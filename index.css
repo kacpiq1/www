@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+          scroll-behavior: smooth;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Roboto Mono', monospace;
+    color:white;
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    background-color: #080e16;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container > h1 {
+    margin: 20px 0;
+    text-shadow: 0 0 30px white;
+}
+
+.container > h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px white;
+}
+
+.colored {
+    text-shadow: 0 0 30px #66fa66;
+    color: #90EE90;
+}
+
+.links > a{
+    margin: 0 10px;
+}
+
+.card{
+    background-color: #001d30;
+    width: 300px;
+    height: 400px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.projecttitle{
+    margin: 10px 0;
+    font-size: 26px;
+}
+
+.card a{
+    background-color: #005892;
+    padding: 18px 32px;
+    margin-top: 30px;
+    font-size: 20px
+}
