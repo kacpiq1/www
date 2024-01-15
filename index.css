@@ -15,14 +15,14 @@ a {
     margin: 0;
     padding: 0;
     border: 0;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Fredoka', bold;
     color:white;
 }
 
 body {
     min-width: 100vw;
     min-height: 100vh;
-    background-color: #080e16;
+    background-color: #030c1a;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,17 +38,17 @@ body {
 
 .container > h1 {
     margin: 20px 0;
-    text-shadow: 0 0 30px white;
+    text-shadow: 0 0 0px white;
 }
 
 .container > h2 {
     margin-top: 40px;
     margin-bottom: 20px;
-    text-shadow: 0 0 30px white;
+    text-shadow: 0 0 0px white;
 }
 
 .colored {
-    text-shadow: 0 0 30px #66fa66;
+    text-shadow: 0 0 0px #66fa66;
     color: #90EE90;
 }
 
