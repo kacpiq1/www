@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap');
 
 @media (prefers-reduced-motion: no-preference) {
     html {
@@ -15,7 +15,7 @@ a {
     margin: 0;
     padding: 0;
     border: 0;
-    font-family: 'Fredoka', bold;
+    font-family: 'Fredoka', sans-serif;
     color:white;
 }
 
