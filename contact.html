@@ -1,53 +1,4 @@
-*, *:before, *:after {
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
-body {
-  background: linear-gradient(to right, #ea1d6f 0%, #eb466b 100%);
-  font-size: 12px;
-}
-
-body, button, input {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-}
-
-.background {
-  display: flex;
-  min-height: 100vh;
-}
-
-.container {
-  flex: 0 1 700px;
-  margin: auto;
-  padding: 10px;
-}
-
-.screen {
-  position: relative;
-  background: #3e3e3e;
-  border-radius: 15px;
-}
-
-.screen:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 20px;
-  right: 20px;
-  bottom: 0;
-  border-radius: 15px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
-  z-index: -1;
-}
-
-.screen-header {
-  display: flex;
-  align-items: center;
 
 <div class="background">
   <div class="container">
@@ -82,7 +33,7 @@ body, button, input {
               <input class="app-form-control" placeholder="EMAIL">
             </div>
             <div class="app-form-group">
-              <input class="app-form-control" placeholder="CONTACT NO">
+              <input class="app-form-control" placeholder="TEMAT">
             </div>
             <div class="app-form-group message">
               <input class="app-form-control" placeholder="WIADOMOŚĆ">
