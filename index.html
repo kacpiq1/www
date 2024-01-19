@@ -2,13 +2,13 @@
     <meta charset="UTF-8">
 	
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <script src="jquery-2.1.4.js"></script>
+	     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
     <title>kacpiq.pl</title>
     <link rel="stylesheet" href="index.css">
 
-<div class="wrapper">
-<div class="loader"></div>
-</div>
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
 
 
 <link id="chromealerabat-link" rel="stylesheet" type="text/css" href="moz-extension://d35e94b3-4e48-4123-8cb4-765dbbce6c5f/content.css"></head>
@@ -66,9 +66,10 @@ var x = setInterval(function() {
 
 
 </body>
-	 <script>
+	 
+    <script>
         $(window).on("load",function(){
-          $(".loader-wrapper").fadeOut("slow");
+            $(".loader-container").fadeOut(1000);
         });
     </script>
 </div>
