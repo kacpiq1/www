@@ -1,6 +1,13 @@
 <html>
 <head>
-<title>Strona w budowie</title>    
+<title>Strona w budowie</title>   
+<style>
+    #countdown {
+      font-size: 24px;
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style> 
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <meta name="description" content="Przepraszamy. Strona jest w trakcie budowy. Prosimy spróbować później!"/>
 <meta name="keywords" content="budowa, strona w budowie" />
@@ -49,6 +56,34 @@ color:#333;
 </style>
 </head>
 <body>
+<div id="countdown"></div>
+
+<script>
+  // Ustaw docelową datę i godzinę
+  const targetDate = new Date("2024-01-21T14:00:00").getTime();
+
+  // Aktualizuj co sekundę
+  const interval = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    // Oblicz dni, godziny, minuty i sekundy
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Wyświetl wynik w elemencie o id "countdown"
+    document.getElementById("countdown").innerHTML = `${days} dni, ${hours} godzin, ${minutes} minut, ${seconds} sekund`;
+
+    // Zatrzymaj odliczanie, gdy osiągnięto docelową datę
+    if (distance < 0) {
+      clearInterval(interval);
+      document.getElementById("countdown").innerHTML = "Trwa aktualizowanie!";
+    }
+  }, 1000);
+</script>
+
 <div class="budowa">
 <h1>Strona w budowie</h1>
 <a href="mailto:kontakt@kacpiq.pl" class="button">kontakt@kacpiq.pl</a>
