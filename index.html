@@ -12,6 +12,19 @@
 
 <link id="chromealerabat-link" rel="stylesheet" type="text/css" href="moz-extension://d35e94b3-4e48-4123-8cb4-765dbbce6c5f/content.css"></head>
 <body>
+	 <div class="content">
+      <img src="https://picsum.photos/300/300/?random" />
+    </div>
+
+    <div class="loader-wrapper">
+      <span class="loader"><span class="loader-inner"></span></span>
+    </div>
+
+    <script>
+        $(window).on("load",function(){
+          $(".loader-wrapper").fadeOut("slow");
+        });
+    </script>
     <div class="container">
         <h1>Strona w trakcie budowy!</span></h1>
 	    <style>
