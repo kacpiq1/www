@@ -1,95 +1,33 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<title>Strona w budowie</title>   
-<style>
-    #countdown {
-      font-size: 24px;
-      text-align: center;
-      margin-top: 50px;
-text-color: #ffffff;
-    }
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9086056869539710"
-     crossorigin="anonymous"></script>
-  </style> 
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-<meta name="description" content="Przepraszamy. Strona jest w trakcie budowy. Prosimy spróbować później!"/>
-<meta name="keywords" content="budowa, strona w budowie" />
-<link rel="icon" type="image/png" href="favicon.png" />
-<style type="text/css">
-body {
-overflow: hidden;
-text-align:center;
-font-family: 'Montserrat', sans-serif;
-font-size:14px;
-height:100%;
-background: #3333ff;
-}
-h1 {
-color:#fff;
-font-size:40px;
-margin-bottom:30px;
-}
-.budowa {
-width: 400px;
-height: 200px;
-position: absolute;
-top:0;
-bottom: 0;
-left: 0;
-right: 0;
-margin: auto;
-}
-a, a:link, a:visited, a:active, a:hover {
-text-decoration:none;
-}
-.button {
-padding:7px 14px 7px 14px;
-border:1px solid #fff;
-border-radius:20px;
--moz-border-radius:20px;
--webkit-border-radius:20px;
-color:#fff;
-cursor:pointer;
-transition:background-color .1s linear,color .1s linear
-}
-.button:hover {
-background-color:#fff;
-color:#333;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przerwa techniczna</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
-<div id="countdown"></div>
+    
+    <div class="wrapper">
+    <form action="">
+    <h1> <i class='bx bxs-time bx-tada' style='color:#ffffff align-items: center' ></i> Przerwa techniczna</h1>
+    <div class="input-box">
+    <input type="text" placeholder="Username"
+    required>
+    </div>
+    <div class="input-box">
+    <input type="password" placeholder="Password"
+    required>
+    
+    <a href="mailto:kontakt@kacpiq.pl" class="button">Skontaktuj się</a>
+    </div>
+    </form>
+    </div>
 
-<script>
-  // Ustaw docelową datę i godzinę
-  const targetDate = new Date("2024-01-21T14:00:00").getTime();
-
-  // Aktualizuj co sekundę
-  const interval = setInterval(function() {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    // Oblicz dni, godziny, minuty i sekundy
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Wyświetl wynik w elemencie o id "countdown"
-    document.getElementById("countdown").innerHTML = `${days} dni, ${hours} godzin, ${minutes} minut, ${seconds} sekund`;
-
-    // Zatrzymaj odliczanie, gdy osiągnięto docelową datę
-    if (distance < 0) {
-      clearInterval(interval);
-      document.getElementById("countdown").innerHTML = "Trwa aktualizowanie!";
-    }
-  }, 1000);
-</script>
-
-<div class="budowa">
-<h1>Strona w budowie</h1>
-<a href="mailto:kontakt@kacpiq.pl" class="button">kontakt@kacpiq.pl</a>
-</div>
 </body>
+
 </html>
