@@ -17,6 +17,13 @@ body {
     background-position: center;
 }
 
+.paypal-button-container-P-0C056308UJ752004YMWW3C5A{
+ display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .wrapper{
     width: 420px;
     background: transparent;
