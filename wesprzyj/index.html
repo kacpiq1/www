@@ -11,9 +11,18 @@
 </head>
 
 <body>
+    
+    <div class="wrapper">
+    <form action="">
+    <h1> <i class='bx bxs-time bx-tada' style='color:#ffffff align-items: center' ></i> Wkrótce</h1>
+    <h2>Przepraszamy, strona jest w trakcie budowy. Szacowana data otwarcia: 24.01.2024</h2>
+    
+    <a href="mailto:kontakt@kacpiq.plclass="button">Skontaktuj się</a>
+      <a href="https://www.kacpiq.pl" class="button">Powrót</a>
+    </div>
 
-<div id="paypal-button-container-P-1RD10986LA754522GMWW2ZZY"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=AS02FwqavugINlLHQAUz4ctuXFK6BFvogsKv6MWdTeYhRzjZXYKezgVBZF38plbdsW2lEY91jKrl5rE4&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+<div id="paypal-button-container-P-0C056308UJ752004YMWW3C5A"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=sb&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 <script>
   paypal.Buttons({
       style: {
@@ -25,23 +34,14 @@
       createSubscription: function(data, actions) {
         return actions.subscription.create({
           /* Creates the subscription */
-          plan_id: 'P-1RD10986LA754522GMWW2ZZY'
+          plan_id: 'P-0C056308UJ752004YMWW3C5A'
         });
       },
       onApprove: function(data, actions) {
         alert(data.subscriptionID); // You can add optional success message for the subscriber here
       }
-  }).render('#paypal-button-container-P-1RD10986LA754522GMWW2ZZY'); // Renders the PayPal button
+  }).render('#paypal-button-container-P-0C056308UJ752004YMWW3C5A'); // Renders the PayPal button
 </script>
-    
-    <div class="wrapper">
-    <form action="">
-    <h1> <i class='bx bxs-time bx-tada' style='color:#ffffff align-items: center' ></i> Wkrótce</h1>
-    <h2>Przepraszamy, strona jest w trakcie budowy. Szacowana data otwarcia: 24.01.2024</h2>
-    
-    <a href="mailto:kontakt@kacpiq.pl" class="button">Skontaktuj się</a>
-      <a href="https://www.kacpiq.pl" class="button">Powrót</a>
-    </div>
     </form>
     </div>
 
