@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <meta http-equiv="refresh" content="0;url=https://www.kacpiq.pl/maintenance">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kacpiq.pl</title>
     <link rel="stylesheet" href="mainstyle.css">
@@ -15,32 +14,233 @@
     
     <header class="header">
         <a href="#" class="logo">Kacpiq.</a>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+
         <nav class="navbar">
-            <a href="#" class="active">Strona Główna</a>
-            <a href="o-mnie">O mnie</a>
-            <a href="kursy">Kursy</a>
-            <a href="filmy">Filmy</a>
-            <a href="kontakt">Kontakt</a>
+            <a href="#home" class="active">Strona Główna</a>
+            <a href="#o-mnie">O mnie</a>
+            <a href="#kursy">Kursy</a>
+            <a href="#filmy">Filmy</a>
+            <a href="#kontakt">Kontakt</a>
         </nav>
     </header>
 
-    <section class="home">
+    <section class="home" id="home">
         <div class="home-content">
             <h1>Hej, tu Kacpiq!</h1>
+            <div class="text-animate">
             <h3>YouTuber / Junior Programista</h3>
+        </div>
             <p>Pomagam ludziom robić gry na platformie Roblox oraz uczę jak robić gry na poziomie łatwym, średnim bądź zaawansowanym. Tutaj będą się pojawiać kursy, które będą publikowane na platformie YouTube, jak i tutaj, gdzie będzie można zadać pytania, dostać pomoc i wiele więcej!</p>
         <div class="btn-box">
-            <a href="kursy">Kursy</a>
-            <a href="wesprzyj">Wesprzyj</a>
+            <a href="#kursy" class="btn">Kursy</a>
+            <a href="#" class="btn">Wesprzyj</a>
         </div>
         </div>
 
         <div class="home-sci">
             <a href="https://www.youtube.com/c/kacpiq"><i class='bx bxl-youtube'></i></a>
             <a href="#"><i class='bx bxl-discord-alt'></i></a>
-            <a href="wesprzyj"><i class='bx bx-credit-card'></i></a>
+            <a href="#"><i class='bx bx-credit-card'></i></a>
         </div>
     </section>
+
+<section class="about" id="o-mnie">
+    <h2 class="heading">O <span>Mnie</span></h2>
+
+    <div class="about-img">
+        <img src="img/empty.png" alt="">
+        <span class="circle-spin"></span>
+    </div>
+
+    <div class="about-content">
+        <h3>YouTuber / Junior Programista</h3>
+        <p>Od dawna interesuję się tworzeniem gier, programowaniu i robieniu filmów na YouTubie. Pasję z tworzeniem gier i filmów rozpoczęłem w 2017 roku i aż do teraz wciąż pracuje nad różnymi projektami. Dla Was staram się robić jak najlepsze poradniki, jak zrobić np. GUI, statystyki itp., aktualnie uczę się w szkole średniej i chcę, by każdy mógł się czegoś ode mnie nauczyć.</p>
+
+        <div class="btn-box btns">
+            <a href="#" class="btn">Czytaj Więcej</a>
+        </div>
+    </div>
+</section>
+
+<section class="education" id="kursy">
+    <h2 class="heading">Moje <span>Kursy</span></h2>
+
+    <div class="education-row">
+        <div class="education-column">
+            <h3 class="title">Bezpłatne</h3>
+
+            <div class="education-box">
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3>Jak się zabrać za tworzenie gier w Roblox?</h3>
+                            <p>W tym kursie poznasz jak się zabrać za projektowanie gier. Zawarte są w nim: podstawy tworzenia gry, krok po kroku wytłumaczone każde funkcje, i wiele więcej.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3>Podstawowe pojęcia i komendy</h3>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3>Podstawy Programowania - zmienne</h3>
+                            <p></p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="education-column">
+            <h3 class="title">Premium</h3>
+
+            <div class="education-box">
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3>Nauka robienia zaawansowanych gier w Roblox - nauka zaawansowana programowania LUA</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos illo inventore in deserunt qui sapiente hic praesentium soluta dolore ea?</p>
+                        </div>
+                    </div>
+
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3></h3>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="education-content">
+                        <div class="content">
+                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <h3></h3>
+                            <p></p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="filmy" id="filmy">
+    <h2 class="heading">Moje <span>filmy</span></h2>
+    <div class="filmy-row">
+        <div class="filmy-column">
+            <h3 class="title">Trudność EASY</h3>
+
+            <div class="filmy-box">
+                <div class="filmy-content">
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filmy-column">
+            <h3 class="title">Trudność MEDIUM</h3>
+
+            <div class="filmy-box">
+                <div class="filmy-content">
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+
+                    <div class="progress">
+                        <h3>WKRÓTCE <span>??</span></h3>
+                        <div class="bar"><span></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="contact" id="kontakt">
+    <h2 class="heading">Skontaktuj się <span>ze mną!</span></h2>
+
+    <form action="#">
+        <div class="input-box">
+            <div class="input-field">
+                <input type="text" placeholder="Nick" required>
+                <span class="focus"></span>
+            </div>
+            <div class="input-field">
+                <input type="text" placeholder="Email" required>
+                <span class="focus"></span>
+            </div> 
+        </div>
+
+        <div class="input-box">
+            <div class="input-field">
+                <input type="text" placeholder="Nr. tel." required>
+                <span class="focus"></span>
+            </div>
+            <div class="input-field">
+                <input type="text" placeholder="Temat/Problem" required>
+                <span class="focus"></span>
+            </div> 
+        </div>
+
+        <div class="textarea-field">
+            <textarea name="" id="" cols="30" rows="10" placeholder="Twoja wiadomość" required></textarea>
+            <span class="focus"></span>
+        </div>
+
+        <div class="btn-box btns">
+            <button type="submit" class="btn">Wyślij</button>
+        </div>
+    </form>
+</section>
+
+<footer class="footer">
+    <div class="footer-text">
+        <p>Prawa autorskie &copy; 2024 przez Kacpiq | Wszelkie prawa zastrzeżone.</p>
+    </div>
+
+    <div class="footer-iconTop">
+        <a href="#"><i class='bx bx-up-arrow-alt'></i></a>
+    </div>
+</footer>
+    
 </body>
 
 </html>
