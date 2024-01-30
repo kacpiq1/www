@@ -8,6 +8,7 @@
     <title>kacpiq.pl</title>
     <link rel="stylesheet" href="mainstyle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="odliczanie.js" defer></script>
 </head>
 
 <body>
@@ -76,7 +77,7 @@
             <div class="education-box">
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-time' ></i> 17.02.2024 (za 25 dni)</div>
+                            <div class="year"><i class='bx bxs-time' ></i> <span id="countdown1"></span></div>
                             <h3>Jak się zabrać za tworzenie gier w Roblox?</h3>
                             <p>W tym kursie poznasz jak się zabrać za projektowanie gier. Zawarte są w nim: podstawy tworzenia gry, krok po kroku wytłumaczone każde funkcje, i wiele więcej.
                             </p>
@@ -85,7 +86,7 @@
 
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <div class="year"><i class='bx bxs-calendar'></i> <span id="countdown2"></span></div>
                             <h3>Podstawy Roblox Studio</h3>
                             <p>● Omówienie interfejsu Roblox Studio.
 ● Korzystanie z podstawowych narzędzi edycji, takich jak Move, Scale, Rotate.
@@ -95,7 +96,7 @@
 
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <div class="year"><i class='bx bxs-calendar'></i> <span id="countdown3"></span></div>
                             <h3>Podstawy Programowania - zmienne</h3>
                             <p></p>
                         </div>
@@ -104,12 +105,12 @@
         </div>
 
         <div class="education-column">
-            <h3 class="title">Premium - 9,99zł/msc</h3>
+            <h3 class="title">Premium 9,99zł/msc</h3>
 
             <div class="education-box">
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <div class="year"><i class='bx bxs-calendar'></i> <span id="countdownP1"></span></div>
                             <h3>Nauka robienia zaawansowanych gier w Roblox - nauka zaawansowana programowania LUA</h3>
                             <p></p>
                         </div>
@@ -117,7 +118,7 @@
 
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <div class="year"><i class='bx bxs-calendar'></i> <span id="countdownP2"></span></div>
                             <h3>Tworzenie modeli 3D</h3>
                             <p>● Korzystanie z zewnętrznych programów do modelowania 3D.
 ● Importowanie i dostosowywanie modeli w Roblox Studio.
@@ -127,7 +128,7 @@
 
                     <div class="education-content">
                         <div class="content">
-                            <div class="year"><i class='bx bxs-calendar'></i> WKRÓTCE</div>
+                            <div class="year"><i class='bx bxs-calendar'></i> <span id="countdownP3"></span></div>
                             <h3>Monetyzacja gier na Roblox</h3>
                             <p>● Omówienie systemu DevEx (Developer Exchange) i możliwości zarobku.
 ● Sprzedaż produktów w grze, takich jak ubrania czy przedmioty.
