@@ -893,6 +893,10 @@ span {
     }
 }
 
+h2 {
+    font-size: 2rem;
+}
+
 /* KEYFRAMES ANIMATION */
 @keyframes homeBgText {
 
