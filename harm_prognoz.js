@@ -45,6 +45,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentTime = new Date();
         const diff = targetDate - currentTime;
 
+        if (diff <= 0) {
+            return `
+                <div class="content">
+                    <div class="year">Prognoza jest już dostępna</div>
+                    <h3>${title}</h3>
+                    <p></p>
+                </div>
+            `;
+        }
+
         let days = Math.floor(diff / (1000 * 60 * 60 * 24));
         let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
