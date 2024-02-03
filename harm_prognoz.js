@@ -44,17 +44,29 @@ document.addEventListener('DOMContentLoaded', function () {
     function countdownHTML(targetDate, title) {
         const currentTime = new Date();
         const diff = targetDate - currentTime;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        
-        const dayText = days > 0 ? days + 'd ' : '';
-        const hourText = hours > 0 ? hours + 'h' : '';
-        
+
+        let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        let timeString = '';
+
+        if (days > 0) {
+            timeString = `${days}d ${hours}h`;
+        } else if (hours > 0) {
+            timeString = `${hours}h ${minutes}m`;
+        } else if (minutes > 0) {
+            timeString = `${minutes}m ${seconds}s`;
+        } else {
+            timeString = `${seconds}s`;
+        }
+
         const dateText = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' });
 
         return `
             <div class="content">
-                <div class="year"><i class='bx bxs-time' ></i> ${dayText} ${hourText}</div>
+                <div class="year"><i class='bx bxs-time' ></i> ${timeString}</div>
                 <h3>${title} (${dateText})</h3>
                 <p></p>
             </div>
