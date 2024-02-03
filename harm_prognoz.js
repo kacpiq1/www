@@ -1,56 +1,64 @@
-// countdown.js
+document.addEventListener('DOMContentLoaded', function () {
+    // Funkcja do aktualizacji prognoz
+    function updatePrognoza() {
+        // Zdefiniuj godziny prognoz na dzień i na noc
+        const godzinaPrognozaDzien = 11; // 11:30
+        const godzinaPrognozaNoc = 19; // 19:00
 
-function updateCountdown(targetDate, elementId) {
-    const updateInterval = 1000;
-  
-    function formatTimeUnit(unit) {
-      return unit < 10 ? `0${unit}` : unit;
-    }
-  
-    function formatDate(date) {
-      const day = formatTimeUnit(date.getDate());
-      const month = formatTimeUnit(date.getMonth() + 1);
-      const year = date.getFullYear();
-      const hours = formatTimeUnit(date.getHours());
-      const minutes = formatTimeUnit(date.getMinutes());
-      const seconds = formatTimeUnit(date.getSeconds());
-      return `${day}.${month}.${year} ${hours}:${minutes}`;
-    }
-  
-    function updateDisplay() {
-      const currentDate = new Date();
-      const timeDifference = targetDate - currentDate;
-  
-      if (timeDifference > 0) {
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  
-        let countdownText;
-  
-        if (days > 0) {
-          countdownText = `${formatDate(targetDate)} (za ${days} dni)`;
-        } else if (hours > 0) {
-          countdownText = `${formatDate(targetDate)} (za ${hours}h ${minutes}m)`;
-        } else if (minutes > 0) {
-          countdownText = `${formatDate(targetDate)} (za ${minutes}m ${seconds}s)`;
+        // Pobierz aktualną datę
+        const currentTime = new Date();
+
+        // Utwórz datę prognozy na dzień dla dzisiaj
+        const prognozaDzien1 = getNextPrognozaDate(currentTime, godzinaPrognozaDzien);
+        
+        // Utwórz datę prognozy na noc dla dzisiaj
+        const prognozaNoc1 = getNextPrognozaDate(currentTime, godzinaPrognozaNoc);
+        
+        // Utwórz datę prognozy na dzień dla jutrzejszego dnia
+        const prognozaDzien2 = getNextPrognozaDate(new Date(currentTime.setDate(currentTime.getDate() + 1)), godzinaPrognozaDzien);
+        
+        // Utwórz datę prognozy na noc dla jutrzejszego dnia
+        const prognozaNoc2 = getNextPrognozaDate(new Date(currentTime.setDate(currentTime.getDate() + 1)), godzinaPrognozaNoc);
+
+        // Ustaw nowe daty w HTML
+        document.getElementById('countdown1').textContent = countdownText(prognozaDzien1);
+        document.getElementById('countdown2').textContent = countdownText(prognozaNoc1);
+        document.getElementById('countdown3').textContent = countdownText(prognozaDzien2);
+
+        // Ukryj lub pokaż prognozy na dzień i noc
+        const prognozaDzienElement = document.querySelector('.education-content:nth-child(1)');
+        const prognozaNocElement = document.querySelector('.education-content:nth-child(2)');
+
+        if (currentTime < prognozaNoc1) {
+            prognozaDzienElement.style.display = 'block';
+            prognozaNocElement.style.display = 'none';
+        } else if (currentTime < prognozaDzien2) {
+            prognozaDzienElement.style.display = 'none';
+            prognozaNocElement.style.display = 'block';
         } else {
-          countdownText = `${formatDate(targetDate)} (za ${seconds}s)`;
+            // Tutaj dodaj obsługę kolejnych dat prognoz, jeśli są dostępne
         }
-  
-        document.getElementById(elementId).innerHTML = countdownText;
-      } else {
-        document.getElementById(elementId).innerHTML = "Prognoza jest już dostępna!";
-      }
     }
-  
-    updateDisplay();
-  
-    setInterval(updateDisplay, updateInterval);
-  }
-  
-  updateCountdown(new Date(2024, 1, 3, 11, 30, 0), 'countdown1');
-  updateCountdown(new Date(2024, 1, 3, 18, 00, 0), 'countdown2');
-  updateCountdown(new Date(2024, 1, 4, 11, 0, 0), 'countdown3');
-  updateCountdown(new Date(2024, 1, 5, 9, 0, 0), 'countdownWeek');
+
+    // Funkcja do uzyskiwania tekstu z odliczenia czasu
+    function countdownText(targetDate) {
+        const currentTime = new Date();
+        const diff = targetDate - currentTime;
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        return `${hours}h ${minutes}m`;
+    }
+
+    // Funkcja do uzyskiwania następnej daty prognozy na dzień
+    function getNextPrognozaDate(currentDate, hour) {
+        const nextDate = new Date(currentDate);
+        nextDate.setHours(hour, 30, 0, 0); // Ustaw godzinę prognozy na dzień
+        return nextDate;
+    }
+
+    // Wywołaj funkcję po załadowaniu strony
+    updatePrognoza();
+
+    // Aktualizuj prognozy co minutę
+    setInterval(updatePrognoza, 60000);
+});
