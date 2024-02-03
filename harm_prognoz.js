@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
             element.innerHTML = countdownHTML(targetDate, title);
         }
 
+        // Pokaż całą kolumnę
+        element.closest('.education-column').style.display = 'flex';
         element.style.display = 'block';
     }
 
