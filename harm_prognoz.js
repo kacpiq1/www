@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // Utwórz datę prognozy na noc dla jutrzejszego dnia
         const prognozaNoc2 = getNextPrognozaDate(new Date(currentTime.setDate(currentTime.getDate() + 1)), godzinaPrognozaNoc);
 
-        // Ustaw nowe daty w HTML
-        document.getElementById('countdown1').textContent = countdownText(prognozaDzien1);
-        document.getElementById('countdown2').textContent = countdownText(prognozaNoc1);
-        document.getElementById('countdown3').textContent = countdownText(prognozaDzien2);
+        // Ustaw nowe daty i opisy w HTML
+        document.getElementById('countdown1').innerHTML = countdownHTML(prognozaDzien1, 'Prognoza na dzień');
+        document.getElementById('countdown2').innerHTML = countdownHTML(prognozaNoc1, 'Prognoza na noc');
+        document.getElementById('countdown3').innerHTML = countdownHTML(prognozaDzien2, 'Prognoza na dzień');
 
         // Ukryj lub pokaż prognozy na dzień i noc
         const prognozaDzienElement = document.querySelector('.education-content:nth-child(1)');
@@ -40,13 +40,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Funkcja do uzyskiwania tekstu z odliczenia czasu
-    function countdownText(targetDate) {
+    // Funkcja do uzyskiwania HTML z odliczenia czasu
+    function countdownHTML(targetDate, title) {
         const currentTime = new Date();
         const diff = targetDate - currentTime;
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours}h ${minutes}m`;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        const dayText = days > 0 ? days + 'd ' : '';
+        const hourText = hours > 0 ? hours + 'h' : '';
+        
+        const dateText = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' });
+
+        return `
+            <div class="content">
+                <div class="year"><i class='bx bxs-time' ></i> ${dayText} ${hourText}</div>
+                <h3>${title} (${dateText})</h3>
+                <p></p>
+            </div>
+        `;
     }
 
     // Funkcja do uzyskiwania następnej daty prognozy na dzień
