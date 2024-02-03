@@ -20,26 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Utwórz datę prognozy na noc dla jutrzejszego dnia
         const prognozaNoc2 = getNextPrognozaDate(new Date(currentTime.setDate(currentTime.getDate() + 1)), godzinaPrognozaNoc);
 
-        // Ukryj wszystkie prognozy
-        const prognozaElements = document.querySelectorAll('.education-content');
-        prognozaElements.forEach(element => {
-            element.style.display = 'none';
-        });
-
-        // Sprawdź, która prognoza jest aktualna i pokaż ją
-        if (currentTime < prognozaNoc1) {
-            showPrognoza('countdown1', prognozaDzien1, 'Prognoza na dzień');
-        } else if (currentTime < prognozaDzien2) {
-            showPrognoza('countdown2', prognozaNoc1, 'Prognoza na noc');
-        } else {
-            // Tutaj dodaj obsługę kolejnych dat prognoz, jeśli są dostępne
-            showPrognoza('countdown3', prognozaDzien2, 'Prognoza na dzień');
-        }
+        // Aktualizuj nazwy i daty prognoz
+        updatePrognozaElement('countdown1', prognozaDzien1, 'Prognoza na dzień');
+        updatePrognozaElement('countdown2', prognozaNoc1, 'Prognoza na noc');
+        updatePrognozaElement('countdown3', prognozaDzien2, 'Prognoza na dzień');
     }
 
-    // Funkcja do pokazywania prognozy w danym elemencie
-    function showPrognoza(elementId, targetDate, title) {
+    // Funkcja do aktualizacji nazwy i daty prognozy w danym elemencie
+    function updatePrognozaElement(elementId, targetDate, title) {
         const element = document.getElementById(elementId);
+        const dateText = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' });
 
         // Sprawdź, czy czas osiągnął 0s
         if (targetDate <= new Date()) {
@@ -52,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         } else {
             // W przeciwnym razie wyświetl odliczanie
-            element.innerHTML = countdownHTML(targetDate, title);
+            element.innerHTML = countdownHTML(targetDate, title, dateText);
         }
 
         // Pokaż całą kolumnę
@@ -61,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Funkcja do uzyskiwania HTML z odliczenia czasu
-    function countdownHTML(targetDate, title) {
+    function countdownHTML(targetDate, title, dateText) {
         const currentTime = new Date();
         const diff = targetDate - currentTime;
 
@@ -81,8 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             timeString = `${seconds}s`;
         }
-
-        const dateText = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' });
 
         return `
             <div class="content">
