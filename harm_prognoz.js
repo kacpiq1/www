@@ -20,40 +20,48 @@ document.addEventListener('DOMContentLoaded', function () {
         // Utwórz datę prognozy na noc dla jutrzejszego dnia
         const prognozaNoc2 = getNextPrognozaDate(new Date(currentTime.setDate(currentTime.getDate() + 1)), godzinaPrognozaNoc);
 
-        // Ustaw nowe daty i opisy w HTML
-        document.getElementById('countdown1').innerHTML = countdownHTML(prognozaDzien1, 'Prognoza na dzień');
-        document.getElementById('countdown2').innerHTML = countdownHTML(prognozaNoc1, 'Prognoza na noc');
-        document.getElementById('countdown3').innerHTML = countdownHTML(prognozaDzien2, 'Prognoza na dzień');
+        // Ukryj wszystkie prognozy
+        const prognozaElements = document.querySelectorAll('.education-content');
+        prognozaElements.forEach(element => {
+            element.style.display = 'none';
+        });
 
-        // Ukryj lub pokaż prognozy na dzień i noc
-        const prognozaDzienElement = document.querySelector('.education-content:nth-child(1)');
-        const prognozaNocElement = document.querySelector('.education-content:nth-child(2)');
-
+        // Sprawdź, która prognoza jest aktualna i pokaż ją
         if (currentTime < prognozaNoc1) {
-            prognozaDzienElement.style.display = 'block';
-            prognozaNocElement.style.display = 'none';
+            showPrognoza('countdown1', prognozaDzien1, 'Prognoza na dzień');
         } else if (currentTime < prognozaDzien2) {
-            prognozaDzienElement.style.display = 'none';
-            prognozaNocElement.style.display = 'block';
+            showPrognoza('countdown2', prognozaNoc1, 'Prognoza na noc');
         } else {
             // Tutaj dodaj obsługę kolejnych dat prognoz, jeśli są dostępne
+            showPrognoza('countdown3', prognozaDzien2, 'Prognoza na dzień');
         }
     }
 
-    // Funkcja do uzyskiwania HTML z odliczenia czasu
-    function countdownHTML(targetDate, title) {
-        const currentTime = new Date();
-        const diff = targetDate - currentTime;
+    // Funkcja do pokazywania prognozy w danym elemencie
+    function showPrognoza(elementId, targetDate, title) {
+        const element = document.getElementById(elementId);
 
-        if (diff <= 0) {
-            return `
+        // Sprawdź, czy czas osiągnął 0s
+        if (targetDate <= new Date()) {
+            element.innerHTML = `
                 <div class="content">
                     <div class="year">Prognoza jest już dostępna</div>
                     <h3>${title}</h3>
                     <p></p>
                 </div>
             `;
+        } else {
+            // W przeciwnym razie wyświetl odliczanie
+            element.innerHTML = countdownHTML(targetDate, title);
         }
+
+        element.style.display = 'block';
+    }
+
+    // Funkcja do uzyskiwania HTML z odliczenia czasu
+    function countdownHTML(targetDate, title) {
+        const currentTime = new Date();
+        const diff = targetDate - currentTime;
 
         let days = Math.floor(diff / (1000 * 60 * 60 * 24));
         let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
