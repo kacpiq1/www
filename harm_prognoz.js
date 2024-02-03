@@ -83,6 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Wywołaj funkcję po załadowaniu strony
     updatePrognoza();
 
-    // Aktualizuj prognozy co minutę
-    setInterval(updatePrognoza, 60000);
+    // Aktualizuj prognozy co sekundę
+    setInterval(updatePrognoza, 1000);
 });
