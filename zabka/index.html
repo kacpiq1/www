@@ -38,6 +38,35 @@
   data-lyket-type="updown"
   data-lyket-id="my-first-post"
  />
+
+<div id="counter" style="font-size: 12px"></div>
+
+<script>
+  const counterElement = document.getElementById('counter');
+  let count = localStorage.getItem('clickCount') || 0; // Pobranie wartości z localStorage, jeśli istnieje
+
+  function updateCounter(change) {
+    count += change;
+    counterElement.innerText = `Liczba kliknięć: ${count}`;
+    localStorage.setItem('clickCount', count); // Zapisanie wartości do localStorage
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const upvoteButton = document.querySelector('[data-lyket-type="updown"][data-lyket-id="my-first-post"]');
+    const downvoteButton = document.querySelector('[data-lyket-type="updown"][data-lyket-id="my-first-post"][style="font-size: 12px"]');
+
+    upvoteButton.addEventListener('click', function () {
+      updateCounter(1);
+    });
+
+    downvoteButton.addEventListener('click', function () {
+      updateCounter(-1);
+    });
+
+    // Aktualizacja liczby kliknięć przy ładowaniu strony
+    counterElement.innerText = `Liczba kliknięć: ${count}`;
+  });
+</script>
 </h2>
     
     <a href="mailto:kontakt@kacpiq.pl" class="button">Skontaktuj się</a>
