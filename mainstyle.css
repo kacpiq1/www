@@ -516,28 +516,28 @@ span {
     padding-bottom: .5rem;
 }
 
-.filmy {
+.strefy {
     min-height: auto;
     padding-bottom: 7rem;
     background: var(--second-bg-color);
 }
 
-.filmy .filmy-row {
+.strefy .strefy-row {
     display: flex;
     flex-wrap: wrap;
     gap: 5rem;
 }
 
-.filmy-row .filmy-column {
+.strefy-row .strefy-column {
     flex: 1 1 40rem;
 }
 
-.filmy-column .title {
+.strefy-column .title {
     font-size: 2.5rem;
     margin: 0 0 1.5rem;
 }
 
-.filmy-box .filmy-content {
+.strefy-box .strefy-content {
     position: relative;
     border: .2rem solid var(--main-color);
     border-radius: .6rem;
@@ -546,7 +546,7 @@ span {
     overflow: hidden;
 }
 
-.filmy-box .filmy-content::before{
+.strefy-box .strefy-content::before{
     content: '';
     position: absolute;
     top: 0;
@@ -558,25 +558,25 @@ span {
     transition: .5s;
 }
 
-.filmy-box .filmy-content:hover::before{
+.strefy-box .strefy-content:hover::before{
     width: 100%;
 }
 
-.filmy-content .progress {
+.strefy-content .progress {
     padding: 1rem 0;
 }
 
-.filmy-content .progress h3 {
+.strefy-content .progress h3 {
     font-size: 1.7rem;
     display: flex;
     justify-content: space-between;
 }
 
-.filmy-content .progress h3 span {
+.strefy-content .progress h3 span {
     color: var(--text-color);
 }
 
-.filmy-content .progress .bar {
+.strefy-content .progress .bar {
     height: 2.5rem;
     border-radius: .6rem;
     border: .2rem solid var(--main-color);
@@ -584,40 +584,40 @@ span {
     margin: 1rem 0;
 }
 
-.filmy-content .progress .bar span {
+.strefy-content .progress .bar span {
     display: block;
     height: 100%;
     border-radius: .3rem;
     background: var(--main-color);
 }
 
-.filmy-column:nth-child(1) .filmy-content .progress:nth-child(1) .bar span {
+.strefy-column:nth-child(1) .strefy-content .progress:nth-child(1) .bar span {
     width: 100%;
 }
 
-.filmy-column:nth-child(1) .filmy-content .progress:nth-child(2) .bar span {
+.strefy-column:nth-child(1) .strefy-content .progress:nth-child(2) .bar span {
     width: 100%;
 }
 
-.filmy-column:nth-child(1) .filmy-content .progress:nth-child(3) .bar span {
+.strefy-column:nth-child(1) .strefy-content .progress:nth-child(3) .bar span {
     width: 100%;
 }
-.filmy-column:nth-child(1) .filmy-content .progress:nth-child(4) .bar span {
-    width: 100%;
-}
-
-.filmy-column:nth-child(2) .filmy-content .progress:nth-child(1) .bar span {
+.strefy-column:nth-child(1) .strefy-content .progress:nth-child(4) .bar span {
     width: 100%;
 }
 
-.filmy-column:nth-child(2) .filmy-content .progress:nth-child(2) .bar span {
+.strefy-column:nth-child(2) .strefy-content .progress:nth-child(1) .bar span {
     width: 100%;
 }
 
-.filmy-column:nth-child(2) .filmy-content .progress:nth-child(3) .bar span {
+.strefy-column:nth-child(2) .strefy-content .progress:nth-child(2) .bar span {
     width: 100%;
 }
-.filmy-column:nth-child(2) .filmy-content .progress:nth-child(4) .bar span {
+
+.strefy-column:nth-child(2) .strefy-content .progress:nth-child(3) .bar span {
+    width: 100%;
+}
+.strefy-column:nth-child(2) .strefy-content .progress:nth-child(4) .bar span {
     width: 100%;
 }
 
