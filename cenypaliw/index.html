@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel Prices</title>
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+
+<h2>Fuel Prices</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ProductName</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody id="fuelTableBody">
+    <!-- Data will be dynamically populated here -->
+  </tbody>
+</table>
+
+<script>
+  fetch('https://tool.orlen.pl/api/wholesalefuelprices')
+    .then(response => response.json())
+    .then(data => {
+      let pb95ValueWithTax;
+      let onEkodieselValueWithTax;
+
+      // Filter out Pb98 and ONArctic2 initially
+      const initialData = data.filter(item => item.productName !== 'Pb98' && item.productName !== 'ONArctic2');
+
+      // Calculate values with tax and store Pb95 and ONEkodiesel values
+      const filteredData = initialData.map(item => {
+        let taxRate = 0;
+        if (item.productName === 'Pb95') {
+          taxRate = 0.26;
+        } else if (item.productName === 'ONEkodiesel') {
+          taxRate = 0.26;
+        } else if (item.productName === 'ONArctic2') {
+          taxRate = 0.23;
+        }
+
+        let valueWithTax = (item.value / 1000) * (1 + taxRate);
+        if (item.productName === 'Pb95') {
+          pb95ValueWithTax = valueWithTax; // Store Pb95 value with tax for later use
+        } else if (item.productName === 'ONEkodiesel') {
+          onEkodieselValueWithTax = valueWithTax; // Store ONEkodiesel value with tax for later use
+        }
+
+        return {
+          productName: item.productName,
+          value: valueWithTax.toFixed(2)
+        };
+      });
+
+      // Add Pb98 with special calculation
+      if (pb95ValueWithTax !== undefined) {
+        const pb98ValueWithTax = pb95ValueWithTax + 0.60;
+        filteredData.push({
+          productName: 'Pb98',
+          value: pb98ValueWithTax.toFixed(2)
+        });
+      }
+
+      // Add ONArctic2 with special calculation
+      if (onEkodieselValueWithTax !== undefined) {
+        const onArctic2ValueWithTax = onEkodieselValueWithTax + 0.20;
+        filteredData.push({
+          productName: 'ONArctic2',
+          value: onArctic2ValueWithTax.toFixed(2)
+        });
+      }
+
+      const tableBody = document.getElementById('fuelTableBody');
+      filteredData.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.productName}</td>
+          <td>${item.value}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error:', error));
+</script>
+
+</body>
+</html>
