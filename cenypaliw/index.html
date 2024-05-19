@@ -7,16 +7,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-
     <title>Ceny Hurtowe Paliw</title>
     <style>
         @font-face {
             font-family: 'Myriad Pro Condensed';
             src: url('https://fonts.cdnfonts.com/s/9045/MyriadPro-Cond.otf') format('opentype');
         }
-
-        
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -27,6 +23,9 @@
             margin: 0;
             background-color: #f4f4f9;
             position: relative;
+            flex-direction: column;
+            overflow-y: auto; /* Dodane dla przewijania strony */
+            padding: 20px;
         }
 
         .container {
@@ -43,32 +42,25 @@
         table {
             width: 100%;
             border-collapse: collapse;
-           /* border-radius: 25px; */
             margin: 25px 0;
-            font-size: 26px;
+            font-size: 18px;
             text-align: left;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            
         }
-
-        
 
         th, td {
             padding: 15px;
             border-bottom: 1px solid #ddd;
-            
         }
 
         th {
             background-color: #f2f2f2;
-            
         }
 
-        th:last-child {
+        th:last-child, td:last-child {
             border-right: none;
         }
-
 
         .icon {
             width: 50px;
@@ -80,87 +72,84 @@
         }
 
         .update-info {
-           position: absolute;
-           bottom: 20px;
-           left: 20px; 
-           font-size: 14px;
-           color: #555;
-}
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #555;
+        }
 
-.countdown {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    font-size: 14px;
-    color: #555;
-    margin-top: 20px;
-}
+        .countdown {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+        }
 
-.light-theme {
-    color: #000;
-    background-color: #f4f4f9;
-}
+        .light-theme {
+            color: #000;
+            background-color: #f4f4f9;
+        }
 
-.dark-theme {
-    color: #fff;
-    background-color: #1d1f21;
-}
+        .dark-theme {
+            color: #fff;
+            background-color: #1d1f21;
+        }
 
-.dark-theme .update-info {
-    color: #fff;
-}
+        .dark-theme .update-info {
+            color: #fff;
+        }
 
-.dark-theme .info {
-    color: #fff;
-}
+        .dark-theme .info {
+            color: #fff;
+        }
 
-.dark-theme .countdown {
-    color: #fff;
-}
+        .dark-theme .countdown {
+            color: #fff;
+        }
 
-.dark-theme th {
-    background-color: #323232;
-}
+        .dark-theme th {
+            background-color: #323232;
+        }
 
-.dark-theme table {
-    background-color: #2d2d2d;
-}
+        .dark-theme table {
+            background-color: #2d2d2d;
+        }
 
-.theme-toggle {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    color: #555;
-    font-size: 24px;
-}
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #555;
+            font-size: 24px;
+        }
 
-.info {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        color: #555;
-    }
+        .info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #555;
+        }
 
-    .info i {
-        margin-right: 5px;
-    }
-
-
-
+        .info i {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="loading" id="loading">Ładowanie danych...</div>
     <div class="container" id="container">
-      <div class="info">
-        <i class='bx bxs-info-circle'></i>
-        <span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span>
-    </div>
-    
+        <div class="info">
+            <i class='bx bxs-info-circle'></i>
+            <span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span>
+        </div>
+
         <h1>Ceny Hurtowe Paliw</h1>
         <table>
             <thead>
@@ -173,15 +162,26 @@
                 <!-- Dane zostaną tutaj wstawione przez JavaScript -->
             </tbody>
         </table>
-          <div class="update-info" id="updateInfo"></div>
-          <div class="countdown" id="countdown"></div>
-          <div class="notification" id="notification"></div>
+        <h2>Historia Cen Paliw</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Paliwo</th>
+                    <th>Cena z podatkiem (PLN)</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody">
+                <!-- Dane historii zostaną tutaj wstawione przez JavaScript -->
+            </tbody>
+        </table>
+        <div class="update-info" id="updateInfo"></div>
+        <div class="countdown" id="countdown"></div>
+        <div class="notification" id="notification"></div>
 
-          <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="theme-toggle" onclick="toggleTheme()">
             <i class='bx bxs-adjust'></i>
         </div>
-        
-      
     </div>
 
     <script>
@@ -195,8 +195,10 @@
             'ONArctic2': 'img/vervadiesel.png'
         };
 
+        const historyData = [];
+
         function fetchData() {
-          showNotification("Odświeżono dane.")
+            showNotification("Odświeżono dane.");
             document.getElementById('loading').style.display = 'block';
             document.getElementById('container').style.display = 'none';
 
@@ -269,16 +271,25 @@
                         tableBody.appendChild(row);
                     });
 
+                    updateHistoryTable(publishFrom, filteredData);
+
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('container').style.display = 'block';
-
-                    
                 })
-
-                
                 .catch(error => console.error('Error:', error));
+        }
 
-                
+        function updateHistoryTable(date, data) {
+            const historyTableBody = document.getElementById('historyTableBody');
+            data.forEach(item => {
+                const historyRow = document.createElement('tr');
+                historyRow.innerHTML = `
+                    <td>${date}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.value}</td>
+                `;
+                historyTableBody.appendChild(historyRow);
+            });
         }
 
         function startCountdown() {
@@ -302,23 +313,21 @@
         const notificationElement = document.getElementById('notification');
 
         function showNotification(message) {
-           notificationElement.textContent = message;
-           notificationElement.style.display = 'block';
-           setTimeout(() => {
-           notificationElement.style.display = 'none';
-         }, 3000);
-}
+            notificationElement.textContent = message;
+            notificationElement.style.display = 'block';
+            setTimeout(() => {
+                notificationElement.style.display = 'none';
+            }, 3000);
+        }
 
-let isDarkTheme = false;
+        let isDarkTheme = false;
 
-function toggleTheme() {
-    const body = document.body;
-    body.classList.toggle('light-theme');
-    body.classList.toggle('dark-theme');
-    isDarkTheme = !isDarkTheme;
-}
-
-
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            isDarkTheme = !isDarkTheme;
+        }
 
         fetchData();
         setInterval(fetchData, 1 * 60 * 1000);
