@@ -263,7 +263,7 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${record.date}</td>
-                        <td>${item.productName}</td>
+                        <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
                         <td>${item.value}</td>
                     `;
                     historyTableBody.appendChild(row);
