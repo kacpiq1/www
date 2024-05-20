@@ -103,7 +103,7 @@
             background-color: #323232;
         }
 
-.dark-theme .modal-content {
+        .dark-theme .modal-content {
             background-color: #323232;
         }
 
@@ -439,12 +439,31 @@
         }, 3000);
     }
 
+    function saveThemeToLocalStorage(theme) {
+        localStorage.setItem('theme', theme);
+    }
+
+    function loadThemeFromLocalStorage() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.classList.add(savedTheme);
+            isDarkTheme = savedTheme === 'dark-theme';
+        } else {
+            document.body.classList.add('light-theme');
+        }
+    }
+
     let isDarkTheme = false;
 
     function toggleTheme() {
         const body = document.body;
-        body.classList.toggle('light-theme');
-        body.classList.toggle('dark-theme');
+        if (isDarkTheme) {
+            body.classList.replace('dark-theme', 'light-theme');
+            saveThemeToLocalStorage('light-theme');
+        } else {
+            body.classList.replace('light-theme', 'dark-theme');
+            saveThemeToLocalStorage('dark-theme');
+        }
         isDarkTheme = !isDarkTheme;
     }
 
@@ -457,12 +476,11 @@
         document.getElementById('historyModal').style.display = 'none';
     }
 
+    loadThemeFromLocalStorage();
     fetchData();
     setInterval(fetchData, 1 * 60 * 1000);
     startCountdown();
 </script>
-
-
 
 </body>
 </html>
