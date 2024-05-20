@@ -307,16 +307,20 @@
         const history = fetchHistory();
         const historyTableBody = document.getElementById('historyTableBody');
         historyTableBody.innerHTML = '';
-        
+
         // Sort history in descending order by date
         history.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
+
         history.forEach(record => {
+            const dateRow = document.createElement('tr');
+            dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
+            historyTableBody.appendChild(dateRow);
+
             record.data.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${record.date}</td>
                     <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                    <td>${item.productName}</td>
                     <td>${item.value}</td>
                 `;
                 historyTableBody.appendChild(row);
@@ -457,6 +461,7 @@
     setInterval(fetchData, 1 * 60 * 1000);
     startCountdown();
 </script>
+
 
 </body>
 </html>
