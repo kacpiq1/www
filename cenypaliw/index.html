@@ -281,17 +281,17 @@
         let history = JSON.parse(localStorage.getItem(historyKey)) || [];
         let isDuplicate = false;
 
-        // Check if new data is duplicate
+        // Sprawdzanie, czy nowe dane są zduplikowane
         history = history.map(entry => {
             if (entry.date === data.date) {
                 isDuplicate = true;
-                return data; // Replace duplicate data with new data
+                return data; // Zastąpienie zduplikowanych danych nowymi danymi
             } else {
                 return entry;
             }
         });
 
-        // If data is not duplicate, add it to history
+        // Jeśli dane nie są zduplikowane, dodaj je do historii
         if (!isDuplicate) {
             history.push(data);
         }
@@ -312,10 +312,13 @@
         history.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         history.forEach(record => {
+            const dateRow = document.createElement('tr');
+            dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
+            historyTableBody.appendChild(dateRow);
+
             record.data.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${record.date}</td>
                     <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
                     <td>${item.productName}</td>
                     <td>${item.value}</td>
@@ -458,7 +461,6 @@
     setInterval(fetchData, 1 * 60 * 1000);
     startCountdown();
 </script>
-
 
 
 
