@@ -238,10 +238,27 @@
         };
 
         function saveHistory(data) {
-            let history = JSON.parse(localStorage.getItem(historyKey)) || [];
-            history.push(data);
-            localStorage.setItem(historyKey, JSON.stringify(history));
+    let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+    let isDuplicate = false;
+
+    // Sprawdzanie, czy nowe dane są zduplikowane
+    history = history.map(entry => {
+        if (entry.date === data.date) {
+            isDuplicate = true;
+            return data; // Zastąpienie zduplikowanych danych nowymi danymi
+        } else {
+            return entry;
         }
+    });
+
+    // Jeśli dane nie są zduplikowane, dodaj je do historii
+    if (!isDuplicate) {
+        history.push(data);
+    }
+
+    localStorage.setItem(historyKey, JSON.stringify(history));
+}
+
 
         function fetchHistory() {
             return JSON.parse(localStorage.getItem(historyKey)) || [];
