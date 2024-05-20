@@ -335,13 +335,14 @@
 
             row.innerHTML = `
                 <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                <td>${item.productName}</td>
-                <td>${item.value} zł <span style="color: ${priceChangeColor};">${priceChangeText}</span></td>
+                <td>${item.value} zł</td>
+                <td><span style="color: ${priceChangeColor};">${priceChangeText}</span></td>
             `;
             historyTableBody.appendChild(row);
         });
     });
 }
+
 
 
 function getPreviousPrice(productName, currentDate) {
