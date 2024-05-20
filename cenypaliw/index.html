@@ -213,6 +213,42 @@
             <span class="close" onclick="closeHistory()">&times;</span>
             <h2>Historia Cen Paliw</h2>
             <table>
+<div class="fuelprices aem-GridColumn aem-GridColumn--default--12">
+
+<div id="hcp" class="hcp"></div>
+
+<script>
+    window.hcpConfig = function() {
+        return {
+            root: '#hcp',
+            styles: 'https://tool.orlen.pl/static/hcp.min.css',
+            images: 'https://tool.orlen.pl/static/assets/images',
+            language: 'PL',
+            navigation: [
+                ['Paliwa', 'fuels', 'WholesaleFuelPrices'],
+                ['Opusty regionalne', 'regionalDiscount', 'RegionalDiscounts', [
+                    ['Benzyna Eurosuper 95', 'pb95', 'Pb95'],
+                    ['Benzyna Super Plus 98', 'pb98', 'Pb98'],
+                    ['ON Ekodiesel', 'onekodiesel', 'ONEkodiesel']
+                ]],
+                ['Autogaz Hurt', 'autogasWholesale', 'LPG'],
+                ['Olej opałowy ciężki', 'heavyFuelOil', 'HeatingOil'],
+                ['Paliwa lotnicze', 'aviationFuels', 'AviationFuels', [
+                    ['Jet A-1', 'jeta1', 'JETA1'],
+                    ['Avgas 100LL', 'avgas', 'AVGAS100LL']
+                ]]
+            ],
+            defaultPageIndex: 0,
+            archiveUrlSegment: 'archive',
+        }
+    };
+
+    (function(d, i) {
+        var b = d.querySelector('body');
+        var s = d.createElement('script');
+        s.src = i + '?ts=' + +(new Date()); b.appendChild(s);
+    }(document, 'https://tool.orlen.pl/static/hcp.min.js'));
+</script>
                 
 </div>
                 <tbody id="historyTableBody">
