@@ -299,34 +299,62 @@
         localStorage.setItem(historyKey, JSON.stringify(history));
     }
 
-    function fetchHistory() {
+        function fetchHistory() {
         return JSON.parse(localStorage.getItem(historyKey)) || [];
     }
 
     function displayHistory() {
-        const history = fetchHistory();
-        const historyTableBody = document.getElementById('historyTableBody');
-        historyTableBody.innerHTML = '';
+    const history = fetchHistory();
+    const historyTableBody = document.getElementById('historyTableBody');
+    historyTableBody.innerHTML = '';
 
-        // Sort history in descending order by date
-        history.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort history in descending order by date
+    history.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        history.forEach(record => {
-            const dateRow = document.createElement('tr');
-            dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
-            historyTableBody.appendChild(dateRow);
+    history.forEach(record => {
+        const dateRow = document.createElement('tr');
+        dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
+        historyTableBody.appendChild(dateRow);
 
-            record.data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                    <td>${item.productName}</td>
-                    <td>${item.value}</td>
-                `;
-                historyTableBody.appendChild(row);
-            });
+        record.data.forEach(item => {
+            const row = document.createElement('tr');
+            let priceChange = item.value - getPreviousPrice(item.productName, record.date);
+            let priceChangeText = '';
+
+            if (priceChange > 0) {
+                priceChangeText = `(+${priceChange.toFixed(2)} zł)`;
+                row.style.color = 'red'; // set text color to red for price increase
+            } else if (priceChange < 0) {
+                priceChangeText = `(${priceChange.toFixed(2)} zł)`;
+                row.style.color = 'green'; // set text color to green for price decrease
+            } else {
+                priceChangeText = `(0 zł)`;
+                row.style.color = '#555'; // set text color to gray for no price change
+            }
+
+            row.innerHTML = `
+                <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                <td>${item.productName}</td>
+                <td>${item.value} zł ${priceChangeText}</td>
+            `;
+            historyTableBody.appendChild(row);
         });
+    });
+}
+
+function getPreviousPrice(productName, currentDate) {
+    const history = fetchHistory();
+    for (let i = 0; i < history.length; i++) {
+        if (history[i].date < currentDate) {
+            for (let j = 0; j < history[i].data.length; j++) {
+                if (history[i].data[j].productName === productName) {
+                    return history[i].data[j].value;
+                }
+            }
+        }
     }
+    return null; // if previous price not found
+}
 
     function fetchData() {
         showNotification("Odświeżono dane.");
