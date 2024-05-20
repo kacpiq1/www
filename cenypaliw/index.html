@@ -318,29 +318,31 @@
 
         record.data.forEach(item => {
             const row = document.createElement('tr');
-            let priceChange = item.value - getPreviousPrice(item.productName, record.date);
+            let previousPrice = getPreviousPrice(item.productName, record.date);
+            let priceChange = item.value - previousPrice;
             let priceChangeText = '';
+            let priceChangeColor = '#555'; // default color gray
 
             if (priceChange > 0) {
                 priceChangeText = `(+${priceChange.toFixed(2)} zł)`;
-                row.style.color = 'red'; // set text color to red for price increase
+                priceChangeColor = 'red'; // set text color to red for price increase
             } else if (priceChange < 0) {
                 priceChangeText = `(${priceChange.toFixed(2)} zł)`;
-                row.style.color = 'green'; // set text color to green for price decrease
+                priceChangeColor = 'green'; // set text color to green for price decrease
             } else {
                 priceChangeText = `(0 zł)`;
-                row.style.color = '#555'; // set text color to gray for no price change
             }
 
             row.innerHTML = `
                 <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
                 <td>${item.productName}</td>
-                <td>${item.value} zł ${priceChangeText}</td>
+                <td>${item.value} zł <span style="color: ${priceChangeColor};">${priceChangeText}</span></td>
             `;
             historyTableBody.appendChild(row);
         });
     });
 }
+
 
 function getPreviousPrice(productName, currentDate) {
     const history = fetchHistory();
