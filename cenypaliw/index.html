@@ -445,6 +445,26 @@
             body.classList.toggle('dark-theme');
             isDarkTheme = !isDarkTheme;
         }
+
+        
+function saveThemeToLocalStorage(theme) {
+    localStorage.setItem('theme', theme);
+}
+
+
+function loadThemeFromLocalStorage() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        isDarkTheme = savedTheme === 'dark-theme';
+    } else {
+        document.body.classList.add('light-theme');
+    }
+}
+
+
+loadThemeFromLocalStorage();
+
     
         function showHistory() {
             displayHistory();
