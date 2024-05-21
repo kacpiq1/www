@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
     <title>Ceny Hurtowe Paliw</title>
     <style>
         @font-face {
@@ -178,6 +179,20 @@
             cursor: pointer;
         }
 
+        .history-info {
+    text-align: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+}
+
+.history-info i {
+    font-size: 40px; 
+    margin-right: 5px;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -210,308 +225,220 @@
         <div class="history-toggle" onclick="showHistory()">
             <i class='bx bxs-time'></i>
         </div>
-    </div>
 
-    <div id="historyModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHistory()">&times;</span>
-            <h2>Historia Cen Paliw</h2>
-            <table>
-<div class="fuelprices aem-GridColumn aem-GridColumn--default--12">
-
-<div id="hcp" class="hcp"></div>
-
-<script>
-    window.hcpConfig = function() {
-        return {
-            root: '#hcp',
-            styles: 'https://tool.orlen.pl/static/hcp.min.css',
-            images: 'https://tool.orlen.pl/static/assets/images',
-            language: 'PL',
-            navigation: [
-                ['Paliwa', 'fuels', 'WholesaleFuelPrices'],
-                ['Opusty regionalne', 'regionalDiscount', 'RegionalDiscounts', [
-                    ['Benzyna Eurosuper 95', 'pb95', 'Pb95'],
-                    ['Benzyna Super Plus 98', 'pb98', 'Pb98'],
-                    ['ON Ekodiesel', 'onekodiesel', 'ONEkodiesel']
-                ]],
-                ['Autogaz Hurt', 'autogasWholesale', 'LPG'],
-                ['Olej opałowy ciężki', 'heavyFuelOil', 'HeatingOil'],
-                ['Paliwa lotnicze', 'aviationFuels', 'AviationFuels', [
-                    ['Jet A-1', 'jeta1', 'JETA1'],
-                    ['Avgas 100LL', 'avgas', 'AVGAS100LL']
-                ]]
-            ],
-            defaultPageIndex: 0,
-            archiveUrlSegment: 'archive',
-        }
-    };
-
-    (function(d, i) {
-        var b = d.querySelector('body');
-        var s = d.createElement('script');
-        s.src = i + '?ts=' + +(new Date()); b.appendChild(s);
-    }(document, 'https://tool.orlen.pl/static/hcp.min.js'));
-</script>
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeHistory()">&times;</span>
+                <h2>Historia Cen Paliw</h2>
+                <div class="history-info">
+                    <i class='bx bx-error'></i>
+                    <p>Historia cen paliw jest aktualnie zapisywana lokalnie i wkrótce będzie dostępna również od serwera.</p>
+                </div>
                 
-</div>
-                <tbody id="historyTableBody">
+                
+                <table id="historyTable">
                     <!-- Historia cen paliw -->
-                </tbody>
-            </table>
+                </table>
+            </div>
         </div>
-      
-    </div>
-  
-  
-
-<script>
-    const proxyUrl = 'https://api.allorigins.win/get?url=';
-    const targetUrl = 'https://tool.orlen.pl/api/wholesalefuelprices';
-    const historyKey = 'fuelPriceHistory';
-
-    const productIcons = {
-        'Pb95': 'img/efecta95.png',
-        'Pb98': 'img/verva98.png',
-        'ONEkodiesel': 'img/efectadiesel.png',
-        'ONArctic2': 'img/vervadiesel.png'
-    };
-
-    function saveHistory(data) {
-        let history = JSON.parse(localStorage.getItem(historyKey)) || [];
-        let isDuplicate = false;
-
-        // Sprawdzanie, czy nowe dane są zduplikowane
-        history = history.map(entry => {
-            if (entry.date === data.date) {
-                isDuplicate = true;
-                return data; // Zastąpienie zduplikowanych danych nowymi danymi
-            } else {
-                return entry;
+    
+    <script>
+        const proxyUrl = 'https://api.allorigins.win/get?url=';
+        const targetUrl = 'https://tool.orlen.pl/api/wholesalefuelprices';
+        const historyKey = 'fuelPriceHistory';
+    
+        const productIcons = {
+            'Pb95': 'img/efecta95.png',
+            'Pb98': 'img/verva98.png',
+            'ONEkodiesel': 'img/efectadiesel.png',
+            'ONArctic2': 'img/vervadiesel.png'
+        };
+    
+        function saveHistory(data) {
+            let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+            let isDuplicate = false;
+    
+            // Sprawdzanie, czy nowe dane są zduplikowane
+            history = history.map(entry => {
+                if (entry.date === data.date) {
+                    isDuplicate = true;
+                    return data; // Zastąpienie zduplikowanych danych nowymi danymi
+                } else {
+                    return entry;
+                }
+            });
+    
+            // Jeśli dane nie są zduplikowane, dodaj je do historii
+            if (!isDuplicate) {
+                history.push(data);
             }
-        });
-
-        // Jeśli dane nie są zduplikowane, dodaj je do historii
-        if (!isDuplicate) {
-            history.push(data);
+    
+            localStorage.setItem(historyKey, JSON.stringify(history));
         }
-
-        localStorage.setItem(historyKey, JSON.stringify(history));
-    }
-
+    
         function fetchHistory() {
-        return JSON.parse(localStorage.getItem(historyKey)) || [];
-    }
-
-    function displayHistory() {
-    const history = fetchHistory();
-    const historyTableBody = document.getElementById('historyTableBody');
-    historyTableBody.innerHTML = '';
-
-    // Sort history in descending order by date
-    history.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    history.forEach(record => {
-        const dateRow = document.createElement('tr');
-        dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
-        historyTableBody.appendChild(dateRow);
-
-        record.data.forEach(item => {
-            const row = document.createElement('tr');
-            let previousPrice = getPreviousPrice(item.productName, record.date);
-            let priceChange = item.value - previousPrice;
-            let priceChangeText = '';
-            let priceChangeColor = '#555'; // default color gray
-
-            if (priceChange > 0) {
-                priceChangeText = `(+${priceChange.toFixed(2)} zł)`;
-                priceChangeColor = 'red'; // set text color to red for price increase
-            } else if (priceChange < 0) {
-                priceChangeText = `(${priceChange.toFixed(2)} zł)`;
-                priceChangeColor = 'green'; // set text color to green for price decrease
-            } else {
-                priceChangeText = `(0 zł)`;
-            }
-
-            row.innerHTML = `
-                <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                <td>${item.value} zł</td>
-                <td><span style="color: ${priceChangeColor};">${priceChangeText}</span></td>
-            `;
-            historyTableBody.appendChild(row);
-        });
-    });
-}
-
-
-
-function getPreviousPrice(productName, currentDate) {
-    const history = fetchHistory();
-    for (let i = 0; i < history.length; i++) {
-        if (history[i].date < currentDate) {
-            for (let j = 0; j < history[i].data.length; j++) {
-                if (history[i].data[j].productName === productName) {
-                    return history[i].data[j].value;
-                }
-            }
+            return JSON.parse(localStorage.getItem(historyKey)) || [];
         }
-    }
-    return null; // if previous price not found
-}
-
-    function fetchData() {
-        showNotification("Odświeżono dane.");
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('container').style.display = 'none';
-
-        fetch(proxyUrl + encodeURIComponent(targetUrl))
-            .then(response => response.json())
-            .then(data => {
-                console.log('Fetched data:', data);
-
-                let pb95ValueWithTax;
-                let onEkodieselValueWithTax;
-
-                const jsonData = JSON.parse(data.contents);
-                console.log('Parsed JSON data:', jsonData);
-
-                const publishFrom = jsonData[0]?.publishFrom?.replace('T', ' ') || 'brak danych';
-                document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
-
-                const initialData = jsonData.filter(item => item.productName !== 'Pb98' && item.productName !== 'ONArctic2' && item.productName !== 'OnEkoterm');
-                console.log('Filtered initial data:', initialData);
-
-                const filteredData = initialData.map(item => {
-                    let taxRate = 0;
-                    if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel') {
-                        taxRate = 0.26;
-                    } else if (item.productName === 'ONArctic2') {
-                        taxRate = 0.23;
-                    }
-
-                    let valueWithTax = (item.value / 1000) * (1 + taxRate);
-                    if (item.productName === 'Pb95') {
-                        pb95ValueWithTax = valueWithTax;
-                    } else if (item.productName === 'ONEkodiesel') {
-                        onEkodieselValueWithTax = valueWithTax;
-                    }
-
-                    return {
-                        productName: item.productName,
-                        value: valueWithTax.toFixed(2)
-                    };
-                });
-
-                console.log('Filtered data with tax:', filteredData);
-
-                if (pb95ValueWithTax !== undefined) {
-                    const pb98ValueWithTax = pb95ValueWithTax + 0.60;
-                    filteredData.push({
-                        productName: 'Pb98',
-                        value: pb98ValueWithTax.toFixed(2)
-                    });
-                }
-
-                if (onEkodieselValueWithTax !== undefined) {
-                    const onArctic2ValueWithTax = onEkodieselValueWithTax + 0.20;
-                    filteredData.push({
-                        productName: 'ONArctic2',
-                        value: onArctic2ValueWithTax.toFixed(2)
-                    });
-                }
-
-                console.log('Final data:', filteredData);
-
-                const tableBody = document.getElementById('fuelTableBody');
-                tableBody.innerHTML = '';
-                filteredData.forEach(item => {
+    
+        function displayHistory() {
+            const history = fetchHistory();
+            const historyTableBody = document.getElementById('historyTable');
+            historyTableBody.innerHTML = '';
+    
+            // Sort history in descending order by date
+            history.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+            history.forEach(record => {
+                const dateRow = document.createElement('tr');
+                dateRow.innerHTML = `<td colspan="2" class="bold">${record.date}</td>`;
+                historyTableBody.appendChild(dateRow);
+    
+                record.data.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                        <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.value}</td>
+                        <td>${item.value}</td>
                     `;
-                    tableBody.appendChild(row);
+                    historyTableBody.appendChild(row);
                 });
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('container').style.display = 'block';
-
-                const currentDate = new Date().toLocaleDateString();
-                saveHistory({ date: currentDate, data: filteredData });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function startCountdown() {
-        let countdownTime = 1 * 60;
-        const countdownElement = document.getElementById('countdown');
-
-        function updateCountdown() {
-            const minutes = Math.floor(countdownTime / 60);
-            const seconds = countdownTime % 60;
-            countdownElement.textContent = `Odświeżenie za: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            countdownTime--;
-
-            if (countdownTime < 0) {
-                countdownTime = 1 * 60;
+            });
+        }
+    
+        function fetchData() {
+            showNotification("Odświeżono dane.");
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('container').style.display = 'none';
+    
+            fetch(proxyUrl + encodeURIComponent(targetUrl))
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched data:', data);
+    
+                    let pb95ValueWithTax;
+                    let onEkodieselValueWithTax;
+    
+                    const jsonData = JSON.parse(data.contents);
+                    console.log('Parsed JSON data:', jsonData);
+    
+                    const publishFrom = jsonData[0]?.publishFrom?.replace('T', ' ') || 'brak danych';
+                    document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
+    
+                    const initialData = jsonData.filter(item => item.productName !== 'Pb98' && item.productName !== 'ONArctic2' && item.productName !== 'OnEkoterm');
+                    console.log('Filtered initial data:', initialData);
+    
+                    const filteredData = initialData.map(item => {
+                        let taxRate = 0;
+                        if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel') {
+                            taxRate = 0.26;
+                        } else if (item.productName === 'ONArctic2') {
+                            taxRate = 0.23;
+                        }
+    
+                        let valueWithTax = (item.value / 1000) * (1 + taxRate);
+                        if (item.productName === 'Pb95') {
+                            pb95ValueWithTax = valueWithTax;
+                        } else if (item.productName === 'ONEkodiesel') {
+                            onEkodieselValueWithTax = valueWithTax;
+                        }
+    
+                        return {
+                            productName: item.productName,
+                            value: valueWithTax.toFixed(2)
+                        };
+                    });
+    
+                    console.log('Filtered data with tax:', filteredData);
+    
+                    if (pb95ValueWithTax !== undefined) {
+                        const pb98ValueWithTax = pb95ValueWithTax + 0.60;
+                        filteredData.push({
+                            productName: 'Pb98',
+                            value: pb98ValueWithTax.toFixed(2)
+                        });
+                    }
+    
+                    if (onEkodieselValueWithTax !== undefined) {
+                        const onArctic2ValueWithTax = onEkodieselValueWithTax + 0.20;
+                        filteredData.push({
+                            productName: 'ONArctic2',
+                            value: onArctic2ValueWithTax.toFixed(2)
+                        });
+                    }
+    
+                    console.log('Final data:', filteredData);
+    
+                    const tableBody = document.getElementById('fuelTableBody');
+                    tableBody.innerHTML = '';
+                    filteredData.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.value}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('container').style.display = 'block';
+    
+                    const currentDate = new Date().toLocaleDateString();
+                    saveHistory({ date: currentDate, data: filteredData });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
+        function startCountdown() {
+            let countdownTime = 1 * 60;
+            const countdownElement = document.getElementById('countdown');
+    
+            function updateCountdown() {
+                const minutes = Math.floor(countdownTime / 60);
+                const seconds = countdownTime % 60;
+                countdownElement.textContent = `Odświeżenie za: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                countdownTime--;
+    
+                if (countdownTime < 0) {
+                    countdownTime = 1 * 60;
+                }
             }
+    
+            setInterval(updateCountdown, 1000);
         }
-
-        setInterval(updateCountdown, 1000);
-    }
-
-    const notificationElement = document.getElementById('notification');
-
-    function showNotification(message) {
-        notificationElement.textContent = message;
-        notificationElement.style.display = 'block';
-        setTimeout(() => {
-            notificationElement.style.display = 'none';
-        }, 3000);
-    }
-
-    function saveThemeToLocalStorage(theme) {
-        localStorage.setItem('theme', theme);
-    }
-
-    function loadThemeFromLocalStorage() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.body.classList.add(savedTheme);
-            isDarkTheme = savedTheme === 'dark-theme';
-        } else {
-            document.body.classList.add('light-theme');
+    
+        const notificationElement = document.getElementById('notification');
+    
+        function showNotification(message) {
+            notificationElement.textContent = message;
+            notificationElement.style.display = 'block';
+            setTimeout(() => {
+                notificationElement.style.display = 'none';
+            }, 3000);
         }
-    }
-
-    let isDarkTheme = false;
-
-    function toggleTheme() {
-        const body = document.body;
-        if (isDarkTheme) {
-            body.classList.replace('dark-theme', 'light-theme');
-            saveThemeToLocalStorage('light-theme');
-        } else {
-            body.classList.replace('light-theme', 'dark-theme');
-            saveThemeToLocalStorage('dark-theme');
+    
+        let isDarkTheme = false;
+    
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('light-theme');
+            body.classList.toggle('dark-theme');
+            isDarkTheme = !isDarkTheme;
         }
-        isDarkTheme = !isDarkTheme;
-    }
-
-    function showHistory() {
-        displayHistory();
-        document.getElementById('historyModal').style.display = 'block';
-    }
-
-    function closeHistory() {
-        document.getElementById('historyModal').style.display = 'none';
-    }
-
-    loadThemeFromLocalStorage();
-    fetchData();
-    setInterval(fetchData, 1 * 60 * 1000);
+    
+        function showHistory() {
+            displayHistory();
+            document.getElementById('historyModal').style.display = 'block';
+        }
+    
+        function closeHistory() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+    
+        fetchData();
+        setInterval(fetchData, 1 * 60 * 1000);
     startCountdown();
 </script>
 
 </body>
 </html>
+
+    
