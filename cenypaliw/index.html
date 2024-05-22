@@ -329,18 +329,58 @@
     }
 
     
-function displayHistory() {
-            const historyTableBody = document.getElementById('historyTableBody');
-            historyTableBody.innerHTML = '';
+//function displayHistory() {
+           // const historyTableBody = document.getElementById('historyTableBody');
+           // historyTableBody.innerHTML = '';
 
-            const historyInfo = document.createElement('div');
-            historyInfo.className = 'history-info';
-            historyInfo.innerHTML = `
-                <i class='bx bx-error'></i>
-                <p>Historia cen paliw jest tymczasowo wyłączona.</p>
+          //  const historyInfo = document.createElement('div');
+          //  historyInfo.className = 'history-info';
+          //  historyInfo.innerHTML = `
+              //  <i class='bx bx-error'></i>
+               // <p>Historia cen paliw jest tymczasowo wyłączona.</p>
+        //    `;
+          //  historyTableBody.appendChild(historyInfo);
+       // }
+
+    function displayHistory() {
+    const history = fetchHistory();
+    const historyTableBody = document.getElementById('historyTableBody');
+    historyTableBody.innerHTML = '';
+
+    // Sort history in descending order by date
+    history.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    history.forEach(record => {
+        const dateRow = document.createElement('tr');
+        dateRow.innerHTML = `<td colspan="3" class="bold">${record.date}</td>`;
+        historyTableBody.appendChild(dateRow);
+
+        record.data.forEach(item => {
+            const row = document.createElement('tr');
+            let previousPrice = getPreviousPrice(item.productName, record.date);
+            let priceChange = item.value - previousPrice;
+            let priceChangeText = '';
+            let priceChangeColor = '#555'; // default color gray
+
+            if (priceChange > 0) {
+                priceChangeText = `(+${priceChange.toFixed(2)} zł)`;
+                priceChangeColor = 'red'; // set text color to red for price increase
+            } else if (priceChange < 0) {
+                priceChangeText = `(${priceChange.toFixed(2)} zł)`;
+                priceChangeColor = 'green'; // set text color to green for price decrease
+            } else {
+                priceChangeText = `(0 zł)`;
+            }
+
+            row.innerHTML = `
+                <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                <td>${item.value} zł</td>
+                <td><span style="color: ${priceChangeColor};">${priceChangeText}</span></td>
             `;
-            historyTableBody.appendChild(historyInfo);
-        }
+            historyTableBody.appendChild(row);
+        });
+    });
+}
 
 
 function getPreviousPrice(productName, currentDate) {
