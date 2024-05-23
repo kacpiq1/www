@@ -206,7 +206,7 @@
     <div class="container" id="container">
       <div class="info">
         <i class='bx bxs-info-circle'></i>
-        <span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span>
+        /*<span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span> */
       </div>
     
         <h1>Ceny Hurtowe Paliw</h1>
@@ -238,8 +238,8 @@
             <span class="close" onclick="closeHistory()">&times;</span>
             <h2>Historia Cen Paliw</h2>
              <div class="history-info">
-                    <i class='bx bx-error'></i>
-                    <p>Historia cen paliw jest aktualnie zapisywana lokalnie i wkrótce dane będą dostępne od serwera.</p>
+                    <i class='bx bx-traffic-cone'></i>
+                    <p>Pracujemy nad wprowadzeniem danych z archiwum cen paliw.</p>
                 </div>
             <table>
 <div class="fuelprices aem-GridColumn aem-GridColumn--default--12">
@@ -329,20 +329,20 @@
     }
 
     
-//function displayHistory() {
-           // const historyTableBody = document.getElementById('historyTableBody');
-           // historyTableBody.innerHTML = '';
+function displayHistory() {
+            const historyTableBody = document.getElementById('historyTableBody');
+            historyTableBody.innerHTML = '';
 
-          //  const historyInfo = document.createElement('div');
-          //  historyInfo.className = 'history-info';
-          //  historyInfo.innerHTML = `
-              //  <i class='bx bx-error'></i>
-               // <p>Historia cen paliw jest tymczasowo wyłączona.</p>
-        //    `;
-          //  historyTableBody.appendChild(historyInfo);
-       // }
+            const historyInfo = document.createElement('div');
+            historyInfo.className = 'history-info';
+            historyInfo.innerHTML = `
+                <i class='bx bx-error'></i>
+                <p>Na czas prac historia cen paliw jest wyłączona.</p>
+            `;
+            historyTableBody.appendChild(historyInfo);
+        }
 
-    function displayHistory() {
+    /*function displayHistory() {
     const history = fetchHistory();
     const historyTableBody = document.getElementById('historyTableBody');
     historyTableBody.innerHTML = '';
@@ -380,7 +380,7 @@
             historyTableBody.appendChild(row);
         });
     });
-}
+}*/
 
 
 function getPreviousPrice(productName, currentDate) {
