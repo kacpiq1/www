@@ -190,6 +190,27 @@
     margin-right: 5px;
 }
 
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px; /* Maksymalna szerokość modala */
+    text-align: center;
+}
+
 .dark-theme .history-info {
     background-color: #323232;
     color: #fff; 
@@ -234,6 +255,33 @@
         </div>
     </div>
 
+        <div class="modal" id="mobileModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMobileModal()">&times;</span>
+            <h2>Uwaga!</h2>
+            <p>Interfejs graficzny nie jest przystosowany do użytkowania na urządzeniach mobilnych.</p>
+        </div>
+    </div>
+
+    <script>
+        // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
+        function closeMobileModal() {
+            document.getElementById('mobileModal').style.display = 'none';
+        }
+
+        // Sprawdzenie, czy urządzenie jest mobilne
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Wyświetlenie modala dla urządzeń mobilnych
+        window.onload = function() {
+            if (isMobileDevice()) {
+                document.getElementById('mobileModal').style.display = 'block';
+            }
+        };
+    </script>
+
     <div id="historyModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeHistory()">&times;</span>
@@ -247,6 +295,7 @@
 
 <div id="hcp" class="hcp"></div>
 
+    
 <script>
     window.hcpConfig = function() {
         return {
