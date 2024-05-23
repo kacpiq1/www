@@ -203,11 +203,11 @@
 </head>
 <body>
     <div class="loading" id="loading">Ładowanie danych...</div>
-    <div class="container" id="container">
+   /* <div class="container" id="container">
       <div class="info">
         <i class='bx bxs-info-circle'></i>
-        /*<span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span> */
-      </div>
+        <span class="info-text">Odliczanie nie jest synchronizowane równo z czasem</span>
+      </div>*/
     
         <h1>Ceny Hurtowe Paliw</h1>
         <table>
@@ -502,13 +502,13 @@ function getPreviousPrice(productName, currentDate) {
 
                 const lpgRow = document.createElement('tr');
                 lpgRow.innerHTML = `
-                    <td><img class="icon" src="lpg-icon-url" alt="LPG"></td>
+                    <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"</td>
                     <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
                 `;
                 const tableBody = document.getElementById('fuelTableBody');
                 tableBody.appendChild(lpgRow);
             } else {
-                console.log('Brak danych dla województwa Małopolskiego.');
+                console.log('Brak danych dla województwa.');
             }
         } else {
             console.log('Received data is not an array:', data);
