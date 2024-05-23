@@ -478,6 +478,45 @@ function getPreviousPrice(productName, currentDate) {
                 saveHistory({ date: currentDate, data: filteredData });
             })
             .catch(error => console.error('Error:', error));
+
+                fetch(proxyUrl + encodeURIComponent('https://tool.orlen.pl/api/autogasprices'))
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(responseData => {
+        const data = JSON.parse(responseData.contents); // Parse the contents as JSON
+        console.log('Fetched LPG data:', data);
+
+        const lpgTaxRate = 0.28;
+
+        if (Array.isArray(data)) {
+           
+            const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
+
+            if (małopolskieData) {
+                const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
+
+
+                const lpgRow = document.createElement('tr');
+                lpgRow.innerHTML = `
+                    <td><img class="icon" src="lpg-icon-url" alt="LPG"></td>
+                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
+                `;
+                const tableBody = document.getElementById('fuelTableBody');
+                tableBody.appendChild(lpgRow);
+            } else {
+                console.log('Brak danych dla województwa Małopolskiego.');
+            }
+        } else {
+            console.log('Received data is not an array:', data);
+        }
+    })
+    .catch(error => console.error('Error fetching LPG data:', error));
+
+}
     }
 
     function startCountdown() {
