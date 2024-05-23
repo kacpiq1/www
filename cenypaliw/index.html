@@ -215,6 +215,7 @@
                 <tr>
                     <th>Paliwo</th>
                     <th>Cena z podatkiem (PLN)</th>
+                    <th>Cena hurtowa (PLN)</th>
                 </tr>
             </thead>
             <tbody id="fuelTableBody">
@@ -398,124 +399,124 @@ function getPreviousPrice(productName, currentDate) {
 }
 
     function fetchData() {
-        showNotification("Odświeżono dane.");
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('container').style.display = 'none';
+    // Pokaż komunikat o odświeżeniu danych
+    showNotification("Odświeżono dane.");
+    
+    // Wyświetl komunikat o ładowaniu
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('container').style.display = 'none';
 
-        fetch(proxyUrl + encodeURIComponent(targetUrl))
-            .then(response => response.json())
-            .then(data => {
-                console.log('Fetched data:', data);
+    // Pobierz dane o cenach paliw
+    fetch(proxyUrl + encodeURIComponent(targetUrl))
+        .then(response => response.json())
+        .then(data => {
+            // Przetwórz pobrane dane
+            const jsonData = JSON.parse(data.contents);
 
-                let pb95ValueWithTax;
-                let onEkodieselValueWithTax;
+            // Pobierz datę ostatniej aktualizacji i wyświetl informację
+            const publishFrom = jsonData[0]?.publishFrom?.replace('T', ' ') || 'brak danych';
+            document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
 
-                const jsonData = JSON.parse(data.contents);
-                console.log('Parsed JSON data:', jsonData);
-
-                const publishFrom = jsonData[0]?.publishFrom?.replace('T', ' ') || 'brak danych';
-                document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
-
-                const initialData = jsonData.filter(item => item.productName !== 'Pb98' && item.productName !== 'ONArctic2' && item.productName !== 'OnEkoterm');
-                console.log('Filtered initial data:', initialData);
-
-                const filteredData = initialData.map(item => {
-                    let taxRate = 0;
-                    if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel') {
-                        taxRate = 0.26;
-                    } else if (item.productName === 'ONArctic2') {
-                        taxRate = 0.23;
-                    }
-
-                    let valueWithTax = (item.value / 1000) * (1 + taxRate);
-                    if (item.productName === 'Pb95') {
-                        pb95ValueWithTax = valueWithTax;
-                    } else if (item.productName === 'ONEkodiesel') {
-                        onEkodieselValueWithTax = valueWithTax;
-                    }
-
-                    return {
-                        productName: item.productName,
-                        value: valueWithTax.toFixed(2)
-                    };
-                });
-
-                console.log('Filtered data with tax:', filteredData);
-
-                if (pb95ValueWithTax !== undefined) {
-                    const pb98ValueWithTax = pb95ValueWithTax + 0.60;
-                    filteredData.push({
-                        productName: 'Pb98',
-                        value: pb98ValueWithTax.toFixed(2)
-                    });
+            // Przygotuj dane dotyczące paliw: Pb95, Pb98, ONEkodiesel, ONArctic2
+            const filteredData = jsonData.filter(item => 
+                item.productName !== 'Pb98' && 
+                item.productName !== 'ONArctic2' && 
+                item.productName !== 'OnEkoterm' &&
+                item.productName !== 'LPG'
+            ).map(item => {
+                let taxRate = 0;
+                if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel') {
+                    taxRate = 0.26;
+                } else if (item.productName === 'ONArctic2') {
+                    taxRate = 0.23;
                 }
 
-                if (onEkodieselValueWithTax !== undefined) {
-                    const onArctic2ValueWithTax = onEkodieselValueWithTax + 0.20;
-                    filteredData.push({
-                        productName: 'ONArctic2',
-                        value: onArctic2ValueWithTax.toFixed(2)
-                    });
+                let valueWithTax = (item.value / 1000) * (1 + taxRate);
+                let valueWithoutTax = item.value / 1000;
+                return {
+                    productName: item.productName,
+                    valueWithTax: valueWithTax.toFixed(2),
+                    valueWithoutTax: valueWithoutTax.toFixed(2)
+                };
+            });
+
+            // Dodaj cenę Pb98 i ONArctic2 do danych
+            let pb98ValueWithTax, onArctic2ValueWithTax;
+            filteredData.forEach(item => {
+                if (item.productName === 'Pb95') {
+                    pb98ValueWithTax = parseFloat(item.valueWithTax) + 0.60;
+                } else if (item.productName === 'ONEkodiesel') {
+                    onArctic2ValueWithTax = parseFloat(item.valueWithTax) + 0.20;
                 }
-
-                console.log('Final data:', filteredData);
-
-                const tableBody = document.getElementById('fuelTableBody');
-                tableBody.innerHTML = '';
-                filteredData.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                        <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.value}</td>
-                    `;
-                    tableBody.appendChild(row);
+            });
+            if (pb98ValueWithTax !== undefined) {
+                filteredData.push({
+                    productName: 'Pb98',
+                    valueWithTax: pb98ValueWithTax.toFixed(2),
+                    valueWithoutTax: (pb98ValueWithTax - 0.60).toFixed(2)
                 });
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('container').style.display = 'block';
-
-                const currentDate = new Date().toLocaleDateString();
-                saveHistory({ date: currentDate, data: filteredData });
-            })
-            .catch(error => console.error('Error:', error));
-
-                fetch(proxyUrl + encodeURIComponent('https://tool.orlen.pl/api/autogasprices'))
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(responseData => {
-        const data = JSON.parse(responseData.contents); // Parse the contents as JSON
-        console.log('Fetched LPG data:', data);
-
-        const lpgTaxRate = 0.28;
-
-        if (Array.isArray(data)) {
-           
-            const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
-
-            if (małopolskieData) {
-                const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
-
-
-                const lpgRow = document.createElement('tr');
-                lpgRow.innerHTML = `
-                    <td><img class="icon" src="img/lpg.png" alt="LPG"</td>
-                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
-                `;
-                const tableBody = document.getElementById('fuelTableBody');
-                tableBody.appendChild(lpgRow);
-            } else {
-                console.log('Brak danych dla województwa.');
             }
-        } else {
-            console.log('Received data is not an array:', data);
-        }
-    })
-    .catch(error => console.error('Error fetching LPG data:', error));
+            if (onArctic2ValueWithTax !== undefined) {
+                filteredData.push({
+                    productName: 'ONArctic2',
+                    valueWithTax: onArctic2ValueWithTax.toFixed(2),
+                    valueWithoutTax: (onArctic2ValueWithTax - 0.20).toFixed(2)
+                });
+            }
 
+            // Wyświetl dane na stronie
+            const tableBody = document.getElementById('fuelTableBody');
+            tableBody.innerHTML = '';
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithTax}</td>
+                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithoutTax}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Ukryj komunikat o ładowaniu
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('container').style.display = 'block';
+
+            // Zapisz dane do historii
+            const currentDate = new Date().toLocaleDateString();
+            saveHistory({ date: currentDate, data: filteredData });
+        })
+        .catch(error => console.error('Error:', error));
+
+    // Pobierz dane o cenie LPG
+    fetch(proxyUrl + encodeURIComponent('https://tool.orlen.pl/api/autogasprices'))
+        .then(response => response.json())
+        .then(responseData => {
+            // Przetwórz pobrane dane
+            const data = JSON.parse(responseData.contents);
+
+            const lpgTaxRate = 0.27;
+
+            if (Array.isArray(data)) {
+                const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
+                if (małopolskieData) {
+                    const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
+                    // Wyświetl cenę LPG
+                    const lpgRow = document.createElement('tr');
+                    lpgRow.innerHTML = `
+                        <td><img class="icon" src="lpg-icon-url" alt="LPG"></td>
+                        <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
+                        <td class="bold" style="font-family: 'Outfit', sans-serif;">${(lpgValue - lpgTaxRate).toFixed(2)}</td>
+                    `;
+                    const tableBody = document.getElementById('fuelTableBody');
+                    tableBody.appendChild(lpgRow);
+                } else {
+                    console.log('Brak danych dla województwa Małopolskiego.');
+                }
+            } else {
+                console.log('Received data is not an array:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching LPG data:', error));
 }
 
     function startCountdown() {
