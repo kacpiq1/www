@@ -568,8 +568,10 @@
             const historyTableBody = document.getElementById('historyTableBody');
             historyTableBody.innerHTML = '';
 
+            // Zapisanie historii cen paliw do localStorage
+            localStorage.setItem('fuelHistory', JSON.stringify(historyData));
+
             historyData.forEach(item => {
-               
                 const totalPrice = item.value + additionalCost;
                 const row = document.createElement('tr');
                 const effectiveDate = item.effectiveDate.replace('T00:00:00', '');
@@ -583,8 +585,11 @@
                 closeHistoryLoadingModal();
             });
         })
-        .catch(error => console.error('Error fetching history data:', error));
-        displayHistoryError('Wystąpił błąd podczas pobierania danych')
+        .catch(error => {
+            console.error('Error fetching history data:', error);
+
+        });
+        /*displayHistoryError('Wystąpił błąd podczas pobierania danych')*/
         
         closeHistoryLoadingModal();
 
