@@ -320,7 +320,7 @@
 
         // Funkcja wyświetlająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
         function displayHistoryLoadingModal() {
-            document.getElementById('historyLoadingModal').style.display = 'block';
+            document.getElementById('historyLoadingModal').style.display = 'none';
         }
 
         // Funkcja zamykająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
@@ -582,7 +582,7 @@
         taxRateH = 0.26;
     }
 
-    const historyUrl = `https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
+    const historyUrl = `https://api.allorigins.win/get?url=https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
 
     fetch(historyUrl)
         .then(response => response.json())
