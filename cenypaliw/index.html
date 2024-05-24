@@ -254,9 +254,8 @@
         </div>
     </div>
 
-    <div class="modal" id="historyModal">
+   <div class="modal" id="historyModal">
         <div class="modal-content">
-            
             <span class="close" onclick="closeHistoryModal()">&times;</span>
             <h2>Historia Cen Paliw</h2>
             <label for="fuelType">Wybierz paliwo:</label>
@@ -265,6 +264,10 @@
                 <option value="43-ONEkodiesel">ONEkodiesel</option>
                 <option value="42-Pb98">Pb98</option>
                 <option value="44-ONArctic2">ONArctic2</option>
+            </select>
+            <label for="year">Wybierz rok:</label>
+            <select id="year" onchange="fetchHistoryData()">
+                <!-- Lata zostaną dynamicznie załadowane przez JavaScript -->
             </select>
             <table>
                 <thead>
@@ -283,6 +286,7 @@
         </div>
     </div>
 
+    
     <div class="modal" id="historyLoadingModal">
         <div class="modal-content">
             <h2>Trwa ładowanie danych...</h2>
@@ -538,13 +542,27 @@
             document.getElementById('historyModal').style.display = 'none';
         }
 
+        function getYears() {
+    
+    const years = [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const yearSelect = document.getElementById('year');
+    yearSelect.innerHTML = '';
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    });
+}
+
         
         function fetchHistoryData() {
             displayHistoryLoadingModal();
             document.getElementById('loadingHistory').style.display = 'block';
-    const fuelType = document.getElementById('fuelType').value;
+            const fuelType = document.getElementById('fuelType').value;
+    const selectedYear = document.getElementById('year').value;
     const productId = fuelType.split('-')[0];
-    
+
     let additionalCost = 0;
     let taxRateH = 1;
 
@@ -558,8 +576,7 @@
         taxRateH = 0.26;
     }
 
-
-    const historyUrl = `https://api.allorigins.win/get?url=https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}`;
+    const historyUrl = `https://api.allorigins.win/get?url=https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
 
     fetch(historyUrl)
         .then(response => response.json())
@@ -567,9 +584,6 @@
             const historyData = JSON.parse(data.contents);
             const historyTableBody = document.getElementById('historyTableBody');
             historyTableBody.innerHTML = '';
-
-            // Zapisanie historii cen paliw do localStorage
-            localStorage.setItem('fuelHistory', JSON.stringify(historyData));
 
             historyData.forEach(item => {
                 const totalPrice = item.value + additionalCost;
@@ -581,20 +595,17 @@
                     <td>${valueWithTax.toFixed(2)}</td>
                 `;
                 historyTableBody.appendChild(row);
-                document.getElementById('loadingHistory').style.display = 'none';
-                closeHistoryLoadingModal();
             });
+
+            document.getElementById('loadingHistory').style.display = 'none';
+            closeHistoryLoadingModal();
         })
         .catch(error => {
             console.error('Error fetching history data:', error);
-
+            displayHistoryError('Wystąpił błąd podczas pobierania danych');
+            closeHistoryLoadingModal();
         });
-        /*displayHistoryError('Wystąpił błąd podczas pobierania danych')*/
-        
-        closeHistoryLoadingModal();
-
-        
-}
+    }
 
 
 
