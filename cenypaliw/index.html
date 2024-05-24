@@ -256,6 +256,7 @@
 
     <div class="modal" id="historyModal">
         <div class="modal-content">
+            
             <span class="close" onclick="closeHistoryModal()">&times;</span>
             <h2>Historia Cen Paliw</h2>
             <label for="fuelType">Wybierz paliwo:</label>
@@ -272,12 +273,52 @@
                         <th>Cena (PLN)</th>
                     </tr>
                 </thead>
+                <div id="loadingHistory" style="display: none; text-align: center;">
+                    <i class='bx bx-loader bx-spin' style="font-size: 50px;"></i>
+                </div>
                 <tbody id="historyTableBody">
                     <!-- Dane zostaną tutaj wstawione przez JavaScript -->
                 </tbody>
             </table>
         </div>
     </div>
+
+    <div class="modal" id="historyLoadingModal">
+        <div class="modal-content">
+            <h2>Trwa ładowanie danych...</h2>
+        </div>
+    </div>
+
+    <div class="modal" id="historyErrorModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryErrorModal()">&times;</span>
+            <h2>Wystąpił błąd</h2>
+            <p id="historyErrorMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        // Funkcja wywoływana przy zamknięciu modala dla błędu ładowania historii cen paliw
+        function closeHistoryErrorModal() {
+            document.getElementById('historyErrorModal').style.display = 'none';
+        }
+
+        // Funkcja wyświetlająca modale w przypadku błędu
+        function displayHistoryError(errorMessage) {
+            document.getElementById('historyErrorMessage').textContent = errorMessage;
+            document.getElementById('historyErrorModal').style.display = 'block';
+        }
+
+        // Funkcja wyświetlająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
+        function displayHistoryLoadingModal() {
+            document.getElementById('historyLoadingModal').style.display = 'block';
+        }
+
+        // Funkcja zamykająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
+        function closeHistoryLoadingModal() {
+            document.getElementById('historyLoadingModal').style.display = 'none';
+        }
+</script>
 
     <div class="modal" id="mobileModal">
         <div class="modal-content">
@@ -317,6 +358,7 @@
         function fetchData() {
             // Pokaż komunikat o odświeżeniu danych
             showNotification("Odświeżono dane.");
+            document.getElementById('loadingHistory').style.display = 'block';
             
             // Wyświetl komunikat o ładowaniu
             document.getElementById('loading').style.display = 'block';
@@ -498,6 +540,8 @@
 
         
         function fetchHistoryData() {
+            displayHistoryLoadingModal();
+            document.getElementById('loadingHistory').style.display = 'block';
     const fuelType = document.getElementById('fuelType').value;
     const productId = fuelType.split('-')[0];
     
@@ -535,9 +579,16 @@
                     <td>${valueWithTax.toFixed(2)}</td>
                 `;
                 historyTableBody.appendChild(row);
+                document.getElementById('loadingHistory').style.display = 'none';
+                closeHistoryLoadingModal();
             });
         })
         .catch(error => console.error('Error fetching history data:', error));
+        displayHistoryError('Wystąpił błąd podczas pobierania danych')
+        
+        closeHistoryLoadingModal();
+
+        
 }
 
 
