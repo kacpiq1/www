@@ -537,24 +537,6 @@
             }, 3000);
         }
 
-        function showPriceHistoryChartForYear(year) {
-    // Pobierz dane z tabeli historii cen paliw
-    const tableRows = document.querySelectorAll('#historyTableBody tr');
-    const filteredDates = [];
-    const filteredPrices = [];
-
-    tableRows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        const date = cells[0].textContent;
-        const price = parseFloat(cells[1].textContent);
-        const yearFromCell = date.split('-')[0];
-        
-        if (yearFromCell === year) {
-            filteredDates.push(date);
-            filteredPrices.push(price);
-        }
-    });
-
     let priceHistoryChart; // Zmienna globalna przechowująca wykres
 
 function showPriceHistoryChart() {
