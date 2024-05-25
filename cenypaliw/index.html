@@ -312,7 +312,7 @@
                 <option value="2020">2020</option>
                 <option value="2019">2019</option>
             </select>
-            <button onclick="showPriceHistoryChartForYear()">Wyświetl wykres cen</button>
+            <button onclick="showPriceHistoryChart()">Wyświetl wykres cen</button>
             <table>
                 <thead>
                     <tr>
@@ -555,19 +555,37 @@
         }
     });
 
-    let priceHistoryChart; 
-    
+    let priceHistoryChart; // Zmienna globalna przechowująca wykres
+
+function showPriceHistoryChart() {
+    // Sprawdź, czy istnieje już wykres i zniszcz go
+    if (priceHistoryChart) {
+        priceHistoryChart.destroy();
+    }
+
+    // Pobierz dane z tabeli historii cen paliw
+    const tableRows = document.querySelectorAll('#historyTableBody tr');
+    const dates = [];
+    const prices = [];
+
+    tableRows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        dates.push(cells[0].textContent);
+        prices.push(parseFloat(cells[1].textContent));
+    });
+
+    // Utwórz wykres
     const ctx = document.getElementById('priceHistoryChart').getContext('2d');
     priceHistoryChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: filteredDates,
+            labels: dates,
             datasets: [{
                 label: 'Cena paliwa (PLN)',
                 backgroundColor: 'rgba(227, 6, 19, 0.2)',
                 borderColor: 'rgba(227, 6, 19, 1)',
                 borderWidth: 2,
-                data: filteredPrices,
+                data: prices,
             }]
         },
         options: {
