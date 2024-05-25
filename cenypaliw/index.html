@@ -529,7 +529,7 @@
                         lpgRow.innerHTML = `
                             <td><img class="icon" src="img/lpg.png" alt="LPG"></td>
                             <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
-                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${(lpgValue - lpgTaxRate).toFixed(2)}</td>
+                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${małopolskieData.value.toFixed(2)}</td>
                         `;
                         const tableBody = document.getElementById('fuelTableBody');
                         tableBody.appendChild(lpgRow);
@@ -704,6 +704,13 @@ function showPriceHistoryChart() {
             const historyTableBody = document.getElementById('historyTableBody');
             historyTableBody.innerHTML = '';
 
+            
+            if (historyData.length === 0) {
+                const noDataMessage = document.createElement('tr');
+                noDataMessage.innerHTML = `<td colspan="2">Dla wybranego roku, nie ma danych o cenach.</td>`;
+                historyTableBody.appendChild(noDataMessage);
+            } else {
+
             historyData.forEach(item => {
                 const totalPrice = item.value + additionalCost;
                 const row = document.createElement('tr');
@@ -715,6 +722,7 @@ function showPriceHistoryChart() {
                 `;
                 historyTableBody.appendChild(row);
             });
+        }
 
             document.getElementById('loadingHistory').style.display = 'none';
             closeHistoryLoadingModal();
