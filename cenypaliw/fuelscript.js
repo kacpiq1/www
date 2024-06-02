@@ -1,4 +1,3 @@
-<script>
         // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
         function closeMobileModal() {
             document.getElementById('mobileModal').style.display = 'none';
@@ -353,4 +352,3 @@ function showPriceHistoryChart() {
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
-    </script>
