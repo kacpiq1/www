@@ -1,5 +1,5 @@
-        // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
-        function closeMobileModal() {
+// Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
+                function closeMobileModal() {
             document.getElementById('mobileModal').style.display = 'none';
         }
 
@@ -39,6 +39,7 @@
         const productIcons = {
             'Pb95': 'img/efecta95.png',
             'Pb98': 'img/verva98.png',
+            'LPG': 'img/LPG.png',
             'ONEkodiesel': 'img/efectadiesel.png',
             'ONArctic2': 'img/vervadiesel.png'
         };
@@ -65,63 +66,39 @@
 
                     // Przygotuj dane dotyczące paliw: Pb95, Pb98, ONEkodiesel, ONArctic2
                     const filteredData = jsonData.filter(item => 
-                        item.productName !== 'Pb98' && 
-                        item.productName !== 'ONArctic2' && 
-                        item.productName !== 'OnEkoterm' &&
-                        item.productName !== 'LPG'
-                    ).map(item => {
-                        let taxRate = 0;
-                        if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel') {
-                            taxRate = 0.26;
-                        } else if (item.productName === 'ONArctic2') {
-                            taxRate = 0.23;
-                        }
+                item.productName === 'Pb95' || 
+                item.productName === 'ONEkodiesel' ||
+                item.productName === 'Pb98' || 
+                item.productName === 'ONArctic2'
+            ).map(item => {
+                let taxRate = 0;
+                if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel' || item.productName === 'ONArctic2') {
+                    taxRate = 0.26;
+                } else if (item.productName === 'Pb98') {
+                    taxRate = 0.31; 
+                }
 
-                        let valueWithTax = (item.value / 1000) * (1 + taxRate);
-                        let valueWithoutTax = item.value / 1000;
-                        return {
-                            productName: item.productName,
-                            valueWithTax: valueWithTax.toFixed(2),
-                            valueWithoutTax: valueWithoutTax.toFixed(2)
-                        };
-                    });
+                let valueWithTax = (item.value / 1000) * (1 + taxRate);
+                let valueWithoutTax = item.value / 1000;
+                return {
+                    productName: item.productName,
+                    valueWithTax: valueWithTax.toFixed(2),
+                    valueWithoutTax: valueWithoutTax.toFixed(2)
+                };
+            });
 
-                    // Dodaj cenę Pb98 i ONArctic2 do danych
-                    let pb98ValueWithTax, onArctic2ValueWithTax;
-                    filteredData.forEach(item => {
-                        if (item.productName === 'Pb95') {
-                            pb98ValueWithTax = parseFloat(item.valueWithTax) + 0.60;
-                        } else if (item.productName === 'ONEkodiesel') {
-                            onArctic2ValueWithTax = parseFloat(item.valueWithTax) + 0.20;
-                        }
-                    });
-                    if (pb98ValueWithTax !== undefined) {
-                        filteredData.push({
-                            productName: 'Pb98',
-                            valueWithTax: pb98ValueWithTax.toFixed(2),
-                            valueWithoutTax: (pb98ValueWithTax - 0.60).toFixed(2)
-                        });
-                    }
-                    if (onArctic2ValueWithTax !== undefined) {
-                        filteredData.push({
-                            productName: 'ONArctic2',
-                            valueWithTax: onArctic2ValueWithTax.toFixed(2),
-                            valueWithoutTax: (onArctic2ValueWithTax - 0.20).toFixed(2)
-                        });
-                    }
-
-                    // Wyświetl dane na stronie
-                    const tableBody = document.getElementById('fuelTableBody');
-                    tableBody.innerHTML = '';
-                    filteredData.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithTax}</td>
-                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithoutTax}</td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
+            // Wyświetl dane na stronie
+            const tableBody = document.getElementById('fuelTableBody');
+            tableBody.innerHTML = '';
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithTax}</td>
+                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithoutTax}</td>
+                `;
+                tableBody.appendChild(row);
+            });
 
                     // Ukryj komunikat o ładowaniu
                     document.getElementById('loading').style.display = 'none';
@@ -158,6 +135,33 @@
             })
             .catch(error => console.error('Error fetching LPG data:', error));
         }
+
+        function processForecastData() {
+    const forecastData = [
+        { productName: 'Pb95', minPrice: 6.44, maxPrice: 6.55 },
+        { productName: 'Pb98', minPrice: 7.12, maxPrice: 7.25 },
+        { productName: 'LPG', minPrice: 2.70, maxPrice: 2.77 },
+        { productName: 'ONEkodiesel', minPrice: 6.46, maxPrice: 6.58 },
+        { productName: 'ONArctic2', minPrice: 6.80, maxPrice: 6.90 }
+    ];
+
+    const forecastTableBody = document.getElementById('forecastFuelTableBody');
+    forecastTableBody.innerHTML = '';
+
+    forecastData.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+            <td class="bold">${item.minPrice.toFixed(2)} - ${item.maxPrice.toFixed(2)}</td>
+        `;
+        forecastTableBody.appendChild(row);
+        
+    });
+    
+}
+
+// Wywołanie funkcji przetwarzania danych prognozowanych cen paliw
+processForecastData();
 
         function showNotification(message) {
             const notification = document.getElementById('notification');
