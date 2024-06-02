@@ -420,6 +420,7 @@ footer {
 <br></br>Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość. Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
 
 <br></br>Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych. Informujemy również, że od dnia 24.06.2024 w historii cen paliw będą uwzględniane również hurtowe ceny paliw.</p>
+        <button onclick="closeInfoModalAndAcknowledge()">Zapoznałem się</button>
         </div>
     </div>
 
@@ -429,9 +430,23 @@ footer {
             document.getElementById('mobileModal').style.display = 'none';
         }
 
-        function closeInfoModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
+       function closeInfoModal() {
+    document.getElementById('infoModal').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('infoModal').style.display = 'none';
+    }, 500);
+}
+
+        function closeInfoModalAndAcknowledge() {
+    closeInfoModal();
+}
+        function showInfoModal() {
+    document.getElementById('infoModal').style.display = 'block';
+    setTimeout(() => {
+        document.getElementById('infoModal').style.opacity = '1';
+    }, 100);
+}
+
 
         // Sprawdzenie, czy urządzenie jest mobilne
         function isMobileDevice() {
@@ -440,7 +455,7 @@ footer {
 
         // Wyświetlenie modala dla urządzeń mobilnych
         window.onload = function() {
-             document.getElementById('infoModal').style.display = 'block';
+             showInfoModal()
             if (isMobileDevice()) {
                 document.getElementById('mobileModal').style.display = 'block';
             }
