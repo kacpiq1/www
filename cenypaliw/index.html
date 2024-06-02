@@ -36,6 +36,20 @@
         <div class="countdown" id="countdown"></div>
         <div class="notification" id="notification"></div>
 
+        <h1>Prognozowane ceny paliw</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Paliwo</th>
+            <th>Prognozowana cena (PLN)</th>
+        </tr>
+    </thead>
+    <tbody id="forecastFuelTableBody">
+        <!-- Dane zostaną tutaj wstawione przez JavaScript -->
+    </tbody>
+</table>
+
+
         <div class="theme-toggle" onclick="toggleTheme()">
             <i class='bx bxs-adjust'></i>
         </div>
@@ -156,12 +170,12 @@
         <div class="modal-content">
             <span class="close" onclick="closeInfoModal()">&times;</span>
             <h2>Informacja!</h2>
-            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA 98 podlegają opodatkowaniu w wysokości 26%, natomiast VERVA DIESEL podlega opodatkowaniu w wysokości 31%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
+            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA DIESEL podlegają opodatkowaniu w wysokości 26%, natomiast VERVA 98 podlega opodatkowaniu w wysokości 31%. LPG podlega opodatkowaniu w wysokości 27%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
 
-<br></br>Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość. Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
+<br></br>Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość (opodatkowanie może być zmieniane, co będzie widoczne w informacjach). Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
 
 <br></br>Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych. Informujemy również, że od dnia 24.06.2024 w historii cen paliw będą uwzględniane również hurtowe ceny paliw.</p>
-        <button onclick="closeInfoModalAndAcknowledge()">Zapoznałem się</button>
+        <button onclick="closeInfoModalAndAcknowledge()">Zapoznałem(-am) się</button>
         </div>
     </div>
 
