@@ -39,7 +39,7 @@
         const productIcons = {
             'Pb95': 'img/efecta95.png',
             'Pb98': 'img/verva98.png',
-            'LPG': 'img/LPG.png',
+            'LPG': 'img/lpg.png',
             'ONEkodiesel': 'img/efectadiesel.png',
             'ONArctic2': 'img/vervadiesel.png'
         };
