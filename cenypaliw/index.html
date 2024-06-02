@@ -411,10 +411,26 @@ footer {
         </div>
     </div>
 
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeInfoModal()">&times;</span>
+            <h2>Informacja!</h2>
+            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA 98 podlegają opodatkowaniu w wysokości 26%, natomiast VERVA DIESEL podlega opodatkowaniu w wysokości 31%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
+
+Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość. Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
+
+Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych. Informujemy również, że od dnia 24.06.2024 w historii cen paliw będą uwzględniane również hurtowe ceny paliw.</p>
+        </div>
+    </div>
+
     <script>
         // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
         function closeMobileModal() {
             document.getElementById('mobileModal').style.display = 'none';
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
         }
 
         // Sprawdzenie, czy urządzenie jest mobilne
@@ -424,6 +440,7 @@ footer {
 
         // Wyświetlenie modala dla urządzeń mobilnych
         window.onload = function() {
+             document.getElementById('infoModal').style.display = 'block';
             if (isMobileDevice()) {
                 document.getElementById('mobileModal').style.display = 'block';
             }
