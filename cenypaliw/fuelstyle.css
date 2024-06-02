@@ -1,0 +1,258 @@
+@font-face {
+    font-family: 'Myriad Pro Condensed';
+    src: url('https://fonts.cdnfonts.com/s/9045/MyriadPro-Cond.otf') format('opentype');
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #ffffff;
+    color: #333;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+    width: 80%;
+    display: none;
+}
+
+.loading {
+    font-size: 24px;
+    color: #999;
+}
+
+h1 {
+    color: #E30613;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 70%;
+    margin: 0 auto; /* Center the table */
+    border-collapse: collapse;
+    margin-bottom: 25px;
+    font-size: 18px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Ensure rounding works for all parts */
+}
+
+th, td {
+    padding: 10px 15px; /* Reduce padding for a more compact look */
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #E30613;
+    color: #fff;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.update-info {
+    position: absolute;
+    bottom: 40px;
+    left: 20px; 
+    font-size: 14px;
+    color: #555;
+}
+
+.countdown {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.theme-toggle, .history-toggle {
+    position: absolute;
+    top: 10px;
+    cursor: pointer;
+    color: #E30613;
+    font-size: 24px;
+}
+
+.theme-toggle {
+    right: 10px;
+}
+
+.history-toggle {
+    right: 50px;
+}
+
+.info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: #555;
+}
+
+.info i {
+    margin-right: 5px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 10px; /* Rounded corners for modal */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.history-info {
+    text-align: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+}
+
+.history-info i {
+    font-size: 40px;
+    margin-right: 5px;
+}
+
+.dark-theme {
+    background-color: #1d1f21;
+    color: #fff;
+}
+
+.dark-theme .update-info, .dark-theme .info, .dark-theme .countdown {
+    color: #fff;
+}
+
+.dark-theme th {
+    background-color: #323232;
+}
+
+.dark-theme .modal-content {
+    background-color: #323232;
+}
+
+.dark-theme table {
+    background-color: #2d2d2d;
+}
+
+.dark-theme .history-info {
+    background-color: #323232;
+    color: #fff; 
+}
+
+.dark-theme .history-info i {
+    color: #fff; 
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    appearance: none; 
+    background-image: linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(135deg, black 50%, transparent 50%);
+    background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px);
+    background-size: 5px 5px; 
+    background-repeat: no-repeat;
+}
+
+@supports (-moz-appearance:none) {
+    select {
+        background-image: none;
+        padding-right: 30px; 
+    }
+}
+
+select option {
+    background-color: #fff;
+}
+
+select:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    background-color: #f9f9f9;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+button {
+    background-color: #E30613;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c0040e;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f1f1f1;
+    color: #333;
+    font-size: 14px;
+}
