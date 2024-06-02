@@ -142,7 +142,7 @@
         { productName: 'Pb98', minPrice: 7.12, maxPrice: 7.25 },
         { productName: 'LPG', minPrice: 2.70, maxPrice: 2.77 },
         { productName: 'ONEkodiesel', minPrice: 6.46, maxPrice: 6.58 },
-        { productName: 'ONArctic2', minPrice: 6.80, maxPrice: 6.90 }
+        { productName: 'ONArctic2', minPrice: 6.66, maxPrice: 6.89 }
     ];
 
     const forecastTableBody = document.getElementById('forecastFuelTableBody');
