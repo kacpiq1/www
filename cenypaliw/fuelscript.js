@@ -1,25 +1,8 @@
+<script>
         // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
         function closeMobileModal() {
             document.getElementById('mobileModal').style.display = 'none';
         }
-        // Funkcja do generowania prognozowanych cen paliw
-function generateForecastData() {
-    const fuelTypes = ['EFECTA 95', 'EFECTA DIESEL', 'VERVA 98', 'VERVA DIESEL'];
-    const forecastTableBody = document.getElementById('forecastTableBody');
-    forecastTableBody.innerHTML = '';
-
-    fuelTypes.forEach(fuelType => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${fuelType}</td>
-            <td>6.39 - 6.79</td>
-        `;
-        forecastTableBody.appendChild(row);
-    });
-}
-
-
-
 
        function closeInfoModal() {
     document.getElementById('infoModal').style.opacity = '0';
@@ -369,5 +352,5 @@ function showPriceHistoryChart() {
 }
 
         document.addEventListener('DOMContentLoaded', fetchData);
-        document.addEventListener('DOMContentLoaded', generateForecastData);
         loadThemeFromLocalStorage();
+    </script>
