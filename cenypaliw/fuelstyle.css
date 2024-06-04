@@ -260,7 +260,19 @@ footer {
             font-size: 14px;
         }
 
- .warning-bar {
+  .warning-bar {
+            background-color: #fc4c4c;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px auto;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+ .warn-bar {
             background-color: #FDE456;
             color: #000;
             text-align: center;
