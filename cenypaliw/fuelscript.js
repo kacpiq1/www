@@ -163,6 +163,61 @@
 // Wywołanie funkcji przetwarzania danych prognozowanych cen paliw
 processForecastData();
 
+const webhookUrl = 'https://discord.com/api/webhooks/1247690376257601557/-_1ihSfqvKzrViQ6NCdQhx6GwdMxw-gZ968Jv0q-8yzeQT_Bhb8EOGJm85yuDxhZznrN';
+
+// Funkcja wyświetlająca modal błędu
+function displayErrorModal(errorMessage) {
+    document.getElementById('errorMessage').textContent = errorMessage;
+    document.getElementById('errorModal').style.display = 'block';
+}
+
+// Funkcja zamykająca modal błędu
+function closeErrorModal() {
+    document.getElementById('errorModal').style.display = 'none';
+}
+
+// Funkcja wysyłająca zgłoszenie błędu do Discord
+function sendErrorReport() {
+    const errorMessage = document.getElementById('errorMessage').textContent;
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: `Zgłoszono błąd na stronie: ${errorMessage}`
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Błąd został zgłoszony pomyślnie.');
+            closeErrorModal();
+        } else {
+            alert('Wystąpił problem podczas zgłaszania błędu.');
+        }
+    })
+    .catch(error => {
+        console.error('Error reporting to Discord:', error);
+        alert('Wystąpił problem podczas zgłaszania błędu.');
+    });
+}
+
+// Funkcja do obsługi błędów
+window.onerror = function(message, source, lineno, colno, error) {
+    const errorMessage = `Error: ${message} at ${source}:${lineno}:${colno}`;
+    console.error(errorMessage);
+    displayErrorModal(errorMessage);
+    return true; // Prevent the default handling of the error
+};
+
+// Dla błędów promise
+window.addEventListener('unhandledrejection', event => {
+    const errorMessage = `Unhandled promise rejection: ${event.reason}`;
+    console.error(errorMessage);
+    displayErrorModal(errorMessage);
+});
+
         function showNotification(message) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
