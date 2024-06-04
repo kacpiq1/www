@@ -277,8 +277,6 @@ function showPriceHistoryChart() {
     document.getElementById('priceHistoryModal').style.display = 'block';
 }
 
-f9574dev_build();
-
 
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
@@ -410,6 +408,8 @@ f9574dev_build();
             closeHistoryLoadingModal();
         });
 }
+
+f9574dev_build();
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
