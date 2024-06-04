@@ -277,6 +277,8 @@ function showPriceHistoryChart() {
     document.getElementById('priceHistoryModal').style.display = 'block';
 }
 
+f9574dev_build();
+
 
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
