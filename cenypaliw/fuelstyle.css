@@ -270,6 +270,8 @@ footer {
             width: 80%;
             max-width: 600px;
             position: relative;
+            box-shadow: 0 0 30px rgba(252, 76, 76, 0.7);
+            filter: blur(0);
         }
 
  .warn-bar {
@@ -282,4 +284,6 @@ footer {
             width: 80%;
             max-width: 600px;
             position: relative;
+            box-shadow: 0 0 30px rgba(253, 228, 86, 0.7);
+            filter: blur(0);
         }
