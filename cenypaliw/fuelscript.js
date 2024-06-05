@@ -409,7 +409,5 @@ function showPriceHistoryChart() {
         });
 }
 
-fevu58();
-
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
