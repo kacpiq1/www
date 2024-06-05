@@ -368,7 +368,7 @@ function showPriceHistoryChart() {
     } else if (productId == 43) {
         taxRateH = 0.26;
     } else if (productId == 44) {
-        taxRateH = 0.26;7
+        taxRateH = 0.26;
     }
 
     const historyUrl = 'https://corsproxy.io/?' + `https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
@@ -408,8 +408,6 @@ function showPriceHistoryChart() {
             closeHistoryLoadingModal();
         });
 }
-
-dev_b82639();
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
