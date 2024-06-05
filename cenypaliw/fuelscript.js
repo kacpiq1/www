@@ -33,7 +33,7 @@
                 document.getElementById('mobileModal').style.display = 'block';
             }
         };
-        
+
         const proxyUrl = 'https://api.allorigins.win/get?url=';
         const targetUrl = 'https://tool.orlen.pl/api/wholesalefuelprices';
         const productIcons = {
@@ -48,7 +48,7 @@
             // Pokaż komunikat o odświeżeniu danych
             showNotification("Odświeżono dane.");
             document.getElementById('loadingHistory').style.display = 'block';
-            
+
             // Wyświetl komunikat o ładowaniu
             document.getElementById('loading').style.display = 'block';
             document.getElementById('container').style.display = 'none';
@@ -155,9 +155,9 @@
             <td class="bold">${item.minPrice.toFixed(2)} - ${item.maxPrice.toFixed(2)}</td>
         `;
         forecastTableBody.appendChild(row);
-        
+
     });
-    
+
 }
 
 // Wywołanie funkcji przetwarzania danych prognozowanych cen paliw
@@ -336,7 +336,7 @@ function showPriceHistoryChart() {
         }
 
         function getYears() {
-    
+
     const years = [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
     const yearSelect = document.getElementById('year');
     yearSelect.innerHTML = '';
@@ -349,7 +349,7 @@ function showPriceHistoryChart() {
             yearSelect.value = 2024;
 }
 
-        
+
         function fetchHistoryData() {
     displayHistoryLoadingModal();
     document.getElementById('loadingHistory').style.display = 'block';
@@ -368,7 +368,7 @@ function showPriceHistoryChart() {
     } else if (productId == 43) {
         taxRateH = 0.26;
     } else if (productId == 44) {
-        taxRateH = 0.26;
+        taxRateH = 0.26;7
     }
 
     const historyUrl = 'https://corsproxy.io/?' + `https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
@@ -379,7 +379,7 @@ function showPriceHistoryChart() {
             const historyTableBody = document.getElementById('historyTableBody');
             historyTableBody.innerHTML = '';
 
-            
+
             if (historyData.length === 0) {
                 const noDataMessage = document.createElement('tr');
                 noDataMessage.innerHTML = `<td colspan="2">Dla wybranego roku, nie ma danych o cenach.</td>`;
@@ -409,7 +409,7 @@ function showPriceHistoryChart() {
         });
 }
 
-f9574dev_build();
+fevu58();
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
