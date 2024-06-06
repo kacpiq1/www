@@ -260,6 +260,7 @@
   const stopObj = schedule[direction][stopIndex];
   const resultDiv = document.getElementById('result');
   const now = new Date();
+  const dayOfWeek = now.getDay(); // Pobieramy dzień tygodnia (0 - niedziela, 1 - poniedziałek, itd.)
 
   let output = `<h2>${stopObj.stop}</h2>`;
   output += '<ul>';
@@ -289,11 +290,13 @@
 
   output += '</ul>';
   
-  // Dodajemy obsługę braku kursów i ostatniego odjazdu
-  if (output === '<ul>') {
+  // Dodajemy obsługę braku kursów w soboty i niedziele
+  if (dayOfWeek === 0 || dayOfWeek === 6) { // 0 - niedziela, 6 - sobota
+    output = '<p>Brak kursów w weekendy.</p>';
+  } else if (output === '<ul>') {
     output = '<p>Brak kursów w danym dniu.</p>';
   } else {
-    output += `<p>Ostatni odjazd był o ${lastDepartureTime}.</p>`;
+    output += `<p>Ostatni odjazd był o ${lastDepartureTime || 'brak danych'}.</p>`; // Wyświetlamy ostatni odjazd lub "brak danych"
   }
 
   resultDiv.innerHTML = output;
