@@ -255,38 +255,49 @@
     }
 
     function showSchedule() {
-      const direction = document.getElementById('direction').value;
-      const stopIndex = document.getElementById('stop').value;
-      const stopObj = schedule[direction][stopIndex];
-      const resultDiv = document.getElementById('result');
-      const now = new Date();
+  const direction = document.getElementById('direction').value;
+  const stopIndex = document.getElementById('stop').value;
+  const stopObj = schedule[direction][stopIndex];
+  const resultDiv = document.getElementById('result');
+  const now = new Date();
 
-      let output = `<h2>${stopObj.stop}</h2>`;
-      output += '<ul>';
+  let output = `<h2>${stopObj.stop}</h2>`;
+  output += '<ul>';
+  
+  let lastDepartureTime = null; // Dodajemy zmienną dla ostatniego odjazdu
+  
+  stopObj.times.forEach(time => {
+    const [hours, minutes] = time.split(':');
+    const busTime = new Date(now);
+    busTime.setHours(hours);
+    busTime.setMinutes(minutes);
+    busTime.setSeconds(0);
 
-      stopObj.times.forEach(time => {
-        const [hours, minutes] = time.split(':');
-        const busTime = new Date(now);
-        busTime.setHours(hours);
-        busTime.setMinutes(minutes);
-        busTime.setSeconds(0);
+    const timeLeft = busTime - now;
+    const minutesLeft = Math.floor(timeLeft / 60000);
+    const hoursLeft = Math.floor(timeLeft / 3600000);
 
-        const timeLeft = busTime - now;
-        const minutesLeft = Math.floor(timeLeft / 60000);
-        const hoursLeft = Math.floor(timeLeft / 3600000);
-
-        if (timeLeft > 0) {
-          if (timeLeft <= 2 * 60 * 60 * 1000) {
-            output += `<li>${time} (za ${hoursLeft > 0 ? hoursLeft + ' godz. ' : ''}${minutesLeft % 60} min)</li>`;
-          } else {
-            output += `<li>${time}</li>`;
-          }
-        }
-      });
-
-      output += '</ul>';
-      resultDiv.innerHTML = output;
+    if (timeLeft > 0) {
+      if (timeLeft <= 2 * 60 * 60 * 1000) {
+        output += `<li>${time} (za ${hoursLeft > 0 ? hoursLeft + ' godz. ' : ''}${minutesLeft % 60} min)</li>`;
+      } else {
+        output += `<li>${time}</li>`;
+      }
+      lastDepartureTime = time; // Zapisujemy czas ostatniego odjazdu
     }
+  });
+
+  output += '</ul>';
+  
+  // Dodajemy obsługę braku kursów i ostatniego odjazdu
+  if (output === '<ul>') {
+    output = '<p>Brak kursów w danym dniu.</p>';
+  } else {
+    output += `<p>Ostatni odjazd był o ${lastDepartureTime}.</p>`;
+  }
+
+  resultDiv.innerHTML = output;
+}
   </script>
 </body>
 </html>
