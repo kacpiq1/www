@@ -193,6 +193,10 @@
             background-color: #323232;
         }
 
+        .dark-theme .update-info {
+            background-color: #4f4e4e;
+        }
+
         .dark-theme table {
             background-color: #2d2d2d;
         }
