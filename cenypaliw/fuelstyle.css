@@ -80,13 +80,13 @@
         }
 
         .update-info {
-            position: fixed;
-            bottom: 40px;
-            left: 20px; 
-            font-size: 14px;
-            color: #555;
-            z-index: 10;
-        }
+    background-color: #f0f0f0;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    padding: 10px;
+    font-weight: bold;
+}
 
         .countdown {
             position: absolute;
