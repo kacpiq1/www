@@ -61,7 +61,7 @@
                     const jsonData = JSON.parse(data.contents);
 
                     // Pobierz datę ostatniej aktualizacji i wyświetl informację
-                    const publishFrom = jsonData[0]?.publishFrom?.replace('T', ' ') || 'brak danych';
+                    const publishFrom = jsonData[0]?.publishFrom?.replace('T00:00:00', ' ') || 'brak danych';
                     document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
 
                     // Przygotuj dane dotyczące paliw: Pb95, Pb98, ONEkodiesel, ONArctic2
