@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('/img/eaf2102aaa597054f587c5caaeb9e3da.gif') no-repeat;
+    background: url('/images/background.jpg') no-repeat;
     background-size: cover;
     background-position: center;
 }
