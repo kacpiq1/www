@@ -16,8 +16,8 @@
     <div class="loading" id="loading"></div>
     <div class="container" id="container">
 
-<div class="info-bar">
-        <i class='bx bx-error-circle'></i> W dniu 24.06.2024 nastąpi zmiana UI oraz zostaną dodane hurtowe ceny paliw do historii cen paliw. Więcej informacji dot. zmian będą dostępne w nowej zakładce 'Aktualizacje'.
+<div class="warning-bar">
+        <i class='bx bx-error-circle'></i> Ze względu na usprawnienie naszej strony oraz wprowadzenie nowych funkcji, zaplanowaliśmy przerwę techniczną w dn. 1.08 13:00-17:00.
     </div>
  
         <h1>Ceny Paliw Orlen</h1>
@@ -82,11 +82,9 @@
         <div class="modal-content">
             <span class="close" onclick="closeHistoryModal()">&times;</span>
             <h2>Historia Cen Paliw</h2>
-<div class="warning-bar">
-        <i class='bx bx-error-circle'></i> Występują problemy z uzyskaniem najnowszych danych o historii cen paliw, przez co najnowsze daty nie są uwzględnione w historii.
-    </div>
-            <div class="warn-bar">
-        <i class='bx bx-error'></i> AKTUALIZACJA: Większość danych z archiwum cen paliw została przywrócona. Jedynie paliwo VERVA DIESEL pozostało z brakiem aktualizacji danych. Pracujemy wciąż nad zaistniałym problemem dalej.
+
+            <div class="info-bar">
+        <i class='bx bx-info'></i> Problemy z pobieraniem danych zostały naprawione.
     </div>
             <label for="fuelType">Wybierz paliwo:</label>
             <select id="fuelType" onchange="fetchHistoryData()">
