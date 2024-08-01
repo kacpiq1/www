@@ -411,3 +411,4 @@ function showPriceHistoryChart() {
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
+autoUIFetch();
