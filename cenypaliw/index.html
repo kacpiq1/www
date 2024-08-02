@@ -17,10 +17,30 @@
     <div class="container" id="container">
 
 <div class="warning-bar">
-        <i class='bx bx-warning'></i> Ze względu na usprawnienie naszej strony oraz wprowadzenie nowych funkcji, zaplanowaliśmy przerwę techniczną w dn. 1.08 13:00-17:00.
+        <i class='bx bx-warning'></i> Ze względu na usprawnienie naszej strony oraz wprowadzenie nowych funkcji, zaplanowaliśmy przerwę techniczną w dn. 2.08 13:00-17:00.
     </div>
  
         <h1>Ceny Paliw Orlen</h1>
+<button class="coupon-button" onclick="showCouponModal()">Aktywuj aktualne kupony</button>
+      <br></br>
+      <div class="modal" id="couponModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCouponModal()">&times;</span>
+        <h2>Wybierz kupon</h2>
+        <label for="couponSelect">Wybierz kupon:</label>
+        <select id="couponSelect" onchange="applyCoupon()">
+            <option value="0">Brak kuponu</option>
+            <option value="-0.35">-35 gr/l</option>
+            <!-- Dodaj więcej kuponów tutaj, jeśli są dostępne -->
+        </select>
+        <p id="couponMessage"></p>
+        <p id="couponExpiry" style="display:none;"></p>
+        <p id="couponCountdown" style="display:none;"></p>
+      <p class="legend">
+            <span class="red-dot"></span> - Zastosowany kupon
+        </p>
+    </div>
+</div>
         <table>
             <thead>
                 <tr>
