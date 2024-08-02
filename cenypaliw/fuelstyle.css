@@ -326,3 +326,18 @@ footer {
     box-shadow: 0 0 15px rgba(76, 152, 252, 0.7);
     filter: blur(0);
 }
+
+.legend {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.red-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+}
