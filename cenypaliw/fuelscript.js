@@ -1,4 +1,100 @@
-// Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
+//// Globalna zmienna do przechowywania oryginalnych cen
+let originalPrices = [];
+
+// Data ważności kuponu
+const couponExpiryDate = new Date('2024-08-31T23:59:59');
+
+// Wyświetl modal z kuponami
+function showCouponModal() {
+    document.getElementById('couponModal').style.display = 'block';
+}
+
+// Zamknij modal z kuponami
+function closeCouponModal() {
+    document.getElementById('couponModal').style.display = 'none';
+}
+
+// Zastosuj wybrany kupon
+function applyCoupon() {
+    const couponValue = parseFloat(document.getElementById('couponSelect').value);
+    const rows = document.querySelectorAll('#fuelTableBody tr');
+    const messageElement = document.getElementById('couponMessage');
+    const expiryElement = document.getElementById('couponExpiry');
+    const countdownElement = document.getElementById('couponCountdown');
+
+    if (couponValue === 0) {
+        // Przywróć pierwotne ceny
+        rows.forEach((row, index) => {
+            const priceCells = row.querySelectorAll('td');
+            if (priceCells.length > 1) {
+                const originalPrice = originalPrices[index];
+                if (originalPrice !== undefined) {
+                    priceCells[1].textContent = originalPrice.toFixed(2);
+                    priceCells[1].classList.remove('discounted'); // Usuń klasę oznaczającą zniżkę
+                }
+            }
+        });
+        messageElement.textContent = 'Kupon usunięty. Ceny zostały przywrócone.';
+        expiryElement.style.display = 'none';
+        countdownElement.style.display = 'none';
+    } else {
+        // Zastosuj kupon
+        rows.forEach((row, index) => {
+            const priceCells = row.querySelectorAll('td');
+            if (priceCells.length > 1) {
+                // Zapamiętaj pierwotną cenę, jeśli jeszcze nie zapamiętana
+                if (originalPrices[index] === undefined) {
+                    originalPrices[index] = parseFloat(priceCells[1].textContent);
+                }
+                // Oblicz nową cenę tylko dla nie-LPG (np. dla paliw z rabatami)
+                if (!priceCells[0].textContent.includes('LPG')) {
+                    const currentPrice = parseFloat(priceCells[1].textContent);
+                    const newPrice = currentPrice + couponValue;
+                    priceCells[1].textContent = newPrice.toFixed(2);
+                    priceCells[1].classList.add('discounted'); // Dodaj klasę oznaczającą zniżkę
+                }
+            }
+        });
+        messageElement.innerHTML = `Kupon zastosowany. Obniżono ceny o <span class="bold-text">${Math.abs(couponValue * 100)} gr/l</span>.`;
+        expiryElement.style.display = 'block';
+        countdownElement.style.display = 'block';
+        updateCouponExpiry();
+        startCouponCountdown();
+    }
+}
+
+// Aktualizuj datę ważności kuponu
+function updateCouponExpiry() {
+    const expiryElement = document.getElementById('couponExpiry');
+    const expiryDateStr = `${couponExpiryDate.getDate().toString().padStart(2, '0')}.${(couponExpiryDate.getMonth() + 1).toString().padStart(2, '0')}.${couponExpiryDate.getFullYear()}`;
+    expiryElement.innerHTML = `Kupon wygasa w dniu <span class="bold-text">${expiryDateStr}</span>`;
+}
+
+// Licz czas pozostały do wygaśnięcia kuponu
+function startCouponCountdown() {
+    const countdownElement = document.getElementById('couponCountdown');
+    function updateCountdown() {
+        const now = new Date();
+        const timeDifference = couponExpiryDate - now;
+        
+        if (timeDifference <= 0) {
+            countdownElement.innerHTML = '<span class="bold-text">Kupon wygasł.</span>';
+            return;
+        }
+        
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = `Pozostało <span class="bold-text">${days} dni ${hours} godzin ${minutes} minut ${seconds} sekund</span>`;
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
+
+    // Funkcja wywoływana przy zamknięciu modala dla urządzeń mobilnych
                 function closeMobileModal() {
             document.getElementById('mobileModal').style.display = 'none';
         }
@@ -249,6 +345,8 @@ function showPriceHistoryChart() {
         dates.push(cells[0].textContent);
         prices.push(parseFloat(cells[1].textContent));
     });
+  
+  
 
     // Utwórz wykres
     const ctx = document.getElementById('priceHistoryChart').getContext('2d');
@@ -411,4 +509,3 @@ function showPriceHistoryChart() {
 
         document.addEventListener('DOMContentLoaded', fetchData);
         loadThemeFromLocalStorage();
-autoUIFetch();
