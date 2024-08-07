@@ -209,11 +209,54 @@
         </div>
     </div>
 
+<div id="taxChangeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Zmiany opodatkowania paliw</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rodzaj Paliwa</th>
+                        <th>Stare Opod.</th>
+                        <th>Nowe Opod.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>EFECTA 95</td>
+                        <td>26%</td>
+                        <td>26%</td>
+                    </tr>
+                    <tr>
+                        <td>EFECTA DIESEL</td>
+                        <td>26%</td>
+                        <td>26%</td>
+                    </tr>
+                    <tr>
+                        <td>VERVA DIESEL</td>
+                        <td>26%</td>
+                        <td>26%</td>
+                    </tr>
+                    <tr>
+                        <td>VERVA 98</td>
+                        <td>31%</td>
+                        <td style="color: red;">32%</td>
+                    </tr>
+                    <tr>
+                        <td>LPG</td>
+                        <td>27%</td>
+                        <td style="color: green;">26%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="modal" id="infoModal">
         <div class="modal-content">
             <span class="close" onclick="closeInfoModal()">&times;</span>
             <h2>Informacja!</h2>
-            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA DIESEL podlegają opodatkowaniu w wysokości 26%, natomiast VERVA 98 podlega opodatkowaniu w wysokości 31%. LPG podlega opodatkowaniu w wysokości 27%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
+            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA DIESEL podlegają opodatkowaniu w wysokości 26%, natomiast VERVA 98 podlega opodatkowaniu w wysokości 32%. LPG podlega opodatkowaniu w wysokości 26%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
 
 <br></br>Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość (opodatkowanie może być zmieniane, co będzie widoczne w informacjach). Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
 
