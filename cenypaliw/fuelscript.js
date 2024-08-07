@@ -171,7 +171,7 @@ function startCouponCountdown() {
                 if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel' || item.productName === 'ONArctic2') {
                     taxRate = 0.26;
                 } else if (item.productName === 'Pb98') {
-                    taxRate = 0.31; 
+                    taxRate = 0.32; 
                 }
 
                 let valueWithTax = (item.value / 1000) * (1 + taxRate);
@@ -207,7 +207,7 @@ function startCouponCountdown() {
                 // Przetwórz pobrane dane
                 const data = JSON.parse(responseData.contents);
 
-                const lpgTaxRate = 0.27;
+                const lpgTaxRate = 0.26;
 
                 if (Array.isArray(data)) {
                     const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
