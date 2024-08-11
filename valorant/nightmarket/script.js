@@ -1,11 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     const skins = [
-        { id: 1, name: "Reaver Vandal", type: "Vandal", price: 1775, imgSrc: "https://example.com/reaver_vandal.jpg" },
-        { id: 2, name: "Prime Phantom", type: "Phantom", price: 1775, imgSrc: "https://example.com/prime_phantom.jpg" },
-        { id: 3, name: "Elderflame Operator", type: "Operator", price: 2475, imgSrc: "https://example.com/elderflame_operator.jpg" },
-        { id: 4, name: "Oni Claw", type: "Melee", price: 3550, imgSrc: "https://example.com/oni_claw.jpg" },
+        { name: "Reaver Vandal", type: "Vandal", price: 1775, imgSrc: "https://example.com/reaver_vandal.jpg" },
+        { name: "Prime Phantom", type: "Phantom", price: 1775, imgSrc: "https://example.com/prime_phantom.jpg" },
+        { name: "Elderflame Operator", type: "Operator", price: 2475, imgSrc: "https://example.com/elderflame_operator.jpg" },
+        { name: "Oni Claw", type: "Melee", price: 3550, imgSrc: "https://example.com/oni_claw.jpg" },
+        { name: "Glitchpop Vandal", type: "Vandal", price: 2175, imgSrc: "https://example.com/glitchpop_vandal.jpg" },
+        { name: "Spline Phantom", type: "Phantom", price: 1775, imgSrc: "https://example.com/spline_phantom.jpg" },
         // Dodaj więcej skinów według potrzeby
     ];
+
+    const rarities = ["Select", "Deluxe", "Premium", "Exclusive", "Ultra"];
+    const discounts = [10, 20, 30, 40, 50]; // Procentowe obniżki
 
     const nightMarketStart = new Date("2023-09-01");
     const nightMarketEnd = new Date("2023-09-15");
@@ -23,8 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const cardsContainer = document.getElementById('cards-container');
+    const selectedSkins = [];
 
-    skins.forEach(skin => {
+    while (selectedSkins.length < 6) {
+        const randomIndex = Math.floor(Math.random() * skins.length);
+        if (!selectedSkins.includes(skins[randomIndex])) {
+            selectedSkins.push(skins[randomIndex]);
+        }
+    }
+
+    selectedSkins.forEach(skin => {
         const card = document.createElement('div');
         card.classList.add('card');
         
@@ -32,25 +45,42 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = skin.imgSrc;
         img.alt = skin.name;
 
-        const name = document.createElement('p');
-        name.textContent = skin.name;
+        const info = document.createElement('div');
+        info.classList.add('info');
 
-        const type = document.createElement('p');
-        type.textContent = `Rodzaj: ${skin.type}`;
+        const rarity = document.createElement('p');
+        rarity.textContent = `Rzadkość: ${rarities[Math.floor(Math.random() * rarities.length)]}`;
 
-        const price = document.createElement('p');
-        price.textContent = `Cena: ${skin.price} VP`;
+        const discount = document.createElement('p');
+        discount.textContent = `Promocja: ${discounts[Math.floor(Math.random() * discounts.length)]}%`;
+
+        info.appendChild(rarity);
+        info.appendChild(discount);
 
         card.appendChild(img);
-        card.appendChild(name);
-        card.appendChild(type);
-        card.appendChild(price);
+        card.appendChild(info);
 
         cardsContainer.appendChild(card);
 
         card.addEventListener('click', () => {
-            // Tutaj możesz dodać logikę do obsługi kliknięcia karty
-            alert(`Wybrany skin: ${skin.name}`);
+            card.classList.add('revealed');
+            const skinDetails = document.createElement('div');
+            skinDetails.classList.add('skin-details');
+
+            const name = document.createElement('p');
+            name.textContent = skin.name;
+
+            const type = document.createElement('p');
+            type.textContent = `Rodzaj: ${skin.type}`;
+
+            const price = document.createElement('p');
+            price.textContent = `Cena: ${skin.price} VP`;
+
+            skinDetails.appendChild(name);
+            skinDetails.appendChild(type);
+            skinDetails.appendChild(price);
+
+            card.appendChild(skinDetails);
         });
     });
 });
