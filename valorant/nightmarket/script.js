@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach(card => {
         card.addEventListener('click', () => {
             // Tutaj możesz dodać logikę do obsługi kliknięcia karty
-            alert('Karta kliknięta!');
+            
         });
     });
 });
