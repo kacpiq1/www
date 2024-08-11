@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('background.jpg') no-repeat center center fixed;
+    background: url('https://pbs.twimg.com/media/Fx9DxR5XsAAVkHE.jpg:large') no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, sans-serif;
     display: flex;
