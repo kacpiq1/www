@@ -2,7 +2,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #0e0e0e;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -14,27 +15,31 @@ body {
 
 .night-market {
     text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
 }
 
 h1 {
     margin-bottom: 20px;
+    font-size: 2em;
 }
 
 #market-status {
     margin-bottom: 20px;
+    font-size: 1.2em;
 }
 
 .cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    display: flex;
     gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .card {
-    width: 150px;
-    height: 250px;
+    width: 200px;
+    height: 350px;
     background-color: #1a1a1a;
     border-radius: 10px;
     position: relative;
@@ -47,6 +52,7 @@ h1 {
     padding: 10px;
     color: #ffffff;
     text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .card img {
@@ -56,7 +62,7 @@ h1 {
 }
 
 .card:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .card:before {
@@ -82,4 +88,31 @@ h1 {
 
 .card.revealed .info {
     display: none;
+}
+
+.info {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.skin-details {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.card.revealed .skin-details {
+    display: flex;
+}
+
+.discount {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
 }
