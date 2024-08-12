@@ -170,7 +170,7 @@
             font-size: 0.9em;
         }
 
-        .discounted-price {
+        .discounted.discounted-price {
     position: absolute;
     top: 30px;
     right: 10px;
@@ -178,14 +178,14 @@
     font-size: 1em;
     display: flex;
     align-items: center;
-    transform: rotate(0deg); /* Ensure it's not rotated */
+    justify-content: flex-start; /* Align items to start (left) */
 }
 
 .discounted-price img {
     width: 1em;
     height: 1em;
-    margin-right: 0.3em;
-    transform: rotate(0deg); /* Ensure it's not rotated */
+    margin-right: 0.3em; /* Space between icon and text */
+    transform: rotate(0deg); /* Ensure icon is not rotated */
 }
 
         .card.select {
