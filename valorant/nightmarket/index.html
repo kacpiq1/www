@@ -7,13 +7,17 @@
     </head>
 
 <style>
+    @font-face {
+    font-family: 'DINNextW1G-Regular';
+    src: url('fonts/DINNextW1G-Regular.otf') format('truetype');
+}
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: url('background.jpg') no-repeat center center fixed;
+    background: url('images/background.jpg') no-repeat center center fixed;
     background-size: cover;
-    font-family: Arial, sans-serif;
+    font-family: 'DINNextW1G-Regular', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,7 +32,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     width: 90%;
-    max-width: 1200px;
+    max-width: 1920px;
     margin: 20px;
 }
 
@@ -50,8 +54,8 @@ h1 {
 }
 
 .card {
-    width: 200px;
-    height: 350px;
+    width: 175px;
+    height: 300px;
     border-radius: 10px;
     position: relative;
     cursor: pointer;
@@ -107,7 +111,7 @@ h1 {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotate(45deg);
     z-index: 2;
 }
 
@@ -141,6 +145,7 @@ h1 {
     position: absolute;
     top: 10px;
     left: 10px;
+    color: #ff6161;
     background: rgba(0, 0, 0, 0.7);
     padding: 5px 10px;
     border-radius: 5px;
@@ -151,7 +156,7 @@ h1 {
     position: absolute;
     top: 10px;
     right: 10px;
-    color: red;
+    color: #ff6161;
     text-decoration: line-through;
     font-size: 0.9em;
 }
@@ -166,27 +171,27 @@ h1 {
 
 .card.select {
     background-color: #000; /* Kontur karty */
-    border-color: #00f; /* Kontur rombu */
+    border-color: #5a9fe2; /* Kontur rombu */
 }
 
 .card.deluxe {
     background-color: #000; /* Kontur karty */
-    border-color: #0f0; /* Kontur rombu */
+    border-color: #009587; /* Kontur rombu */
 }
 
 .card.premium {
     background-color: #000; /* Kontur karty */
-    border-color: #f0f; /* Kontur rombu */
+    border-color: #d1548d; /* Kontur rombu */
 }
 
 .card.exclusive {
     background-color: #000; /* Kontur karty */
-    border-color: #ffa500; /* Kontur rombu */
+    border-color: #f1b82d; /* Kontur rombu */
 }
 
 .card.ultra {
     background-color: #000; /* Kontur karty */
-    border-color: #ff0; /* Kontur rombu */
+    border-color: #f1b82d; /* Kontur rombu */
 }
 
 /* Media queries for mobile */
@@ -219,12 +224,12 @@ h1 {
     </div>
     <script>
     const skins = [
-    { name: "Reaver Knife", rarity: "Exclusive", price: 3550, image: "reaver_knife.jpg" },
-    { name: "Magepunk Guardian", rarity: "Select", price: 1775, image: "magepunk_guardian.jpg" },
-    { name: "Ion Operator", rarity: "Select", price: 1775, image: "ion_operator.jpg" },
+    { name: "Reaver Knife", rarity: "Exclusive", price: 3550, image: "images/reaver-knife.png" },
+    { name: "Magepunk Guardian", rarity: "Premium", price: 1775, image: "magepunk_guardian.jpg" },
+    { name: "Ion Operator", rarity: "Premium", price: 1775, image: "ion_operator.jpg" },
     { name: "Minima Sheriff", rarity: "Deluxe", price: 1275, image: "minima_sheriff.jpg" },
-    { name: "Oni Shorty", rarity: "Premium", price: 1775, image: "oni_shorty.jpg" },
-    { name: "Ego Vandal", rarity: "Ultra", price: 1775, image: "ego_vandal.jpg" }
+    { name: "Rush Judge", rarity: "Select", price: 875, image: "oni_shorty.jpg" },
+    { name: "Ego Vandal", rarity: "Premium", price: 1775, image: "ego_vandal.jpg" }
 ];
 
 const discounts = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49];
