@@ -157,22 +157,22 @@ h1 {
 
 .card.select {
     background-color: #000; /* Kontur karty */
-    border-color: #00f; /* Kontur rombu */
+    border-color: #669bd2; /* Kontur rombu */
 }
 
 .card.deluxe {
     background-color: #000; /* Kontur karty */
-    border-color: #0f0; /* Kontur rombu */
+    border-color: #12887d; /* Kontur rombu */
 }
 
 .card.premium {
     background-color: #000; /* Kontur karty */
-    border-color: #f0f; /* Kontur rombu */
+    border-color: #be598d; /* Kontur rombu */
 }
 
 .card.exclusive {
     background-color: #000; /* Kontur karty */
-    border-color: #ffa500; /* Kontur rombu */
+    border-color: #d2ab49; /* Kontur rombu */
 }
 
 .card.ultra {
