@@ -245,7 +245,7 @@ function calculateDiscountPrice(price, discount) {
 function updateMarketStatus() {
     const marketStatusElement = document.getElementById("market-status");
     const now = new Date();
-    const marketStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 3); // Najbliższy czwartek
+    const marketStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 5); // Najbliższy czwartek
     const marketEnd = new Date(marketStart);
     marketEnd.setDate(marketEnd.getDate() + 14);
 
