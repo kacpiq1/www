@@ -171,12 +171,20 @@
         }
 
         .discounted-price {
-            position: absolute;
-            top: 30px;
-            right: 10px;
-            color: white;
-            font-size: 1em;
-        }
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    color: white;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+}
+
+.discounted-price img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
 
         .card.select {
             background-color: #222222; /* Kontur karty */
@@ -332,19 +340,19 @@
     const discountedPrice = calculateDiscountPrice(skin.price, discount);
 
     card.innerHTML = `
-        <div class="discount">-${discount}%</div>
-        <div class="original-price">${skin.price}</div>
-        <div class="discounted-price">${discountedPrice} VP</div>
-        <div class="info">
-            Rzadkość: ${skin.rarity}
-        </div>
-        <div class="skin-details">
-            <img src="${skin.image}" alt="${skin.name}">
-            <div class="skin-name">${skin.name}</div>
-        </div>
-        <div class="rarity-icon"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
-        <div class="diamond-animation"></div> <!-- Existing diamond -->
-    `;
+    <div class="discount">-${discount}%</div>
+    <div class="original-price">${skin.price}</div>
+    <div class="discounted-price"><img src="path/to/valorant-points-icon.png" alt="VP icon">${discountedPrice}</div>
+    <div class="info">
+        Rzadkość: ${skin.rarity}
+    </div>
+    <div class="skin-details">
+        <img src="${skin.image}" alt="${skin.name}">
+        <div class="skin-name">${skin.name}</div>
+    </div>
+    <div class="rarity-icon"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
+    <div class="diamond-animation"></div> <!-- Existing diamond -->
+`;
 
     card.addEventListener("click", () => {
         const diamondAnimation = card.querySelector('.diamond-animation');
