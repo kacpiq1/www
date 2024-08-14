@@ -370,24 +370,24 @@ font-family: 'Tungsten-Bold', sans-serif;
     const discountedPrice = calculateDiscountPrice(skin.price, discount);
 
     card.innerHTML = `
-    <div class="discount">-${discount}%</div>
-    <div class="original-price">${skin.price}</div>
-    <div class="discounted-price"><img src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
-    <div class="skin-details">
-        <img src="${skin.image}" alt="${skin.name}">
-        <div class="skin-name">${skin.name}</div>
-    </div>
-    <div class="rarity-icon"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
-    <div class="diamond-animation"></div> <!-- Existing diamond -->
-`;
+        <div class="discount content">-${discount}%</div>
+        <div class="original-price content">${skin.price}</div>
+        <div class="discounted-price content"><img src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
+        <div class="skin-details content">
+            <img src="${skin.image}" alt="${skin.name}">
+<div class="rarity-icon content"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
+     
+            <div class="skin-name">${skin.name}</div>
+        </div>
+           <div class="diamond-animation"></div> <!-- Existing diamond -->
+    `;
 
     card.addEventListener("click", () => {
         const diamondAnimation = card.querySelector('.diamond-animation');
-        diamondAnimation.style.animation = "shrinkAndEnlargeDiamond 2s forwards";
+        diamondAnimation.style.animation = "shrinkAndDisappear 6s forwards";
         setTimeout(() => {
             card.classList.add("revealed");
-            diamondAnimation.classList.add("hidden"); // Hide the diamond after animation
-        }, 2000);
+        }, 500); // Reveal the card after 6 seconds
     });
 
     return card;
