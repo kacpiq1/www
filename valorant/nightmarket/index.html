@@ -263,41 +263,7 @@ font-family: 'Tungsten-Bold', sans-serif;
             }
         }
 
-        .diamond-animation {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60px; /* Initial size */
-    height: 60px; /* Initial size */
-    background: transparent;
-    border: 2px solid white; /* Color of the diamond */
-    transform: translate(-50%, -50%) rotate(45deg);
-    z-index: 3;
-    opacity: 1; /* Ensure it's visible */
-    animation: none; /* No initial animation */
-}
-
-@keyframes shrinkAndEnlargeDiamond {
-    0% {
-        width: 60px;
-        height: 60px;
-        opacity: 1;
-    }
-    50% {
-        width: 0;
-        height: 0;
-        opacity: 0.5;
-    }
-    100% {
-        width: 60px;
-        height: 60px;
-        opacity: 0;
-    }
-}
-
-.card .diamond-animation.hidden {
-    opacity: 0;
-}
+        
 
         .rarity-icon img {
     width: 30px;
