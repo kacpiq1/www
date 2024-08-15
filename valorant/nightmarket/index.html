@@ -283,60 +283,65 @@ font-family: 'Tungsten-Bold', sans-serif;
     </div>
     <script>
         const skins = [
-            { name: "Reaver Knife", rarity: "Exclusive", price: 3550, image: "nightmarket/images/reaver-knife.png" },
-            { name: "Magepunk Guardian", rarity: "Premium", price: 1775, image: "magepunk_guardian.jpg" },
-            { name: "Ion Operator", rarity: "Premium", price: 1775, image: "ion_operator.jpg" },
-            { name: "Minima Sheriff", rarity: "Deluxe", price: 1275, image: "minima_sheriff.jpg" },
-            { name: "Rush Judge", rarity: "Select", price: 875, image: "oni_shorty.jpg" },
-            { name: "Ego Vandal", rarity: "Premium", price: 1775, image: "ego_vandal.jpg" },
-{ name: "Gaia’s Vengeance Ghost", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Ghost.png" },
-{ name: "Gaia's Vengeance Guardian", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Guardian.png" },
-{ name: "Gaia's Vengeance Vandal", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Vandal.png" },
-{ name: "Gaia's Vengeance Marshal", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Marshal.png" },
-{ name: "Gaia's Wrath", rarity: "Exclusive", price: 3550, image: "nightmarket/images/Gaia's_Wrath.png" },
-{ name: "Gaia's Vengeance Bucky", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Bucky.png" },
-{ name: "Gaia's Vengeance Ares", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Ares.png" },
-{ name: "Gaia's Fury", rarity: "Exclusive", price: 3550, image: "nightmarket/images/Gaia's_Fury.png" }
-        ];
+    { name: "Reaver Knife", rarity: "Exclusive", price: 3550, image: "nightmarket/images/reaver-knife.png" },
+    { name: "Magepunk Guardian", rarity: "Premium", price: 1775, image: "magepunk_guardian.jpg" },
+    { name: "Ion Operator", rarity: "Premium", price: 1775, image: "ion_operator.jpg" },
+    { name: "Minima Sheriff", rarity: "Deluxe", price: 1275, image: "minima_sheriff.jpg" },
+    { name: "Rush Judge", rarity: "Select", price: 875, image: "oni_shorty.jpg" },
+    { name: "Ego Vandal", rarity: "Premium", price: 1775, image: "ego_vandal.jpg" },
+    { name: "Gaia’s Vengeance Ghost", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Ghost.png" },
+    { name: "Gaia's Vengeance Guardian", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Guardian.png" },
+    { name: "Gaia's Vengeance Vandal", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Vandal.png" },
+    { name: "Gaia's Vengeance Marshal", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Marshal.png" },
+    { name: "Gaia's Wrath", rarity: "Exclusive", price: 3550, image: "nightmarket/images/Gaia's_Wrath.png" },
+    { name: "Gaia's Vengeance Bucky", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Bucky.png" },
+    { name: "Gaia's Vengeance Ares", rarity: "Premium", price: 1775, image: "nightmarket/images/Gaia's_Vengeance_Ares.png" },
+    { name: "Gaia's Fury", rarity: "Exclusive", price: 3550, image: "nightmarket/images/Gaia's_Fury.png" }
+];
 
-        const discounts = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49];
+const discounts = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49];
 
-        function getRandomElement(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
+function getRandomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
-        function calculateDiscountPrice(price, discount) {
-            return Math.floor(price * ((100 - discount) / 100));
-        }
+function calculateDiscountPrice(price, discount) {
+    return Math.floor(price * ((100 - discount) / 100));
+}
 
-        function updateMarketStatus() {
-            const marketStatusElement = document.getElementById("market-status");
-            const now = new Date();
-            const marketStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 5); // Najbliższy czwartek
-            const marketEnd = new Date(marketStart);
-            marketEnd.setDate(marketEnd.getDate() + 14);
+function updateMarketStatus() {
+    const marketStatusElement = document.getElementById("market-status");
+    const now = new Date();
+    const marketStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 5); // Najbliższy czwartek
+    const marketEnd = new Date(marketStart);
+    marketEnd.setDate(marketEnd.getDate() + 14);
 
-            if (now < marketStart) {
-                const daysUntilStart = Math.ceil((marketStart - now) / (1000 * 60 * 60 * 24));
-                marketStatusElement.textContent = `STARTS IN ${daysUntilStart} DAYS`;
-            } else if (now >= marketStart && now <= marketEnd) {
-                const daysUntilEnd = Math.ceil((marketEnd - now) / (1000 * 60 * 60 * 24));
-                marketStatusElement.textContent = `ENDS IN ${daysUntilEnd} DAYS`;
-            } else {
-                const daysUntilNextStart = Math.ceil((marketStart.setDate(marketStart.getDate() + 7) - now) / (1000 * 60 * 60 * 24));
-                marketStatusElement.textContent = `STARTS IN ${daysUntilNextStart} DAYS`;
-            }
-        }
+    if (now < marketStart) {
+        const daysUntilStart = Math.ceil((marketStart - now) / (1000 * 60 * 60 * 24));
+        marketStatusElement.textContent = `STARTS IN ${daysUntilStart} DAYS`;
+    } else if (now >= marketStart && now <= marketEnd) {
+        const daysUntilEnd = Math.ceil((marketEnd - now) / (1000 * 60 * 60 * 24));
+        marketStatusElement.textContent = `ENDS IN ${daysUntilEnd} DAYS`;
+    } else {
+        const daysUntilNextStart = Math.ceil((marketStart.setDate(marketStart.getDate() + 7) - now) / (1000 * 60 * 60 * 24));
+        marketStatusElement.textContent = `STARTS IN ${daysUntilNextStart} DAYS`;
+    }
+}
 
-        const rarityImages = {
-        Select: 'nightmarket/images/select.png',
-        Deluxe: 'nightmarket/images/deluxe.png',
-        Premium: 'nightmarket/images/premium.png',
-        Exclusive: 'nightmarket/images/exclusive.png',
-        Ultra: 'nightmarket/images/ultra.png'
-    };
+const rarityImages = {
+    Select: 'nightmarket/images/select.png',
+    Deluxe: 'nightmarket/images/deluxe.png',
+    Premium: 'nightmarket/images/premium.png',
+    Exclusive: 'nightmarket/images/exclusive.png',
+    Ultra: 'nightmarket/images/ultra.png'
+};
 
-        function createCard(skin) {
+function getRandomSkins(skins, count) {
+    const shuffled = skins.sort(() => 0.5 - Math.random()); // Tasujemy tablicę
+    return shuffled.slice(0, count); // Zwracamy pierwsze 'count' elementów
+}
+
+function createCard(skin) {
     const card = document.createElement("div");
     card.classList.add("card", skin.rarity.toLowerCase());
 
@@ -349,11 +354,10 @@ font-family: 'Tungsten-Bold', sans-serif;
         <div class="discounted-price content"><img src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
         <div class="skin-details content">
             <img src="${skin.image}" alt="${skin.name}">
-<div class="rarity-icon content"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
-     
+            <div class="rarity-icon content"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
             <div class="skin-name">${skin.name}</div>
         </div>
-           <div class="diamond-animation"></div> <!-- Existing diamond -->
+        <div class="diamond-animation"></div> <!-- Existing diamond -->
     `;
 
     card.addEventListener("click", () => {
@@ -367,19 +371,17 @@ font-family: 'Tungsten-Bold', sans-serif;
     return card;
 }
 
+function populateMarket() {
+    const cardsContainer = document.getElementById("cards-container");
+    const randomSkins = getRandomSkins(skins, 6); // Wybieramy 6 losowych skórek
+    randomSkins.forEach(skin => {
+        const card = createCard(skin);
+        cardsContainer.appendChild(card);
+    });
+}
 
-
-
-        function populateMarket() {
-            const cardsContainer = document.getElementById("cards-container");
-            skins.forEach(skin => {
-                const card = createCard(skin);
-                cardsContainer.appendChild(card);
-            });
-        }
-
-        updateMarketStatus();
-        populateMarket();
+updateMarketStatus();
+populateMarket();
     </script>
 </body>
 </html>
