@@ -132,16 +132,16 @@ font-family: 'Tungsten-Bold', sans-serif;
 .card.revealed .content {
     opacity: 1; /* Pokaż zawartość po animacji */
 }
-        .card img {
-            max-width: 100%;
-            border-radius: 5px;
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            z-index: 2;
-        }
+        .card .skin-icon {
+    max-width: 100%;
+    border-radius: 5px;
+    display: block; /* Pokazuje obrazy ikon skinów */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    z-index: 2;
+}
 
         .card:hover {
             transform: scale(1.05);
@@ -171,13 +171,19 @@ font-family: 'Tungsten-Bold', sans-serif;
         }
 
         .rarity-icon {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 1.2em;
-            color: #ffffff; /* Kolor ikonki */
-            z-index: 2;
-        }
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 1.2em;
+    color: #ffffff; /* Kolor ikonki */
+    z-index: 2; /* Aby ikona była na wierzchu */
+}
+
+.rarity-icon img {
+    width: 30px; /* Rozmiar ikony rzadkości */
+    height: 30px; /* Rozmiar ikony rzadkości */
+    display: block; /* Upewniamy się, że obrazek jest widoczny */
+}
 
         .discount {
             position: absolute;
@@ -267,13 +273,6 @@ font-family: 'Tungsten-Bold', sans-serif;
                 font-size: 0.8em;
             }
         }
-
-        
-
-        .rarity-icon img {
-    width: 30px;
-    height: 30px;
-}
 
 
 
@@ -369,7 +368,7 @@ function createCard(skin) {
         <div class="original-price content">${skin.price}</div>
         <div class="discounted-price content"><img class="icon" src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
         <div class="skin-details content">
-            <img src="${skin.image}" alt="${skin.name}">
+            <img class="skin-icon" src="${skin.image}" alt="${skin.name}">
             <div class="rarity-icon content"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
             <div class="skin-name">${skin.name}</div>
         </div>
