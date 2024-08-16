@@ -209,12 +209,14 @@ font-family: 'Tungsten-Bold', sans-serif;
     justify-content: flex-start; /* Align items to start (left) */
 }
 
-.discounted-price img {
-    width: 1em;
-    height: 1em;
-    margin-right: 0.3em; /* Space between icon and text */
-    transform: rotate(0deg); /* Ensure icon is not rotated */
-}
+.discounted-price.content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .discounted-price.content img {
+            margin-right: 8px; /* Odstęp między ikoną a tekstem */
+        }
 
         .card.select {
     background-color: #222222; /* Kontur karty */
