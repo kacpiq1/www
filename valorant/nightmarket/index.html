@@ -162,13 +162,18 @@ font-family: 'Tungsten-Bold', sans-serif;
         }
 
         .skin-name {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-size: 1em;
-            color: #ffffff; /* Kolor tekstu */
-            z-index: 2;
-        }
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1em;
+    color: #ffffff; /* Kolor tekstu */
+    z-index: 2;
+    max-width: 75%; /* Maksymalna szerokość 3/4 karty */
+    text-align: center; /* Wyśrodkowanie tekstu */
+    overflow-wrap: break-word; /* Automatyczne łamanie długich słów */
+    word-wrap: break-word; /* Dla starszych przeglądarek */
+    white-space: normal; /* Umożliwia łamanie wierszy */
+}
 
         .rarity-icon {
     position: absolute;
