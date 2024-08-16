@@ -214,8 +214,10 @@ font-family: 'Tungsten-Bold', sans-serif;
             align-items: center;
         }
         
-        .discounted-price.content img {
-            margin-right: 8px; /* Odstęp między ikoną a tekstem */
+        .discounted-price.content .icon {
+            margin-right: 8px;
+            height: 1em;
+            width: auto;
         }
 
         .card.select {
@@ -364,7 +366,7 @@ function createCard(skin) {
     card.innerHTML = `
         <div class="discount content">-${discount}%</div>
         <div class="original-price content">${skin.price}</div>
-        <div class="discounted-price content"><img src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
+        <div class="discounted-price content"><img class="icon" src="nightmarket/images/Valorant_Points.png" alt="VP icon">${discountedPrice}</div>
         <div class="skin-details content">
             <img src="${skin.image}" alt="${skin.name}">
             <div class="rarity-icon content"><img src="${rarityImages[skin.rarity]}" alt="${skin.rarity} icon"></div>
