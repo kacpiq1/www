@@ -257,6 +257,7 @@ font-family: 'Tungsten-Bold', sans-serif;
     border-color: #f1b82d; /* Kontur rombu */
 }
 
+
 /* Style for the toggle button */
 #toggle-skin-list {
     position: fixed;
@@ -276,79 +277,41 @@ font-family: 'Tungsten-Bold', sans-serif;
     background-color: #b07dff;
 }
 
-#skins-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #d39dff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            z-index: 10;
-        }
-        
-        #skins-list {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 300px;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #ffffff;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-        }
-        
-        .skin-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .skin-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-        
-        .skin-item .info {
-            flex: 1;
-        }
-        
-        .skin-item .info h3 {
-            margin: 0;
-            font-size: 1em;
-        }
-        
-        .skin-item .info .price {
-            font-size: 0.9em;
-            color: #d39dff;
-        }
-        
-        .skin-item .rarity {
-            width: 30px;
-            height: 30px;
-            object-fit: cover;
-        }
-        
-        #close-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #ff6161;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-        }
+/* Style for the skin list container */
+.skin-list {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: none; /* Initially hidden */
+    z-index: 1000; /* Ensures it is above other content */
+}
+
+.skin-list img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.skin-list .skin-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.skin-list .skin-item .price {
+    margin-left: auto;
+    font-size: 1em;
+}
+
+
         /* Media queries for mobile */
         @media (max-width: 768px) {
             .card {
