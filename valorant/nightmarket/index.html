@@ -469,6 +469,39 @@ font-family: 'Tungsten-Bold', sans-serif;
 
 const discounts = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49];
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Existing code...
+
+    // Get references to the button and list container
+    const toggleSkinListButton = document.getElementById('toggle-skin-list');
+    const skinListContainer = document.getElementById('skin-list');
+
+    // Function to generate the skin list
+    function generateSkinList() {
+        return skins.map(skin => `
+            <div class="skin-item">
+                <img src="${rarityImages[skin.rarity]}" alt="${skin.rarity}" />
+                <span>${skin.name}</span>
+                <img src="${skin.image}" alt="${skin.name}" />
+                <span class="price">${skin.price} VP</span>
+            </div>
+        `).join('');
+    }
+
+    // Toggle the visibility of the skin list
+    toggleSkinListButton.addEventListener('click', function() {
+        if (skinListContainer.style.display === 'none') {
+            skinListContainer.innerHTML = generateSkinList();
+            skinListContainer.style.display = 'block';
+        } else {
+            skinListContainer.style.display = 'none';
+        }
+    });
+
+    // Initial market status update
+    updateMarketStatus();
+});
+
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
