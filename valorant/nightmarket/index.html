@@ -258,25 +258,6 @@ font-family: 'Tungsten-Bold', sans-serif;
 }
 
 
-/* Style for the toggle button */
-#toggle-skin-list {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #d39dff;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    z-index: 1000; /* Ensures it is above other content */
-}
-
-#toggle-skin-list:hover {
-    background-color: #b07dff;
-}
-
 /* Style for the skin list container */
 .skin-list {
     position: fixed;
@@ -310,7 +291,6 @@ font-family: 'Tungsten-Bold', sans-serif;
     margin-left: auto;
     font-size: 1em;
 }
-
 
         /* Media queries for mobile */
         @media (max-width: 768px) {
@@ -367,8 +347,7 @@ font-family: 'Tungsten-Bold', sans-serif;
 <button id="toggle-skin-list">Show Skins</button>
 
 <!-- Container for the skin list -->
-<div id="skins-list">
-            <button id="close-button">Zamknij</button>
+<div id="skin-list" class="skin-list"></div>
     <script>
         const skins = [
     { name: "Abyssal Guardian", rarity: "Deluxe", price: 1275, image: "nightmarket/images/Abyssal_Guardian.png" },
