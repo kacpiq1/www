@@ -548,6 +548,33 @@ function populateMarket() {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Existing code...
+
+    // Get references to the button and list container
+    const toggleSkinListButton = document.getElementById('toggle-skin-list');
+    const skinListContainer = document.getElementById('skin-list');
+
+    // Function to generate the skin list
+    function generateSkinList() {
+        return skins.map(skin => `
+            <div class="skin-item">
+                <img src="${rarityImages[skin.rarity]}" alt="${skin.rarity}" />
+                <span>${skin.name}</span>
+                <img src="${skin.image}" alt="${skin.name}" />
+                <span class="price">${skin.price} VP</span>
+            </div>
+        `).join('');
+    }
+
+    // Toggle the visibility of the skin list
+    toggleSkinListButton.addEventListener('click', function() {
+        if (skinListContainer.style.display === 'none') {
+            skinListContainer.innerHTML = generateSkinList();
+            skinListContainer.style.display = 'block';
+        } else {
+            skinListContainer.style.display = 'none';
+
 updateMarketStatus();
 populateMarket();
     </script>
