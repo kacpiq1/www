@@ -545,11 +545,7 @@ function populateMarket() {
     randomSkins.forEach(skin => {
         const card = createCard(skin);
         cardsContainer.appendChild(card);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Existing code...
+    
 
     // Get references to the button and list container
     const toggleSkinListButton = document.getElementById('toggle-skin-list');
@@ -575,6 +571,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             skinListContainer.style.display = 'none';
 
+});
+}
 updateMarketStatus();
 populateMarket();
     </script>
