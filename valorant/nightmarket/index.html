@@ -257,6 +257,58 @@ font-family: 'Tungsten-Bold', sans-serif;
     border-color: #f1b82d; /* Kontur rombu */
 }
 
+/* Style for the toggle button */
+#toggle-skin-list {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #d39dff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    z-index: 1000; /* Ensures it is above other content */
+}
+
+#toggle-skin-list:hover {
+    background-color: #b07dff;
+}
+
+/* Style for the skin list container */
+.skin-list {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: none; /* Initially hidden */
+    z-index: 1000; /* Ensures it is above other content */
+}
+
+.skin-list img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.skin-list .skin-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.skin-list .skin-item .price {
+    margin-left: auto;
+    font-size: 1em;
+}
         /* Media queries for mobile */
         @media (max-width: 768px) {
             .card {
@@ -308,6 +360,11 @@ font-family: 'Tungsten-Bold', sans-serif;
         <p id="market-status"><strong></strong></p>
         <div class="cards-container" id="cards-container"></div>
     </div>
+
+<button id="toggle-skin-list">Show Skins</button>
+
+<!-- Container for the skin list -->
+<div id="skin-list" class="skin-list"></div>
     <script>
         const skins = [
     { name: "Abyssal Guardian", rarity: "Deluxe", price: 1275, image: "nightmarket/images/Abyssal_Guardian.png" },
