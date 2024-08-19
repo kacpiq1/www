@@ -485,7 +485,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <img src="${rarityImages[skin.rarity]}" alt="${skin.rarity}" />
                 <span>${skin.name}</span>
                 <img src="${skin.image}" alt="${skin.name}" />
-                <span class="price">${skin.price} VP</span>
+
+<div class="discounted-price content"><img class="icon" src="nightmarket/images/Valorant_Points.png" alt="VP icon">${skin.price}</div>
             </div>
         `).join('');
     }
