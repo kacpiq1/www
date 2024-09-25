@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valorant Skins</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="search-container"></div>
+    <input type="text" id="search-input" placeholder="Szukaj skinów..." />
+</div>
+
+  <div id="skins-list"></div>
+
+  <div id="favorites-container" style="display:none;"></div>
+
+
+  <div id="skin-detail" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      
+      <div class="skin-name-container">
+        <div id="tier-container">
+          <img id="tier-icon" src="" alt="Tier Icon">
+        </div>
+        <h2 id="skin-name" class="skin-name">Skin Name</h2>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAABqElEQVRIS8WWgVECMRBFSQdSgdiBJUAH0gF0oBUoFWgH0oF0IB1oB14JUMH5v7O5uQvZ5Dbmhp3JzAF3efey2Q1udqVwV+LOisFt2y7x0jfOuUPJyxeBBfpBMMa6BF4KJvRBTI8Ar6zWZjBsF4B8ia3n3QHeWOAl4BcAngPIHuDtZGDYMqc/gW2RtckY4JitB+9gzd9HxWiw2DK3zHEsTgDPR1Fx0wAsZXIvD9/KkhLEJebQoJ53wkUjg9ccZ/+5X3YdGFCWB8tkytgCviegD6Ypl3LK6JpNuNQbUN8nIHPJn7ztwNjDJM+fFeGEcokHPT26qyvCo9CocUVz7u6V1kqTdfwP829AuZEIj0a2gQDOFrkw5jzbu3PGpSWW7WI58CNMX422/vbkUZkD9w98K591+1aU40x+WSrs31ocAF6bwYCm8ntkJ5JJ2en8wRJy5oDzBS9CXWrl0OAkOwzu2m5C3Kvthe5QCMkpME02vQf+LAFkjV6ErFBor5ZVCszdTJOopZa7wF7NcwrMjUNj/n2NWibgzPkSg+DGlGNt0lrfZ1tmLVA4zy9GJ6kfsbtO7AAAAABJRU5ErkJggg" 
+             alt="Favorite Icon" class="star-icon" id="favorite-icon" onclick="toggleFavorite('uuid-skin')">
+      </div>
+      <img id="skin-icon" src="" alt="Skin Icon">
+      <div id="variants-container"></div>
+      
+      <!-- Message for no video available -->
+      <div id="no-video-message" class="no-video-message" style="display: none;">
+        Brak podglądu dla tego wariantu.
+      </div>
+  
+      <video id="skin-video" controls style="display: none;"></video>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funkcja do filtrowania skinów
+        function filterSkins() {
+            const searchInput = document.getElementById('search-input');
+            const searchTerm = searchInput.value.toLowerCase();
+            const skinsList = document.getElementById('skins-list');
+            const skins = skinsList.getElementsByClassName('skin-card');
+
+            // Przechodzimy przez wszystkie skiny i ukrywamy lub pokazujemy je w zależności od wyszukiwania
+            Array.from(skins).forEach(skin => {
+                const skinName = skin.querySelector('h3').textContent.toLowerCase();
+                if (skinName.includes(searchTerm)) {
+                    skin.style.display = ''; // Pokazuje skina
+                } else {
+                    skin.style.display = 'none'; // Ukrywa skina
+                }
+            });
+        }
+
+        // Inicjalizuj wyszukiwarkę
+        document.getElementById('search-input').addEventListener('input', filterSkins);
+    });
+</script>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1f1f1f;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #skins-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+  }
+  
+  .skin-card {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 200px;
+    cursor: pointer;
+  }
+  
+  .skin-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .skin-card h3 {
+    font-size: 1.1em;
+    margin: 10px 0;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh; /* Maksymalna wysokość, aby nie wychodziło poza ekran */
+    overflow-y: auto; /* Dodanie przewijania, jeśli treść jest zbyt długa */
+  }
+
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff;
+  }
+  
+  #variants-container img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
+ /* Kontener dla nazwy skina i ikony rzadkości */
+.skin-name-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Ikona rzadkości */
+.skin-tier-icon {
+  width: 24px; /* Dopasowane do rozmiaru tekstu */
+  height: 24px;
+  margin-right: 10px;
+}
+
+
+
+/* Kontener dla nazwy skina i ikony rzadkości */
+.skin-name-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Kontener dla ikony rzadkości */
+#tier-container {
+    display: flex; /* Flexbox, aby kontener był elastyczny */
+    align-items: center; /* Wyrównanie ikony w pionie */
+    width: 1.5em; /* Ustalamy szerokość kontenera */
+    height: 1.5em; /* Ustalamy wysokość kontenera */
+    margin-right: 10px; /* Odstęp od tekstu */
+}
+
+/* Ikona rzadkości */
+#tier-icon {
+    width: 100%; /* Dopasowanie do kontenera */
+    height: auto; /* Utrzymanie proporcji */
+}
+
+/* Nazwa skina */
+.skin-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.2;
+}
+  
+  /* Obraz skina */
+  #skin-icon {
+    width: 275px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  #skin-video {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    max-height: 300px;
+    display: block;
+    text-align: center;
+  }
+  
+  #levels-container {
+    margin-top: 20px;
+  }
+  
+  .level-button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .level-button:hover {
+    background-color: #777;
+  }
+  
+  /* Styl dla komunikatu, gdy brak video */
+  .no-video-message {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 10px;
+  }
+  
+  .favorite-icon {
+    margin-left: 10px; /* Odstęp od nazwy skina */
+    cursor: pointer; /* Kursor wskazujący */
+}
+
+.star-icon {
+    width: 24px; /* Ustalony rozmiar ikony gwiazdki */
+    height: 24px;
+    vertical-align: middle; /* Wyrównanie z tekstem */
+}
+
+/* Styl dla ulubionych skinów */
+#favorites-container {
+    margin-top: 20px; /* Odstęp od innych sekcji */
+    display: none; /* Domyślnie ukryta, gdy nie ma ulubionych */
+}
+
+.favorites-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+/* Dodaj styl dla aktywnego poziomu */
+.active-level {
+  background-color: #777; /* Kolor tła dla aktywnego poziomu */
+  color: #fff; /* Kolor tekstu dla aktywnego poziomu */
+}
+
+#search-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center; /* Wyśrodkowuje pole wyszukiwania */
+}
+
+#search-input {
+  width: 300px; /* Szerokość pola wyszukiwania */
+  padding: 10px; /* Wewnętrzny odstęp */
+  border: 1px solid #ccc; /* Kolor ramki */
+  border-radius: 5px; /* Zaokrąglenie rogów */
+  font-size: 16px; /* Rozmiar czcionki */
+  transition: border-color 0.3s; /* Płynna zmiana koloru ramki */
+}
+
+#search-input:focus {
+  outline: none; /* Usunięcie domyślnego konturu */
+  border-color: #007BFF; /* Kolor ramki przy focie */
+}
