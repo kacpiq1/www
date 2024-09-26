@@ -127,16 +127,16 @@ async function showSkinDetail(skin) {
     });
   }
 
-  // Dodanie przycisku „Udostępnij” w szczegółach skina
-  const shareButton = document.createElement('button');
-  shareButton.textContent = 'Udostępnij';
-  shareButton.className = 'share-button'; // Dodaj klasę CSS do stylizacji
-  shareButton.addEventListener('click', () => {
+  // Dodanie przycisku „Udostępnij” w // Dodanie przycisku „Udostępnij” w szczegółach skina
+const shareButton = document.createElement('button');
+shareButton.textContent = 'Udostępnij';
+shareButton.className = 'share-button'; // Dodaj klasę CSS do stylizacji
+shareButton.addEventListener('click', () => {
     shareSkin(skin.uuid); // Wywołaj funkcję udostępniania z identyfikatorem skina
-  });
+});
 
-  // Dodanie przycisku do kontenera z wariantami lub innego miejsca w modalnym oknie
-  variantsContainer.appendChild(shareButton);
+// Dodanie przycisku do kontenera z wariantami lub innego miejsca w modalnym oknie
+variantsContainer.appendChild(shareButton);
 
   // Ustawienie domyślnego wideo
   skinVideoElement.src = defaultVideo;
