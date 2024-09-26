@@ -31,16 +31,9 @@ function displaySkins(skins) {
     skinCard.innerHTML = `
       <img src="${skin.displayIcon}" alt="${skin.displayName}">
       <h3>${skin.displayName}</h3>
-      <button class="share-btn">Udostępnij</button>
     `;
 
     skinCard.addEventListener('click', () => showSkinDetail(skin));
-
-    // Dodaj obsługę przycisku udostępniania
-    skinCard.querySelector('.share-btn').addEventListener('click', (e) => {
-      e.stopPropagation(); // Zatrzymaj propagację kliknięcia na skinCard
-      shareSkin(skin.uuid);
-    });
 
     skinsListContainer.appendChild(skinCard);
   });
@@ -133,6 +126,17 @@ async function showSkinDetail(skin) {
       levelsContainer.appendChild(levelButton);
     });
   }
+
+  // Dodanie przycisku „Udostępnij” w szczegółach skina
+  const shareButton = document.createElement('button');
+  shareButton.textContent = 'Udostępnij';
+  shareButton.className = 'share-button'; // Dodaj klasę CSS do stylizacji
+  shareButton.addEventListener('click', () => {
+    shareSkin(skin.uuid); // Wywołaj funkcję udostępniania z identyfikatorem skina
+  });
+
+  // Dodanie przycisku do kontenera z wariantami lub innego miejsca w modalnym oknie
+  variantsContainer.appendChild(shareButton);
 
   // Ustawienie domyślnego wideo
   skinVideoElement.src = defaultVideo;
