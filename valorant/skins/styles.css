@@ -214,3 +214,18 @@ body {
   outline: none; /* Usunięcie domyślnego konturu */
   border-color: #007BFF; /* Kolor ramki przy focie */
 }
+
+.share-button {
+    background-color: #555; /* Ciemny niebieski */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s; /* Dodaje efekt zmiany koloru przy najechaniu */
+}
+
+.share-button:hover {
+    background-color: #333; /* Jaśniejszy niebieski przy najechaniu */
+}
