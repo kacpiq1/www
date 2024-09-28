@@ -39,6 +39,9 @@ function displaySkins(skins) {
   });
 }
 
+let currentLevel = 0; // Przechowuje aktualny poziom
+let currentChroma = 0; // Przechowuje aktualny chroma
+
 // Funkcja do wyświetlania szczegółów skina
 async function showSkinDetail(skin) {
   skinNameElement.textContent = skin.displayName;
@@ -56,138 +59,13 @@ async function showSkinDetail(skin) {
   let defaultVideo = '';
 
   if (skin.chromas && skin.chromas.length > 0) {
-    skin.chromas.forEach(chroma => {
-      const chromaIcon = document.createElement('img');
-      chromaIcon.src = chroma.swatch || skin.displayIcon;
-
-      // Obsługa kliknięcia na wariant skina (chroma)
-      chromaIcon.addEventListener('click', async () => {
-        let videoUrl = chroma.streamedVideo || '';
-
-        // Jeśli brak video w chroma, sprawdź levels
-        if (!videoUrl && skin.levels && skin.levels.length > 0) {
-          for (let level of skin.levels) {
-            if (level.streamedVideo) {
-              videoUrl = level.streamedVideo;
-              break;
-            }
-          }
-        }
-
-        // Ustawienie video dla wybranego wariantu
-        skinVideoElement.src = videoUrl || '';
-        skinVideoElement.play(); // Automatyczne odtwarzanie wideo
-      });
-
-      variantsContainer.appendChild(chromaIcon);
-    });
-  }
-
-  // Ustawienie domyślnego video
-  if (skin.levels && skin.levels.length > 0) {
-    for (let level of skin.levels) {
-      if (level.streamedVideo) {
-        defaultVideo = level.streamedVideo;
-        break;
-      }
-    }
-  }
-
-  // Wyświetlanie przycisków do poziomów (levels)
-  const levelsContainer = document.createElement('div');
-  levelsContainer.id = 'levels-container';
-  variantsContainer.appendChild(levelsContainer);
-
-  if (skin.levels && skin.levels.length > 0) {
-    skin.levels.forEach((level, index) => {
-      const levelButton = document.createElement('button');
-      levelButton.textContent = `Level ${index + 1}`;
-      levelButton.classList.add('level-button');
-      if (index === 0) levelButton.classList.add('active-level'); // Ustaw domyślnie na aktywny poziom
-
-      // Obsługa kliknięcia na przycisk poziomu (level)
-      levelButton.addEventListener('click', () => {
-        // Zaktualizuj wszystkie przyciski, aby usunąć klasę aktywną
-        const allButtons = document.querySelectorAll('.level-button');
-        allButtons.forEach(btn => btn.classList.remove('active-level'));
-
-        // Dodaj klasę aktywną do klikniętego przycisku
-        levelButton.classList.add('active-level');
-
-        if (level.streamedVideo) {
-          skinVideoElement.src = level.streamedVideo;
-        } else {
-          skinVideoElement.src = ''; // Brak filmu dla poziomu
-        }
-
-        skinVideoElement.play(); // Automatyczne odtwarzanie wideo
-      });
-
-      levelsContainer.appendChild(levelButton);
-    });
-  }
-
-  // Dodanie przycisku „Udostępnij” w // Dodanie przycisku „Udostępnij” w szczegółach skina
-const shareButton = document.createElement('button');
-shareButton.textContent = 'Udostępnij';
-shareButton.className = 'share-button'; // Dodaj klasę CSS do stylizacji
-shareButton.addEventListener('click', () => {
-    shareSkin(skin.uuid); // Wywołaj funkcję udostępniania z identyfikatorem skina
-});
-
-// Dodanie przycisku do kontenera z wariantami lub innego miejsca w modalnym oknie
-variantsContainer.appendChild(shareButton);
-
-  // Ustawienie domyślnego wideo
-  skinVideoElement.src = defaultVideo;
-  if (defaultVideo) {
-    skinVideoElement.style.display = 'block';
-    skinVideoElement.play(); // Odtwarzanie domyślnego wideo
-  } else {
-    // Gdy brak wideo
-    skinVideoElement.style.display = 'none'; // Ukryj wideo
-    const noVideoMessage = document.createElement('div');
-    noVideoMessage.className = 'no-video-message';
-    noVideoMessage.textContent = 'Brak podglądu dla tego wariantu';
-    variantsContainer.appendChild(noVideoMessage);
-  }
-
-  skinDetailModal.style.display = 'flex';
-}
-
-let currentLevel = 0; // Przechowuje aktualny poziom
-let currentChroma = 0; // Przechowuje aktualny chroma
-
-// Funkcja do generowania linku do udostępniania z poziomem i chromą
-function shareSkin(skinId) {
-  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}`;
-  navigator.clipboard.writeText(url).then(() => {
-    alert('Link do skina został skopiowany do schowka!');
-  }).catch(err => {
-    console.error('Nie udało się skopiować linku: ', err);
-  });
-}
-
-// Modyfikacja funkcji `showSkinDetail` dla chromas
-async function showSkinDetail(skin) {
-  skinNameElement.textContent = skin.displayName;
-  skinIconElement.src = skin.displayIcon;
-
-  // Pobieranie ikonki rzadkości skina
-  if (skin.contentTierUuid) {
-    const tierResponse = await fetch(`${TIER_API_URL}${skin.contentTierUuid}`);
-    const tierData = await tierResponse.json();
-    tierIconElement.src = tierData.data.displayIcon;
-  }
-
-  variantsContainer.innerHTML = '';
-  let defaultVideo = '';
-
-  if (skin.chromas && skin.chromas.length > 0) {
     skin.chromas.forEach((chroma, index) => {
       const chromaIcon = document.createElement('img');
       chromaIcon.src = chroma.swatch || skin.displayIcon;
       chromaIcon.classList.add('chroma-icon'); // Dodanie klasy dla stylizacji
+
+      // Dodanie stylu konturu
+      chromaIcon.style.border = `2px solid ${index === currentChroma ? '#90cac1' : '#545e6c'}`;
 
       // Obsługa kliknięcia na wariant skina (chroma)
       chromaIcon.addEventListener('click', async () => {
@@ -228,6 +106,7 @@ async function showSkinDetail(skin) {
     }
   }
 
+  // Wyświetlanie przycisków do poziomów (levels)
   const levelsContainer = document.createElement('div');
   levelsContainer.id = 'levels-container';
   variantsContainer.appendChild(levelsContainer);
@@ -237,8 +116,9 @@ async function showSkinDetail(skin) {
       const levelButton = document.createElement('button');
       levelButton.textContent = `Level ${index + 1}`;
       levelButton.classList.add('level-button');
-      if (index === 0) levelButton.classList.add('active-level');
+      if (index === currentLevel) levelButton.classList.add('active-level'); // Ustaw domyślnie na aktywny poziom
 
+      // Obsługa kliknięcia na przycisk poziomu (level)
       levelButton.addEventListener('click', () => {
         currentLevel = index; // Aktualizacja bieżącego poziomu
         document.querySelectorAll('.level-button').forEach(btn => btn.classList.remove('active-level'));
@@ -247,20 +127,52 @@ async function showSkinDetail(skin) {
         if (level.streamedVideo) {
           skinVideoElement.src = level.streamedVideo;
         } else {
-          skinVideoElement.src = '';
+          skinVideoElement.src = ''; // Brak filmu dla poziomu
         }
 
-        skinVideoElement.play();
+        skinVideoElement.play(); // Automatyczne odtwarzanie wideo
       });
 
       levelsContainer.appendChild(levelButton);
     });
   }
 
+  // Dodanie przycisku „Udostępnij” w szczegółach skina
+  const shareButton = document.createElement('button');
+  shareButton.textContent = 'Udostępnij';
+  shareButton.className = 'share-button'; // Dodaj klasę CSS do stylizacji
+  shareButton.addEventListener('click', () => {
+    shareSkin(skin.uuid); // Wywołaj funkcję udostępniania z identyfikatorem skina
+  });
+
+  // Dodanie przycisku do kontenera z wariantami lub innego miejsca w modalnym oknie
+  variantsContainer.appendChild(shareButton);
+
+  // Ustawienie domyślnego wideo
   skinVideoElement.src = defaultVideo;
-  skinVideoElement.style.display = defaultVideo ? 'block' : 'none';
+  if (defaultVideo) {
+    skinVideoElement.style.display = 'block';
+    skinVideoElement.play(); // Odtwarzanie domyślnego wideo
+  } else {
+    // Gdy brak wideo
+    skinVideoElement.style.display = 'none'; // Ukryj wideo
+    const noVideoMessage = document.createElement('div');
+    noVideoMessage.className = 'no-video-message';
+    noVideoMessage.textContent = 'Brak podglądu dla tego wariantu';
+    variantsContainer.appendChild(noVideoMessage);
+  }
 
   skinDetailModal.style.display = 'flex';
+}
+
+// Funkcja do generowania linku do udostępniania z poziomem i chromą
+function shareSkin(skinId) {
+  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}`;
+  navigator.clipboard.writeText(url).then(() => {
+    alert('Link do skina został skopiowany do schowka!');
+  }).catch(err => {
+    console.error('Nie udało się skopiować linku: ', err);
+  });
 }
 
 // Funkcja do sprawdzania URL i otwierania skina z odpowiednim poziomem i chromą
@@ -287,7 +199,6 @@ function checkURLForSkin() {
     }
   }
 }
-
 
 // Funkcja wyszukująca skina na podstawie jego ID
 function getSkinById(id) {
