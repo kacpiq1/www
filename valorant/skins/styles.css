@@ -229,3 +229,14 @@ body {
 .share-button:hover {
     background-color: #333; /* Jaśniejszy niebieski przy najechaniu */
 }
+
+.chroma-icon {
+  border: 2px solid #545e6c; /* Domyślny kolor konturu */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  cursor: pointer;
+  transition: border-color 0.3s; /* Efekt przejścia konturu */
+}
+
+.chroma-icon.active {
+  border-color: #90cac1; /* Kolor konturu dla wybranego chroma */
+}
