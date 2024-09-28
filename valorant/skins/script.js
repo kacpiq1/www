@@ -155,9 +155,12 @@ variantsContainer.appendChild(shareButton);
   skinDetailModal.style.display = 'flex';
 }
 
-// Funkcja do generowania linku do udostępniania
+let currentLevel = 0; // Przechowuje aktualny poziom
+let currentChroma = 0; // Przechowuje aktualny chroma
+
+// Funkcja do generowania linku do udostępniania z poziomem i chromą
 function shareSkin(skinId) {
-  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}`;
+  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}`;
   navigator.clipboard.writeText(url).then(() => {
     alert('Link do skina został skopiowany do schowka!');
   }).catch(err => {
@@ -165,17 +168,126 @@ function shareSkin(skinId) {
   });
 }
 
-// Funkcja sprawdzająca parametry URL, aby otworzyć szczegóły skina
+// Modyfikacja funkcji `showSkinDetail` dla chromas
+async function showSkinDetail(skin) {
+  skinNameElement.textContent = skin.displayName;
+  skinIconElement.src = skin.displayIcon;
+
+  // Pobieranie ikonki rzadkości skina
+  if (skin.contentTierUuid) {
+    const tierResponse = await fetch(`${TIER_API_URL}${skin.contentTierUuid}`);
+    const tierData = await tierResponse.json();
+    tierIconElement.src = tierData.data.displayIcon;
+  }
+
+  variantsContainer.innerHTML = '';
+  let defaultVideo = '';
+
+  if (skin.chromas && skin.chromas.length > 0) {
+    skin.chromas.forEach((chroma, index) => {
+      const chromaIcon = document.createElement('img');
+      chromaIcon.src = chroma.swatch || skin.displayIcon;
+      chromaIcon.classList.add('chroma-icon'); // Dodanie klasy dla stylizacji
+
+      // Obsługa kliknięcia na wariant skina (chroma)
+      chromaIcon.addEventListener('click', async () => {
+        currentChroma = index; // Aktualizacja bieżącego chroma
+        let videoUrl = chroma.streamedVideo || '';
+
+        // Jeśli brak video w chroma, sprawdź levels
+        if (!videoUrl && skin.levels && skin.levels.length > 0) {
+          for (let level of skin.levels) {
+            if (level.streamedVideo) {
+              videoUrl = level.streamedVideo;
+              break;
+            }
+          }
+        }
+
+        // Ustawienie video dla wybranego wariantu
+        skinVideoElement.src = videoUrl || '';
+        skinVideoElement.play();
+
+        // Aktualizacja stylu konturów ikon
+        document.querySelectorAll('.chroma-icon').forEach((icon, i) => {
+          icon.style.borderColor = i === currentChroma ? '#90cac1' : '#545e6c';
+        });
+      });
+
+      variantsContainer.appendChild(chromaIcon);
+    });
+  }
+
+  // Ustawienie domyślnego video
+  if (skin.levels && skin.levels.length > 0) {
+    for (let level of skin.levels) {
+      if (level.streamedVideo) {
+        defaultVideo = level.streamedVideo;
+        break;
+      }
+    }
+  }
+
+  const levelsContainer = document.createElement('div');
+  levelsContainer.id = 'levels-container';
+  variantsContainer.appendChild(levelsContainer);
+
+  if (skin.levels && skin.levels.length > 0) {
+    skin.levels.forEach((level, index) => {
+      const levelButton = document.createElement('button');
+      levelButton.textContent = `Level ${index + 1}`;
+      levelButton.classList.add('level-button');
+      if (index === 0) levelButton.classList.add('active-level');
+
+      levelButton.addEventListener('click', () => {
+        currentLevel = index; // Aktualizacja bieżącego poziomu
+        document.querySelectorAll('.level-button').forEach(btn => btn.classList.remove('active-level'));
+        levelButton.classList.add('active-level');
+
+        if (level.streamedVideo) {
+          skinVideoElement.src = level.streamedVideo;
+        } else {
+          skinVideoElement.src = '';
+        }
+
+        skinVideoElement.play();
+      });
+
+      levelsContainer.appendChild(levelButton);
+    });
+  }
+
+  skinVideoElement.src = defaultVideo;
+  skinVideoElement.style.display = defaultVideo ? 'block' : 'none';
+
+  skinDetailModal.style.display = 'flex';
+}
+
+// Funkcja do sprawdzania URL i otwierania skina z odpowiednim poziomem i chromą
 function checkURLForSkin() {
   const params = new URLSearchParams(window.location.search);
   const skinId = params.get('skin');
+  currentLevel = parseInt(params.get('level')) || 0;
+  currentChroma = parseInt(params.get('chroma')) || 0;
+
   if (skinId) {
     const skin = getSkinById(skinId);
     if (skin) {
       showSkinDetail(skin);
+
+      // Automatyczne ustawienie chromy i poziomu przy otwarciu
+      const chromaIcons = document.querySelectorAll('.chroma-icon');
+      if (chromaIcons[currentChroma]) {
+        chromaIcons[currentChroma].click();
+      }
+      const levelButtons = document.querySelectorAll('.level-button');
+      if (levelButtons[currentLevel]) {
+        levelButtons[currentLevel].click();
+      }
     }
   }
 }
+
 
 // Funkcja wyszukująca skina na podstawie jego ID
 function getSkinById(id) {
