@@ -89,26 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Wysyłanie powiadomienia
-    function sendNotification(lesson) {
-        if (Notification.permission === 'granted') {
-            new Notification(`Zaraz zaczyna się lekcja!`, {
-                body: `Lekcja: ${lesson.subject}\nSala: ${lesson.room}`,
-                icon: 'https://cdn-icons-png.freepik.com/512/61/61227.png?ga=GA1.1.1121791634.1698960058', 
-            });
-        }
-    }
-
-    // Sprawdzenie uprawnień do powiadomień
-    function checkNotificationPermission() {
-        if (Notification.permission === 'default') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    console.log("Powiadomienia są dozwolone.");
-                }
-            });
-        }
-    }
+   
 
      function checkUpcomingLessons() {
         const now = new Date();
@@ -185,8 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lessonDiv = document.createElement('div');
             lessonDiv.className = 'lesson';
 
-            
-const lessonNumber = getLessonNumber(lesson.time);
+            const lessonNumber = getLessonNumber(lesson.time);
 
             lessonDiv.innerHTML = `
                 <div class="lesson-number">${lessonNumber}</div>
@@ -202,7 +182,6 @@ const lessonNumber = getLessonNumber(lesson.time);
             lessonsContainer.appendChild(lessonDiv);
         });
     }
-            
 
     // Obsługa zmiany daty
     function updateDateDisplay(date) {
@@ -251,7 +230,7 @@ const lessonNumber = getLessonNumber(lesson.time);
     setInterval(updateCurrentStatus, 60000);
 
     // Inicjalne wyświetlenie
-    checkNotificationPermission();
+    
     updateCalendar();
     updateCurrentStatus();
 });
