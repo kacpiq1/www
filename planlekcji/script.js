@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const minutesRemaining = calculateRemainingTime(currentLesson.time);
             currentStatus.innerHTML = `Aktualna lekcja: ${currentLesson.subject} - Sala ${currentLesson.room} <br></br>Jeszcze ${minutesRemaining} min.`;
         } else {
-            currentStatus.innerHTML = 'Obecnie nie trwa żadna lekcja.';
+            currentStatus.innerHTML = 'Brak lekcji.';
         }
     }
 
