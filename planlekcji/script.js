@@ -89,6 +89,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Wysyłanie powiadomienia
+    function sendNotification(lesson) {
+        if (Notification.permission === 'granted') {
+            new Notification(`Zaraz zaczyna się lekcja!`, {
+                body: `Lekcja: ${lesson.subject}\nSala: ${lesson.room}`,
+                icon: 'https://cdn-icons-png.freepik.com/512/61/61227.png?ga=GA1.1.1121791634.1698960058', 
+            });
+        }
+    }
+
+    // Sprawdzenie uprawnień do powiadomień
+    function checkNotificationPermission() {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    console.log("Powiadomienia są dozwolone.");
+                }
+            });
+        }
+    }
+
+     function checkUpcomingLessons() {
+        const now = new Date();
+        const currentDay = now.getDay();
+        const currentTime = now.getHours() + ':' + (now.getMinutes().toString().padStart(2, '0'));
+
+        lessons.forEach(lesson => {
+            if (lesson.day === currentDay) {
+                const [start] = lesson.time.split('-');
+                const lessonStartTime = new Date(now);
+                const [startHour, startMinute] = start.split(':').map(Number);
+                lessonStartTime.setHours(startHour, startMinute, 0, 0);
+
+                const timeDiff = lessonStartTime - now; // Różnica w ms
+
+                // Sprawdź, czy jest 5 minut do lekcji
+                if (timeDiff <= 5 * 60 * 1000 && timeDiff > 0) {
+                    sendNotification(lesson);
+                }
+            }
+        });
+    }
+
     // Oblicz czas pozostały do zakończenia aktualnej lekcji
     function calculateRemainingTime(lessonTime) {
         const [start, end] = lessonTime.split('-');
@@ -206,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateCurrentStatus, 60000);
 
     // Inicjalne wyświetlenie
+    checkNotificationPermission();
     updateCalendar();
     updateCurrentStatus();
 });
