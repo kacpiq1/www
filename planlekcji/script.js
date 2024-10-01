@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startDate = new Date('2024-09-03');
     const endDate = new Date('2024-12-20');
-const quizDate = new Date('2024-10-07'); // Data kartkówki
 
     // Definicja numeru lekcji na podstawie godzin
     const lessonTimes = [
@@ -186,39 +185,23 @@ const quizDate = new Date('2024-10-07'); // Data kartkówki
             const lessonDiv = document.createElement('div');
             lessonDiv.className = 'lesson';
 
-            // Sprawdzamy, czy to jest specjalna lekcja (polski w dniu 7 października)
-            if (date.getTime() === quizDate.getTime() && lesson.subject === 'Język polski') {
-                lessonDiv.style.borderLeft = '5px solid #FFA500'; // Pomarańczowo-żółty kolor
-                lessonDiv.innerHTML = `
-                    <div class="lesson-number">${index + 1}</div>
-                    <div class="lesson-info">
-                        <div class="lesson-subject">${lesson.subject}</div>
-                        <div class="lesson-details">
-                            <span class="lesson-time">${lesson.time}</span>
-                            <span class="lesson-room">${lesson.room}</span>
-                        </div>
-                        <div class="lesson-teacher">${lesson.teacher}</div>
-                        <div style="color: #FFA500;">Kartkówka</div> <!-- Pomarańczowo-żółty tekst -->
+            
+const lessonNumber = getLessonNumber(lesson.time);
+
+            lessonDiv.innerHTML = `
+                <div class="lesson-number">${lessonNumber}</div>
+                <div class="lesson-info">
+                    <div class="lesson-subject">${lesson.subject}</div>
+                    <div class="lesson-details">
+                        <span class="lesson-time">${lesson.time}</span>
+                        <span class="lesson-room">${lesson.room}</span>
                     </div>
-                `;
-            } else {
-                // Normalna lekcja
-                lessonDiv.innerHTML = `
-                    <div class="lesson-number">${index + 1}</div>
-                    <div class="lesson-info">
-                        <div class="lesson-subject">${lesson.subject}</div>
-                        <div class="lesson-details">
-                            <span class="lesson-time">${lesson.time}</span>
-                            <span class="lesson-room">${lesson.room}</span>
-                        </div>
-                        <div class="lesson-teacher">${lesson.teacher}</div>
-                    </div>
-                `;
-            }
+                    <div class="lesson-teacher">${lesson.teacher}</div>
+                </div>
+            `;
             lessonsContainer.appendChild(lessonDiv);
         });
     }
-
             
 
     // Obsługa zmiany daty
