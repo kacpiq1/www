@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan lekcji</title>
+    <style>
+        /* Style for the layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #181c1f; /* Tło strony */
+    color: #ffffff; /* Kolor tekstu */
+}
+
+#current-status {
+    background-color: #374955; /* Tło dla aktualnego statusu */
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 18px;
+    border-left: 5px solid #76d1fd; /* Kolor obramowania */
+}
+
+#lessons-container {
+    margin: 20px 0;
+}
+
+.lesson {
+    border: 1px solid #212a31; /* Kolor obramowania lekcji */
+    background-color: #212a31; /* Tło lekcji */
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s; /* Dodanie efektu przejścia */
+}
+
+.lesson:hover {
+    background-color: #76d1fd; /* Tło po najechaniu na lekcję */
+}
+
+.lesson-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.lesson-info {
+    flex-grow: 1;
+}
+
+.lesson-subject {
+    font-size: 20px;
+    font-weight: bold;
+    color: #76d1fd; /* Kolor tematu lekcji */
+}
+
+.lesson-details {
+    font-size: 14px;
+    color: #ffffff; /* Kolor szczegółów lekcji */
+}
+
+#calendar-input {
+    margin-top: 20px;
+    padding: 5px;
+    border: 1px solid #76d1fd; /* Kolor obramowania dla inputu */
+    background-color: #212a31; /* Tło inputu */
+    color: #ffffff; /* Kolor tekstu w inputcie */
+}
+
+#prev-day, #next-day {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #76d1fd; /* Kolor przycisków */
+    color: #181c1f; /* Kolor tekstu przycisków */
+    border: none;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s; /* Dodanie efektu przejścia */
+}
+
+#prev-day:hover, #next-day:hover {
+    background-color: #374955; /* Tło przycisków po najechaniu */
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Element do wyświetlania statusu bieżącej lekcji -->
+    <div id="current-status"></div>
+
+    <!-- Element do wyświetlania bieżącej daty -->
+    <div id="current-date"></div>
+
+    <!-- Kontener na lekcje na dany dzień -->
+    <div id="lessons-container"></div>
+
+    <!-- Kalendarz oraz przyciski do zmiany dnia -->
+    <input type="date" id="calendar-input">
+    <button id="prev-day">Dzień wstecz</button>
+    <button id="next-day">Dzień naprzód</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
