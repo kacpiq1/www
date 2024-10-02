@@ -113,37 +113,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Oblicz czas pozostały do zakończenia aktualnej lekcji
-    function calculateRemainingTime(lessonTime) {
-        const [start, end] = lessonTime.split('-');
-        const [endHour, endMinute] = end.split(':').map(Number);
-        const now = new Date();
-        const endTime = new Date(now);
-        endTime.setHours(endHour, endMinute, 0, 0);
+    // Oblicz czas pozostały do zakończenia aktualnej lekcji (w formacie mm:ss)
+function calculateRemainingTime(lessonTime) {
+    const [start, end] = lessonTime.split('-');
+    const [endHour, endMinute] = end.split(':').map(Number);
+    const now = new Date();
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMinute, 0, 0);
 
-        const timeDiff = endTime - now; // różnica w ms
-        const minutesRemaining = Math.floor(timeDiff / 60000); // konwersja na minuty
-        return minutesRemaining;
+    const timeDiff = endTime - now; // różnica w ms
+    const minutesRemaining = Math.floor(timeDiff / 60000); // konwersja na minuty
+    const secondsRemaining = Math.floor((timeDiff % 60000) / 1000); // pozostałe sekundy
+
+    return `${minutesRemaining}:${secondsRemaining.toString().padStart(2, '0')}`; // format mm:ss
+}
+
+
+    // Oblicz czas pozostały do końca przerwy
+function calculateRemainingBreakTime(nextLessonTime) {
+    const [nextStart] = nextLessonTime.split('-');
+    const [nextStartHour, nextStartMinute] = nextStart.split(':').map(Number);
+    const now = new Date();
+    const nextStartTime = new Date(now);
+    nextStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
+
+    const timeDiff = nextStartTime - now; // różnica w ms
+    const minutesRemaining = Math.floor(timeDiff / 60000); // konwersja na minuty
+    const secondsRemaining = Math.floor((timeDiff % 60000) / 1000); // pozostałe sekundy
+
+    return `${minutesRemaining}:${secondsRemaining.toString().padStart(2, '0')}`; // Format mm:ss
+}
+
+
+function updateCurrentStatus() {
+    const now = new Date();
+    const currentDay = now.getDay(); // Pobierz bieżący dzień tygodnia
+    const currentTime = now.getHours() + ':' + (now.getMinutes().toString().padStart(2, '0'));
+
+    const currentLesson = lessons.find(lesson => {
+        const [start, end] = lesson.time.split('-');
+        return lesson.day === currentDay && start <= currentTime && end >= currentTime;
+    });
+
+    const nextLesson = lessons.find(lesson => {
+        const [start] = lesson.time.split('-');
+        return lesson.day === currentDay && start > currentTime;
+    });
+
+    if (currentLesson) {
+        const minutesRemaining = calculateRemainingTime(currentLesson.time);
+        currentStatus.innerHTML = `Aktualna lekcja: ${currentLesson.subject} - Sala ${currentLesson.room} <br> (${minutesRemaining})`;
+    } else if (nextLesson) {
+        const breakTimeRemaining = calculateRemainingBreakTime(nextLesson.time);
+        currentStatus.innerHTML = `Trwa przerwa - (${breakTimeRemaining}) <br> Następna lekcja: ${nextLesson.subject} - Sala ${nextLesson.room}`;
+    } else {
+        currentStatus.innerHTML = 'Brak lekcji.';
     }
+}
 
-    // Wyświetl aktualny status lekcji
-    function updateCurrentStatus() {
-        const now = new Date();
-        const currentDay = now.getDay(); // Pobierz bieżący dzień tygodnia
-        const currentTime = now.getHours() + ':' + (now.getMinutes().toString().padStart(2, '0'));
-
-        const currentLesson = lessons.find(lesson => {
-            const [start, end] = lesson.time.split('-');
-            return lesson.day === currentDay && start <= currentTime && end >= currentTime;
-        });
-
-        if (currentLesson) {
-            const minutesRemaining = calculateRemainingTime(currentLesson.time);
-            currentStatus.innerHTML = `Aktualna lekcja: ${currentLesson.subject} - Sala ${currentLesson.room} <br></br>Jeszcze ${minutesRemaining} min.`;
-        } else {
-            currentStatus.innerHTML = 'Brak lekcji.';
-        }
+function checkForQuiz(date, lessonNumber) {
+    const quizDate = new Date('2024-10-07'); // Data kartkówki
+    if (date.getTime() === quizDate.getTime() && lessonNumber === 12) {
+        return '<div class="quiz" style="color: orange; font-weight: bold;">Kartkówka</div>';
     }
+    return ''; // Brak kartkówki
+}
+
+// Funkcja sprawdzająca zmianę sali
+function checkForRoomChange(date, lessonNumber) {
+    const roomChangeDate = new Date('2024-10-03'); // Data zmiany sali
+    const originalRoom = "S30"; // Pierwotny numer sali
+    const newRoom = "12"; // Nowy numer sali
+
+    if (date.getTime() === roomChangeDate.getTime() && lessonNumber === 8) {
+        return `<span style="text-decoration: line-through;">${originalRoom}</span> &rarr; <strong>${newRoom}</strong>`;
+    }
+    return ''; // Brak zmiany sali
+}
+
 
     // Wyświetl lekcje dla wybranego dnia
     function updateLessonsForDate(date) {
@@ -168,15 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const lessonNumber = getLessonNumber(lesson.time);
 
+            // Sprawdzenie zmiany sali
+        const roomChangeInfo = checkForRoomChange(date, lessonNumber);
+
             lessonDiv.innerHTML = `
                 <div class="lesson-number">${lessonNumber}</div>
                 <div class="lesson-info">
                     <div class="lesson-subject">${lesson.subject}</div>
                     <div class="lesson-details">
                         <span class="lesson-time">${lesson.time}</span>
-                        <span class="lesson-room">${lesson.room}</span>
+                        <span class="lesson-room">${roomChangeInfo ? roomChangeInfo : lesson.room}</span>
                     </div>
                     <div class="lesson-teacher">${lesson.teacher}</div>
+                    ${checkForQuiz(date, lessonNumber)}
                 </div>
             `;
             lessonsContainer.appendChild(lessonDiv);
@@ -227,9 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Aktualizuj status lekcji co minutę
-    setInterval(updateCurrentStatus, 60000);
+    setInterval(updateCurrentStatus, 1000);
 
     // Inicjalne wyświetlenie
+
+    window.onload = function() {
+        updateLessonsForDate(new Date()); // Aktualizacja lekcji na dzisiaj
+        updateStatus(); // Aktualizacja statusu na dzisiaj
+    };
     
     updateCalendar();
     updateCurrentStatus();
