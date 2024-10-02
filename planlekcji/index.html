@@ -5,86 +5,328 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan lekcji</title>
     <style>
-        /* Style for the layout */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #181c1f; /* Tło strony */
-    color: #ffffff; /* Kolor tekstu */
-}
+        /* Paleta kolorów 1 */
+        .palette-1 {
+            --background-color: #181c1f;
+            --text-color: #ffffff;
+            --status-background: #374955;
+            --border-color: #76d1fd;
+            --lesson-background: #212a31;
+            --lesson-hover-background: #374955;
+        }
 
-#current-status {
-    background-color: #374955; /* Tło dla aktualnego statusu */
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 18px;
-    border-left: 5px solid #76d1fd; /* Kolor obramowania */
-}
+        /* Paleta kolorów 2 */
+        .palette-2 {
+            --background-color: #f0f0f0;
+            --text-color: #333333;
+            --status-background: #e0e0e0;
+            --border-color: #ff5722;
+            --lesson-background: #ffffff;
+            --lesson-hover-background: #e0e0e0;
+        }
 
-#lessons-container {
-    margin: 20px 0;
-}
+        /* Paleta kolorów 3 */
+        .palette-3 {
+            --background-color: #282c34;
+            --text-color: #ffffff;
+            --status-background: #3e444f;
+            --border-color: #61dafb;
+            --lesson-background: #21252b;
+            --lesson-hover-background: #3e444f;
+        }
 
-.lesson {
-    border: 1px solid #212a31; /* Kolor obramowania lekcji */
-    background-color: #212a31; /* Tło lekcji */
-    margin-bottom: 10px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.3s; /* Dodanie efektu przejścia */
-}
+        /* Paleta kolorów 4 */
+        .palette-4 {
+            --background-color: #2d2d2d;
+            --text-color: #eaeaea;
+            --status-background: #4d4d4d;
+            --border-color: #f39c12;
+            --lesson-background: #3d3d3d;
+            --lesson-hover-background: #4d4d4d;
+        }
 
-.lesson:hover {
-    background-color: #374955; /* Tło po najechaniu na lekcję */
-}
+        /* Paleta kolorów 5 */
+        .palette-5 {
+            --background-color: #cce7ff;
+            --text-color: #003366;
+            --status-background: #99ccff;
+            --border-color: #0066cc;
+            --lesson-background: #e6f7ff;
+            --lesson-hover-background: #99ccff;
+        }
 
-.lesson-number {
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 15px;
-}
+        /* Ciemne palety kolorów 6 */
+        .palette-6 {
+            --background-color: #1c1c1c;
+            --text-color: #c8c8c8;
+            --status-background: #2d2d2d;
+            --border-color: #5bc0de;
+            --lesson-background: #2e2e2e;
+            --lesson-hover-background: #3e3e3e;
+        }
 
-.lesson-info {
-    flex-grow: 1;
-}
+        /* Ciemne palety kolorów 7 */
+        .palette-7 {
+            --background-color: #641e3b;
+            --text-color: #f8d7da;
+            --status-background: #5b3c43;
+            --border-color: #dc3545;
+            --lesson-background: #451825;
+            --lesson-hover-background: #5b3c43;
+        }
 
-.lesson-subject {
-    font-size: 20px;
-    font-weight: bold;
-    color: #76d1fd; /* Kolor tematu lekcji */
-}
+        /* Ciemne palety kolorów 8 */
+        .palette-8 {
+            --background-color: #343a40;
+            --text-color: #ffffff;
+            --status-background: #6c757d;
+            --border-color: #007bff;
+            --lesson-background: #212529;
+            --lesson-hover-background: #495057;
+        }
 
-.lesson-details {
-    font-size: 14px;
-    color: #ffffff; /* Kolor szczegółów lekcji */
-}
+        /* Ciemne palety kolorów 9 */
+        .palette-9 {
+            --background-color: #856404;
+            --text-color: #fff3cd;
+            --status-background: #ffecb5;
+            --border-color: #ffc107;
+            --lesson-background: #d39e00;
+            --lesson-hover-background: #ffecb5;
+        }
 
-#calendar-input {
-    margin-top: 20px;
-    padding: 5px;
-    border: 1px solid #76d1fd; /* Kolor obramowania dla inputu */
-    background-color: #212a31; /* Tło inputu */
-    color: #ffffff; /* Kolor tekstu w inputcie */
-}
+        /* Ciemne palety kolorów 10 */
+        .palette-10 {
+            --background-color: #f0e68c;
+            --text-color: #4f4f4f;
+            --status-background: #f8e6a4;
+            --border-color: #c2c200;
+            --lesson-background: #ffffff;
+            --lesson-hover-background: #f8e6a4;
+        }
 
-#prev-day, #next-day {
-    cursor: pointer;
-    padding: 5px 10px;
-    background-color: #76d1fd; /* Kolor przycisków */
-    color: #181c1f; /* Kolor tekstu przycisków */
-    border: none;
-    margin: 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s; /* Dodanie efektu przejścia */
-}
+        /* Zastosowanie zmiennych CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease; /* Dodana animacja */
+        }
 
-#prev-day:hover, #next-day:hover {
-    background-color: #374955; /* Tło przycisków po najechaniu */
-}
+        h2 {
+            color: black; /* Kolor nagłówka h2 zawsze czarny */
+        }
 
+        #current-status {
+            background-color: var(--status-background);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 18px;
+            border-left: 5px solid var(--border-color);
+            transition: background-color 0.3s ease; /* Dodana animacja */
+        }
+
+        #lessons-container {
+            margin: 20px 0;
+        }
+
+        .lesson {
+            border: 1px solid var(--border-color);
+            background-color: var(--lesson-background);
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, border-color 0.3s; /* Dodana animacja */
+        }
+
+        .lesson:hover {
+            background-color: var(--lesson-hover-background);
+        }
+
+        .lesson-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .lesson-info {
+            flex-grow: 1;
+        }
+
+        .lesson-subject {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--border-color);
+        }
+
+        .lesson-details {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        #calendar-input {
+            margin-top: 20px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--lesson-background);
+            color: var(--text-color);
+        }
+
+        #prev-day, #next-day {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: var(--border-color);
+            color: var(--background-color);
+            border: none;
+            margin: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #prev-day:hover, #next-day:hover {
+            background-color: #374955; /* Tło przycisków po najechaniu */
+        }
+
+        /* Styl dla przycisku wyboru koloru */
+        #color-picker-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff; /* Kolor przycisku */
+            color: #fff;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s; /* Dodana animacja */
+        }
+
+        #color-picker-button:hover {
+            background-color: #0056b3; /* Tło przycisku po najechaniu */
+            transform: scale(1.1); /* Powiększenie po najechaniu */
+        }
+
+        /* Okno wyboru kolorów */
+        #color-picker-modal {
+            display: none; /* Domyślnie ukryte */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Kontener dla palet kolorów */
+        #palette-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        /* Styl dla podglądu palet */
+        #palette-preview {
+            display: flex;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Palety w podglądzie */
+        .color-sample {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid transparent; /* Domyślny obramowanie */
+            border-radius: 5px;
+            transition: border-color 0.3s, transform 0.3s; /* Dodana animacja */
+        }
+
+        /* Efekt podświetlenia */
+        .color-sample:hover {
+            border-color: #000; /* Kolor obramowania po najechaniu */
+            transform: scale(1.1); /* Powiększenie po najechaniu */
+        }
+
+        /* Podgląd kolorów */
+        .palette-1.color-sample {
+            background-color: #374955;
+        }
+        .palette-2.color-sample {
+            background-color: #f0f0f0;
+        }
+        .palette-3.color-sample {
+            background-color: #282c34;
+        }
+        .palette-4.color-sample {
+            background-color: #2d2d2d;
+        }
+        .palette-5.color-sample {
+            background-color: #cce7ff;
+        }
+        .palette-6.color-sample {
+            background-color: #1c1c1c;
+        }
+        .palette-7.color-sample {
+            background-color: #641e3b;
+        }
+        .palette-8.color-sample {
+            background-color: #343a40;
+        }
+        .palette-9.color-sample {
+            background-color: #856404;
+        }
+        .palette-10.color-sample {
+            background-color: #f0e68c;
+        }
+
+        /* Przycisk zamykający */
+        #close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            color: #000;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Przycisk wyboru koloru -->
+    <button id="color-picker-button">🎨</button>
+
+    <!-- Okno wyboru kolorów -->
+    <div id="color-picker-modal">
+        <div id="palette-container">
+            <button id="close-modal">✖</button>
+            <h2>Wybierz paletę kolorów:</h2>
+            <div id="palette-preview">
+                <div class="palette-1 color-sample" data-value="palette-1"></div>
+                <div class="palette-2 color-sample" data-value="palette-2"></div>
+                <div class="palette-3 color-sample" data-value="palette-3"></div>
+                <div class="palette-4 color-sample" data-value="palette-4"></div>
+                <div class="palette-5 color-sample" data-value="palette-5"></div>
+                <div class="palette-6 color-sample" data-value="palette-6"></div>
+                <div class="palette-7 color-sample" data-value="palette-7"></div>
+                <div class="palette-8 color-sample" data-value="palette-8"></div>
+                <div class="palette-9 color-sample" data-value="palette-9"></div>
+                <div class="palette-10 color-sample" data-value="palette-10"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Element do wyświetlania statusu bieżącej lekcji -->
     <div id="current-status"></div>
@@ -100,6 +342,37 @@ body {
     <button id="prev-day">Dzień wstecz</button>
     <button id="next-day">Dzień naprzód</button>
 
-    <script src="planlekcji/script.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Ustawienia domyślnej palety kolorów z localStorage
+        const defaultPalette = localStorage.getItem('colorPalette') || 'palette-1';
+        document.body.classList.add(defaultPalette);
+
+        // Wyświetlenie okna wyboru kolorów
+        document.getElementById('color-picker-button').addEventListener('click', function() {
+            document.getElementById('color-picker-modal').style.display = 'flex';
+        });
+
+        // Zamknięcie okna wyboru kolorów
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('color-picker-modal').style.display = 'none';
+        });
+
+        // Wybór palety na kliknięcie
+        document.querySelectorAll('.color-sample').forEach(function(sample) {
+            sample.addEventListener('click', function() {
+                // Usuń wszystkie palety
+                document.body.classList.remove('palette-1', 'palette-2', 'palette-3', 'palette-4', 'palette-5', 
+                                                'palette-6', 'palette-7', 'palette-8', 'palette-9', 'palette-10');
+                
+                // Dodaj wybraną paletę
+                const selectedPalette = this.getAttribute('data-value');
+                document.body.classList.add(selectedPalette);
+
+                // Zapisz wybraną paletę w localStorage
+                localStorage.setItem('colorPalette', selectedPalette);
+            });
+        });
+    </script>
 </body>
 </html>
