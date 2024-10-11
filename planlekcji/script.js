@@ -252,6 +252,89 @@ function changeDate(days) {
     }
 }
 
+// Tablica dni wolnych od zajęć dydaktycznych z przypisanymi świętami
+const holidays = {
+    "2024-01-01": "Nowy Rok",
+    "2024-01-06": "Święto Trzech Króli",
+    "2024-04-01": "Wielkanoc - Poniedziałek Wielkanocny",
+    "2024-05-01": "Święto Pracy",
+    "2024-05-03": "Święto Konstytucji 3 Maja",
+    "2024-05-19": "Zielone Świątki",
+    "2024-05-30": "Boże Ciało",
+    "2024-08-15": "Wniebowzięcie Najświętszej Maryi Panny",
+    "2024-11-01": "Wszystkich Świętych",
+    "2024-11-11": "Święto Niepodległości",
+    "2024-12-25": "Boże Narodzenie",
+    "2024-12-26": "Drugi dzień Świąt Bożego Narodzenia",
+    "2024-10-14": "Dzień Edukacji Narodowej - Dzień wolny od zajęć dydaktycznych",
+    // Przerwy świąteczne i ferie (jako przedziały dat)
+    "2023-12-23:2024-01-01": "Przerwa świąteczna",
+    "2024-04-01:2024-04-02": "Przerwa wielkanocna",
+    "2024-06-27:2024-08-31": "Wakacje"
+};
+
+// Funkcja sprawdzająca, czy dana data to dzień wolny
+function isHoliday(date) {
+    const formattedDate = date.toISOString().split('T')[0];
+    if (holidays[formattedDate]) {
+        return holidays[formattedDate];
+    }
+
+    // Sprawdzenie, czy data należy do przedziału (np. ferie zimowe, przerwa świąteczna)
+    for (let range in holidays) {
+        if (range.includes(':')) {
+            const [start, end] = range.split(':');
+            if (date >= new Date(start) && date <= new Date(end)) {
+                return holidays[range];
+            }
+        }
+    }
+
+    return null;
+}
+
+// Funkcja obsługująca zmianę daty
+function updateCurrentDate() {
+    const calendarInput = document.getElementById('calendar-input');
+    const selectedDate = new Date(calendarInput.value);
+
+    // Aktualizacja elementu z bieżącą datą
+    const currentDateElement = document.getElementById('current-date');
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    currentDateElement.textContent = selectedDate.toLocaleDateString('pl-PL', options);
+
+    // Sprawdzenie, czy to dzień wolny
+    const holidayMessage = isHoliday(selectedDate);
+    const statusElement = document.getElementById('current-status');
+
+    if (holidayMessage) {
+        statusElement.textContent = `Dzień wolny od zajęć dydaktycznych: ${holidayMessage}`;
+    } else {
+        statusElement.textContent = "Dzień z zajęciami dydaktycznymi";
+    }
+}
+
+// Obsługa zmiany daty przez strzałki
+document.getElementById('prev-day').addEventListener('click', function() {
+    const calendarInput = document.getElementById('calendar-input');
+    const selectedDate = new Date(calendarInput.value);
+    selectedDate.setDate(selectedDate.getDate() - 1);
+    calendarInput.value = selectedDate.toISOString().split('T')[0];
+    updateCurrentDate();
+});
+
+document.getElementById('next-day').addEventListener('click', function() {
+    const calendarInput = document.getElementById('calendar-input');
+    const selectedDate = new Date(calendarInput.value);
+    selectedDate.setDate(selectedDate.getDate() + 1);
+    calendarInput.value = selectedDate.toISOString().split('T')[0];
+    updateCurrentDate();
+});
+
+// Ustawienie domyślnej daty na dzisiejszą
+document.getElementById('calendar-input').value = new Date().toISOString().split('T')[0];
+updateCurrentDate();
+
     // Obsługa zmiany daty
     function updateDateDisplay(date) {
         dateDisplay.textContent = formatDate(date);
