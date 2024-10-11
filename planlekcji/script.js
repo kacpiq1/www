@@ -234,33 +234,7 @@ function checkForRoomChange(date, lessonNumber) {
         });
     }
 
-// Funkcja do sprawdzania lekcji w danym dniu
-function checkLessonsForDay(date) {
-    const lessonsContainer = document.getElementById('lessons-container');
-    const noLessonsMessage = document.getElementById('no-lessons');
 
-    // Załóżmy, że pobieramy lekcje na dany dzień z jakiegoś źródła (np. API)
-    const lessons = getLessonsForDate(date); // Ta funkcja powinna zwrócić lekcje dla danego dnia
-
-    if (lessons.length === 0) {
-        // Brak lekcji - pokaż komunikat i ukryj kontener z lekcjami
-        lessonsContainer.style.display = 'none';
-        noLessonsMessage.style.display = 'block'; // Pokaż komunikat o braku lekcji
-    } else {
-        // Są lekcje - pokaż kontener i ukryj komunikat
-        lessonsContainer.style.display = 'block';
-        noLessonsMessage.style.display = 'none';
-
-        // Wyświetlenie lekcji (twoja logika wyświetlania lekcji)
-        displayLessons(lessons);
-    }
-}
-
-// Przykład wywołania funkcji przy zmianie dnia
-document.getElementById('calendar-input').addEventListener('change', function() {
-    const selectedDate = this.value;
-    checkLessonsForDay(selectedDate);
-});
 
 
     // Obsługa zmiany daty
