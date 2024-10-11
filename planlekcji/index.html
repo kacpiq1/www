@@ -368,6 +368,17 @@
     font-size: 24px; /* Powiększony tekst */
     margin-top: 10px;
 }
+
+#holiday-message {
+    background-color: var(--status-background); /* Użycie zmiennej dla tła */
+    color: var(--text-color); /* Użycie zmiennej dla koloru tekstu */
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+    text-align: center; /* Wyśrodkowanie tekstu */
+    font-size: 18px; /* Ustawienie rozmiaru czcionki */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lekki cień dla efektu */
+}
     </style>
 </head>
 <body>
@@ -400,6 +411,9 @@
 
     <!-- Element do wyświetlania bieżącej daty -->
     <div id="current-date"></div>
+
+<!-- Element do wyświetlania informacji o dniach wolnych -->
+<div id="holiday-message" style="text-align: center; font-size: 20px; color: var(--border-color); margin: 20px 0;"></div>
 
     <!-- Kontener na lekcje na dany dzień -->
     <div id="lessons-container"></div>
