@@ -235,7 +235,22 @@ function checkForRoomChange(date, lessonNumber) {
     }
 
 
+document.getElementById('prev-day').addEventListener('click', function() {
+    changeDate(-1); // Zmniejsz o jeden dzień
+});
 
+document.getElementById('next-day').addEventListener('click', function() {
+    changeDate(1); // Zwiększ o jeden dzień
+});
+
+function changeDate(days) {
+    const calendar = document.getElementById('calendar-input');
+    const currentDate = new Date(calendar.value); // Pobierz aktualną datę z pola daty
+    if (!isNaN(currentDate.getTime())) { // Sprawdź, czy data jest prawidłowa
+        currentDate.setDate(currentDate.getDate() + days); // Dodaj/odejmij dni
+        calendar.value = currentDate.toISOString().split('T')[0]; // Zaktualizuj pole daty
+    }
+}
 
     // Obsługa zmiany daty
     function updateDateDisplay(date) {
