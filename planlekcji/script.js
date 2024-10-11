@@ -252,67 +252,53 @@ function changeDate(days) {
     }
 }
 
-// Tablica dni wolnych od zajęć dydaktycznych z przypisanymi świętami
 const holidays = {
-    "2024-01-01": "Nowy Rok",
-    "2024-01-06": "Święto Trzech Króli",
-    "2024-04-01": "Wielkanoc - Poniedziałek Wielkanocny",
-    "2024-05-01": "Święto Pracy",
-    "2024-05-03": "Święto Konstytucji 3 Maja",
-    "2024-05-19": "Zielone Świątki",
-    "2024-05-30": "Boże Ciało",
-    "2024-08-15": "Wniebowzięcie Najświętszej Maryi Panny",
-    "2024-11-01": "Wszystkich Świętych",
-    "2024-11-11": "Święto Niepodległości",
-    "2024-12-25": "Boże Narodzenie",
-    "2024-12-26": "Drugi dzień Świąt Bożego Narodzenia",
-    "2024-10-14": "Dzień Edukacji Narodowej - Dzień wolny od zajęć dydaktycznych",
-    // Przerwy świąteczne i ferie (jako przedziały dat)
-    "2023-12-23:2024-01-01": "Przerwa świąteczna",
-    "2024-04-01:2024-04-02": "Przerwa wielkanocna",
-    "2024-06-27:2024-08-31": "Wakacje"
+    '02.09.2024': 'Rozpoczęcie roku szkolnego',
+    '14.10.2024': 'Dzień Edukacji Narodowej',
+    '01.11.2024': 'Wszystkich Świętych',
+    '11.11.2024': 'Narodowe Święto Niepodległości',
+    '21.12.2024': 'Przerwa świąteczna',
+    '22.12.2024': 'Przerwa świąteczna',
+    '23.12.2024': 'Przerwa świąteczna',
+    '24.12.2024': 'Przerwa świąteczna',
+    '25.12.2024': 'Boże Narodzenie',
+    '26.12.2024': 'Drugi Dzień Świąt Bożego Narodzenia',
+    '27.12.2024': 'Przerwa świąteczna',
+    '01.01.2025': 'Nowy Rok',
+    '06.01.2025': 'Święto Trzech Króli',
+    '13.01.2025': 'Początek ferii zimowych',
+    '14.01.2025': 'Ferie zimowe',
+    '15.01.2025': 'Ferie zimowe',
+    '16.01.2025': 'Ferie zimowe',
+    '17.01.2025': 'Ferie zimowe',
+    '18.01.2025': 'Ferie zimowe',
+    '19.01.2025': 'Ferie zimowe',
+    '20.01.2025': 'Ferie zimowe',
+    '21.01.2025': 'Ferie zimowe',
+    '22.01.2025': 'Ferie zimowe',
+    '23.01.2025': 'Ferie zimowe',
+    '24.01.2025': 'Ferie zimowe',
+    '25.01.2025': 'Ferie zimowe',
+    '26.01.2025': 'Ferie zimowe',
+    '27.01.2025': 'Ferie zimowe',
+    '01.05.2025': 'Święto Pracy',
+    '03.05.2025': 'Święto Konstytucji 3 Maja',
+    '15.08.2025': 'Wniebowzięcie Najświętszej Maryi Panny',
+    '01.11.2025': 'Wszystkich Świętych',
+    '11.11.2025': 'Narodowe Święto Niepodległości',
+    '25.12.2025': 'Boże Narodzenie',
+    '26.12.2025': 'Drugi Dzień Świąt Bożego Narodzenia',
+    '27.06.2025': 'Zakończenie roku szkolnego',
 };
 
-// Funkcja sprawdzająca, czy dana data to dzień wolny
-function isHoliday(date) {
-    const formattedDate = date.toISOString().split('T')[0];
-    if (holidays[formattedDate]) {
-        return holidays[formattedDate];
-    }
-
-    // Sprawdzenie, czy data należy do przedziału (np. ferie zimowe, przerwa świąteczna)
-    for (let range in holidays) {
-        if (range.includes(':')) {
-            const [start, end] = range.split(':');
-            if (date >= new Date(start) && date <= new Date(end)) {
-                return holidays[range];
-            }
-        }
-    }
-
-    return null;
+function updateHolidayMessage(date) {
+    const message = holidays[date] ? holidays[date] : '';
+    document.getElementById('holiday-message').innerText = message;
 }
 
-// Funkcja obsługująca zmianę daty
-function updateCurrentDate() {
-    const calendarInput = document.getElementById('calendar-input');
-    const selectedDate = new Date(calendarInput.value);
+// Po zmianie daty w kalendarzu
+updateHolidayMessage(currentDate);
 
-    // Aktualizacja elementu z bieżącą datą
-    const currentDateElement = document.getElementById('current-date');
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    currentDateElement.textContent = selectedDate.toLocaleDateString('pl-PL', options);
-
-    // Sprawdzenie, czy to dzień wolny
-    const holidayMessage = isHoliday(selectedDate);
-    const statusElement = document.getElementById('current-status');
-
-    if (holidayMessage) {
-        statusElement.textContent = `Dzień wolny od zajęć dydaktycznych: ${holidayMessage}`;
-    } else {
-        statusElement.textContent = "Dzień z zajęciami dydaktycznymi";
-    }
-}
 
 // Obsługa zmiany daty przez strzałki
 document.getElementById('prev-day').addEventListener('click', function() {
