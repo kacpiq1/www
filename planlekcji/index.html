@@ -176,15 +176,18 @@
 #navigation-container {
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Wyśrodkowanie */
     width: 100%;
+    max-width: 600px; /* Maksymalna szerokość, aby wyglądało dobrze na większych ekranach */
     background-color: var(--status-background);
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* Równa odległość między elementami */
     align-items: center;
     padding: 15px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    border-radius: 15px 15px 0 0; /* Zaokrąglenie górnych rogów */
 }
 
 /* Okrągłe przyciski strzałek */
@@ -205,9 +208,10 @@
     transition: background-color 0.3s;
 }
 
-/* Strzałki hover */
+/* Strzałki hover z kontrastowym kolorem */
 .circle-button:hover {
-    background-color: var(--lesson-hover-background);
+    background-color: #ffa500; /* Kontrastowy kolor na hover */
+    color: white; /* Zmiana koloru tekstu */
 }
 
 /* Pole wyboru daty */
