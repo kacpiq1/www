@@ -172,20 +172,47 @@
             color: var(--text-color);
         }
 
-        #prev-day, #next-day {
-            cursor: pointer;
-            padding: 5px 10px;
-            background-color: var(--border-color);
-            color: var(--background-color);
-            border: none;
-            margin: 5px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+        /* Kontener nawigacyjny na dole strony */
+#navigation-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--status-background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
 
-        #prev-day:hover, #next-day:hover {
-            background-color: #374955; /* Tło przycisków po najechaniu */
-        }
+/* Strzałki nawigacyjne */
+#prev-day, #next-day {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: var(--border-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+/* Strzałki hover */
+#prev-day:hover, #next-day:hover {
+    background-color: var(--lesson-hover-background);
+}
+
+/* Pole wyboru daty */
+#calendar-input {
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--lesson-background);
+    color: var(--text-color);
+    border-radius: 5px;
+}
+
 
         /* Styl dla przycisku wyboru koloru */
         #color-picker-button {
@@ -356,10 +383,12 @@
     <!-- Kontener na lekcje na dany dzień -->
     <div id="lessons-container"></div>
 
-    <!-- Kalendarz oraz przyciski do zmiany dnia -->
-    <input type="date" id="calendar-input">
-    <button id="prev-day">Dzień wstecz</button>
-    <button id="next-day">Dzień naprzód</button>
+    <!-- Elementy nawigacyjne (strzałki) przeniesione na dół strony -->
+    <div id="navigation-container">
+        <button id="prev-day">&#9664</button>
+        <input type="date" id="calendar-input">
+        <button id="next-day">&#9654</button>
+    </div>
 
     <script src="planlekcji/script.js"></script>
     <script>
