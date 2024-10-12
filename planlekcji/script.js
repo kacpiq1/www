@@ -291,11 +291,13 @@ const holidays = {
     '27.06.2025': 'Zakończenie roku szkolnego',
 };
 
+    
 function updateHolidayMessage(date) {
     const message = holidays[date] ? holidays[date] : '';
     document.getElementById('holiday-message').innerText = message;
 }
 
+    let currentDate = new Date();
 // Po zmianie daty w kalendarzu
 updateHolidayMessage(currentDate);
 
