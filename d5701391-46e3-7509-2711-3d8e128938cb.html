@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timer</title>
+    <style>
+
+    @font-face {
+    font-family: 'Torus';
+    src: url("fonts/Torus-Regular.woff")format("woff"),
+       url('fonts/Torus-Regular.woff2') format('woff2'),
+       url('fonts/Torus-Regular.ttf') format('truetype'),
+       url('fonts/Torus-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Torus;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        #timer {
+            font-size: 20rem;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">Loading...</div>
+
+    <script>
+        function updateTimer() {
+            const targetDate = new Date('2024-11-27T19:00:00');
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('timer').textContent = "It's 19:00!";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
