@@ -1,0 +1,271 @@
+/* Globalne style */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #282828;
+}
+
+header {
+    background-color: #d4001d;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mod-selection,
+.selected-mods {
+    width: 45%;
+    background-color: #282828;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mod-selection h2 {
+    color: #fff;
+}
+
+.mod-selection label {
+    color: #fff;
+}
+
+.selected-mods h2 {
+    color: #fff;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Styl dla wybranych modyfikacji */
+.order {
+    overflow-x: hidden;
+	overflow-y: auto;
+	max-height: 880px;
+}
+
+.mod-package {
+    display: none;
+    align-items: center;
+    background-color: #2e2e2e;
+	margin: 10px;
+	width: 425px;
+	height: 100px;
+	display: flex;
+	align-items: center;
+}
+
+.mod-icon {
+    display: flex;
+    height: 80px;
+    margin-right: 10px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+span {
+    display: flex;
+    font-weight: bold;
+    color: #d7d7d7;
+}
+
+.mod-selection #selectCurrentModsButton {
+  align-items: center;
+  appearance: none;
+  background-clip: padding-box;
+  background-color: initial;
+  background-image: none;
+  border-style: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-family: Eina01,sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  justify-content: center;
+  line-height: 0px;
+  margin: 0;
+  min-height: 48px;
+  outline: none;
+  overflow: visible;
+  padding: 19px 26px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: auto;
+  word-break: keep-all;
+  margin-bottom: 15px;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .mod-selection #selectCurrentModsButton {
+    padding: 19px 32px;
+  }
+}
+
+.mod-selection #selectCurrentModsButton:before,
+.mod-selection #selectCurrentModsButton:after {
+  border-radius: 80px;
+}
+
+.mod-selection #selectCurrentModsButton:before {
+  background-image: linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -2;
+}
+
+.mod-selection #selectCurrentModsButton:after {
+  background-color: initial;
+  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  bottom: 4px;
+  content: "";
+  display: block;
+  left: 4px;
+  overflow: hidden;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  transition: all 100ms ease-out;
+  z-index: -1;
+}
+
+.mod-selection #selectCurrentModsButton:hover:not(:disabled):before {
+  background: linear-gradient(92.83deg, rgb(255, 116, 38) 0%, rgb(249, 58, 19) 100%);
+}
+
+.mod-selection #selectCurrentModsButton:hover:not(:disabled):after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition-timing-function: ease-in;
+  opacity: 0;
+}
+
+.mod-selection #selectCurrentModsButton:active:not(:disabled) {
+  color: #ccc;
+}
+
+.mod-selection #selectCurrentModsButton:active:not(:disabled):before {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+}
+
+.mod-selection #selectCurrentModsButton:active:not(:disabled):after {
+  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  top: 4px;
+}
+
+.mod-selection #selectCurrentModsButton:disabled {
+  cursor: default;
+  opacity: .24;
+}
+
+@media (max-width: 768px) {
+    main {
+        display: flex;
+        flex-direction: column;  /* Ustawienie układu pionowego */
+        align-items: center;     /* Wyrównanie elementów do środka */
+        justify-content: center; /* Wyrównanie elementów w pionie */
+        padding: 0 10px;         /* Dodanie odstępów z lewej i prawej strony */
+    }
+
+    .mod-selection,
+    .selected-mods {
+        width: 100%;             /* Cała szerokość dla każdego z elementów */
+        padding: 10px;           /* Dodanie paddingu */
+        box-sizing: border-box;  /* Uwzględnianie paddingu w szerokości */
+        margin-bottom: 20px;     /* Margines między elementami */
+    }
+
+    .mod-package {
+        width: 100%;             /* Szerokość 100% dla pełnej szerokości */
+        margin: 10px 0;          /* Margines pionowy między elementami */
+        height: auto;            /* Automatyczna wysokość */
+        display: flex;           /* Flexbox dla elementów wewnętrznych */
+        flex-direction: column;  /* Układ pionowy dla zawartości */
+        align-items: center;     /* Wyrównanie elementów wewnątrz */
+        padding: 10px;           /* Wewnętrzne odstępy */
+        box-sizing: border-box;  /* Uwzględnianie paddingu i border w szerokości */
+    }
+
+    .mod-icon {
+        height: 50px;            /* Zmniejszona wysokość ikony */
+        margin-bottom: 10px;     /* Dodanie marginesu na dole */
+    }
+
+    .mod-details {
+        font-size: 14px;         /* Mniejsza czcionka dla szczegółów */
+        text-align: center;      /* Wyśrodkowanie tekstu */
+    }
+
+    #activeModsCounter {
+        font-size: 14px;         /* Mniejsza czcionka dla licznika */
+        margin-top: 10px;        /* Dodanie odstępu od góry */
+    }
+
+    label {
+        font-size: 14px;         /* Mniejsza czcionka dla etykiet */
+    }
+
+    input[type="checkbox"] {
+        margin-right: 5px;       /* Mniejszy odstęp dla checkboxów */
+    }
+}
+
+@media (max-width: 480px) {
+    .mod-package {
+        margin: 5px 0;          /* Mniejsze marginesy */
+    }
+
+    .mod-icon {
+        height: 40px;           /* Jeszcze mniejsza ikona */
+    }
+
+    .mod-details {
+        font-size: 12px;        /* Jeszcze mniejsza czcionka */
+    }
+
+    #activeModsCounter {
+        font-size: 12px;        /* Dostosowanie czcionki licznika */
+    }
+
+    label {
+        font-size: 12px;        /* Dostosowanie czcionki etykiety */
+    }
+}
