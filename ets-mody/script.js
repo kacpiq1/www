@@ -43,6 +43,21 @@ document.addEventListener("DOMContentLoaded", () => {
         counterDisplay.textContent = `Aktywne modyfikacje: ${activeMods.length}`;
     }
 
+    // Resetowanie zaznaczeń checkboxów przy załadowaniu strony
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Ustawienie domyślnie zaznaczonych checkboxów dla "Poland Rebuilding" i "ProMods"
+    const defaultCheckedPackages = ["polreb", "promods"];
+    defaultCheckedPackages.forEach(packageName => {
+        const checkbox = document.querySelector(`.mod-selection input[type='checkbox'][data-package="${packageName}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+            toggleModPackages(packageName, true);
+        }
+    });
+
     // Obsługa zmiany zaznaczenia checkboxa
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", () => {
