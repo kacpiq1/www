@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Selector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Kolejność modyfikacji</h1>
+    </header>
+    <main>
+        <!-- Lista do zaznaczenia -->
+        <section class="mod-selection">
+            <h2>Modyfikacje</h2>
+            <button id="selectCurrentModsButton">Aktualnie Używane Modyfikacje</button>
+            <label>
+                <input type="checkbox" data-package="polreb" checked disabled> Poland Rebuilding
+            </label>
+            <label>
+                <input type="checkbox" data-package="polrebst"> Poland Rebuilding – Special Transport
+            </label>
+            <label>
+                <input type="checkbox" data-package="polrebacc"> Poland Rebuilding – Accessories
+            </label>
+            <label>
+                <input type="checkbox" data-package="polrebfix"> Poland Rebuilding – Fix
+            </label>
+            <label>
+                <input type="checkbox" data-package="promods" checked disabled> Promods
+            </label>
+            <label>
+                <input type="checkbox" data-package="promodsdlc"> Promods – DLC Support Package
+            </label>
+            <label>
+                <input type="checkbox" data-package="promods convoy"> Promods – Convoy Mode Support
+            </label>
+            <label>
+                <input type="checkbox" data-package="promodstc"> Promods – Trailer & Company
+            </label>
+            <label>
+                <input type="checkbox" data-package="promodsme"> Promods – Middle-East Add-On
+            </label>
+            <label>
+                <input type="checkbox" data-package="mapaeaa"> Mapa EAA
+            </label>
+            <label>
+                <input type="checkbox" data-package="pbmap"> Project Balkans
+            </label>
+            <label>
+                <input type="checkbox" data-package="roex"> RoExtended Map
+            </label>
+            <label>
+                <input type="checkbox" data-package="rusmap"> RusMap
+            </label>
+            <label>
+                <input type="checkbox" data-package="srmap"> Southern Region
+            </label>
+            <label>
+                <input type="checkbox" data-package="tgsmap"> The Great Steppe
+            </label>
+            <label>
+                <input type="checkbox" data-package="googlemaps"> Google Maps
+            </label>
+        </section>
+
+        <!-- Lista wybranych modyfikacji -->
+        <section class="selected-mods">
+            <div id="activeModsCounter" style="font-weight: bold; color: #fff; font-size: 20px;">Aktywne modyfikacje: 0</div>
+            <div class="order">
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_trailer_def_replacement.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Replacement Trailer Definition)</span></div>
+                </div>
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_trailer_def_standalone.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Standalone Trailer Definition)</span></div>
+                </div>
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_trailer_def_main.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Main Trailer Definition)</span></div>
+                </div>
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_trailer.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Trailer Package)</span></div>
+                </div>
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_company_def.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Company Definition)</span></div>
+                </div>
+                <div data-package="promodstc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_TC_company.jpg"></div>
+                    <div><span>ProMods Trailer and Company Pack<br>(Company Package)</span></div>
+                </div>
+                <div data-package="roex" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/ROEX_RM_PM_PR_roadconnection.jpg"></div>
+                    <div><span>Hybrid+ PM + PR + RM + RoEx<br>(RoadConnection)</span></div>
+                </div>
+                <div data-package="roex" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/ROEX_defmap.jpg"></div>
+                    <div><span>1.ROEXdefmap</span></div>
+                </div>
+                <div data-package="roex" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/ROEX_model.jpg"></div>
+                    <div><span>2.ROEXmodel</span></div>
+                </div>
+                <div data-package="roex" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/ROEX_prefab.jpg"></div>
+                    <div><span>3.ROEXprefab</span></div>
+                </div>
+                <div data-package="roex" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/ROEX_assets.jpg"></div>
+                    <div><span>4.ROEXassets</span></div>
+                </div>
+                <div data-package="mapaeaa" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/mapa_eaa_pm_fix.jpg"></div>
+                    <div><span>PM + EAA<br>(RoadConnection)</span></div>
+                </div>
+                <div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_RM_rc.jpg"></div>
+                    <div><span>PR-PM-RM RC</span></div>
+                </div>
+                <!--<div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/RM_PM_fix.jpg"></div>
+                    <div><span>PM_RM_connect_RusMap</span></div>
+                </div>-->
+                <div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/RM_map.jpg"></div>
+                    <div><span>RusMap Map Package</span></div>
+                </div>
+                <div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/RM_map.jpg"></div>
+                    <div><span>RusMap Model Package</span></div>
+                </div>
+                <div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/RM_map.jpg"></div>
+                    <div><span>RusMap Model 2 Package</span></div>
+                </div>
+                <div data-package="polrebfix" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_fix.jpg"></div>
+                    <div><span>Poland Rebuilding – Fix</span></div>
+                </div>
+                <div data-package="polrebacc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_accessories.jpg"></div>
+                    <div><span>Poland Rebuilding – Accessories</span></div>
+                </div>
+                <div data-package="polrebst" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_st.jpg"></div>
+                    <div><span>Poland Rebuilding – Special Transport<br>(Do wersji 1.47 i starszych)</span></div>
+                </div>
+                <div data-package="polreb" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_def.jpg"></div>
+                    <div><span>Poland Rebuilding – Def</span></div>
+                </div>
+                <div data-package="polreb" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_map.jpg"></div>
+                    <div><span>Poland Rebuilding – Map</span></div>
+                </div>
+                <!--
+            <div data-package="polreb" class="mod-package">
+                <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_media.jpg"></div>
+                <div><span>Poland Rebuilding - Media<br>(Do wersji 1.36 i starszych)</span></div>
+            </div>-->
+                <div data-package="polreb" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_models.jpg"></div>
+                    <div><span>Poland Rebuilding – Models</span></div>
+                </div>
+                <div data-package="polreb" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PR_assets.jpg"></div>
+                    <div><span>Poland Rebuidling – Assets</span></div>
+                </div>
+                <div data-package="pbmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PB_def.jpg"></div>
+                    <div><span>Project Balkans Def Package</span></div>
+                </div>
+                <div data-package="pbmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PB_map.jpg"></div>
+                    <div><span>Project Balkans Map Package</span></div>
+                </div>
+                <div data-package="pbmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PB_assets.jpg"></div>
+                    <div><span>Project Balkans Assets Package</span></div>
+                </div>
+                <div data-package="promodsme" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_ME_def_and_map.jpg"></div>
+                    <div><span>ProMods Middle-East Add-on<br>(Def &amp; Map Package)</span></div>
+                </div>
+                <div data-package="promodsme" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_ME_assets.jpg"></div>
+                    <div><span>ProMods Middle-East Add-on<br>(Assets Package)</span></div>
+                </div>
+                <div data-package="promodsdlc" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_dlc.jpg"></div>
+                    <div><span>ProMods DLC Support Package</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_def.jpg"></div>
+                    <div><span>ProMods Definition Package</span></div>
+                </div>
+                <div data-package="promods convoy" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_convoy.jpg"></div>
+                    <div><span>ProMods Convoy Mode Support</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_map.jpg"></div>
+                    <div><span>ProMods Map Package</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_media.jpg"></div>
+                    <div><span>ProMods Media Package</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_models1.jpg"></div>
+                    <div><span>ProMods Models Package 1</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_models2.jpg"></div>
+                    <div><span>ProMods Models Package 2</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_models3.jpg"></div>
+                    <div><span>ProMods Models Package 3</span></div>
+                </div>
+                <div data-package="promods" class="mod-package" style="display: flex;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_assets.jpg"></div>
+                    <div><span>ProMods Assets Package</span></div>
+                </div>
+                <div data-package="rusmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/RM_map.jpg"></div>
+                    <div><span>RusMap Def Package</span></div>
+                </div>
+                <div data-package="srmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/SR_map.jpg"></div>
+                    <div><span>Southern Region map [Def and Map]</span></div>
+                </div>
+                <div data-package="srmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/SR_map.jpg"></div>
+                    <div><span>Southern Region map [Model1]</span></div>
+                </div>
+                <div data-package="srmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/SR_map.jpg"></div>
+                    <div><span>Southern Region map [Model2]</span></div>
+                </div>
+                <div data-package="tgsmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/TGS_map.jpg"></div>
+                    <div><span>The Great Steppe – def</span></div>
+                </div>
+                <div data-package="tgsmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/TGS_map.jpg"></div>
+                    <div><span>The Great Steppe – map</span></div>
+                </div>
+                <div data-package="tgsmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/TGS_map.jpg"></div>
+                    <div><span>The Great Steppe – model</span></div>
+                </div>
+                <div data-package="tgsmap" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/TGS_map.jpg"></div>
+                    <div><span>The Great Steppe – model2</span></div>
+                </div>
+                <div data-package="mapaeaa" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/mapa_eaa.jpg"></div>
+                    <div><span>Mapa EAA</span></div>
+                </div>
+                <div data-package="mapaeaa" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/mapa_eaa.jpg"></div>
+                    <div><span>Base Mapa EAA</span></div>
+                </div>
+                <div data-package="googlemaps" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/PM_nav_night.jpg"></div>
+                    <div><span>Google Maps Navigation Night Version ProMods Addon</span></div>
+                </div>
+                <div data-package="googlemaps" class="mod-package" style="display: none;">
+                    <div><img decoding="async" class="mod-icon" src="https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/gmaps_polish_vc.jpg"></div>
+                    <div><span>Google Maps Polski Głos</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
