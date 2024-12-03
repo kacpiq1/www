@@ -63,7 +63,32 @@
             <label>
                 <input type="checkbox" data-package="googlemaps"> Google Maps
             </label>
+            <button id="downloadModsButton">Pobierz modyfikacje</button>
         </section>
+
+        <section class="download-mods">      
+            <!-- Okno modalne -->
+            <div id="downloadModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span id="closeModal" class="close">&times;</span>
+                    <h2>Lista modów do pobrania</h2>
+                    <table id="modsTable">
+                        <thead>
+                            <tr>
+                                <th>Nazwa modu</th>
+                                <th>Pobierz</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Wiersze zostaną wygenerowane dynamicznie -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        
 
         <!-- Lista wybranych modyfikacji -->
         <section class="selected-mods">
