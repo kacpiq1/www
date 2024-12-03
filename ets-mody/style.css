@@ -85,7 +85,7 @@ span {
     color: #d7d7d7;
 }
 
-.mod-selection #selectCurrentModsButton {
+.mod-selection #selectCurrentModsButton, #downloadModsButton {
   align-items: center;
   appearance: none;
   background-clip: padding-box;
@@ -124,17 +124,17 @@ span {
 }
 
 @media (min-width: 768px) {
-  .mod-selection #selectCurrentModsButton {
+  .mod-selection #selectCurrentModsButton, #downloadModsButton {
     padding: 19px 32px;
   }
 }
 
-.mod-selection #selectCurrentModsButton:before,
-.mod-selection #selectCurrentModsButton:after {
+.mod-selection #selectCurrentModsButton:before, #downloadModsButton:before
+.mod-selection #selectCurrentModsButton:after,  #downloadModsButton::after {
   border-radius: 80px;
 }
 
-.mod-selection #selectCurrentModsButton:before {
+.mod-selection #selectCurrentModsButton:before , #downloadModsButton:before {
   background-image: linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
   content: "";
   display: block;
@@ -147,7 +147,7 @@ span {
   z-index: -2;
 }
 
-.mod-selection #selectCurrentModsButton:after {
+.mod-selection #selectCurrentModsButton:after , #downloadModsButton:after {
   background-color: initial;
   background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
   bottom: 4px;
@@ -162,11 +162,11 @@ span {
   z-index: -1;
 }
 
-.mod-selection #selectCurrentModsButton:hover:not(:disabled):before {
+.mod-selection #selectCurrentModsButton:hover:not(:disabled):before , #downloadModsButton:hover:not(:disabled):before{
   background: linear-gradient(92.83deg, rgb(255, 116, 38) 0%, rgb(249, 58, 19) 100%);
 }
 
-.mod-selection #selectCurrentModsButton:hover:not(:disabled):after {
+.mod-selection #selectCurrentModsButton:hover:not(:disabled):after , #downloadModsButton:hover:not(:disabled):after{
   bottom: 0;
   left: 0;
   right: 0;
@@ -175,15 +175,15 @@ span {
   opacity: 0;
 }
 
-.mod-selection #selectCurrentModsButton:active:not(:disabled) {
+.mod-selection #selectCurrentModsButton:active:not(:disabled), #downloadModsButton:active:not(:disabled) {
   color: #ccc;
 }
 
-.mod-selection #selectCurrentModsButton:active:not(:disabled):before {
+.mod-selection #selectCurrentModsButton:active:not(:disabled):before, #downloadModsButton {
   background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
 }
 
-.mod-selection #selectCurrentModsButton:active:not(:disabled):after {
+.mod-selection #selectCurrentModsButton:active:not(:disabled):after, #downloadModsButton:active:not(:disabled):after {
   background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
   bottom: 4px;
   left: 4px;
@@ -191,9 +191,125 @@ span {
   top: 4px;
 }
 
-.mod-selection #selectCurrentModsButton:disabled {
+.mod-selection #selectCurrentModsButton:disabled, #downloadModsButton:disabled {
   cursor: default;
   opacity: .24;
+}
+
+.download-mods {
+    margin: 20px 0;
+    text-align: center;
+}
+
+#downloadLinks ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#downloadLinks ul li {
+    margin: 10px 0;
+}
+
+#progressBar {
+    width: 80%;
+    background-color: #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px auto;
+    height: 20px;
+}
+
+#progressBarFill {
+    height: 100%;
+    background-color: #4caf50;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#progressBarLabel {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #282828;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%; /* Zwiększona szerokość dla lepszego dopasowania */
+    max-width: 600px;
+    max-height: 80%; /* Maksymalna wysokość okna */
+    overflow-y: auto; /* Włączenie pionowego przewijania */
+    max-width: 600px;
+    text-align: center;
+    color: #d4001d;
+    position: relative;
+    
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #414141;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #414141;
+}
+
+.status-waiting {
+    color: orange;
+}
+
+.status-downloaded {
+    color: green;
+}
+
+.download-button {
+    background: url('https://www.kacpiq.pl/wp-content/themes/polreb/images/mods_icons/download.png') no-repeat center center;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin: 0 auto; /* Centrowanie w komórce */
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(1%)
+            hue-rotate(149deg) brightness(103%) contrast(101%);
+}
+
+.download-button:hover {
+    filter: brightness(0.8); /* Efekt przyciemnienia przy najechaniu */
 }
 
 @media (max-width: 768px) {
