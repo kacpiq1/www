@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEEDTEST</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --bg-color: #05061f;
+    --second-bg-color: #141526;
+    --text-color: #ededed;
+    --main-color: #00abf0;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+#downloadSpeedLabel, #downloadSpeed, #speedPerMinuteLabel, #speedPerMinute, #speedPerHourLabel, #speedPerHour, #timeEstimate {
+    margin: 10px;
+    width: 60%;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 1.6rem;
+}
+
+select, input {
+    margin: 5px;
+    padding: 10px;
+    width: 60%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1.6rem;
+    color: var(--text-color);
+    background-color: var(--second-bg-color);
+}
+
+button {
+    background: linear-gradient(to bottom, #2de1ce, #1fa3e8);
+    color: var(--text-color);
+    font-size: 1.6rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 150px;
+    border: none;
+    height: 50px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+button:hover {
+    background: linear-gradient(to bottom, #1fa3e8, #2de1ce); 
+}
+
+#waitingMessage {
+    display: none;
+    font-size: 1.6rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+#chart_div {
+    display: flex;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px; 
+    border: 2px solid var(--main-color); 
+    border-radius: 10px; 
+    padding: 10px;
+    background-color: var(--second-bg-color); 
+    align-items: center;
+    justify-content: center;
+}
+
+#chart_div canvas {
+    border-radius: 8px; 
+}
+
+#downloadSpeedLabel, #speedPerMinuteLabel, #speedPerHourLabel {
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+#downloadSpeed, #speedPerMinute, #speedPerHour {
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+</style>
+<body>
+<h2>SPEEDTEST</h2>
+<div id="waitingMessage">Oczekiwanie na serwer...</div>
+<div id="chart_div" style="margin-bottom: 20px;"></div>
+<span id="downloadSpeedLabel">Średnia szybkość pobierania:</span>
+<span id="downloadSpeed"></span>
+<br>
+<span id="speedPerMinuteLabel">Szybkość na minutę:</span>
+<span id="speedPerMinute"></span>
+<br>
+<span id="speedPerHourLabel">Szybkość na godzinę:</span>
+<span id="speedPerHour"></span>
+<br>
+<input type="number" id="fileSizeInput" placeholder="Podaj rozmiar pliku">
+<select id="unitSelect">
+    <option value="KB">KB</option>
+    <option value="MB" selected>MB</option>
+    <option value="GB">GB</option>
+    <option value="TB">TB</option>
+</select>
+<button id="calculateTimeButton">Oblicz czas</button>
+<br>
+<span id="timeEstimate"></span>
+<button id="testButton">Uruchom test</button>
+<script>
+    let fileUrl = "https://api.cors.lol/?url=http://test.beskidmedia.pl/download/3gb.bm";
+    const testButton = document.getElementById("testButton");
+    const calculateTimeButton = document.getElementById("calculateTimeButton");
+    const fileSizeInput = document.getElementById("fileSizeInput");
+    const unitSelect = document.getElementById("unitSelect");
+    const timeEstimate = document.getElementById("timeEstimate");
+    const waitingMessage = document.getElementById("waitingMessage");
+    const downloadSpeed = document.getElementById("downloadSpeed");
+    const speedPerMinute = document.getElementById("speedPerMinute");
+    const speedPerHour = document.getElementById("speedPerHour");
+
+    testButton.addEventListener("click", startTest);
+    calculateTimeButton.addEventListener("click", calculateDownloadTime);
+
+    let testTime = 20;
+    let averageSpeedMbps = 0;
+
+    google.charts.load("current", {packages: ["corechart", "gauge"]});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function startTest() {
+        
+        waitingMessage.style.display = "block";
+
+        downloadSpeed.textContent = "";
+        speedPerMinute.textContent = "";
+        speedPerHour.textContent = "";
+        timeEstimate.textContent = "";
+
+        setTimeout(() => {
+            waitingMessage.style.display = "none";
+            downloadFile(fileUrl);
+        }, 1000); 
+    }
+
+    function drawChart(speed = 0) {
+        let data = google.visualization.arrayToDataTable([
+            ["Label", "Value"],
+            ["mb/s", speed],
+        ]);
+
+        let options = {
+            min: 0,
+            max: 400,
+            width: 300,
+            height: 300,
+            minorTicks: 5,
+            majorTicks: ["0", "100", "200", "300", "500"],
+            redFrom: 350,
+            redTo: 500,
+            yellowFrom: 200,
+            yellowTo: 350,
+            greenFrom: 0,
+            greenTo: 200,
+            animation: {
+                duration: 1000,
+                easing: 'out'
+            }
+        };
+        let chart = new google.visualization.Gauge(
+            document.getElementById("chart_div")
+        );
+        chart.draw(data, options);
+    }
+
+    async function downloadFile(url) {
+        let uniqueUrl = url + "?t=" + new Date().getTime();
+        const response = await fetch(uniqueUrl);
+        const reader = response.body.getReader();
+        let receivedLength = 0;
+        let startTime = new Date();
+
+        while (true) {
+            const {done, value} = await reader.read();
+            if (done) {
+                break;
+            }
+            if (value) {
+                receivedLength += value.length;
+                let currentTime = new Date();
+                let timeElapsed = (currentTime - startTime) / 1000;
+                let speed = (8 / 1000000) * (receivedLength / timeElapsed);
+                drawChart(speed);
+                if (timeElapsed > testTime) {
+                    break;
+                }
+            }
+        }
+        let currentTime = new Date();
+        let timeElapsed = (currentTime - startTime) / 1000;
+        averageSpeedMbps = (8 / 1000000) * (receivedLength / timeElapsed);
+        drawChart(averageSpeedMbps);
+        averageSpeedMbps = averageSpeedMbps.toFixed(2);
+
+        // Convert Mbps to MB/s
+        let averageSpeedMBps = (averageSpeedMbps / 8).toFixed(2);
+
+        downloadSpeed.textContent = `${averageSpeedMbps} Mbps (${averageSpeedMBps} MB/s)`;
+
+        // Calculate speed per minute and per hour
+        calculateSpeedPerMinute(averageSpeedMBps);
+        calculateSpeedPerHour(averageSpeedMBps);
+    }
+
+    function calculateSpeedPerMinute(speedMBps) {
+        let speedPerMinuteValue = (speedMBps * 60); // MB/min
+        let displayValue;
+
+        if (speedPerMinuteValue > 1000) {
+            let speedGBmin = (speedPerMinuteValue / 1000).toFixed(2); // Convert to GB/min
+            displayValue = `${speedGBmin} GB/min`;
+        } else {
+            displayValue = `${speedPerMinuteValue.toFixed(2)} MB/min`;
+        }
+
+        speedPerMinute.textContent = displayValue;
+    }
+
+    function calculateSpeedPerHour(speedMBps) {
+        let speedPerHourValue = (speedMBps * 3600); // MB/h
+        let displayValue;
+
+        if (speedPerHourValue > 1000) {
+            let speedGBhr = (speedPerHourValue / 1000).toFixed(2); // Convert to GB/h
+            displayValue = `${speedGBhr} GB/h`;
+        } else {
+            displayValue = `${speedPerHourValue.toFixed(2)} MB/h`;
+        }
+
+        speedPerHour.textContent = displayValue;
+    }
+
+    function calculateDownloadTime() {
+        let fileSize = parseFloat(fileSizeInput.value);
+        let unit = unitSelect.value;
+
+        if (isNaN(fileSize) || fileSize <= 0) {
+            timeEstimate.textContent = "Proszę wprowadzić prawidłowy rozmiar pliku.";
+            return;
+        }
+        if (averageSpeedMbps === 0) {
+            timeEstimate.textContent = "Proszę najpierw uruchomić test, aby obliczyć szybkość.";
+            return;
+        }
+
+        // Convert file size to MB
+        switch (unit) {
+            case "KB":
+                fileSize /= 1024;
+                break;
+            case "GB":
+                fileSize *= 1024;
+                break;
+            case "TB":
+                fileSize *= 1024 * 1024;
+                break;
+        }
+
+        let downloadTime = (fileSize / (averageSpeedMbps / 8)).toFixed(2); // File size (MB) divided by speed (MB/s)
+        let minutes = Math.floor(downloadTime / 60);
+        let seconds = downloadTime % 60;
+
+        timeEstimate.textContent = `Szacowany czas pobierania: ${minutes} minut i ${seconds.toFixed(0)} sekund.`;
+    }
+</script>
+</body>
+</html>
