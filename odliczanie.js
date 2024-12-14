@@ -41,7 +41,7 @@ function updateCountdown(targetDate, elementId) {
   
         document.getElementById(elementId).innerHTML = countdownText;
       } else {
-        document.getElementById(elementId).innerHTML = "Kurs jest już dostępny";
+        document.getElementById(elementId).innerHTML = "Odśwież stronę.";
       }
     }
   
