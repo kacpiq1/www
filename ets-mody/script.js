@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         rusmap: "RusMap",
         srmap: "Southern Region",
         tgsmap: "ProMods - The Great Steppe",
-        googlemaps: "Google Maps"
+        googlemaps: "Google Maps",
+        season_map: "Late Autumn/Mild Winter v5.8"
     };
 
     // Mapowanie paczek na linki
@@ -39,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
         googlemaps: [
             "https://steamcommunity.com/workshop/filedetails/?l=polish&id=2115873179",
             "https://steamcommunity.com/sharedfiles/filedetails/?id=1147652266"
-        ]
+        ],
+        season_map: ["https://sharemods.com/qsyclcr2ii1n/late_autumn-mild_winter_v5_8.scs.html"]
     };
 
     // Status modyfikacji
@@ -117,7 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "promodsdlc",
             "promods convoy",
             "googlemaps",
-            "promods"
+            "promods",
+            "season_map"
         ];
 
         selectedPackages.forEach(packageName => {
