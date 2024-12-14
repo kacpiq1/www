@@ -150,14 +150,6 @@ function generateModsTable() {
                 nameCell.textContent = displayName;
                 row.appendChild(nameCell);
 
-                if (packageName === "polreb") {
-                    const warning = document.createElement("span");
-                    warning.textContent = " NIEKOMPATYBILNE Z WERSJĄ 1.53";
-                    warning.style.color = "red";
-                    warning.style.marginLeft = "10px";
-                    nameCell.appendChild(warning);
-                }
-
                 // Przycisk pobierania
                 const downloadCell = document.createElement("td");
                 const downloadButton = document.createElement("button");
