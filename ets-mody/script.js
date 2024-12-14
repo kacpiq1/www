@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Ustawienie domyślnie zaznaczonych checkboxów dla "Poland Rebuilding" i "ProMods"
-    const defaultCheckedPackages = ["polreb", "promods"];
+    const defaultCheckedPackages = ["promods"];
     defaultCheckedPackages.forEach(packageName => {
         const checkbox = document.querySelector(`.mod-selection input[type='checkbox'][data-package="${packageName}"]`);
         if (checkbox) {
