@@ -366,6 +366,35 @@
     </form>
 </section>
 
+	<section class="custom-modal custom-container">
+        <button style="font-family: 'Poppins', sans-serif; font-size: .938rem; cursor: pointer; border: none; outline: none;" class="custom-modal__button" id="custom-button-modal">
+            Open Modal
+        </button>
+    
+        <div class="custom-modal__container" id="custom-modal-container">
+            <div class="custom-modal__content">
+                <div class="custom-modal__close custom-close-modal" title="Close">
+                    <i class='bx bx-x'></i>
+                </div>
+    
+                <img src="assets/img/star-trophy.png" alt="" class="custom-modal__img">
+    
+                <h1 style="font-family: 'Poppins', sans-serif; border: none; outline: none;" class="custom-modal__title">Informacja!</h1>
+                <p style="font-family: 'Poppins', sans-serif; font-size: .938rem; border: none; outline: none;" class="custom-modal__description">
+                    Następująca strona https://anubis.kacpiq.pl/ jest napisana w języku angielskim. Czy chcesz kontynuować?
+                </p>
+    
+                <button style="font-family: 'Poppins', sans-serif; font-size: .938rem; cursor: pointer; border: none; outline: none;" class="custom-modal__button custom-modal__button-width">
+                    Przejdź do strony
+                </button>
+    
+                <button style="font-family: 'Poppins', sans-serif; font-size: .938rem; cursor: pointer; border: none; outline: none;" class="custom-modal__button-link custom-close-modal">
+                    Anuluj
+                </button>
+            </div>
+        </div>
+    </section>
+
 <footer class="footer">
     <div class="footer-text">
         <p>Prawa autorskie &copy; 2024 przez kacpiq.pl | Wszelkie prawa zastrzeżone.</p>
@@ -375,6 +404,28 @@
         <a href="#"><i class='bx bx-up-arrow-alt'></i></a>
     </div>
 </footer>
+
+	<script>
+		const showModal = (openButton, modalContent) => {
+    const openBtn = document.getElementById(openButton),
+        modalContainer = document.getElementById(modalContent);
+
+    if (openBtn && modalContainer) {
+        openBtn.addEventListener('click', () => {
+            modalContainer.classList.add('custom-show-modal');
+        });
+    }
+};
+showModal('custom-button-modal', 'custom-modal-container');
+
+const closeBtn = document.querySelectorAll('.custom-close-modal');
+
+function closeModal() {
+    const modalContainer = document.getElementById('custom-modal-container');
+    modalContainer.classList.remove('custom-show-modal');
+}
+closeBtn.forEach(c => c.addEventListener('click', closeModal));
+	</script>
 
 <script src="mainscript.js"></script>
     <script src="odliczanie.js"></script>
