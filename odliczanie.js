@@ -50,5 +50,5 @@ function updateCountdown(targetDate, elementId) {
     setInterval(updateDisplay, updateInterval);
   }
   
-updateCountdown(new Date(2024, 11, 15, 17, 0, 0), 'countdownOP');
+updateCountdown(new Date(2024, 11, 29, 17, 0, 0), 'countdownOP');
   updateCountdown(new Date(2024, 11, 19, 17, 30, 0), 'updatecountdown');
