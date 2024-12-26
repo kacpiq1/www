@@ -1,7 +1,26 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("privacy-modal");
+    const acceptButton = document.getElementById("accept-policy");
 
+    const currentPolicyVersion = "2025-01-01";
 
+    const acceptedPolicyVersion = localStorage.getItem("privacyPolicyVersion");
 
+    if (acceptedPolicyVersion !== currentPolicyVersion) {
+        modal.style.display = "flex";
+    } else {
+        modal.style.display = "none";
+    }
 
+    acceptButton.addEventListener("click", () => {
+        modal.classList.add("hide-animation"); 
+        setTimeout(() => {
+            localStorage.setItem("privacyPolicyVersion", currentPolicyVersion); 
+            modal.style.display = "none"; 
+        }, 300);
+    });
+
+});
 
 // toggle icon navbar
 let menuIcon = document.querySelector('#menu-icon');
