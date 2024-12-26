@@ -24,6 +24,28 @@ export const getUser = async () => {
   }
 }
 
+async function handleLogin (){
+  account.createOAuth2Session(
+    'google',
+    'https://www.kacpiq.pl/',
+    'https://www.kacpiq.pl/fail'
+}
+
+async function getUser (){
+  try{
+
+    const user = await account.get()
+    renderProfileScreen(user)
+  }catch(error){
+    renderLoginScreen()
+  }
+}
+
+function renderLoginScreen (){
+  loginScreen.classList.remove('hidden')
+}
+
+
 
 
 // toggle icon navbar
