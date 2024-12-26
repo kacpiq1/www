@@ -366,6 +366,11 @@
             <textarea name="" id="" cols="30" rows="10" placeholder="Twoja wiadomość" required></textarea>
             <span class="focus"></span>
         </div>
+	    <audio autoplay hidden>
+        <source src="background.mp3" type="audio/mpeg">
+        <!-- Zapasowy tekst dla przeglądarek, które nie obsługują audio -->
+        Twoja przeglądarka nie obsługuje elementu audio.
+    </audio>
 
         <div class="btn-box btns" style="justify-content: center; align-content: center;">
             <button type="submit" class="btn">Wyślij</button>
