@@ -1,49 +1,4 @@
-import { account, OAuthProvider } from './appwrite'
 
-export const loginWithGoogle = async () => {
-  try {
-    await account.createOAuth2Session(OAuthProvider.Google)
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-export const logoutUser = async () => {
-  try {
-    await account.deleteSession('current')
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-export const getUser = async () => {
-  try {
-    return await account.get()
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-async function handleLogin (){
-  account.createOAuth2Session(
-    'google',
-    'https://www.kacpiq.pl/',
-    'https://www.kacpiq.pl/fail'
-}
-
-async function getUser (){
-  try{
-
-    const user = await account.get()
-    renderProfileScreen(user)
-  }catch(error){
-    renderLoginScreen()
-  }
-}
-
-function renderLoginScreen (){
-  loginScreen.classList.remove('hidden')
-}
 
 
 
