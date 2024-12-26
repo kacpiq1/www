@@ -142,7 +142,7 @@
         <div class="home-sci">
             <a href="https://www.youtube.com/c/kacpiq"><i class='bx bxl-youtube'></i></a>
             <a href="#"><i class='bx bxl-discord-alt'></i></a>
-            <a id="audioControl"><i class='bx bx-credit-card'></i></a>
+            <a href="#" id="audioControl"><i class='bx bx-volume-mute'></i></a>
         </div>
     </section>
 
@@ -366,17 +366,16 @@
             <textarea name="" id="" cols="30" rows="10" placeholder="Twoja wiadomość" required></textarea>
             <span class="focus"></span>
         </div>
-	    <audio autoplay hidden>
-        <source src="background.mp3" type="audio/mpeg">
-        <!-- Zapasowy tekst dla przeglądarek, które nie obsługują audio -->
-        Twoja przeglądarka nie obsługuje elementu audio.
-    </audio>
 
         <div class="btn-box btns" style="justify-content: center; align-content: center;">
             <button type="submit" class="btn">Wyślij</button>
         </div>
     </form>
 </section>
+
+	<audio id="hiddenAudio" hidden>
+        <source src="background.mp3" type="audio/mpeg">
+    </audio>
 
 <footer class="footer">
     <div class="footer-text">
@@ -389,28 +388,31 @@
 </footer>
 
 	<script>
-        const audio = document.getElementById('hiddenAudio');
-        const audioControl = document.getElementById('audioControl');
-        const icon = audioControl.querySelector('i');
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('hiddenAudio');
+            const audioControl = document.getElementById('audioControl');
+            const icon = audioControl.querySelector('i');
 
-        let isPlaying = false;
+            let isPlaying = false; // Domyślnie wyciszone
 
-        audioControl.addEventListener('click', (event) => {
-            event.preventDefault(); 
-            
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                icon.className = 'bx bx-volume-mute';
-            } else {
-                audio.volume = 0.2;
-                audio.play().then(() => {
-                    isPlaying = true;
-                    icon.className = 'bx bx-volume-full';
-                }).catch(error => {
-                    console.error("Nie udało się odtworzyć dźwięku:", error);
-                });
-            }
+            // Obsługa kliknięcia przycisku
+            audioControl.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                if (isPlaying) {
+                    audio.pause();
+                    isPlaying = false;
+                    icon.className = 'bx bx-volume-mute';
+                } else {
+                    audio.volume = 0.2; // Cicha głośność
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        icon.className = 'bx bx-volume-full';
+                    }).catch(error => {
+                        console.error("Nie udało się odtworzyć dźwięku:", error);
+                    });
+                }
+            });
         });
     </script>
 
