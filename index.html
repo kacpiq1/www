@@ -142,7 +142,7 @@
         <div class="home-sci">
             <a href="https://www.youtube.com/c/kacpiq"><i class='bx bxl-youtube'></i></a>
             <a href="#"><i class='bx bxl-discord-alt'></i></a>
-            <a href="#"><i class='bx bx-credit-card'></i></a>
+            <a id="audioControl"><i class='bx bx-credit-card'></i></a>
         </div>
     </section>
 
@@ -387,6 +387,32 @@
         <a href="#"><i class='bx bx-up-arrow-alt'></i></a>
     </div>
 </footer>
+
+	<script>
+        const audio = document.getElementById('hiddenAudio');
+        const audioControl = document.getElementById('audioControl');
+        const icon = audioControl.querySelector('i');
+
+        let isPlaying = false;
+
+        audioControl.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                icon.className = 'bx bx-volume-mute';
+            } else {
+                audio.volume = 0.2;
+                audio.play().then(() => {
+                    isPlaying = true;
+                    icon.className = 'bx bx-volume-full';
+                }).catch(error => {
+                    console.error("Nie udało się odtworzyć dźwięku:", error);
+                });
+            }
+        });
+    </script>
 
 	<script>
 		const showModal = (openButton, modalContent) => {
