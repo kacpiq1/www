@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("privacy-modal");
     const acceptButton = document.getElementById("accept-policy");
 
-    const currentPolicyVersion = "2025-01-01";
+    const currentPolicyVersion = "2025-01-02";
 
     const acceptedPolicyVersion = localStorage.getItem("privacyPolicyVersion");
 
