@@ -234,11 +234,11 @@ function startCouponCountdown() {
 
         function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 6.32, maxPrice: 6.41 },
-        { productName: 'Pb98', minPrice: 7.08, maxPrice: 7.20 },
-        { productName: 'LPG', minPrice: 2.67, maxPrice: 2.74 },
-        { productName: 'ONEkodiesel', minPrice: 6.32, maxPrice: 6.43 },
-        { productName: 'ONArctic2', minPrice: 6.52, maxPrice: 6.63 }
+        { productName: 'Pb95', minPrice: 6.05, maxPrice: 6.16 },
+        { productName: 'Pb98', minPrice: 6.83, maxPrice: 6.94 },
+        { productName: 'LPG', minPrice: 3.21, maxPrice: 3.28 },
+        { productName: 'ONEkodiesel', minPrice: 6.17, maxPrice: 6.28 },
+        { productName: 'ONArctic2', minPrice: 6.37, maxPrice: 6.48 }
     ];
 
     const forecastTableBody = document.getElementById('forecastFuelTableBody');
