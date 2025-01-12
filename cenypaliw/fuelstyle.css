@@ -341,9 +341,19 @@ footer {
     vertical-align: middle;
     margin-right: 5px;
 }
+.min-price {
+    color: green;
+    font-weight: bold;
+}
+
+.max-price {
+    color: red;
+    font-weight: bold;
+}
+
 
 @media screen and (max-width: 798px) {
     .chart{
-        height: 90%;
+        height: 71vh;
     }
 }
