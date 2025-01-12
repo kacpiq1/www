@@ -153,9 +153,9 @@
             border: 1px solid #888;
             width: 80%;
             max-width: 800px;
-            max-height: 70vh;
+            max-height: 80%;
             overflow-y: auto;
-            border-radius: 10px; /* Rounded corners for modal */
+            border-radius: 10px;
         }
 
         .close {
@@ -340,4 +340,10 @@ footer {
     border-radius: 50%;
     vertical-align: middle;
     margin-right: 5px;
+}
+
+@media screen and (max-width: 798px) {
+    .chart{
+        height: 90%;
+    }
 }
