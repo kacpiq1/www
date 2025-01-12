@@ -139,6 +139,17 @@
                 <option value="2004">2004</option>
             </select>
             <button onclick="showPriceHistoryChart()">Wyświetl wykres cen</button>
+            <div class="view-options">
+                <label>
+                    <input type="radio" name="dataView" value="daily" checked onclick="fetchHistoryData()">
+                    Dziennie
+                </label>
+                <label>
+                    <input type="radio" name="dataView" value="monthly" onclick="fetchHistoryData()">
+                    Miesięcznie
+                </label>
+                
+            </div>
             <br></br>
             <table>
                 <thead>
@@ -212,7 +223,7 @@
         </div>
     </div>
 
-<div id="taxChangeModal" class="modal">
+<!--<div id="taxChangeModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Zmiany opodatkowania paliw</h2>
@@ -253,7 +264,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div>-->
 
     <div class="modal" id="infoModal">
         <div class="modal-content">
