@@ -234,11 +234,11 @@ function startCouponCountdown() {
 
         function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 6.05, maxPrice: 6.16 },
-        { productName: 'Pb98', minPrice: 6.83, maxPrice: 6.94 },
-        { productName: 'LPG', minPrice: 3.21, maxPrice: 3.28 },
-        { productName: 'ONEkodiesel', minPrice: 6.17, maxPrice: 6.28 },
-        { productName: 'ONArctic2', minPrice: 6.37, maxPrice: 6.48 }
+        { productName: 'Pb95', minPrice: 6.32, maxPrice: 6.41 },
+        { productName: 'Pb98', minPrice: 7.08, maxPrice: 7.20 },
+        { productName: 'LPG', minPrice: 2.67, maxPrice: 2.74 },
+        { productName: 'ONEkodiesel', minPrice: 6.32, maxPrice: 6.43 },
+        { productName: 'ONArctic2', minPrice: 6.52, maxPrice: 6.63 }
     ];
 
     const forecastTableBody = document.getElementById('forecastFuelTableBody');
@@ -359,13 +359,30 @@ function showPriceHistoryChart() {
                 backgroundColor: 'rgba(227, 6, 19, 0.2)',
                 borderColor: 'rgba(227, 6, 19, 1)',
                 borderWidth: 2,
-                data: prices,
+                data: prices.map(price => parseFloat(price).toFixed(2)),
             }]
         },
         options: {
+            maintainAspectRatio: false,
             scales: {
                 y: {
-                    beginAtZero: true
+                    min: Math.min(...prices) - 0.01, 
+                    max: Math.max(...prices) + 0.01,
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(2);
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `Cena paliwa (PLN): ${parseFloat(tooltipItem.raw).toFixed(2)}`;
+                        }
+                    }
                 }
             }
         }
@@ -435,7 +452,7 @@ function showPriceHistoryChart() {
 
         function getYears() {
 
-    const years = [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const years = [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
     const yearSelect = document.getElementById('year');
     yearSelect.innerHTML = '';
     years.forEach(year => {
@@ -444,7 +461,7 @@ function showPriceHistoryChart() {
         option.textContent = year;
         yearSelect.appendChild(option);
     });
-            yearSelect.value = 2024;
+            yearSelect.value = 2025;
 }
 
 
