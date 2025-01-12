@@ -465,26 +465,21 @@ function showPriceHistoryChart() {
 }
 
 
-        function fetchHistoryData() {
+function fetchHistoryData() {
     displayHistoryLoadingModal();
     document.getElementById('loadingHistory').style.display = 'block';
 
     const fuelType = document.getElementById('fuelType').value;
     const selectedYear = document.getElementById('year').value;
     const productId = fuelType.split('-')[0];
+    const viewOption = document.querySelector('input[name="dataView"]:checked').value;
 
     let additionalCost = 0;
     let taxRateH = 1;
 
-    if (productId == 41) {
-        taxRateH = 0.26;
-    } else if (productId == 42) {
-        taxRateH = 0.31;
-    } else if (productId == 43) {
-        taxRateH = 0.26;
-    } else if (productId == 44) {
-        taxRateH = 0.26;
-    }
+    if (productId == 41) taxRateH = 0.26;
+    else if (productId == 42) taxRateH = 0.31;
+    else if (productId == 43 || productId == 44) taxRateH = 0.26;
 
     const historyUrl = 'https://corsproxy.io/?' + `https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
 
@@ -492,27 +487,81 @@ function showPriceHistoryChart() {
         .then(response => response.json())
         .then(historyData => {
             const historyTableBody = document.getElementById('historyTableBody');
-            historyTableBody.innerHTML = '';
-
+            historyTableBody.innerHTML = '';  // Czyścimy tabelę przed jej ponownym wypełnieniem
 
             if (historyData.length === 0) {
                 const noDataMessage = document.createElement('tr');
                 noDataMessage.innerHTML = `<td colspan="2">Dla wybranego roku, nie ma danych o cenach.</td>`;
                 historyTableBody.appendChild(noDataMessage);
             } else {
+                // Zmienna do przechowywania danych do tabeli
+                const tableData = [];
+                let minPrice = Infinity;  // Początkowa minimalna cena
+                let maxPrice = -Infinity; // Początkowa maksymalna cena
 
-            historyData.forEach(item => {
-                const totalPrice = item.value + additionalCost;
-                const row = document.createElement('tr');
-                const effectiveDate = item.effectiveDate.replace('T00:00:00', '');
-                const valueWithTax = (item.value / 1000) * (1 + taxRateH);
-                row.innerHTML = `
-                    <td>${effectiveDate}</td>
-                    <td>${valueWithTax.toFixed(2)}</td>
-                `;
-                historyTableBody.appendChild(row);
-            });
-        }
+                // Pierwsze przetwarzanie danych, aby znaleźć najmniejszą i największą cenę z wszystkich danych
+                historyData.forEach(item => {
+                    const valueWithTax = (item.value / 1000) * (1 + taxRateH);
+                    if (valueWithTax < minPrice) minPrice = valueWithTax;
+                    if (valueWithTax > maxPrice) maxPrice = valueWithTax;
+                });
+
+                if (viewOption === 'daily') {
+                    // Wyświetlanie dzienne
+                    historyData.forEach(item => {
+                        const effectiveDate = item.effectiveDate.replace('T00:00:00', '');
+                        const valueWithTax = (item.value / 1000) * (1 + taxRateH);
+
+                        // Przypisujemy odpowiednią klasę na podstawie porównania z min/max ceną
+                        const priceClass = valueWithTax === minPrice ? 'min-price' : valueWithTax === maxPrice ? 'max-price' : '';
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${effectiveDate}</td>
+                            <td class="${priceClass}">${valueWithTax.toFixed(2)}</td>
+                        `;
+                        historyTableBody.appendChild(row);
+                    });
+                } else if (viewOption === 'monthly') {
+                    // Grupowanie danych po miesiącach
+                    const monthlyData = {};
+                    historyData.forEach(item => {
+                        const month = item.effectiveDate.slice(0, 7);  // Otrzymujemy format "YYYY-MM"
+                        if (!monthlyData[month]) monthlyData[month] = [];
+                        monthlyData[month].push(item.value);
+                    });
+
+                    // Obliczenie minimalnej i maksymalnej średniej ceny miesięcznej
+                    let minMonthlyPrice = Infinity;
+                    let maxMonthlyPrice = -Infinity;
+                    const monthlyAverages = [];
+
+                    for (const [month, values] of Object.entries(monthlyData)) {
+                        const totalValues = values.reduce((sum, val) => sum + val, 0);
+                        const avgValue = totalValues / values.length;
+                        const avgValueWithTax = (avgValue / 1000) * (1 + taxRateH);
+
+                        // Obliczamy minimalną i maksymalną średnią cenę miesięczną
+                        if (avgValueWithTax < minMonthlyPrice) minMonthlyPrice = avgValueWithTax;
+                        if (avgValueWithTax > maxMonthlyPrice) maxMonthlyPrice = avgValueWithTax;
+
+                        monthlyAverages.push({ month, avgValueWithTax });
+                    }
+
+                    // Wyświetlanie danych miesięcznych
+                    monthlyAverages.forEach(({ month, avgValueWithTax }) => {
+                        // Przypisanie odpowiedniej klasy CSS do komórki na podstawie porównania z min/max
+                        const priceClass = avgValueWithTax === minMonthlyPrice ? 'min-price' : avgValueWithTax === maxMonthlyPrice ? 'max-price' : '';
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${month}</td>
+                            <td class="${priceClass}">${avgValueWithTax.toFixed(2)}</td>
+                        `;
+                        historyTableBody.appendChild(row);
+                    });
+                }
+            }
 
             document.getElementById('loadingHistory').style.display = 'none';
             closeHistoryLoadingModal();
@@ -524,6 +573,9 @@ function showPriceHistoryChart() {
         });
 }
 
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     // Get the modal
     var modal = document.getElementById("taxChangeModal");
@@ -532,7 +584,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var span = document.getElementsByClassName("close")[0];
 
     // When the user opens the page, open the modal
-    modal.style.display = "block";
+
+    // modal.style.display = "block";
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
