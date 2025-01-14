@@ -236,7 +236,7 @@ function startCouponCountdown() {
     const forecastData = [
         { productName: 'Pb95', minPrice: 6.32, maxPrice: 6.41 },
         { productName: 'Pb98', minPrice: 7.08, maxPrice: 7.20 },
-        { productName: 'LPG', minPrice: 2.67, maxPrice: 2.74 },
+        { productName: 'LPG', minPrice: 3.19, maxPrice: 3.35 },
         { productName: 'ONEkodiesel', minPrice: 6.32, maxPrice: 6.43 },
         { productName: 'ONArctic2', minPrice: 6.52, maxPrice: 6.63 }
     ];
