@@ -99,22 +99,26 @@ function startCouponCountdown() {
             document.getElementById('mobileModal').style.display = 'none';
         }
 
-       function closeInfoModal() {
-    document.getElementById('infoModal').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('infoModal').style.display = 'none';
-    }, 500);
-}
-
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('infoModal').style.display = 'none';
+            }, 500);
+        }
+    
         function closeInfoModalAndAcknowledge() {
-    closeInfoModal();
-}
+            localStorage.setItem('infoModalAcknowledged', 'true'); 
+            closeInfoModal(); 
+        }
+    
         function showInfoModal() {
-    document.getElementById('infoModal').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('infoModal').style.opacity = '1';
-    }, 100);
-}
+            if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
+                document.getElementById('infoModal').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('infoModal').style.opacity = '1';
+                }, 100);
+            }
+        }
 
 
         // Sprawdzenie, czy urządzenie jest mobilne
