@@ -442,7 +442,7 @@ function showPriceHistoryChart() {
     }
 
         function toggleHistory() {
-            document.getElementById('historyModal').style.display = 'block';
+            document.getElementById('historyModal').style.display = 'flex';
             fetchHistoryData();
         }
 
