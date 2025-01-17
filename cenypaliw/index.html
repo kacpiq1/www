@@ -284,6 +284,26 @@
         </div>
     </div>
 
+        <div class="modal" id="resetModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeInfoModal()">&times;</span>
+            <h2>Wystąpił błąd!</h2>
+            <p>Przepraszamy, wystąpił problem podczas ładowania strony. 
+            Może to być spowodowane problemem z połączeniem internetowym, 
+            błędem w działaniu domeny, niekompatybilnością przeglądarki lub niepowodzonym pobraniem danych.</p>
+    
+            <h3>Co możesz zrobić?</h3>
+            <ul>
+                <li>Sprawdź swoje połączenie z internetem.</li>
+                <li>Odśwież stronę, aby spróbować ponownie załadować zawartość.</li>
+                <li>Jeśli problem będzie się powtarzał, skontaktuj się z administratorem domeny.</li>
+            </ul>
+    
+            <button onclick="resetButton()">Zresetuj stronę</button>
+            <button onclick="closeResetModal()">Zamknij</button>
+        </div>
+    </div>
+
     <script src="cenypaliw/fuelscript.js"></script>
 
 <footer>
