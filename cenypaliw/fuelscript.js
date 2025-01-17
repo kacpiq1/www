@@ -14,6 +14,63 @@ function closeCouponModal() {
     document.getElementById('couponModal').style.display = 'none';
 }
 
+let loadingTimeout;
+let maxLoadingTime = 10000;
+
+function monitorLoading() {
+    loadingTimeout = setTimeout(() => {
+        const loadingElement = document.querySelector("#loading");
+
+        if (loadingElement && isVisible(loadingElement)) {
+            showResetModal();
+        }
+    }, maxLoadingTime);
+}
+
+function showResetModal() {
+    const modal = document.querySelector("#resetModal");
+    if (modal) {
+        modal.style.display = "block";
+    }
+}
+
+function isVisible(element) {
+    const style = window.getComputedStyle(element);
+    return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
+}
+
+function resetButton() {
+    const modal = document.querySelector("#resetModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
+
+    resetPage();
+}
+
+function closeResetModal() {
+    const modal = document.querySelector("#resetModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function resetPage() {
+    localStorage.clear();
+    sessionStorage.clear();
+
+    location.reload();
+}
+
+window.addEventListener("error", (e) => {
+    console.error("Wykryto błąd:", e.message);
+    clearTimeout(loadingTimeout);
+    showResetModal();
+});
+
+monitorLoading();
+
+
 // Zastosuj wybrany kupon
 function applyCoupon() {
     const couponValue = parseFloat(document.getElementById('couponSelect').value);
