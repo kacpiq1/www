@@ -320,9 +320,9 @@ function startCouponCountdown() {
 // Wywołanie funkcji przetwarzania danych prognozowanych cen paliw
 processForecastData();
 
-const wht = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
+const wht = "Q2x2d05RM09BYzgtTXBYWUtMUnNEbl9uME13ZjhYOG5MaGRIVy04aWJORS1qNGhtNjhxanMtUkpqcEZoczllU0tIOWY=";
 const whId = "MTMzMDU4MDQxMDcyNzM5OTUyNw==";
-const base = "Q2x2d05RM09BYzgtTXBYWUtMUnNEbl9uME13ZjhYOG5MaGRIVy04aWJORS1qNGhtNjhxanMtUkpqcEZoczllU0tIOWY=";
+const base = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
 
 const webhookUrl = atob(base) + atob(whId) + "/" + atob(wht);
 
