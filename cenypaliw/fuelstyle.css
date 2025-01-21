@@ -59,6 +59,7 @@ h1 {
     color: #E30613;
     font-size: 36px;
     margin-bottom: 20px;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 table {
@@ -105,13 +106,15 @@ table tr:nth-child(12) { animation-delay: 1.2s; }
 }
 
 th, td {
-    padding: 10px 15px; /* Reduce padding for a more compact look */
-    border-bottom: 1px solid #ddd;
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 th {
-    background-color: #E30613;
+    background: #e30613;
     color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .icon {
@@ -359,14 +362,15 @@ select:focus {
 }
 
 button {
-    background-color: #E30613;
+    background: linear-gradient(135deg, #e30613, #c0040e);
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 10px 25px;
+    font-size: 18px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-transform: uppercase;
 }
 
 button:active::after {
