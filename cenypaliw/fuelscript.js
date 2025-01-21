@@ -262,6 +262,7 @@ function startCouponCountdown() {
                         // Ukryj komunikat o ładowaniu
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('container').style.display = 'block';
+                    setTimeout(fetchLPGData, 2000);
                     } catch (error) {
                         console.error('Błąd podczas parsowania danych paliw:', error);
                         document.getElementById('loading').style.display = 'none';
@@ -274,42 +275,43 @@ function startCouponCountdown() {
                     document.getElementById('container').style.display = 'block';
                 });
         
-            // Pobierz dane LPG
-            fetch(lpgUrl)
-                .then(response => response.text())
-                .then(responseData => {
-        
-                    try {
-                        const data = JSON.parse(responseData); // Próba parsowania jako JSON
-                        const lpgTaxRate = 0.26;
-        
-                        if (Array.isArray(data)) {
-                            const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
-                            if (małopolskieData) {
-                                const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
-                                // Wyświetl cenę LPG
-                                const lpgRow = document.createElement('tr');
-                                lpgRow.innerHTML = `
-                                    <td><img class="icon" src="img/lpg.png" alt="LPG"></td>
-                                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
-                                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${małopolskieData.value.toFixed(2)}</td>
-                                `;
-                                const tableBody = document.getElementById('fuelTableBody');
-                                tableBody.appendChild(lpgRow);
-                            } else {
-                                console.log('Brak danych dla województwa Małopolskiego.');
+                function fetchLPGData() {
+                    fetch(lpgUrl)
+                        .then(response => response.text())
+                        .then(responseData => {
+                
+                            try {
+                                const data = JSON.parse(responseData); // Próba parsowania jako JSON
+                                const lpgTaxRate = 0.26;
+                
+                                if (Array.isArray(data)) {
+                                    const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
+                                    if (małopolskieData) {
+                                        const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
+                                        // Wyświetl cenę LPG
+                                        const lpgRow = document.createElement('tr');
+                                        lpgRow.innerHTML = `
+                                            <td><img class="icon" src="img/lpg.png" alt="LPG"></td>
+                                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
+                                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${małopolskieData.value.toFixed(2)}</td>
+                                        `;
+                                        const tableBody = document.getElementById('fuelTableBody');
+                                        tableBody.appendChild(lpgRow);
+                                    } else {
+                                        console.log('Brak danych dla województwa Małopolskiego.');
+                                    }
+                                } else {
+                                    console.log('Received data is not an array:', data);
+                                }
+                            } catch (error) {
+                                console.error('Błąd podczas parsowania danych LPG:', error);
                             }
-                        } else {
-                            console.log('Received data is not an array:', data);
-                        }
-                    } catch (error) {
-                        console.error('Błąd podczas parsowania danych LPG:', error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching LPG data:', error);
-                });
-        }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching LPG data:', error);
+                        });
+                }
+            }
 
         function processForecastData() {
     const forecastData = [
