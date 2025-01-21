@@ -191,8 +191,9 @@ function startCouponCountdown() {
             }
         };
 
-        const proxyUrl = 'https://api.allorigins.win/get?url=';
-        const targetUrl = 'https://tool.orlen.pl/api/wholesalefuelprices';
+        const fuelUrl = 'https://cenypaliw.kacpiq.workers.dev/';
+        const lpgUrl = 'https://cenypaliw-lpg.kacpiq.workers.dev/';
+        
         const productIcons = {
             'Pb95': 'img/efecta95.png',
             'Pb98': 'img/verva98.png',
@@ -200,97 +201,114 @@ function startCouponCountdown() {
             'ONEkodiesel': 'img/efectadiesel.png',
             'ONArctic2': 'img/vervadiesel.png'
         };
-
+        
         function fetchData() {
             // Pokaż komunikat o odświeżeniu danych
             showNotification("Odświeżono dane.");
             document.getElementById('loadingHistory').style.display = 'block';
-
+        
             // Wyświetl komunikat o ładowaniu
             document.getElementById('loading').style.display = 'block';
             document.getElementById('container').style.display = 'none';
-
+        
             // Pobierz dane o cenach paliw
-            fetch(proxyUrl + encodeURIComponent(targetUrl))
-                .then(response => response.json())
+            fetch(fuelUrl)
+                .then(response => response.text())
                 .then(data => {
-                    // Przetwórz pobrane dane
-                    const jsonData = JSON.parse(data.contents);
-
-                    // Pobierz datę ostatniej aktualizacji i wyświetl informację
-                    const publishFrom = jsonData[0]?.publishFrom?.replace('T00:00:00', ' ') || 'brak danych';
-                    document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
-
-                    // Przygotuj dane dotyczące paliw: Pb95, Pb98, ONEkodiesel, ONArctic2
-                    const filteredData = jsonData.filter(item => 
-                item.productName === 'Pb95' || 
-                item.productName === 'ONEkodiesel' ||
-                item.productName === 'Pb98' || 
-                item.productName === 'ONArctic2'
-            ).map(item => {
-                let taxRate = 0;
-                if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel' || item.productName === 'ONArctic2') {
-                    taxRate = 0.26;
-                } else if (item.productName === 'Pb98') {
-                    taxRate = 0.32; 
-                }
-
-                let valueWithTax = (item.value / 1000) * (1 + taxRate);
-                let valueWithoutTax = item.value / 1000;
-                return {
-                    productName: item.productName,
-                    valueWithTax: valueWithTax.toFixed(2),
-                    valueWithoutTax: valueWithoutTax.toFixed(2)
-                };
-            });
-
-            // Wyświetl dane na stronie
-            const tableBody = document.getElementById('fuelTableBody');
-            tableBody.innerHTML = '';
-            filteredData.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
-                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithTax}</td>
-                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithoutTax}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-
-                    // Ukryj komunikat o ładowaniu
+        
+                    try {
+                        const jsonData = JSON.parse(data); // Próba parsowania jako JSON
+        
+                        // Pobierz datę ostatniej aktualizacji i wyświetl informację
+                        const publishFrom = jsonData[0]?.publishFrom?.replace('T00:00:00', ' ') || 'brak danych';
+                        document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
+        
+                        // Przygotuj dane dotyczące paliw: Pb95, Pb98, ONEkodiesel, ONArctic2
+                        const filteredData = jsonData.filter(item => 
+                            item.productName === 'Pb95' || 
+                            item.productName === 'ONEkodiesel' ||
+                            item.productName === 'Pb98' || 
+                            item.productName === 'ONArctic2'
+                        ).map(item => {
+                            let taxRate = 0;
+                            if (item.productName === 'Pb95' || item.productName === 'ONEkodiesel' || item.productName === 'ONArctic2') {
+                                taxRate = 0.26;
+                            } else if (item.productName === 'Pb98') {
+                                taxRate = 0.32; 
+                            }
+        
+                            let valueWithTax = (item.value / 1000) * (1 + taxRate);
+                            let valueWithoutTax = item.value / 1000;
+                            return {
+                                productName: item.productName,
+                                valueWithTax: valueWithTax.toFixed(2),
+                                valueWithoutTax: valueWithoutTax.toFixed(2)
+                            };
+                        });
+        
+                        // Wyświetl dane na stronie
+                        const tableBody = document.getElementById('fuelTableBody');
+                        tableBody.innerHTML = '';
+                        filteredData.forEach(item => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td><img class="icon" src="${productIcons[item.productName]}" alt="${item.productName}"></td>
+                                <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithTax}</td>
+                                <td class="bold" style="font-family: 'Outfit', sans-serif;">${item.valueWithoutTax}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+        
+                        // Ukryj komunikat o ładowaniu
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('container').style.display = 'block';
+                    } catch (error) {
+                        console.error('Błąd podczas parsowania danych paliw:', error);
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('container').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching fuel data:', error);
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('container').style.display = 'block';
                 });
-
-            fetch(proxyUrl + encodeURIComponent('https://tool.orlen.pl/api/autogasprices'))
-            .then(response => response.json())
-            .then(responseData => {
-                // Przetwórz pobrane dane
-                const data = JSON.parse(responseData.contents);
-
-                const lpgTaxRate = 0.26;
-
-                if (Array.isArray(data)) {
-                    const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
-                    if (małopolskieData) {
-                        const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
-                        // Wyświetl cenę LPG
-                        const lpgRow = document.createElement('tr');
-                        lpgRow.innerHTML = `
-                            <td><img class="icon" src="img/lpg.png" alt="LPG"></td>
-                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
-                            <td class="bold" style="font-family: 'Outfit', sans-serif;">${małopolskieData.value.toFixed(2)}</td>
-                        `;
-                        const tableBody = document.getElementById('fuelTableBody');
-                        tableBody.appendChild(lpgRow);
-                    } else {
-                        console.log('Brak danych dla województwa Małopolskiego.');
+        
+            // Pobierz dane LPG
+            fetch(lpgUrl)
+                .then(response => response.text())
+                .then(responseData => {
+        
+                    try {
+                        const data = JSON.parse(responseData); // Próba parsowania jako JSON
+                        const lpgTaxRate = 0.26;
+        
+                        if (Array.isArray(data)) {
+                            const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
+                            if (małopolskieData) {
+                                const lpgValue = małopolskieData.value * (1 + lpgTaxRate);
+                                // Wyświetl cenę LPG
+                                const lpgRow = document.createElement('tr');
+                                lpgRow.innerHTML = `
+                                    <td><img class="icon" src="img/lpg.png" alt="LPG"></td>
+                                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${lpgValue.toFixed(2)}</td>
+                                    <td class="bold" style="font-family: 'Outfit', sans-serif;">${małopolskieData.value.toFixed(2)}</td>
+                                `;
+                                const tableBody = document.getElementById('fuelTableBody');
+                                tableBody.appendChild(lpgRow);
+                            } else {
+                                console.log('Brak danych dla województwa Małopolskiego.');
+                            }
+                        } else {
+                            console.log('Received data is not an array:', data);
+                        }
+                    } catch (error) {
+                        console.error('Błąd podczas parsowania danych LPG:', error);
                     }
-                } else {
-                    console.log('Received data is not an array:', data);
-                }
-            })
-            .catch(error => console.error('Error fetching LPG data:', error));
+                })
+                .catch(error => {
+                    console.error('Error fetching LPG data:', error);
+                });
         }
 
         function processForecastData() {
