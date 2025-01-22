@@ -1,14 +1,14 @@
 @font-face {
   font-family: 'Tungsten Bold';
-  src: url('TungstenBold.woff2') format('woff2'),
-       url('TungstenBold.woff') format('woff');
+  src: url('fonts/TungstenBold.woff2') format('woff2'),
+       url('fonts/TungstenBold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'DINNextW1G';
-  src: url('DINNextW1G-Regular.otf') format('truetype');
+  src: url('fonts/DINNextW1G-Regular.otf') format('truetype');
 }
 
 body {
