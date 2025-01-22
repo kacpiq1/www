@@ -402,13 +402,21 @@ body::before {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(15, 25, 35, 0.8);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   z-index: 9999;
+}
+
+
+#loading-text {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
 }
 
 .spinner {
