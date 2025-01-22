@@ -232,39 +232,73 @@ function getSkinById(id) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
-
-  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
-  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
-function checkImagesLoaded() {
-  const images = Array.from(document.querySelectorAll('#skins-list img'));
   const loadingText = document.getElementById('loading-text'); // Odwołanie do elementu liczby
-
   let loadedCount = 0; // Liczba załadowanych obrazów
+  let totalCount = 0; // Całkowita liczba obrazów
 
-  // Aktualizuj licznik po każdym załadowaniu obrazu
-  const promises = images.map(image => {
-    return new Promise(resolve => {
-      if (image.complete) {
-        loadedCount++; // Jeśli obraz jest już załadowany
-        loadingText.textContent = `${loadedCount}/${images.length}`;
-        resolve();
-      } else {
-        image.addEventListener('load', () => {
-          loadedCount++; // Zwiększamy licznik po załadowaniu obrazu
-          loadingText.textContent = `${loadedCount}/${images.length}`;
+  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
+  function checkImagesLoaded() {
+    const images = Array.from(document.querySelectorAll('#skins-list img'));
+    totalCount = images.length; // Liczba obrazów do załadowania
+
+    // Aktualizuj licznik po każdym załadowaniu obrazu
+    const promises = images.map(image => {
+      return new Promise(resolve => {
+        if (image.complete) {
+          loadedCount++; // Jeśli obraz jest już załadowany
+          loadingText.textContent = `${loadedCount}/${totalCount}`;
           resolve();
-        });
-        image.addEventListener('error', resolve); // Obsługuje błąd ładowania obrazu
-      }
+        } else {
+          image.addEventListener('load', () => {
+            loadedCount++; // Zwiększamy licznik po załadowaniu obrazu
+            loadingText.textContent = `${loadedCount}/${totalCount}`;
+            resolve();
+          });
+          image.addEventListener('error', resolve); // Obsługuje błąd ładowania obrazu
+        }
+      });
     });
-  });
 
-  // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
-  Promise.all(promises).then(() => {
-    loadingScreen.style.display = 'none';
-  });
-}
+    // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
+    Promise.all(promises).then(() => {
+      loadingScreen.style.display = 'none';
+    });
+  }
 
+  // Funkcja do pobrania listy skinów
+  async function fetchSkins() {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    skinsData = data.data; // Przypisanie danych do globalnej zmiennej
+    displaySkins(skinsData);
+    checkURLForSkin(); // Sprawdzenie URL po załadowaniu skinów
+    checkImagesLoaded(); // Sprawdzenie, czy obrazy zostały załadowane po wyświetleniu skórek
+  }
+
+  // Sprawdź, czy URL zawiera parametry skina, poziomu i chroma
+  function checkURLForSkin() {
+    const params = new URLSearchParams(window.location.search);
+    const skinId = params.get('skin');
+    currentLevel = parseInt(params.get('level')) || 0;
+    currentChroma = parseInt(params.get('chroma')) || 0;
+
+    if (skinId) {
+      const skin = getSkinById(skinId);
+      if (skin) {
+        showSkinDetail(skin);
+
+        // Automatyczne ustawienie chromy i poziomu przy otwarciu
+        const chromaIcons = document.querySelectorAll('.chroma-icon');
+        if (chromaIcons[currentChroma]) {
+          chromaIcons[currentChroma].click();
+        }
+        const levelButtons = document.querySelectorAll('.level-button');
+        if (levelButtons[currentLevel]) {
+          levelButtons[currentLevel].click();
+        }
+      }
+    }
+  }
 
   // Po załadowaniu danych uruchom sprawdzanie obrazów
   fetchSkins().then(() => {
@@ -277,4 +311,3 @@ function checkImagesLoaded() {
     skinDetailModal.style.display = 'none';
   });
 });
-
