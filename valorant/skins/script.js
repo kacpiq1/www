@@ -235,21 +235,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
   function checkImagesLoaded() {
-    const images = Array.from(document.querySelectorAll('#skins-list img'));
-    const promises = images.map(image => new Promise(resolve => {
-      if (image.complete) {
-        resolve();
-      } else {
-        image.addEventListener('load', resolve);
-        image.addEventListener('error', resolve); // Obsługa błędów
-      }
-    }));
+  const images = Array.from(document.querySelectorAll('#skins-list img'));
+  const loadingText = document.getElementById('loading-text'); // Odwołanie do elementu liczby
 
-    // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
-    Promise.all(promises).then(() => {
-      loadingScreen.style.display = 'none';
+  const promises = images.map((image, index) => new Promise(resolve => {
+    if (image.complete) {
+      resolve();
+    } else {
+      image.addEventListener('load', resolve);
+      image.addEventListener('error', resolve); // Obsługa błędów
+    }
+
+    // Aktualizacja liczby załadowanych obrazów
+    image.addEventListener('load', () => {
+      const loadedCount = document.querySelectorAll('#skins-list img[complete]').length;
+      loadingText.textContent = `${loadedCount}/${images.length}`;
     });
-  }
+  }));
+
+  // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
+  Promise.all(promises).then(() => {
+    loadingScreen.style.display = 'none';
+  });
+}
 
   // Po załadowaniu danych uruchom sprawdzanie obrazów
   fetchSkins().then(() => {
