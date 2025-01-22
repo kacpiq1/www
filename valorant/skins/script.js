@@ -234,30 +234,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
 
   // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
-  function checkImagesLoaded() {
+  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
+function checkImagesLoaded() {
   const images = Array.from(document.querySelectorAll('#skins-list img'));
   const loadingText = document.getElementById('loading-text'); // Odwołanie do elementu liczby
 
-  const promises = images.map((image, index) => new Promise(resolve => {
-    if (image.complete) {
-      resolve();
-    } else {
-      image.addEventListener('load', resolve);
-      image.addEventListener('error', resolve); // Obsługa błędów
-    }
+  let loadedCount = 0; // Liczba załadowanych obrazów
 
-    // Aktualizacja liczby załadowanych obrazów
-    image.addEventListener('load', () => {
-      const loadedCount = document.querySelectorAll('#skins-list img[complete]').length;
-      loadingText.textContent = `${loadedCount}/${images.length}`;
+  // Aktualizuj licznik po każdym załadowaniu obrazu
+  const promises = images.map(image => {
+    return new Promise(resolve => {
+      if (image.complete) {
+        loadedCount++; // Jeśli obraz jest już załadowany
+        loadingText.textContent = `${loadedCount}/${images.length}`;
+        resolve();
+      } else {
+        image.addEventListener('load', () => {
+          loadedCount++; // Zwiększamy licznik po załadowaniu obrazu
+          loadingText.textContent = `${loadedCount}/${images.length}`;
+          resolve();
+        });
+        image.addEventListener('error', resolve); // Obsługuje błąd ładowania obrazu
+      }
     });
-  }));
+  });
 
   // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
   Promise.all(promises).then(() => {
     loadingScreen.style.display = 'none';
   });
 }
+
 
   // Po załadowaniu danych uruchom sprawdzanie obrazów
   fetchSkins().then(() => {
