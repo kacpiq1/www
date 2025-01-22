@@ -1,14 +1,14 @@
 @font-face {
   font-family: 'Tungsten Bold';
-  src: url('skins/TungstenBold.woff2') format('woff2'),
-       url('skins/TungstenBold.woff') format('woff');
+  src: url('TungstenBold.woff2') format('woff2'),
+       url('TungstenBold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'DINNextW1G';
-  src: url('skins/DINNextW1G-Regular.otf') format('truetype');
+  src: url('DINNextW1G-Regular.otf') format('truetype');
 }
 
 body {
@@ -160,6 +160,31 @@ body {
       position: relative;
 
   }
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://media.valorant-api.com/images/bg/04.jpg') no-repeat center center/cover;
+  opacity: 0.2;
+  z-index: -1;
+  animation: bg-animation 5s linear infinite;
+}
+
+@keyframes bg-animation {
+  0% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
 
   .close-button {
   position: absolute;
