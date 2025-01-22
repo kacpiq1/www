@@ -1,5 +1,18 @@
+@font-face {
+  font-family: 'Tungsten Bold';
+  src: url('skins/TungstenBold.woff2') format('woff2'),
+       url('skins/TungstenBold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DINNextW1G';
+  src: url('skins/DINNextW1G-Regular.otf') format('truetype');
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: DINNextW1G, sans-serif;
     background-color: #1f1f1f;
     color: #fff;
     margin: 0;
