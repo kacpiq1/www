@@ -230,14 +230,36 @@ function getSkinById(id) {
   return skinsData.find(skin => skin.uuid === id);
 }
 
-// Wywołaj na starcie
-fetchSkins().then(() => checkURLForSkin());
+document.addEventListener('DOMContentLoaded', () => {
+  const loadingScreen = document.getElementById('loading-screen');
 
-// Funkcja zamykająca modal
-closeButton.addEventListener('click', () => {
-  skinDetailModal.style.display = 'none';
+  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
+  function checkImagesLoaded() {
+    const images = Array.from(document.querySelectorAll('#skins-list img'));
+    const promises = images.map(image => new Promise(resolve => {
+      if (image.complete) {
+        resolve();
+      } else {
+        image.addEventListener('load', resolve);
+        image.addEventListener('error', resolve); // Obsługa błędów
+      }
+    }));
+
+    // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
+    Promise.all(promises).then(() => {
+      loadingScreen.style.display = 'none';
+    });
+  }
+
+  // Po załadowaniu danych uruchom sprawdzanie obrazów
+  fetchSkins().then(() => {
+    checkURLForSkin(); // Sprawdzenie parametrów URL po załadowaniu skinów
+    checkImagesLoaded(); // Sprawdź, czy wszystkie obrazy są załadowane
+  });
+
+  // Funkcja zamykająca modal
+  closeButton.addEventListener('click', () => {
+    skinDetailModal.style.display = 'none';
+  });
 });
-
-// Wywołanie funkcji na start
-fetchSkins();
 
