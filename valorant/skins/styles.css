@@ -347,7 +347,7 @@ body::before {
   padding: 12px 15px;
   border: 2px solid #ff4655; /* Czerwony akcent */
   border-radius: 25px;
-  font-size: 16px;
+  font-size: 24px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   transition: all 0.3s;
