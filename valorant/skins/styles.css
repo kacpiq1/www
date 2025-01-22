@@ -177,7 +177,6 @@ body::before {
   background: url('https://media.valorant-api.com/images/bg/04.jpg') no-repeat center center/cover;
   opacity: 0.2;
   z-index: -1;
-  animation: bg-animation 5s linear infinite;
 }
 
 @keyframes bg-animation {
