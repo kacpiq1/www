@@ -6,33 +6,118 @@ body {
     padding: 0;
   }
   
-  #skins-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-  }
+#skins-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+}
   
   .skin-card {
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    width: 200px;
-    cursor: pointer;
-  }
   
-  .skin-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
+  background: linear-gradient(145deg, #1b2735, #2b3a4b); /* Gradient futurystyczny */
+  border: 2px solid #ff4655; /* Czerwony akcent */
+  border-radius: 10px;
+  text-align: center;
+  width: 200px;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 70, 85, 0.6); /* Delikatna poświata */
+}
+.skin-card:hover {
+  transform: translateY(-10px); /* Unoszenie karty */
+  box-shadow: 0 10px 30px rgba(255, 70, 85, 0.5); /* Neonowa poświata */
+  background: linear-gradient(145deg, #2b3a4b, #1b2735); /* Odwrócony gradient */
+  animation: card-hover 1.5s infinite alternate;
+}
+
+@keyframes card-hover {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 70, 85, 0.3);
   }
-  
-  .skin-card h3 {
-    font-size: 1.1em;
-    margin: 10px 0;
+  100% {
+    box-shadow: 0 0 30px rgba(255, 70, 85, 1);
   }
+}
+
+
+.skin-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.skin-card:hover img {
+  transform: scale(1.05); /* Powiększenie obrazu na hover */
+  filter: brightness(1.2); /* Rozjaśnienie obrazu */
+}
+
+.skin-card h3 {
+  font-size: 1.1em;
+  margin: 15px 0 10px;
+  color: #ff4655; /* Czerwony akcent tytułu */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s;
+}
+
+.skin-card:hover h3 {
+  color: #fff; /* Zmiana koloru tekstu na biały */
+}
+
+.skin-card h3::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0%;
+  height: 2px;
+  background: #ff4655;
+  transition: width 0.3s, left 0.3s;
+}
+
+.skin-card:hover h3::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Neonowe linie dekoracyjne */
+.skin-card::before,
+.skin-card::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff4655, transparent);
+  animation: neon-line 2s infinite linear;
+  z-index: 1;
+}
+
+.skin-card::before {
+  top: 0;
+  left: 0;
+}
+
+.skin-card::after {
+  bottom: 0;
+  right: 0;
+}
+
+@keyframes neon-line {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
   
   .modal {
     display: none;
@@ -49,24 +134,33 @@ body {
   }
   
   .modal-content {
-    background-color: #2c2c2c;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh; /* Maksymalna wysokość, aby nie wychodziło poza ekran */
-    overflow-y: auto; /* Dodanie przewijania, jeśli treść jest zbyt długa */
+      background-color: #1b2735;
+      border: 2px solid #ff4655;
+      border-radius: 15px;
+      padding: 25px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      text-align: center;
+      position: relative;
+
   }
 
   .close-button {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
-    cursor: pointer;
-    color: #fff;
-  }
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  cursor: pointer;
+  color: #ff4655;
+  transition: transform 0.3s;
+}
+
+.close-button:hover {
+  transform: rotate(90deg);
+}
   
   #variants-container img {
     width: 50px;
@@ -196,23 +290,43 @@ body {
 }
 
 #search-container {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center; /* Wyśrodkowuje pole wyszukiwania */
+  font-family: 'Tungsten Bold', sans-serif;
+  margin: 20px auto;
+  text-align: center;
+  position: relative;
 }
 
+/* Animacja tła dla input */
 #search-input {
-  width: 300px; /* Szerokość pola wyszukiwania */
-  padding: 10px; /* Wewnętrzny odstęp */
-  border: 1px solid #ccc; /* Kolor ramki */
-  border-radius: 5px; /* Zaokrąglenie rogów */
-  font-size: 16px; /* Rozmiar czcionki */
-  transition: border-color 0.3s; /* Płynna zmiana koloru ramki */
+  font-family: 'Tungsten Bold', sans-serif;
+  width: 300px;
+  padding: 12px 15px;
+  border: 2px solid #ff4655; /* Czerwony akcent */
+  border-radius: 25px;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
 }
 
 #search-input:focus {
-  outline: none; /* Usunięcie domyślnego konturu */
-  border-color: #007BFF; /* Kolor ramki przy focie */
+  outline: none;
+  border-color: #fff;
+  box-shadow: 0 0 15px rgba(255, 70, 85, 0.8);
+  background: rgba(0, 0, 0, 0.8);
+  animation: glow-input 1.5s infinite alternate;
+}
+
+@keyframes glow-input {
+  0% {
+    border-color: #ff4655;
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.6);
+  }
+  100% {
+    border-color: #ff4655;
+    box-shadow: 0 0 30px rgba(255, 70, 85, 1);
+  }
 }
 
 .share-button {
@@ -247,7 +361,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(15, 25, 35, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -255,8 +369,8 @@ body {
 }
 
 .spinner {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #3498db;
+  border: 8px solid #1b2735;
+  border-top: 8px solid #ff4655;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -271,3 +385,25 @@ body {
     transform: rotate(360deg);
   }
 }
+
+h1 {
+  font-family: 'Tungsten Bold', sans-serif;
+  text-align: center;
+  color: #ff4655;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 3em;
+  position: relative;
+  margin-top: 20px;
+  animation: glow-text 2s infinite alternate;
+}
+
+@keyframes glow-text {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 70, 85, 0.6), 0 0 20px rgba(255, 70, 85, 0.8);
+  }
+  100% {
+    text-shadow: 0 0 20px rgba(255, 70, 85, 1), 0 0 40px rgba(255, 70, 85, 1);
+  }
+}
+
