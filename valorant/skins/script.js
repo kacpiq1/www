@@ -46,14 +46,6 @@ async function showSkinDetail(skin) {
   skinNameElement.textContent = skin.displayName;
   skinIconElement.src = skin.displayIcon;
 
-  // Dodajemy dodatkowy opis i poziom do szczegółów
-  const descriptionElement = document.createElement('p');
-  descriptionElement.textContent = "Zobacz wygląd skina"; // Można dodać dynamicznie
-  const levelElement = document.createElement('p');
-  levelElement.textContent = `Poziom: ${currentLevel + 1}`;
-
-  variantsContainer.prepend(descriptionElement, levelElement);
-
   // Pobieranie ikonki rzadkości skina
   if (skin.contentTierUuid) {
     const tierResponse = await fetch(`${TIER_API_URL}${skin.contentTierUuid}`);
@@ -173,9 +165,7 @@ async function showSkinDetail(skin) {
 
 // Funkcja do generowania linku do udostępniania z poziomem i chromą
 function shareSkin(skinId) {
-  const skin = getSkinById(skinId);
-  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}&title=${encodeURIComponent(skin.displayName)}&description=${encodeURIComponent("Zobacz wygląd skina")}&levelTitle=${encodeURIComponent("Poziom: " + (currentLevel + 1))}&image=${encodeURIComponent(skin.displayIcon)}`;
-  
+  const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}`;
   navigator.clipboard.writeText(url).then(() => {
     alert('Link do skina został skopiowany do schowka!');
   }).catch(err => {
@@ -193,20 +183,7 @@ function checkURLForSkin() {
   if (skinId) {
     const skin = getSkinById(skinId);
     if (skin) {
-      // Wyświetlanie szczegółów skina z URL
-      skinNameElement.textContent = params.get('title') || skin.displayName;
-      skinIconElement.src = params.get('image') || skin.displayIcon;
-
-      const description = params.get('description') || "Zobacz wygląd skina";
-      const levelTitle = params.get('levelTitle') || `Poziom: ${currentLevel + 1}`;
-      
-      // Wyświetlenie opisu i poziomu
-      const descriptionElement = document.createElement('p');
-      descriptionElement.textContent = description;
-      const levelElement = document.createElement('p');
-      levelElement.textContent = levelTitle;
-
-      variantsContainer.prepend(descriptionElement, levelElement); // Dodaj opis i poziom przed wariantami
+      showSkinDetail(skin);
 
       // Automatyczne ustawienie chromy i poziomu przy otwarciu
       const chromaIcons = document.querySelectorAll('.chroma-icon');
@@ -217,6 +194,19 @@ function checkURLForSkin() {
       if (levelButtons[currentLevel]) {
         levelButtons[currentLevel].click();
       }
+    }
+  }
+}
+
+// Sprawdź URL i ustaw metadane
+function checkURLForSkin() {
+  const params = new URLSearchParams(window.location.search);
+  const skinId = params.get('skin');
+
+  if (skinId) {
+    const skin = getSkinById(skinId);
+    if (skin) {
+      updateMetaTags(skin); // Ustaw meta tagi Open Graph
     }
   }
 }
