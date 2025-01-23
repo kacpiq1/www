@@ -261,7 +261,9 @@ function checkImagesLoaded() {
 
   // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
   Promise.all(promises).then(() => {
-    loadingScreen.style.display = 'none';
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 2000);
   });
 }
 
