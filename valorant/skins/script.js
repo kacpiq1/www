@@ -198,33 +198,6 @@ function checkURLForSkin() {
   }
 }
 
-function updateMetaTags(skin) {
-  // Znajdź elementy meta w HTML
-  const ogTitle = document.getElementById('og-title');
-  const ogDescription = document.getElementById('og-description');
-  const ogImage = document.getElementById('og-image');
-  const ogUrl = document.getElementById('og-url');
-
-  // Zaktualizuj metadane na podstawie skina
-  ogTitle.setAttribute('content', skin.displayName);
-  ogDescription.setAttribute('content', 'Zobacz szczegóły skina w Valorant!');
-  ogImage.setAttribute('content', skin.displayIcon);
-  ogUrl.setAttribute('content', window.location.href);
-}
-
-// Sprawdź URL i ustaw metadane
-function checkURLForSkin() {
-  const params = new URLSearchParams(window.location.search);
-  const skinId = params.get('skin');
-
-  if (skinId) {
-    const skin = getSkinById(skinId);
-    if (skin) {
-      updateMetaTags(skin); // Ustaw meta tagi Open Graph
-    }
-  }
-}
-
 // Funkcja wyszukująca skina na podstawie jego ID
 function getSkinById(id) {
   return skinsData.find(skin => skin.uuid === id);
