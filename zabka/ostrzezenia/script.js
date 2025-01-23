@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function checkDataAvailability(timestamp, label, date, duration) {
-        const apiUrl = `https://corsproxy.io/?https://meteo.imgw.pl/api/v1/forecast/storm?token=p4DXKjsYadfBV21TYrDk&time=${timestamp}`;
+        const apiUrl = `https://corsproxy.io/?https://meteo.imgw.pl/api/v1/forecast/text/2d?token=p4DXKjsYadfBV21TYrDk&terytCode=00&time=${timestamp}`;
 
         fetch(apiUrl)
             .then(response => response.json())
