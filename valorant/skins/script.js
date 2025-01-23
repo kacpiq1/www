@@ -16,17 +16,21 @@ let currentChroma = 0; // Przechowuje aktualny chroma
 
 const bundleFilter = document.getElementById('bundle-filter');
 const weaponTypeFilter = document.getElementById('weapon-type-filter');
+const searchInput = document.getElementById('search-input');
 
-const availableWeaponTypes = ['Ghost', 'Classic', 'Vandal', 'Phantom', 'Sheriff', 'Operator'];
+const availableWeaponTypes = ['Ghost', 'Classic', 'Vandal', 'Phantom', 'Sheriff', 'Operator']; 
 
-// Funkcja do pobrania listy skinów
+let skinsData = [];
+let filteredSkins = [];
+
 async function fetchSkins() {
   const response = await fetch(API_URL);
   const data = await response.json();
-  skinsData = data.data; // Przypisanie danych do globalnej zmiennej
+  skinsData = data.data;
+
   populateFilters(skinsData);
-  displaySkins(skinsData);
-  checkURLForSkin(); // Sprawdzenie URL po załadowaniu skinów
+  filterSkins();
+  checkURLForSkin();
 }
 
 function populateFilters(skins) {
@@ -35,15 +39,14 @@ function populateFilters(skins) {
 
   skins.forEach(skin => {
     if (skin.displayName) {
-      const bundleName = skin.displayName.split(' ')[0]; // Pobranie nazwy bundla (pierwsze słowo)
+      const bundleName = skin.displayName.split(' ')[0];
       bundles.add(bundleName);
     }
     if (skin.weapon && skin.weapon.displayName) {
-      weaponTypes.add(skin.weapon.displayName); // Pobranie typu broni
+      weaponTypes.add(skin.weapon.displayName);
     }
   });
 
-  // Wypełnij filtr bundli
   bundleFilter.innerHTML = '<option value="">Wszystkie Bundles</option>';
   bundles.forEach(bundle => {
     const option = document.createElement('option');
@@ -52,7 +55,6 @@ function populateFilters(skins) {
     bundleFilter.appendChild(option);
   });
 
-  // Wypełnij filtr typów broni (tylko dostępne typy)
   weaponTypeFilter.innerHTML = '<option value="">Wszystkie Bronie</option>';
   availableWeaponTypes.forEach(type => {
     const option = document.createElement('option');
@@ -62,62 +64,24 @@ function populateFilters(skins) {
   });
 }
 
-// Obsługa filtra bundli
-function filterSkinsByBundle(bundleName) {
-  if (!bundleName) {
-    displaySkins(skinsData); // Wyświetl wszystkie skiny, jeśli filtr jest pusty
-    return;
-  }
-  const filteredSkins = skinsData.filter(skin => {
-    const bundle = skin.displayName.split(' ')[0]; // Pobranie nazwy bundla
-    return bundle === bundleName;
+function filterSkins() {
+  const selectedBundle = bundleFilter.value;
+  const selectedWeaponType = weaponTypeFilter.value;
+  const searchQuery = searchInput.value.toLowerCase();
+
+  filteredSkins = skinsData.filter(skin => {
+    const isInBundle = selectedBundle ? skin.displayName.split(' ')[0] === selectedBundle : true;
+    const isWeaponType = selectedWeaponType ? skin.displayName.toLowerCase().includes(selectedWeaponType.toLowerCase()) : true;
+    const matchesSearchQuery = skin.displayName.toLowerCase().includes(searchQuery);
+
+    return isInBundle && isWeaponType && matchesSearchQuery;
   });
-  displaySkins(filteredSkins);
-}
-
-// Obsługa filtra typów broni (po nazwie skórki)
-function filterSkinsByWeaponType(weaponType) {
-  const selectedBundle = bundleFilter.value;
-  
-  let filteredSkins = skinsData;
-
-  // Jeśli wybrano bundel, przefiltruj skiny
-  if (selectedBundle) {
-    filteredSkins = filteredSkins.filter(skin => {
-      const bundle = skin.displayName.split(' ')[0]; // Pobranie nazwy bundla
-      return bundle === selectedBundle;
-    });
-  }
-
-  // Jeśli wybrano typ broni, przefiltruj po nazwie skórki
-  if (weaponType && weaponType !== "") {
-    filteredSkins = filteredSkins.filter(skin => {
-      // Sprawdzamy, czy nazwa skórki zawiera nazwę broni
-      return skin.displayName.toLowerCase().includes(weaponType.toLowerCase());
-    });
-  }
 
   displaySkins(filteredSkins);
 }
 
-// Obsługa zmiany bundla
-bundleFilter.addEventListener('change', () => {
-  const selectedBundle = bundleFilter.value;
-  const selectedWeaponType = weaponTypeFilter.value;
-  filterSkinsByWeaponType(selectedWeaponType); // Zastosowanie filtra typu broni po zmianie bundla
-});
-
-// Obsługa zmiany typu broni
-weaponTypeFilter.addEventListener('change', () => {
-  const selectedWeaponType = weaponTypeFilter.value;
-  filterSkinsByWeaponType(selectedWeaponType); // Zastosowanie filtra bundla po zmianie typu broni
-});
-
-
-
-// Funkcja do wyświetlania listy skinów
 function displaySkins(skins) {
-  skinsListContainer.innerHTML = ''; // Czyści kontener przed dodaniem nowych skinów
+  skinsListContainer.innerHTML = '';
 
   skins.forEach(skin => {
     const skinCard = document.createElement('div');
@@ -132,6 +96,10 @@ function displaySkins(skins) {
     skinsListContainer.appendChild(skinCard);
   });
 }
+
+bundleFilter.addEventListener('change', filterSkins);
+weaponTypeFilter.addEventListener('change', filterSkins);
+searchInput.addEventListener('input', filterSkins);
 
 // Funkcja do wyświetlania szczegółów skina
 async function showSkinDetail(skin) {
@@ -308,32 +276,29 @@ weaponTypeFilter.addEventListener('change', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
 
-  // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
   function checkImagesLoaded() {
     const images = Array.from(document.querySelectorAll('#skins-list img'));
-    const loadingText = document.getElementById('loading-text'); // Odwołanie do elementu liczby
+    const loadingText = document.getElementById('loading-text');
 
-    let loadedCount = 0; // Liczba załadowanych obrazów
+    let loadedCount = 0;
 
-    // Aktualizuj licznik po każdym załadowaniu obrazu
     const promises = images.map(image => {
       return new Promise(resolve => {
         if (image.complete) {
-          loadedCount++; // Jeśli obraz jest już załadowany
+          loadedCount++;
           loadingText.textContent = `${loadedCount}/${images.length}`;
           resolve();
         } else {
           image.addEventListener('load', () => {
-            loadedCount++; // Zwiększamy licznik po załadowaniu obrazu
+            loadedCount++;
             loadingText.textContent = `${loadedCount}/${images.length}`;
             resolve();
           });
-          image.addEventListener('error', resolve); // Obsługuje błąd ładowania obrazu
+          image.addEventListener('error', resolve);
         }
       });
     });
 
-    // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
     Promise.all(promises).then(() => {
       setTimeout(() => {
         loadingScreen.style.display = 'none';
@@ -341,13 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Po załadowaniu danych uruchom sprawdzanie obrazów
   fetchSkins().then(() => {
-    checkURLForSkin(); // Sprawdzenie parametrów URL po załadowaniu skinów
-    checkImagesLoaded(); // Sprawdź, czy wszystkie obrazy są załadowane
+    checkURLForSkin();
+    checkImagesLoaded();
   });
 
-  // Funkcja zamykająca modal
   closeButton.addEventListener('click', () => {
     skinDetailModal.style.display = 'none';
   });
