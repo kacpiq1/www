@@ -62,6 +62,7 @@ function populateFilters(skins) {
   });
 }
 
+// Obsługa filtra bundli
 function filterSkinsByBundle(bundleName) {
   if (!bundleName) {
     displaySkins(skinsData); // Wyświetl wszystkie skiny, jeśli filtr jest pusty
@@ -74,12 +75,13 @@ function filterSkinsByBundle(bundleName) {
   displaySkins(filteredSkins);
 }
 
-// Obsługa filtra typów broni
+// Obsługa filtra typów broni (po nazwie skórki)
 function filterSkinsByWeaponType(weaponType) {
   const selectedBundle = bundleFilter.value;
   
   let filteredSkins = skinsData;
 
+  // Jeśli wybrano bundel, przefiltruj skiny
   if (selectedBundle) {
     filteredSkins = filteredSkins.filter(skin => {
       const bundle = skin.displayName.split(' ')[0]; // Pobranie nazwy bundla
@@ -87,9 +89,11 @@ function filterSkinsByWeaponType(weaponType) {
     });
   }
 
+  // Jeśli wybrano typ broni, przefiltruj po nazwie skórki
   if (weaponType && weaponType !== "") {
     filteredSkins = filteredSkins.filter(skin => {
-      return skin.weapon && skin.weapon.displayName === weaponType; // Filtracja po typie broni
+      // Sprawdzamy, czy nazwa skórki zawiera nazwę broni
+      return skin.displayName.toLowerCase().includes(weaponType.toLowerCase());
     });
   }
 
@@ -301,7 +305,6 @@ weaponTypeFilter.addEventListener('change', () => {
   const selectedWeaponType = weaponTypeFilter.value;
   filterSkinsByWeaponType(selectedWeaponType);
 });
-
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
 
