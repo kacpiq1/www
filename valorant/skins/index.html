@@ -1,81 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projekty VALORANT</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tungsten+Book&display=swap">
-<style>
-     body {
-        font-family: 'Montserrat', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-image: url('img/bvalo.jpg');
-        background-size: cover;
-        background-position: center;
-    }
-    .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-    }
-    h1 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 32px;
-        font-weight: bold;
-        text-align: center;
-        margin-top: 20px;
-    }
-    .project-button {
-        display: block;
-        width: 100%;
-        padding: 20px;
-        margin-bottom: 20px;
-        border: none;
-        border-radius: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #fff;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        transition: opacity 0.3s ease;
-    }
-    .project-button:hover {
-        opacity: 0.8;
-    }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+
+  <title>Valorant Skins</title>
+  <link rel="stylesheet" href="skins/styles.css">
 </head>
 <body>
-
-<h1>Projekty VALORANT</h1>
-
-<div class="container">
-    <a href="https://www.kacpiq.pl/valorant/tiercalculator" class="project-button">
-        <div>
-            <div class="project-title">Kalkulator XP / Tierów</div>
-            <div class="project-description">Sprawdź ile potrzebujesz XP, żeby zdobyć dany tier przepustki bojowej.</div>
-        </div>
-    </a>
+  <div id="loading-screen">
+  <div class="spinner"></div>
+    <div id="loading-text">0/100</div>
+</div>
+    <h1>LISTA SKINÓW VALORANT</h1>
+  <div id="search-container"></div>
+    <input type="text" id="search-input" placeholder="Szukaj skinów..." />
 </div>
 
-<div class="container">
-    <a href="https://www.kacpiq.pl/valorant/nightmarket" class="project-button">
-        <div>
-            <div class="project-title">Night Market</div>
-            <div class="project-description">Sprawdź, jakie masz szczęście w Night Markecie</div>
-        </div>
-    </a>
-</div>
+  <div id="skins-list"></div>
 
-     <div class="container">
-    <a href="https://www.kacpiq.pl/valorant/skins" class="project-button">
-        <div>
-            <div class="project-title">Lista skinów</div>
-            <div class="project-description">Sprawdź aktualną listę skinów w VALORANT.</div>
-        </div>
-    </a>
-</div>
+  <div id="favorites-container" style="display:none;"></div>
 
+
+  <div id="skin-detail" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      
+      <div class="skin-name-container">
+        <div id="tier-container">
+          <img id="tier-icon" src="" alt="Tier Icon">
+        </div>
+        <h2 id="skin-name" class="skin-name">Skin Name</h2>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAABqElEQVRIS8WWgVECMRBFSQdSgdiBJUAH0gF0oBUoFWgH0oF0IB1oB14JUMH5v7O5uQvZ5Dbmhp3JzAF3efey2Q1udqVwV+LOisFt2y7x0jfOuUPJyxeBBfpBMMa6BF4KJvRBTI8Ar6zWZjBsF4B8ia3n3QHeWOAl4BcAngPIHuDtZGDYMqc/gW2RtckY4JitB+9gzd9HxWiw2DK3zHEsTgDPR1Fx0wAsZXIvD9/KkhLEJebQoJ53wkUjg9ccZ/+5X3YdGFCWB8tkytgCviegD6Ypl3LK6JpNuNQbUN8nIHPJn7ztwNjDJM+fFeGEcokHPT26qyvCo9CocUVz7u6V1kqTdfwP829AuZEIj0a2gQDOFrkw5jzbu3PGpSWW7WI58CNMX422/vbkUZkD9w98K591+1aU40x+WSrs31ocAF6bwYCm8ntkJ5JJ2en8wRJy5oDzBS9CXWrl0OAkOwzu2m5C3Kvthe5QCMkpME02vQf+LAFkjV6ErFBor5ZVCszdTJOopZa7wF7NcwrMjUNj/n2NWibgzPkSg+DGlGNt0lrfZ1tmLVA4zy9GJ6kfsbtO7AAAAABJRU5ErkJggg" 
+             alt="Favorite Icon" class="star-icon" id="favorite-icon" onclick="toggleFavorite('uuid-skin')">
+      </div>
+      <img id="skin-icon" src="" alt="Skin Icon">
+      <div id="variants-container"></div>
+      
+      <!-- Message for no video available -->
+      <div id="no-video-message" class="no-video-message" style="display: none;">
+        Brak podglądu dla tego wariantu.
+      </div>
+  
+      <video id="skin-video" controls style="display: none;"></video>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funkcja do filtrowania skinów
+        function filterSkins() {
+            const searchInput = document.getElementById('search-input');
+            const searchTerm = searchInput.value.toLowerCase();
+            const skinsList = document.getElementById('skins-list');
+            const skins = skinsList.getElementsByClassName('skin-card');
+
+            // Przechodzimy przez wszystkie skiny i ukrywamy lub pokazujemy je w zależności od wyszukiwania
+            Array.from(skins).forEach(skin => {
+                const skinName = skin.querySelector('h3').textContent.toLowerCase();
+                if (skinName.includes(searchTerm)) {
+                    skin.style.display = ''; // Pokazuje skina
+                } else {
+                    skin.style.display = 'none'; // Ukrywa skina
+                }
+            });
+        }
+
+        // Inicjalizuj wyszukiwarkę
+        document.getElementById('search-input').addEventListener('input', filterSkins);
+    });
+</script>
+
+  <script src="skins/script.js"></script>
 </body>
 </html>
