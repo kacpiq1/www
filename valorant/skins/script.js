@@ -198,19 +198,6 @@ function checkURLForSkin() {
   }
 }
 
-// Sprawdź URL i ustaw metadane
-function checkURLForSkin() {
-  const params = new URLSearchParams(window.location.search);
-  const skinId = params.get('skin');
-
-  if (skinId) {
-    const skin = getSkinById(skinId);
-    if (skin) {
-      updateMetaTags(skin); // Ustaw meta tagi Open Graph
-    }
-  }
-}
-
 // Funkcja wyszukująca skina na podstawie jego ID
 function getSkinById(id) {
   return skinsData.find(skin => skin.uuid === id);
