@@ -17,6 +17,8 @@ let currentChroma = 0; // Przechowuje aktualny chroma
 const bundleFilter = document.getElementById('bundle-filter');
 const weaponTypeFilter = document.getElementById('weapon-type-filter');
 
+const availableWeaponTypes = ['Ghost', 'Classic', 'Vandal', 'Phantom', 'Sheriff', 'Operator'];
+
 // Funkcja do pobrania listy skinów
 async function fetchSkins() {
   const response = await fetch(API_URL);
@@ -41,6 +43,7 @@ function populateFilters(skins) {
     }
   });
 
+  // Wypełnij filtr bundli
   bundleFilter.innerHTML = '<option value="">Wszystkie Bundles</option>';
   bundles.forEach(bundle => {
     const option = document.createElement('option');
@@ -49,9 +52,9 @@ function populateFilters(skins) {
     bundleFilter.appendChild(option);
   });
 
-  // Wypełnij filtr typów broni
-  weaponTypeFilter.innerHTML = '<option value="">Wszystkie Typy Broni</option>';
-  weaponTypes.forEach(type => {
+  // Wypełnij filtr typów broni (tylko dostępne typy)
+  weaponTypeFilter.innerHTML = '<option value="">Wszystkie Bronie</option>';
+  availableWeaponTypes.forEach(type => {
     const option = document.createElement('option');
     option.value = type;
     option.textContent = type;
@@ -73,15 +76,39 @@ function filterSkinsByBundle(bundleName) {
 
 // Obsługa filtra typów broni
 function filterSkinsByWeaponType(weaponType) {
-  if (!weaponType) {
-    displaySkins(skinsData); // Wyświetl wszystkie skiny, jeśli filtr jest pusty
-    return;
+  const selectedBundle = bundleFilter.value;
+  
+  let filteredSkins = skinsData;
+
+  if (selectedBundle) {
+    filteredSkins = filteredSkins.filter(skin => {
+      const bundle = skin.displayName.split(' ')[0]; // Pobranie nazwy bundla
+      return bundle === selectedBundle;
+    });
   }
-  const filteredSkins = skinsData.filter(skin => {
-    return skin.weapon && skin.weapon.displayName === weaponType; // Porównanie typu broni
-  });
+
+  if (weaponType && weaponType !== "") {
+    filteredSkins = filteredSkins.filter(skin => {
+      return skin.weapon && skin.weapon.displayName === weaponType; // Filtracja po typie broni
+    });
+  }
+
   displaySkins(filteredSkins);
 }
+
+// Obsługa zmiany bundla
+bundleFilter.addEventListener('change', () => {
+  const selectedBundle = bundleFilter.value;
+  const selectedWeaponType = weaponTypeFilter.value;
+  filterSkinsByWeaponType(selectedWeaponType); // Zastosowanie filtra typu broni po zmianie bundla
+});
+
+// Obsługa zmiany typu broni
+weaponTypeFilter.addEventListener('change', () => {
+  const selectedWeaponType = weaponTypeFilter.value;
+  filterSkinsByWeaponType(selectedWeaponType); // Zastosowanie filtra bundla po zmianie typu broni
+});
+
 
 
 // Funkcja do wyświetlania listy skinów
