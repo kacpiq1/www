@@ -88,13 +88,47 @@ weaponTypeFilter.addEventListener('change', filterSkins);
 // Obsługa zmiany wyszukiwarki
 searchInput.addEventListener('input', filterSkins);
 
+const TIER_COLORS = { 
+  "0cebb8be-46d7-c12a-d306-e9907bfc5a25": "#009E81", 
+  "e046854e-406c-37f4-6607-19a9ba8426fc": "#F4965A", 
+  "60bca009-4182-7998-dee7-b8a2558dc369": "#D0558C", 
+  "12683d76-48d7-84a3-4e09-6985794f0445": "#5A9FE1", 
+  "411e4a55-4e59-7757-41f0-86a53f101bb5": "#FAD763" 
+};
+
+async function fetchTiers() {
+  try {
+    const response = await fetch(TIER_API_URL);
+    const data = await response.json();
+
+    if (data.status === 200 && data.data) {
+      data.data.forEach(tier => {
+        const tierColor = TIER_COLORS[tier.uuid] || '#545e6c'; // Jeżeli UUID nie ma w mapie, używamy domyślnego koloru
+        TIER_COLORS[tier.uuid] = tierColor; // Przechowujemy kolory dla każdego tieru
+      });
+      console.log('TIER_COLORS:', TIER_COLORS); // Debug: Sprawdź, czy kolory zostały poprawnie wczytane
+    } else {
+      console.error('Błąd w odpowiedzi API tierów:', data);
+    }
+  } catch (error) {
+    console.error('Nie udało się pobrać danych o tierach:', error);
+  }
+}
+
 // Funkcja do wyświetlania listy skinów
 function displaySkins(skins) {
-  skinsListContainer.innerHTML = ''; // Czyści kontener przed dodaniem nowych skinów
+  skinsListContainer.innerHTML = ''; // Czyścimy kontener przed dodaniem nowych skinów
 
   skins.forEach(skin => {
     const skinCard = document.createElement('div');
     skinCard.classList.add('skin-card');
+
+    const borderColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c'; 
+    skinCard.style.borderColor = borderColor;
+
+    const tierBackgroundColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c'; 
+    skinCard.style.setProperty('--tier-background-color', tierBackgroundColor);
+
     skinCard.innerHTML = `
       <img src="${skin.displayIcon}" alt="${skin.displayName}">
       <h3>${skin.displayName}</h3>
@@ -314,6 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  fetchTiers();
+  
   // Po załadowaniu danych uruchom sprawdzanie obrazów
   fetchSkins().then(() => {
     checkURLForSkin(); // Sprawdzenie parametrów URL po załadowaniu skinów
