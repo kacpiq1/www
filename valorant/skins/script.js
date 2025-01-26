@@ -314,6 +314,16 @@ weaponTypeFilter.addEventListener('change', () => {
 });
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
+   const introScreen = document.getElementById('intro-screen');
+  const loadingText = document.getElementById('loading-text');
+
+  const introDuration = 3000;
+
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+    loadingScreen.style.display = 'block';
+    checkImagesLoaded();
+  }, introDuration);
 
   // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
   function checkImagesLoaded() {
@@ -344,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Promise.all(promises).then(() => {
       setTimeout(() => {
         loadingScreen.style.display = 'none';
+        document.body.style.overflow = 'auto';
       }, 2000);
     });
   }
