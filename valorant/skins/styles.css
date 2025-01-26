@@ -399,7 +399,8 @@ body::before {
   border-color: #90cac1; /* Kolor konturu dla wybranego chroma */
 }
 
-#loading-screen {
+#loading-screen,
+#loading-screen #overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -413,8 +414,7 @@ body::before {
   flex-direction: column;
 }
 
-#loading-screen img,
-#loading-screen video {
+#intro-screen #intro-video {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
@@ -431,6 +431,15 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
+}
+
+@media (max-width: 767px) {
+  #intro-screen #intro-video,
+  #loading-screen #overlay {
+    object-fit: contain;
+    width: 100vw;
+    height: auto;
+  }
 }
 
 .spinner {
