@@ -6,104 +6,153 @@
 <title>Projekty VALORANT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tungsten+Book&display=swap">
 <style>
-     body {
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url('img/valorant_background.jpg');
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url('img/bvalo.jpg');
     background-size: cover;
     background-position: center;
-    background-color: #0e0e0e;
-    color: #fff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    text-align: center;
-    background: rgba(24, 24, 24, 0.85);
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
-    border: 2px solid #d02a2a;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    position: relative;
+    overflow-x: hidden;
 }
 
 h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 50px;
-    font-weight: 800;
-    letter-spacing: 2px;
+    text-align: center;
+    font-size: 3em;
+    color: #fff;
+    margin-top: 40px;
     text-transform: uppercase;
-    margin-top: 20px;
-    color: #ff5e5e;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 25px #ff5e5e, 0 0 5px #ff5e5e;
+    letter-spacing: 4px;
+    animation: glow 2s infinite alternate;
+    z-index: 1;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #9d4edd, 0 0 20px #7f00ff, 0 0 30px #5a00cc;
+    }
+    to {
+        text-shadow: 0 0 20px #b300ff, 0 0 40px #9d4edd, 0 0 60px #6100b3;
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
 }
 
 .project-button {
     display: block;
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid #ff5e5e;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
     text-decoration: none;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(90, 0, 204, 0.8), rgba(157, 78, 221, 0.8));
+    padding: 25px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
     position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    box-shadow: 0px 4px 20px rgba(157, 78, 221, 0.3);
+    z-index: 1;
+}
+     
+.project-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(93, 32, 162, 0.6), transparent);
+    transform: rotate(45deg);
+    transition: opacity 0.5s, transform 0.5s;
+    opacity: 0;
+    z-index: 0;
+}
+
+.project-button:hover::before {
+    opacity: 1;
+    transform: rotate(0deg);
 }
 
 .project-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-5px);
-    box-shadow: 0 0 15px rgba(255, 94, 94, 0.8), 0 0 25px rgba(255, 94, 94, 0.6);
+    transform: scale(1.1);
+    box-shadow: 0px 8px 40px rgba(157, 78, 221, 0.5);
 }
 
-.project-button:active {
-    transform: translateY(2px);
-    box-shadow: 0 0 8px rgba(255, 94, 94, 0.8);
+.project-title {
+    font-size: 1.8em;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1;
+    position: relative;
 }
 
-.project-button:before {
+.project-description {
+    font-size: 1em;
+    color: #cccccc;
+    margin-top: 10px;
+    z-index: 1;
+    position: relative;
+}
+.project-button:hover .project-title {
+    animation: neon-flicker 1s infinite alternate;
+}
+
+@keyframes neon-flicker {
+    0% {
+        text-shadow: 0 0 5px #9d4edd, 0 0 10px #7f00ff, 0 0 20px #b300ff;
+    }
+    100% {
+        text-shadow: 0 0 10px #9d4edd, 0 0 20px #5a00cc, 0 0 30px #6100b3;
+    }
+}
+
+.project-button::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 10px;
-    background: linear-gradient(45deg, #ff5e5e, #d02a2a);
+    border-radius: 15px;
+    border: 2px solid rgba(93, 32, 162, 0.6);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.project-button:hover:before {
-    opacity: 0.3;
-    animation: pulse 1.5s infinite ease-in-out;
+.project-button:hover::after {
+    opacity: 1;
+    border: 2px solid rgba(157, 78, 221, 1);
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
+.container {
+    animation: slide-in 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
+@media (max-width: 768px) {
+    .project-button {
+        width: 90%;
+    }
+}
 
 </style>
 </head>
