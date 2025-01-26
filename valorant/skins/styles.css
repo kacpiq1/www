@@ -449,6 +449,25 @@ h1 {
   animation: glow-text 2s infinite alternate;
 }
 
+.modal-footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #ffffff;
+  text-align: center;
+  border-top: 1px solid #ff4655;
+  padding-top: 15px;
+}
+
+.modal-footer a {
+  color: #ff4655;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.modal-footer a:hover {
+  text-decoration: underline;
+}
+
 @keyframes glow-text {
   0% {
     text-shadow: 0 0 10px rgba(255, 70, 85, 0.6), 0 0 20px rgba(255, 70, 85, 0.8);
