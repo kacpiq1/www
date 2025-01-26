@@ -314,11 +314,15 @@ weaponTypeFilter.addEventListener('change', () => {
 });
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
-   const introScreen = document.getElementById('intro-screen');
-  const loadingText = document.getElementById('loading-text');
+  const introScreen = document.getElementById('intro-screen'); // Element for the intro animation
+  const loadingText = document.getElementById('loading-text'); // Element for loading count
+  const skinDetailModal = document.getElementById('skin-detail-modal'); // For modal
+  const closeButton = document.getElementById('close-button'); // Close button for modal
 
-  const introDuration = 3000;
+  // Intro animation duration (adjust as needed)
+  const introDuration = 3000; // 5 seconds (you can modify this based on your animation)
 
+  // Show intro screen for a set amount of time
   setTimeout(() => {
     introScreen.style.display = 'none';
     loadingScreen.style.display = 'block';
@@ -328,8 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Funkcja do sprawdzania, czy wszystkie obrazy zostały załadowane
   function checkImagesLoaded() {
     const images = Array.from(document.querySelectorAll('#skins-list img'));
-    const loadingText = document.getElementById('loading-text'); // Odwołanie do elementu liczby
-
     let loadedCount = 0; // Liczba załadowanych obrazów
 
     // Aktualizuj licznik po każdym załadowaniu obrazu
@@ -353,18 +355,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Po załadowaniu wszystkich obrazów ukryj ekran ładowania
     Promise.all(promises).then(() => {
       setTimeout(() => {
-        loadingScreen.style.display = 'none';
+        loadingScreen.style.display = 'none'; // Hide loading screen after images are loaded
         document.body.style.overflow = 'auto';
-      }, 2000);
+      }, 2000); // Delay to show the final loading screen before hiding
     });
   }
 
+  // Fetch data and images
   fetchTiers();
   
-  // Po załadowaniu danych uruchom sprawdzanie obrazów
+  // After fetching skins, check URL and images loading
   fetchSkins().then(() => {
-    checkURLForSkin(); // Sprawdzenie parametrów URL po załadowaniu skinów
-    checkImagesLoaded(); // Sprawdź, czy wszystkie obrazy są załadowane
+    checkURLForSkin(); // Check URL parameters after skins are loaded
   });
 
   // Funkcja zamykająca modal
