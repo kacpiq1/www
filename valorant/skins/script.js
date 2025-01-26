@@ -316,8 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
   const introScreen = document.getElementById('intro-screen'); // Element for the intro animation
   const loadingText = document.getElementById('loading-text'); // Element for loading count
-  const skinDetailModal = document.getElementById('skin-detail-modal'); // For modal
-  const closeButton = document.getElementById('close-button'); // Close button for modal
 
   // Intro animation duration (adjust as needed)
   const introDuration = 3000; // 5 seconds (you can modify this based on your animation)
