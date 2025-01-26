@@ -317,9 +317,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const introScreen = document.getElementById('intro-screen'); // Element for the intro animation
   const loadingText = document.getElementById('loading-text'); // Element for loading count
   const closeButton = document.querySelector('.close-button');
+  const introVideo = document.getElementById('intro-video'); // Intro video element
+  const loadingImage = document.querySelector('#loading-screen img'); // Loading image element
 
   // Intro animation duration (adjust as needed)
   const introDuration = 3000; // 5 seconds (you can modify this based on your animation)
+
+  // Detect if the user is on a mobile device
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // Set different intro video and image for mobile users
+  if (isMobile) {
+    introVideo.src = 'intro-phone.mp4'; // Mobile intro video
+    loadingImage.src = 'loading-phone.jpg'; // Mobile loading image
+  } else {
+    introVideo.src = 'intro.mp4'; // Desktop intro video
+    loadingImage.src = 'loading-image.jpg'; // Desktop loading image
+  }
 
   // Show intro screen for a set amount of time
   setTimeout(() => {
