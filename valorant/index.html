@@ -7,43 +7,99 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tungsten+Book&display=swap">
 <style>
      body {
-        font-family: 'Montserrat', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-image: url('img/bvalo.jpg');
-        background-size: cover;
-        background-position: center;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('img/valorant_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: #0a0a0a;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #ffffff;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    color: #F4F4F4;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.project-button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid #F4F4F4;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.project-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.project-button:active {
+    transform: scale(0.95);
+}
+
+.project-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #e60000, #ff7300);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-button:hover:before {
+    opacity: 1;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
     }
-    .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
+    50% {
+        transform: scale(1.05);
     }
-    h1 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 32px;
-        font-weight: bold;
-        text-align: center;
-        margin-top: 20px;
+    100% {
+        transform: scale(1);
     }
-    .project-button {
-        display: block;
-        width: 100%;
-        padding: 20px;
-        margin-bottom: 20px;
-        border: none;
-        border-radius: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #fff;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        transition: opacity 0.3s ease;
-    }
-    .project-button:hover {
-        opacity: 0.8;
-    }
+}
+
 </style>
 </head>
 <body>
