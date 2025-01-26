@@ -328,11 +328,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Set different intro video and image for mobile users
   if (isMobile) {
-    introVideo.src = 'intro-phone.mp4'; // Mobile intro video
-    loadingImage.src = 'loading-phone.jpg'; // Mobile loading image
+    introVideo.src = 'skins/source/intro-phone.mp4'; // Mobile intro video
+    loadingImage.src = 'skins/source/loading-phone.jpg'; // Mobile loading image
   } else {
-    introVideo.src = 'intro.mp4'; // Desktop intro video
-    loadingImage.src = 'loading-image.jpg'; // Desktop loading image
+    introVideo.src = 'skins/source/intro.mp4'; // Desktop intro video
+    loadingImage.src = 'skins/source/loading-image.jpg'; // Desktop loading image
   }
 
   // Show intro screen for a set amount of time
