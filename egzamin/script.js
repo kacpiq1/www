@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             examFrame.src = "egzaminy/" + randomExam.file;
             examFrame.style.display = "block";
             zakonczBtn.style.display = "block"; 
-            zakonczBtn.dataset.key = "egzaminy/" + randomExam.key;
+            zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
 
             loadingDiv.style.display = "none";
 
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
             blurOverlay.style.display = "flex";
             keyFrame.src = zakonczBtn.dataset.key;
             keyFrame.style.display = "block";
-            timeLeft = 0; // Reset czasu
+            timeLeft = 0; 
             timerDiv.innerHTML = "Egzamin zakończony!";
             confirmationOverlay.remove();
         });
