@@ -61,9 +61,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalExams = 142;
     const availableExams = exams.length;
 
+    let count2019 = exams.filter(exam => exam.podstawa === "2019").length;
+    let count2017 = exams.filter(exam => exam.podstawa === "2017").length;
+    let countOlder = exams.filter(exam => parseInt(exam.podstawa) < 2017).length;
+
     const examInfoDiv = document.createElement("div");
     examInfoDiv.id = "exam-info";
-    examInfoDiv.innerHTML = `Dostępne egzaminy: <strong>${availableExams}/${totalExams}</strong>`;
+    examInfoDiv.innerHTML = `
+        <strong>Dostępne egzaminy:</strong> ${availableExams}/${totalExams} <br>
+        <strong>Podstawa 2019:</strong> ${count2019} egzaminów <br>
+        <strong>Podstawa 2017:</strong> ${count2017} egzaminów <br>
+        <strong>Starsze niż 2017:</strong> ${countOlder} egzaminów
+    `;
     examInfoDiv.style.position = "absolute";
     examInfoDiv.style.top = "10px";
     examInfoDiv.style.right = "10px";
@@ -72,6 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
     examInfoDiv.style.color = "#fff";
     examInfoDiv.style.borderRadius = "5px";
     examInfoDiv.style.fontSize = "16px";
+    examInfoDiv.style.textAlign = "right";
+    examInfoDiv.style.lineHeight = "1.6";
     document.body.appendChild(examInfoDiv);
 
     const losujBtn = document.getElementById("losuj");
