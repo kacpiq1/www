@@ -31,6 +31,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     ];
 
+    const totalExams = 142;
+    const availableExams = exams.length;
+
+    const examInfoDiv = document.createElement("div");
+    examInfoDiv.id = "exam-info";
+    examInfoDiv.innerHTML = `Dostępne egzaminy: <strong>${availableExams}/${totalExams}</strong>`;
+    examInfoDiv.style.position = "absolute";
+    examInfoDiv.style.top = "10px";
+    examInfoDiv.style.right = "10px";
+    examInfoDiv.style.padding = "10px";
+    examInfoDiv.style.backgroundColor = "#222";
+    examInfoDiv.style.color = "#fff";
+    examInfoDiv.style.borderRadius = "5px";
+    examInfoDiv.style.fontSize = "16px";
+    document.body.appendChild(examInfoDiv);
+});
+
     const losujBtn = document.getElementById("losuj");
     const zakonczBtn = document.getElementById("zakoncz");
     const examFrame = document.getElementById("examFrame");
