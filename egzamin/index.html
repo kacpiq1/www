@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Losowanie egzaminu INF.02</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Losowanie egzaminu INF.02</h1>
+
+        <label>Podstawa programowa:</label>
+        <select id="podstawa">
+            <option value="">Wszystkie</option>
+            <option value="2019">2019</option>
+            <option value="2016">2016</option>
+        </select>
+
+        <label>System operacyjny serwera:</label>
+        <select id="serwer">
+            <option value="">Dowolny</option>
+            <option value="Linux">Linux</option>
+            <option value="Windows Server">Windows Server</option>
+        </select>
+
+        <label>System operacyjny klienta:</label>
+        <select id="klient">
+            <option value="">Dowolny</option>
+            <option value="Windows">Windows</option>
+            <option value="Linux">Linux</option>
+        </select>
+
+        <button id="losuj">Losuj egzamin</button>
+
+        <div id="loading" style="display: none;">Ładowanie egzaminów...</div>
+
+        <iframe id="examFrame" style="display: none;" width="100%" height="600px"></iframe>
+
+        <button id="zakoncz" style="display: none;">Zakończ egzamin</button>
+        <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
+    </div>
+</body>
+</html>

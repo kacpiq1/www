@@ -1,0 +1,193 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const exams = [
+        { file: "inf_02_2024_06_06_SG.pdf", key: "inf_02_2024_06_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "inf_02_2024_06_05_SG.pdf", key: "inf_02_2024_06_05_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "inf_02_2024_06_04_SG.pdf", key: "inf_02_2024_06_04_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "inf_02_2024_06_03_SG.pdf", key: "inf_02_2024_06_03_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "inf_02_2024_06_02_SG.pdf", key: "inf_02_2024_06_02_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "inf_02_2024_06_01_SG.pdf", key: "inf_02_2024_06_01_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "inf_02_2024_06_01_SD.pdf", key: "inf_02_2024_06_01_SD_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "inf_02_2023_01_04_SG_kolor.pdf", key: "inf_02_2023_01_04_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "inf_02_2023_01_03_SG_kolor.pdf", key: "inf_02_2023_01_03_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "inf_02_2023_01_02_SG_kolor.pdf", key: "inf_02_2023_01_02_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "inf_02_2023_01_01_SG_kolor.pdf", key: "inf_02_2023_01_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "inf_02_2021_06_01_SG_kolor.pdf", key: "inf_02_2021_06_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "inf_02_2021_06_01_SD_kolor.pdf", key: "inf_02_2021_06_01_SD_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF_02_04_23_06_SG.pdf", key: "INF_02_04_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF_02_04_22_06_SG.pdf", key: "INF_02_04_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "INF_02_03_23_06_SG.pdf", key: "INF_02_03_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "INF_02_03_22_06_SG.pdf", key: "INF_02_03_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "INF_02_02_23_06_SG.pdf", key: "INF_02_02_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "INF_02_02_22_06_SG.pdf", key: "INF_02_02_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF_02_01_23_06_SG.pdf", key: "INF_02_01_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF_02_01_22_06_SG.pdf", key: "INF_02_01_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "INF_02_01_22_01_SG.pdf", key: "INF_02_01_22_01_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+
+        { file: "INF.02-04-24.01-SG.pdf", key: "INF.02-04-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "INF.02-03-24.01-SG.pdf", key: "INF.02-03-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "INF.02-02-24.01-SG.pdf", key: "INF.02-02-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF.02-01-24.01-SG.pdf", key: "INF.02-01-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2024_06_01_SG.pdf", key: "ee_08_2024_06_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+
+    ];
+
+    const losujBtn = document.getElementById("losuj");
+    const zakonczBtn = document.getElementById("zakoncz");
+    const examFrame = document.getElementById("examFrame");
+    const keyFrame = document.getElementById("keyFrame");
+    const loadingDiv = document.getElementById("loading");
+
+    const iframeContainer = document.createElement("div");
+    iframeContainer.classList.add("iframe-container");
+
+    examFrame.parentNode.replaceChild(iframeContainer, examFrame);
+    iframeContainer.appendChild(examFrame);
+
+    const timerDiv = document.createElement("div");
+    timerDiv.id = "timer";
+    timerDiv.style.display = "none"; 
+    iframeContainer.appendChild(timerDiv);
+
+    const blurOverlay = document.createElement("div");
+    blurOverlay.classList.add("blur-overlay");
+    blurOverlay.innerHTML = "Egzamin zakończony!";
+    iframeContainer.appendChild(blurOverlay);
+
+    let timeLeft = 150 * 60;
+    let countdown;
+
+    function startTimer() {
+        clearInterval(countdown);
+        timeLeft = 150 * 60;
+        updateTimerDisplay();
+        timerDiv.style.display = "block";
+        countdown = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(countdown);
+                endExam();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDiv.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function endExam() {
+        clearInterval(countdown);
+        timerDiv.innerHTML = "Czas minął!";
+        blurOverlay.style.display = "flex";
+        zakonczBtn.style.display = "block";
+    }
+
+    losujBtn.addEventListener("click", function () {
+        examFrame.style.display = "none";
+        keyFrame.style.display = "none";
+        zakonczBtn.style.display = "none";
+        loadingDiv.style.display = "block";
+        blurOverlay.style.display = "none"; 
+
+        setTimeout(() => {
+            const podstawa = document.getElementById("podstawa").value;
+            const serwer = document.getElementById("serwer").value;
+            const klient = document.getElementById("klient").value;
+
+            let filteredExams = exams.filter(exam => 
+                (podstawa === "" || exam.podstawa === podstawa) &&
+                (serwer === "" || exam.serwer === serwer) &&
+                (klient === "" || exam.klient === klient)
+            );
+
+            if (filteredExams.length === 0) {
+                alert("Brak pasujących egzaminów.");
+                loadingDiv.style.display = "none";
+                return;
+            }
+
+            let randomExam = filteredExams[Math.floor(Math.random() * filteredExams.length)];
+
+            examFrame.src = "egzaminy/" + randomExam.file;
+            examFrame.style.display = "block";
+            zakonczBtn.style.display = "block"; 
+            zakonczBtn.dataset.key = "egzaminy/" + randomExam.key;
+
+            loadingDiv.style.display = "none";
+
+            startTimer(); 
+        }, 1000);
+    });
+
+    zakonczBtn.addEventListener("click", function () {
+        // Tworzymy dynamicznie okno z czasem
+        const confirmationOverlay = document.createElement("div");
+        confirmationOverlay.classList.add("confirmation-overlay");
+    
+        const confirmationBox = document.createElement("div");
+        confirmationBox.classList.add("confirmation-box");
+    
+        const confirmationText = document.createElement("p");
+        confirmationText.id = "confirmationText"; // ID do późniejszej aktualizacji
+    
+        const buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("confirmation-buttons");
+    
+        const confirmBtn = document.createElement("button");
+        confirmBtn.innerText = "Tak, zakończ egzamin";
+        confirmBtn.classList.add("confirm-btn");
+    
+        const cancelBtn = document.createElement("button");
+        cancelBtn.innerText = "Anuluj";
+        cancelBtn.classList.add("cancel-btn");
+    
+        // Dodajemy elementy do okienka potwierdzenia
+        buttonsContainer.appendChild(confirmBtn);
+        buttonsContainer.appendChild(cancelBtn);
+        confirmationBox.appendChild(confirmationText);
+        confirmationBox.appendChild(buttonsContainer);
+        confirmationOverlay.appendChild(confirmationBox);
+    
+        document.body.appendChild(confirmationOverlay);
+    
+        // Funkcja aktualizująca tekst o pozostałym czasie
+        function updateConfirmationText() {
+            const remainingTime = Math.floor(timeLeft / 60); // Pozostały czas w minutach
+            const remainingSeconds = timeLeft % 60; // Pozostałe sekundy
+            const message = `Jesteś pewien, że chcesz zakończyć egzamin? Pozostało: ${remainingTime} minut ${remainingSeconds < 10 ? '0' : ''}${remainingSeconds} sekund.`;
+            document.getElementById("confirmationText").innerText = message;
+        }
+    
+        // Co sekundę będziemy aktualizować czas
+        const timeInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                updateConfirmationText();
+            } else {
+                clearInterval(timeInterval);
+            }
+        }, 1000);
+    
+        // Funkcja po kliknięciu "Tak"
+        confirmBtn.addEventListener("click", function () {
+            clearInterval(countdown);
+            blurOverlay.style.display = "flex"; // Rozmycie egzaminu po zakończeniu
+            keyFrame.src = zakonczBtn.dataset.key;
+            keyFrame.style.display = "block";
+            timeLeft = 0; // Reset czasu
+            timerDiv.innerHTML = "Egzamin zakończony!";
+            confirmationOverlay.remove();
+        });
+    
+        // Funkcja po kliknięciu "Anuluj"
+        cancelBtn.addEventListener("click", function () {
+            clearInterval(timeInterval); // Zatrzymanie aktualizacji czasu
+            confirmationOverlay.remove();
+        });
+    
+        // Inicjalizacja aktualizacji czasu
+        updateConfirmationText();
+    });    
+})    
