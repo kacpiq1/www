@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let randomExam = filteredExams[Math.floor(Math.random() * filteredExams.length)];
 
-            examFrame.src = "egzaminy/" + randomExam.file;
+            examFrame.src = "egzamin/egzaminy/" + randomExam.file;
             examFrame.style.display = "block";
             zakonczBtn.style.display = "block"; 
             zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
