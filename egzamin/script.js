@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     examInfoDiv.style.padding = "10px";
     examInfoDiv.style.backgroundColor = "#222";
     examInfoDiv.style.color = "#fff";
+    examInfoDiv.style.textalign = "left";
     examInfoDiv.style.borderRadius = "5px";
     examInfoDiv.style.fontSize = "16px";
     examInfoDiv.style.lineHeight = "1.6";
