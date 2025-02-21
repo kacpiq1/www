@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Dostępne egzaminy:<strong> ${availableExams}/${totalExams} </strong><br>
         Podstawa 2019:<strong> ${count2019} egzaminów </strong><br>
         Podstawa 2017:<strong> ${count2017} egzaminów </strong><br>
-        Starsze niż 2017:<strong> ${countOlder} egzaminów
+        Starsze niż 2017:<strong> ${countOlder} egz.
     `;
     examInfoDiv.style.position = "absolute";
     examInfoDiv.style.top = "10px";
