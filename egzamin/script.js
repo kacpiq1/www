@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     examInfoDiv.style.borderRadius = "5px";
     examInfoDiv.style.fontSize = "16px";
     document.body.appendChild(examInfoDiv);
-});
 
     const losujBtn = document.getElementById("losuj");
     const zakonczBtn = document.getElementById("zakoncz");
