@@ -123,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     zakonczBtn.addEventListener("click", function () {
-        // Tworzymy dynamicznie okno z czasem
         const confirmationOverlay = document.createElement("div");
         confirmationOverlay.classList.add("confirmation-overlay");
     
@@ -131,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
         confirmationBox.classList.add("confirmation-box");
     
         const confirmationText = document.createElement("p");
-        confirmationText.id = "confirmationText"; // ID do późniejszej aktualizacji
+        confirmationText.id = "confirmationText";
     
         const buttonsContainer = document.createElement("div");
         buttonsContainer.classList.add("confirmation-buttons");
@@ -153,15 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
     
         document.body.appendChild(confirmationOverlay);
     
-        // Funkcja aktualizująca tekst o pozostałym czasie
         function updateConfirmationText() {
-            const remainingTime = Math.floor(timeLeft / 60); // Pozostały czas w minutach
-            const remainingSeconds = timeLeft % 60; // Pozostałe sekundy
+            const remainingTime = Math.floor(timeLeft / 60);
+            const remainingSeconds = timeLeft % 60;
             const message = `Jesteś pewien, że chcesz zakończyć egzamin? Pozostało: ${remainingTime} minut ${remainingSeconds < 10 ? '0' : ''}${remainingSeconds} sekund.`;
             document.getElementById("confirmationText").innerText = message;
         }
     
-        // Co sekundę będziemy aktualizować czas
         const timeInterval = setInterval(() => {
             if (timeLeft > 0) {
                 updateConfirmationText();
@@ -170,10 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 1000);
     
-        // Funkcja po kliknięciu "Tak"
         confirmBtn.addEventListener("click", function () {
             clearInterval(countdown);
-            blurOverlay.style.display = "flex"; // Rozmycie egzaminu po zakończeniu
+            blurOverlay.style.display = "flex";
             keyFrame.src = zakonczBtn.dataset.key;
             keyFrame.style.display = "block";
             timeLeft = 0; // Reset czasu
@@ -181,13 +177,11 @@ document.addEventListener("DOMContentLoaded", function () {
             confirmationOverlay.remove();
         });
     
-        // Funkcja po kliknięciu "Anuluj"
         cancelBtn.addEventListener("click", function () {
-            clearInterval(timeInterval); // Zatrzymanie aktualizacji czasu
+            clearInterval(timeInterval);
             confirmationOverlay.remove();
         });
-    
-        // Inicjalizacja aktualizacji czasu
+
         updateConfirmationText();
     });    
 })    
