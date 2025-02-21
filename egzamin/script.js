@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { file: "inf_02_2023_01_01_SG_kolor.pdf", key: "inf_02_2023_01_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
         { file: "inf_02_2021_06_01_SG_kolor.pdf", key: "inf_02_2021_06_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "inf_02_2021_06_01_SD_kolor.pdf", key: "inf_02_2021_06_01_SD_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+
         { file: "INF_02_04_23_06_SG.pdf", key: "INF_02_04_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "INF_02_04_22_06_SG.pdf", key: "INF_02_04_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
         { file: "INF_02_03_23_06_SG.pdf", key: "INF_02_03_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
@@ -27,7 +28,33 @@ document.addEventListener("DOMContentLoaded", function () {
         { file: "INF.02-03-24.01-SG.pdf", key: "INF.02-03-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
         { file: "INF.02-02-24.01-SG.pdf", key: "INF.02-02-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "INF.02-01-24.01-SG.pdf", key: "INF.02-01-24.01-SG-zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+
         { file: "ee_08_2024_06_01_SG.pdf", key: "ee_08_2024_06_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2023_01_01_SG_kolor.pdf", key: "ee_08_2023_01_01_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2021_06_04_SG_kolor.pdf", key: "ee_08_2021_06_04_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2021_06_03_SG_kolor.pdf", key: "ee_08_2021_06_03_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2021_06_02_SG_kolor.pdf", key: "ee_08_2021_06_02_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Windows" },
+        { file: "ee_08_2021_06_01_SG_kolor.pdf", key: "ee_08_2021_06_01_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2021_01_04_SG_kolor.pdf", key: "ee_08_2021_01_04_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2021_01_03_SG_kolor.pdf", key: "ee_08_2021_01_03_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2021_01_02_SG_kolor.pdf", key: "ee_08_2021_01_02_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2021_01_01_SG_kolor.pdf", key: "ee_08_2021_01_01_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2020_06_04_SG_kolor.pdf", key: "ee_08_2020_06_04_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2020_06_03_SG_kolor.pdf", key: "ee_08_2020_06_03_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2020_06_02_SG_kolor.pdf", key: "ee_08_2020_06_02_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Windows" },
+        { file: "ee_08_2020_06_01_SG_kolor.pdf", key: "ee_08_2020_06_01_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2020_01_04_SG_kolor.pdf", key: "ee_08_2020_01_04_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2020_01_03_SG_kolor.pdf", key: "ee_08_2020_01_03_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2020_01_02_SG_kolor.pdf", key: "ee_08_2020_01_02_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2020_01_01_SG_kolor.pdf", key: "ee_08_2020_01_01_SG_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2019_06_07_kolor.pdf", key: "ee_08_2019_06_07_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2019_06_06_kolor.pdf", key: "ee_08_2019_06_06_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Windows" },
+        { file: "ee_08_2019_06_03_kolor.pdf", key: "ee_08_2019_06_03_zo_kolor.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "ee_08_2019_06_02_kolor.pdf", key: "ee_08_2019_06_02_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2019_06_01_kolor.pdf", key: "ee_08_2019_06_01_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2019_01_01_kolor.pdf", key: "ee_08_2019_01_01_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        { file: "ee_08_2018_06_01_kolor.pdf", key: "ee_08_2018_06_01_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+        
 
     ];
 
