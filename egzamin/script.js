@@ -68,10 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const examInfoDiv = document.createElement("div");
     examInfoDiv.id = "exam-info";
     examInfoDiv.innerHTML = `
-        <strong>Dostępne egzaminy:</strong> ${availableExams}/${totalExams} <br>
-        <strong>Podstawa 2019:</strong> ${count2019} egzaminów <br>
-        <strong>Podstawa 2017:</strong> ${count2017} egzaminów <br>
-        <strong>Starsze niż 2017:</strong> ${countOlder} egzaminów
+        Dostępne egzaminy:<strong> ${availableExams}/${totalExams} </strong><br>
+        Podstawa 2019:<strong> ${count2019} egzaminów </strong><br>
+        Podstawa 2017:<strong> ${count2017} egzaminów </strong><br>
+        Starsze niż 2017:<strong> ${countOlder} egzaminów
     `;
     examInfoDiv.style.position = "absolute";
     examInfoDiv.style.top = "10px";
@@ -81,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
     examInfoDiv.style.color = "#fff";
     examInfoDiv.style.borderRadius = "5px";
     examInfoDiv.style.fontSize = "16px";
-    examInfoDiv.style.textAlign = "right";
     examInfoDiv.style.lineHeight = "1.6";
     document.body.appendChild(examInfoDiv);
 
