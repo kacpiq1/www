@@ -47,5 +47,53 @@
             <div id="popupMessage">@kacpiq</div>
         </div>
     </div>
+    <script>
+        const messages = [
+            "@kacpiq"
+        ];
+        let index = 0;
+        let messageTimeout;
+    
+        function changeMessage() {
+            const messageDiv = document.getElementById("popupMessage");
+            messageDiv.style.opacity = 0;
+    
+            clearTimeout(messageTimeout);
+    
+            setTimeout(() => {
+                if (index < messages.length) {
+                    messageDiv.innerText = messages[index];
+                    messageDiv.style.opacity = 1;
+                    index++;
+                } else {
+                    messageDiv.innerText = '';
+                }
+            }, 500);
+        }
+    
+        function expandPopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.add("expanded");
+            popupText.classList.add("visible");
+    
+            messageTimeout = setInterval(changeMessage, 3000);
+        }
+    
+        function collapsePopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.remove("expanded");
+            popupText.classList.remove("visible");
+    
+            clearInterval(messageTimeout);
+        }
+    
+        function redirectToRevolut() {
+            window.open("https://revolut.me/kacpiq", "_blank");
+        }
+    </script>
 </body>
 </html>
