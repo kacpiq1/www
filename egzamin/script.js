@@ -54,8 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
         { file: "ee_08_2019_06_01_kolor.pdf", key: "ee_08_2019_06_01_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
         { file: "ee_08_2019_01_01_kolor.pdf", key: "ee_08_2019_01_01_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
         { file: "ee_08_2018_06_01_kolor.pdf", key: "ee_08_2018_06_01_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
-        
-
+        { file: "EE_08_04_22_01_SG.pdf", key: "EE_08_04_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "EE_08_03_22_01_SG.pdf", key: "EE_08_03_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
+        { file: "EE_08_02_22_01_SG.pdf", key: "EE_08_02_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" }
     ];
 
     const totalExams = 142;
@@ -197,7 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelBtn.innerText = "Anuluj";
         cancelBtn.classList.add("cancel-btn");
     
-        // Dodajemy elementy do okienka potwierdzenia
         buttonsContainer.appendChild(confirmBtn);
         buttonsContainer.appendChild(cancelBtn);
         confirmationBox.appendChild(confirmationText);
@@ -205,6 +205,53 @@ document.addEventListener("DOMContentLoaded", function () {
         confirmationOverlay.appendChild(confirmationBox);
     
         document.body.appendChild(confirmationOverlay);
+
+                const messages = [
+            "@kacpiq"
+        ];
+        let index = 0;
+        let messageTimeout;
+    
+        function changeMessage() {
+            const messageDiv = document.getElementById("popupMessage");
+            messageDiv.style.opacity = 0;
+    
+            clearTimeout(messageTimeout);
+    
+            setTimeout(() => {
+                if (index < messages.length) {
+                    messageDiv.innerText = messages[index];
+                    messageDiv.style.opacity = 1;
+                    index++;
+                } else {
+                    messageDiv.innerText = '';
+                }
+            }, 500);
+        }
+    
+        function expandPopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.add("expanded");
+            popupText.classList.add("visible");
+    
+            messageTimeout = setInterval(changeMessage, 3000);
+        }
+    
+        function collapsePopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.remove("expanded");
+            popupText.classList.remove("visible");
+    
+            clearInterval(messageTimeout);
+        }
+    
+        function redirectToRevolut() {
+            window.open("https://revolut.me/kacpiq", "_blank");
+        }
     
         function updateConfirmationText() {
             const remainingTime = Math.floor(timeLeft / 60);
