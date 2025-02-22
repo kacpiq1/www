@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     examInfoDiv.id = "exam-info";
     examInfoDiv.innerHTML = `
         Dostępne egzaminy:<strong> ${availableExams}/${totalExams} </strong><br>
-        Podstawa 2019:<strong> ${count2019} egzaminów </strong><br>
-        Podstawa 2017:<strong> ${count2017} egzaminów </strong><br>
+        Podstawa 2019:<strong> ${count2019} egz. </strong><br>
+        Podstawa 2017:<strong> ${count2017} egz. </strong><br>
         Starsze niż 2017:<strong> ${countOlder} egz.
     `;
     examInfoDiv.style.position = "absolute";
