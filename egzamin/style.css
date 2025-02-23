@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Reload';
-    src: url('https://github.com/kacpiq1/www/raw/refs/heads/main/fonts/Reload-Medium.woff2') format('woff2'),
-         url('https://github.com/kacpiq1/www/raw/refs/heads/main/fonts/Reload-Medium.woff') format('woff');
+    src: url('fonts/Reload-Medium.woff2') format('woff2'),
+         url('fonts/Reload-Medium.woff') format('woff');
     font-weight: bold;
     font-style: normal;
   }
