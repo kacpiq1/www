@@ -551,6 +551,7 @@ h1 {
 #bundle-rarity img {
     width: 30px; 
     height: 30px; 
+    display: flex;
 }
 
 #bundle-price {
