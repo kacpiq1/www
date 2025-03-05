@@ -543,7 +543,14 @@ h1 {
     background: gold;
     padding: 5px 10px;
     border-radius: 5px;
-    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bundle-rarity img {
+    width: 30px; 
+    height: 30px; 
 }
 
 #bundle-price {
