@@ -491,6 +491,69 @@ h1 {
   text-decoration: underline;
 }
 
+#bundle-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    height: 150px;
+    background: url('skins/source/bundle-image.jpg') no-repeat center/cover;
+    border: 2px solid #ff4655;
+    border-radius: 10px;
+    padding: 15px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+#bundle-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 70, 85, 0.8);
+}
+
+.bundle-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.bundle-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#bundle-timer {
+    font-size: 1em;
+    color: #ff4655;
+}
+
+.bundle-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#bundle-rarity {
+    background: gold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: black;
+}
+
+#bundle-price {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
 @keyframes glow-text {
   0% {
     text-shadow: 0 0 10px rgba(255, 70, 85, 0.6), 0 0 20px rgba(255, 70, 85, 0.8);
