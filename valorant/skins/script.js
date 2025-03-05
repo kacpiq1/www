@@ -387,3 +387,42 @@ document.addEventListener('DOMContentLoaded', () => {
     skinDetailModal.style.display = 'none';
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const bundleEndDate = new Date("2025-03-19T23:00:00");
+
+    function updateBundleTimer() {
+        const now = new Date().getTime();
+        const timeLeft = bundleEndDate - now;
+
+        if (timeLeft <= 0) {
+            document.getElementById("bundle-timer").innerText = "00:00:00:00";
+            return;
+        }
+
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("bundle-timer").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateBundleTimer, 1000);
+    updateBundleTimer();
+
+    function addSkinsToBundle() {
+        const allSkins = document.querySelectorAll(".skin-card");
+        const bundleContainer = document.getElementById("bundle-skins");
+
+        allSkins.forEach(skin => {
+            if (skin.dataset.name.includes("CYRAX")) { 
+                const clone = skin.cloneNode(true);
+                bundleContainer.appendChild(clone);
+            }
+        });
+    }
+
+    addSkinsToBundle();
+});
+
