@@ -115,19 +115,25 @@ async function fetchTiers() {
   }
 }
 
-// Funkcja do wyświetlania listy skinów
 function displaySkins(skins) {
-  skinsListContainer.innerHTML = ''; // Czyścimy kontener przed dodaniem nowych skinów
+  const bundleContainer = document.getElementById('bundle-container');
+
+  if (bundleContainer) {
+    skinsListContainer.removeChild(bundleContainer);
+  }
+
+  skinsListContainer.innerHTML = ''; 
+
+  if (bundleContainer) {
+    skinsListContainer.appendChild(bundleContainer);
+  }
 
   skins.forEach(skin => {
     const skinCard = document.createElement('div');
     skinCard.classList.add('skin-card');
 
-    const borderColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c'; 
+    const borderColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c';
     skinCard.style.borderColor = borderColor;
-
-    const tierBackgroundColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c'; 
-    skinCard.style.setProperty('--tier-background-color', tierBackgroundColor);
 
     skinCard.innerHTML = `
       <img src="${skin.displayIcon}" alt="${skin.displayName}">
