@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const bundleEndDate = new Date("2025-04-02T23:00:00");
+    const bundleEndDate = new Date("2025-04-03T00:00:00");
 
     function updateBundleTimer() {
         const now = new Date().getTime();
