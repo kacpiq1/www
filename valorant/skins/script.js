@@ -405,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-        document.getElementById("bundle-timer").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        document.getElementById("bundle-timer").innerText = `${days}:${hours}:${minutes}:${seconds}`;
     }
 
     setInterval(updateBundleTimer, 1000);
