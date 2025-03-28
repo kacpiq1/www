@@ -1,3 +1,11 @@
+function isTechBreakActive() {
+  const breakStart = new Date('2025-03-28T18:30:00');
+  const breakEnd = new Date('2025-03-31T14:30:00');
+  const currentDate = new Date();
+
+  return currentDate >= breakStart && currentDate <= breakEnd;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const exams = [
         { file: "inf_02_2024_06_06_SG.pdf", key: "inf_02_2024_06_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
@@ -99,45 +107,68 @@ document.addEventListener("DOMContentLoaded", function () {
     iframeContainer.appendChild(examFrame);
 
     const timerDiv = document.createElement("div");
-    timerDiv.id = "timer";
-    timerDiv.style.display = "none"; 
-    iframeContainer.appendChild(timerDiv);
+  timerDiv.id = "timer";
+  timerDiv.style.display = "none"; 
+  iframeContainer.appendChild(timerDiv);
 
-    const blurOverlay = document.createElement("div");
-    blurOverlay.classList.add("blur-overlay");
-    blurOverlay.innerHTML = "Egzamin zakończony!";
-    iframeContainer.appendChild(blurOverlay);
+  const blurOverlay = document.createElement("div");
+  blurOverlay.classList.add("blur-overlay");
+  blurOverlay.innerHTML = "Egzamin zakończony!";
+  iframeContainer.appendChild(blurOverlay);
 
-    let timeLeft = 150 * 60;
-    let countdown;
+  let timeLeft = 150 * 60;
+  let countdown;
 
-    function startTimer() {
-        clearInterval(countdown);
-        timeLeft = 150 * 60;
-        updateTimerDisplay();
-        timerDiv.style.display = "block";
-        countdown = setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateTimerDisplay();
-            } else {
-                clearInterval(countdown);
-                endExam();
-            }
-        }, 1000);
+  function startTimer() {
+      clearInterval(countdown);
+      timeLeft = 150 * 60;
+      updateTimerDisplay();
+      timerDiv.style.display = "block";
+      timerDiv.classList.remove("pulse");
+      countdown = setInterval(() => {
+          if (timeLeft > 0) {
+              timeLeft--;
+              updateTimerDisplay();
+          } else {
+              clearInterval(countdown);
+              endExam();
+          }
+      }, 1000);
+  }
+
+  function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerDiv.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+      if (timeLeft <= 15 * 60 && timeLeft > 10 * 60) {
+        timerDiv.classList.add("red"); 
+        timerDiv.classList.remove("pulse"); 
     }
 
-    function updateTimerDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        timerDiv.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
 
-    function endExam() {
-        clearInterval(countdown);
-        timerDiv.innerHTML = "Czas minął!";
-        blurOverlay.style.display = "flex";
-        zakonczBtn.style.display = "block";
+    if (timeLeft <= 10 * 60) {
+        timerDiv.classList.add("pulse");
+        timerDiv.classList.add("red"); 
+    }
+  }
+
+  function endExam() {
+      clearInterval(countdown);
+      timerDiv.innerHTML = "Czas minął!";
+      blurOverlay.style.display = "flex";
+      zakonczBtn.style.display = "block";
+  }
+        examFrame.style.display = "none";
+    keyFrame.style.display = "none";
+    zakonczBtn.style.display = "none";
+    loadingDiv.style.display = "block";
+    blurOverlay.style.display = "none"; 
+
+  losujBtn.addEventListener("click", function () {
+    if (isTechBreakActive()) {
+        alert("Przerwa techniczna jest w trakcie! Nie możesz teraz losować egzaminu.");
+        return; 
     }
 
     losujBtn.addEventListener("click", function () {
@@ -237,6 +268,12 @@ document.addEventListener("DOMContentLoaded", function () {
             clearInterval(timeInterval);
             confirmationOverlay.remove();
         });
+
+        if (isTechBreakActive()) {
+        losujBtn.disabled = true; 
+        losujBtn.style.cursor = 'not-allowed'; 
+        losujBtn.style.backgroundColor = '#cccccc'; 
+    }
 
         updateConfirmationText();
     });    
