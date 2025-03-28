@@ -94,6 +94,28 @@
         function redirectToRevolut() {
             window.open("https://revolut.me/kacpiq", "_blank");
         }
+
+         function disableScript() {
+            const script = document.getElementById("script");
+            script.setAttribute("disabled", "true");
+        }
+
+        function checkTechnicalBreak() {
+            const startDate = new Date('2025-03-28T18:30:00');
+            const endDate = new Date('2025-03-31T14:30:00');
+            const currentDate = new Date();
+
+            if (currentDate >= startDate && currentDate <= endDate) {
+                document.getElementById("przerwa-komunikat").style.display = 'block';
+
+                document.getElementById("losuj").disabled = true;
+
+                disableScript();
+            }
+        }
+
+
+        window.onload = checkTechnicalBreak;
     </script>
 </body>
 </html>
