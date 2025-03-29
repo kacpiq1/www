@@ -5,12 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Losowanie egzaminu INF.02</title>
     <link rel="stylesheet" href="egzamin/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="egzamin/script.js" defer></script>
 </head>
 <body>
-     <div id="przerwa-komunikat" class="przerwa-komunikat" style="display:none;">
-        <p>Przerwa techniczna rozpocznie się 28.03.2025 o 18:30 i potrwa do 31.03.2025 14:30.<br> W tym czasie korzystanie ze strony i losowanie egzaminów będzie niedostępne.</p>
+     <div class="nav-panel">
+        <a href="https://www.kacpiq.pl/egzamin/lista-egzaminow" target="_blank">Lista egzaminów</a>
+        
+        <div class="dropdown">
+            <a href="#" class="dropbtn">
+                <i class="fas fa-arrow-down"></i>Pobierz
+            </a>
+            <div class="dropdown-content">
+
+                <a href="#" id="download-windows">
+                    <i class="fab fa-windows"></i>Pobierz na Windows
+                    <div class="version-info">Wersja: 1.2.3</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>Windows 10</span><span>Windows 11</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                </a>
+                
+                <a href="#" id="download-linux">
+                    <i class="fab fa-linux"></i>Pobierz na Linux
+                    <div class="version-info">Wersja: 1.2.3</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>Ubuntu</span><span>Debian</span><span>Fedora</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                </a>
+                
+                <a href="#" id="download-macos">
+                    <i class="fab fa-apple"></i>Pobierz na MacOS
+                    <div class="version-info">Wersja: 1.2.3</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>MacOS Big Sur</span><span>MacOS Monterey</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="przerwa-komunikat" class="przerwa-komunikat" style="display:none;">
+            <p>Przerwa techniczna rozpocznie się 28.03.2025 o 18:30 i potrwa do 31.03.2025 14:30.<br> W tym czasie korzystanie ze strony i losowanie egzaminów będzie niedostępne.</p>
+        </div>
     </div>
+    
     <div class="container">
         <h1 style:font-family: 'Reload';>Losowanie egzaminu INF.02</h1>
 
