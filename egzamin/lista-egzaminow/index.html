@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Lista egzaminów INF.02</title>
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+      display: flex;
+      padding: 20px;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background-color: #1e1e1e;
+      color: #f1f1f1;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #ff8c00;
+      width: 100%;
+    }
+    .exam-list {
+      list-style-type: none;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      margin: 0;
+    }
+    .exam-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #333;
+      border: 1px solid #444;
+      border-radius: 5px;
+      position: relative;
+      cursor: pointer;
+    }
+    .exam-item:hover {
+      background-color: #17a2b8;
+    }
+    .pdf-preview-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 70%;
+      height: 100%;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      z-index: 10;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .exam-item:hover .pdf-preview-container {
+      display: block;
+      transform: translateX(0);
+    }
+    #pdf-preview {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .loading {
+      text-align: center;
+      font-size: 18px;
+      color: #555;
+      display: none;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 56px;
+   height: 56px;
+   border-radius: 50%;
+   border: 9px solid #474bff;
+   animation: spinner-bulqg1 0.8s infinite linear alternate,
+        spinner-oaa3wk 1.6s infinite linear;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+    }
+    @keyframes spinner-bulqg1 {
+   0% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+   }
+
+   12.5% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%);
+   }
+
+   25% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%);
+   }
+
+   50% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   62.5% {
+      clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   75% {
+      clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   100% {
+      clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%);
+   }
+}
+
+@keyframes spinner-oaa3wk {
+   0% {
+      transform: scaleY(1) rotate(0deg);
+   }
+
+   49.99% {
+      transform: scaleY(1) rotate(135deg);
+   }
+
+   50% {
+      transform: scaleY(-1) rotate(0deg);
+   }
+
+   100% {
+      transform: scaleY(-1) rotate(-135deg);
+   }
+}
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="spinner" id="spinner"></div>
+
+  <div class="exam-list-container">
+    <h1>Lista egzaminów</h1>
+    <ul id="exam-list" class="exam-list"></ul>
+  </div>
+
+  <div class="pdf-preview-container" id="pdf-preview-container">
+    <iframe id="pdf-preview"></iframe>
+  </div>
+
+  <script>
+     const apiUrl = 'https://api.github.com/repos/kacpiq1/www/contents/egzamin/egzaminy';
+    let activeExam = null;
+
+    async function fetchExams() {
+      try {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('spinner').style.display = 'block';
+
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          const examList = document.getElementById('exam-list');
+          examList.innerHTML = '';
+
+          data.forEach(exam => {
+            const examItem = document.createElement('li');
+            examItem.classList.add('exam-item');
+            examItem.textContent = exam.name;
+
+            if (exam.name.toLowerCase().endsWith('.pdf')) {
+              examItem.addEventListener('mouseenter', () => {
+                if (activeExam !== exam) {
+                  activeExam = exam;
+                  updatePdfPreview(exam);
+                }
+              });
+
+              examItem.addEventListener('mouseleave', () => {
+                if (activeExam === exam) {
+                }
+              });
+            } else {
+              examItem.addEventListener('click', () => {
+                alert("Ten plik nie jest plikiem PDF.");
+              });
+            }
+
+            examList.appendChild(examItem);
+          });
+        } else {
+          throw new Error('Błąd pobierania danych');
+        }
+      } catch (error) {
+        document.querySelector('.loading').textContent = 'Błąd ładowania egzaminów. Spróbuj ponownie później.';
+        console.error('Błąd pobierania egzaminów:', error);
+      } finally {
+
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('spinner').style.display = 'none';
+      }
+    }
+
+    function updatePdfPreview(exam) {
+      const iframe = document.getElementById('pdf-preview');
+      const previewContainer = document.getElementById('pdf-preview-container');
+
+      iframe.src = `https://docs.google.com/gview?url=${encodeURIComponent(exam.download_url)}&embedded=true`;
+      
+      previewContainer.style.display = 'block';
+      previewContainer.style.transform = 'translateX(0)';
+    }
+
+    window.onload = fetchExams;
+  </script>
+</body>
+</html>
