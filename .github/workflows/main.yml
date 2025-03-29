@@ -13,9 +13,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Remove existing Firebase CLI (if exists)
-      run: sudo rm -f /usr/local/bin/firebase
-
     - name: Set up Firebase CLI
       run: |
         curl -sL https://firebase.tools | bash
