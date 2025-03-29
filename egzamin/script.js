@@ -119,6 +119,61 @@ document.addEventListener("DOMContentLoaded", function () {
   let timeLeft = 150 * 60;
   let countdown;
 
+     function checkSavedExam() {
+        const savedExam = localStorage.getItem('savedExam');
+        if (savedExam) {
+            const examData = JSON.parse(savedExam);
+            const currentTime = Math.floor(Date.now() / 1000);
+            const timeDiff = currentTime - examData.timestamp;
+            const remainingTime = examData.timeLeft - timeDiff;
+  
+            if (remainingTime > 0) {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                
+                const shouldContinue = confirm(`Przeglądarka została zamknięta podczas trwania egzaminu ${examData.examFile}. Pozostały czas jaki został egzaminu to ${minutes}:${seconds < 10 ? '0' : ''}${seconds}. Czy kontynuować ten egzamin?`);
+                
+                if (shouldContinue) {
+                    currentExam = exams.find(e => e.file === examData.examFile);
+                    examFrame.src = "egzamin/egzaminy/" + examData.examFile;
+                    examFrame.style.display = "block";
+                    zakonczBtn.style.display = "block"; 
+                    zakonczBtn.dataset.key = "egzamin/egzaminy/" + examData.examKey;
+                    timeLeft = remainingTime;
+                    startTimer();
+                } else {
+                    localStorage.removeItem('savedExam');
+                }
+            } else {
+                localStorage.removeItem('savedExam');
+            }
+        }
+    }
+  
+    checkSavedExam();
+
+  function saveExamToStorage() {
+        if (currentExam && timeLeft > 0) {
+            const examData = {
+                examFile: currentExam.file,
+                examKey: currentExam.key,
+                timeLeft: timeLeft,
+                timestamp: Math.floor(Date.now() / 1000)
+            };
+            localStorage.setItem('savedExam', JSON.stringify(examData));
+        }
+    }
+
+  window.addEventListener('beforeunload', function(e) {
+        if (currentExam && timeLeft > 0) {
+            saveExamToStorage();
+
+            e.preventDefault();
+            e.returnValue = 'Trwa egzamin. Czy na pewno chcesz opuścić stronę?';
+            return e.returnValue;
+        }
+    });
+
   function startTimer() {
       clearInterval(countdown);
       timeLeft = 150 * 60;
@@ -132,6 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
               clearInterval(countdown);
               endExam();
+              localStorage.removeItem('savedExam');
           }
       }, 1000);
   }
@@ -158,6 +214,8 @@ document.addEventListener("DOMContentLoaded", function () {
       timerDiv.innerHTML = "Czas minął!";
       blurOverlay.style.display = "flex";
       zakonczBtn.style.display = "block";
+    currentExam = null;
+    localStorage.removeItem('savedExam');
   }
 
   losujBtn.addEventListener("click", function () {
@@ -198,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         loadingDiv.style.display = "none";
 
+      timeLeft = 150 * 60;
         startTimer(); 
     }, 1000);
 });
@@ -256,6 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {
           timeLeft = 0; 
           timerDiv.innerHTML = "Egzamin zakończony!";
           confirmationOverlay.remove();
+          currentExam = null;
+          localStorage.removeItem('savedExam');
       });
   
       cancelBtn.addEventListener("click", function () {
