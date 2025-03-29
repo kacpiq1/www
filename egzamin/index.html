@@ -162,5 +162,22 @@
 
         window.onload = checkTechnicalBreak;
     </script>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxweHC9eBj-1iZPtrgPBPngqSZGO0A_hY",
+    authDomain: "kacpiq-egzamin.firebaseapp.com",
+    projectId: "kacpiq-egzamin",
+    storageBucket: "kacpiq-egzamin.firebasestorage.app",
+    messagingSenderId: "1060401996008",
+    appId: "1:1060401996008:web:a382e44d487e8a079ae95d",
+    measurementId: "G-KSJX5H1GFT"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
