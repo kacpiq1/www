@@ -455,6 +455,11 @@ input:focus, select:focus {
         color: #f44336;
         margin-top: 5px;
     }
+    .info {
+        font-size: 12px;
+        color: #f4df36;
+        margin-top: 5px;
+    }
 
     .przerwa-komunikat {
         background-color: #ff8c00;
