@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const keyFrame = document.getElementById("keyFrame");
 
-  const loadingDiv = document.getElementById("loading");
+  const loadingDiv = document.getElementById("spinner");
 
 
 
