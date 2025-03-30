@@ -254,6 +254,11 @@ document.addEventListener("DOMContentLoaded", function () {
         zakonczBtn.style.display = "block"; 
         zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
 
+      const ratingInfoFileName = document.getElementById("exam-file-name");
+        if (ratingInfoFileName) {
+            ratingInfoFileName.textContent = `'${randomExam.file}'`;
+        }
+
         loadingDiv.style.display = "none";
 
       timeLeft = 150 * 60;
