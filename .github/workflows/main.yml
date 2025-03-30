@@ -27,7 +27,6 @@ jobs:
       - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
-          sudo mv firebase /usr/local/bin/firebase
           
       - name: Firebase Login
         run: firebase login:ci --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
