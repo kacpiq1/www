@@ -251,17 +251,25 @@
     return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
 }
 
+function sanitizeExamName(examName) {
+    // Zamieniamy kropki, znaki "$", "#", "[", "]" itp. na dozwolony znak, np. "_"
+    return examName.replace(/[.#$\[\]]/g, "_");
+}
+
 // Funkcja zapisu oceny do Firebase na podstawie nazwy egzaminu
 function saveRating() {
     const rating = document.getElementById("exam-rating").value;
-    const examName = getExamName(); // Pobierz nazwę egzaminu
+    let examName = getExamName(); // Pobierz nazwę egzaminu
 
     if (examName === "") {
         alert("Nie wybrano egzaminu!");
         return;
     }
 
-    const ratingRef = ref(db, 'exam-ratings/' + examName); // Używamy nazwy egzaminu jako klucza
+    // Sanityzacja nazwy egzaminu (usuwanie zabronionych znaków)
+    examName = sanitizeExamName(examName);
+
+    const ratingRef = ref(db, 'exam-ratings/' + examName); // Używamy sanitized nazwy jako klucza
 
     set(ratingRef, rating).then(() => {
         document.getElementById("current-rating-value").innerText = rating;
@@ -274,11 +282,14 @@ function saveRating() {
 
 // Funkcja wczytująca aktualną ocenę z Firebase
 function loadCurrentRating() {
-    const examName = getExamName();
+    let examName = getExamName();
     if (examName === "") {
         document.getElementById("current-rating-value").innerText = "Brak oceny";
         return;
     }
+
+    // Sanityzacja nazwy egzaminu
+    examName = sanitizeExamName(examName);
 
     const ratingRef = ref(db, 'exam-ratings/' + examName);
     get(ratingRef).then((snapshot) => {
