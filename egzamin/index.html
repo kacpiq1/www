@@ -230,34 +230,38 @@
         import { getDatabase, ref, push, query, orderByChild, onValue, equalTo, get, set , child} 
             from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxweHC9eBj-1iZPtrgPBPngqSZGO0A_hY",
-    authDomain: "kacpiq-egzamin.firebaseapp.com",
-    projectId: "kacpiq-egzamin",
-    storageBucket: "kacpiq-egzamin.firebasestorage.app",
-    messagingSenderId: "1060401996008",
-    appId: "1:1060401996008:web:a382e44d487e8a079ae95d",
-    measurementId: "G-KSJX5H1GFT"
-  };
+        // Konfiguracja Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxweHC9eBj-1iZPtrgPBPngqSZGO0A_hY",
+            authDomain: "kacpiq-egzamin.firebaseapp.com",
+            databaseURL: "https://kacpiq-egzamin-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kacpiq-egzamin",
+            storageBucket: "kacpiq-egzamin.firebasestorage.app",
+            messagingSenderId: "1060401996008",
+            appId: "1:1060401996008:web:a382e44d487e8a079ae95d",
+            measurementId: "G-KSJX5H1GFT"
+        };
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+        // Inicjalizacja Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
         function getExamName() {
     const examName = document.getElementById("exam-file-name").innerText;
-    return examName.trim();
+    return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
 }
 
+// Funkcja zapisu oceny do Firebase na podstawie nazwy egzaminu
 function saveRating() {
     const rating = document.getElementById("exam-rating").value;
-    const examName = getExamName(); 
+    const examName = getExamName(); // Pobierz nazwę egzaminu
 
     if (examName === "") {
         alert("Nie wybrano egzaminu!");
         return;
     }
 
-    const ratingRef = ref(db, 'exam-ratings/' + examName); 
+    const ratingRef = ref(db, 'exam-ratings/' + examName); // Używamy nazwy egzaminu jako klucza
 
     set(ratingRef, rating).then(() => {
         document.getElementById("current-rating-value").innerText = rating;
@@ -268,6 +272,7 @@ function saveRating() {
     });
 }
 
+// Funkcja wczytująca aktualną ocenę z Firebase
 function loadCurrentRating() {
     const examName = getExamName();
     if (examName === "") {
@@ -288,8 +293,10 @@ function loadCurrentRating() {
     });
 }
 
+// Obsługa kliknięcia przycisku "Zatwierdź ocenę"
 document.getElementById("submit-rating").addEventListener("click", saveRating);
 
+// Załadowanie aktualnej oceny przy wczytywaniu strony
 window.onload = () => {
     loadCurrentRating();
 };
