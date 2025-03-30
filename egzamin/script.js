@@ -191,6 +191,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 1000);
   }
 
+  function setExamFileName(fileName) {
+        document.getElementById("pdfName").value = fileName;
+    }
+
   function updateTimerDisplay() {
       const minutes = Math.floor(timeLeft / 60);
       const seconds = timeLeft % 60;
