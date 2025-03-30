@@ -553,6 +553,7 @@ input:focus, select:focus {
     padding: 0;
     width: 100%;
     text-align: center;
+    direction: rtl;
 }
 
 .star {
@@ -571,10 +572,6 @@ input:focus, select:focus {
 .star:hover,
 .star.selected,
 .star:hover ~ .star,
-.star.selected ~ .star {
+.star.selected ~ .star{
     color: #f0b700; 
-}
-
-.star.selected {
-    color: #f0b700;
 }
