@@ -104,6 +104,21 @@
 
         <button id="zakoncz" style="display: none;">Zakończ egzamin</button>
         <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
+        <div class="rating-section">
+    <label for="exam-rating">Ocena egzaminu:</label>
+    <select id="exam-rating">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <button id="submit-rating">Zatwierdź ocenę</button>
+    <div id="current-rating">
+        <span>Ocena: </span><span id="current-rating-value">0</span>
+    </div>
+</div>
     </div>
     <div class="popup" id="popup" onmouseover="expandPopup()" onmouseout="collapsePopup()" onclick="redirectToRevolut()">
         <img src="https://cdn.brandfetch.io/idkTaHd18D/w/400/h/400/theme/dark/icon.png?c=1dxbfHSJFAPEGdCLU4o5B" alt="R">
@@ -226,6 +241,57 @@
 
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+
+        function getExamName() {
+    const examName = document.getElementById("exam-file-name").innerText;
+    return examName.trim();
+}
+
+function saveRating() {
+    const rating = document.getElementById("exam-rating").value;
+    const examName = getExamName(); 
+
+    if (examName === "") {
+        alert("Nie wybrano egzaminu!");
+        return;
+    }
+
+    const ratingRef = ref(db, 'exam-ratings/' + examName); 
+
+    set(ratingRef, rating).then(() => {
+        document.getElementById("current-rating-value").innerText = rating;
+        alert("Ocena została zapisana!");
+    }).catch((error) => {
+        console.error("Błąd zapisu w Firebase:", error);
+        alert("Wystąpił błąd podczas zapisywania oceny.");
+    });
+}
+
+function loadCurrentRating() {
+    const examName = getExamName();
+    if (examName === "") {
+        document.getElementById("current-rating-value").innerText = "Brak oceny";
+        return;
+    }
+
+    const ratingRef = ref(db, 'exam-ratings/' + examName);
+    get(ratingRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const rating = snapshot.val();
+            document.getElementById("current-rating-value").innerText = rating;
+        } else {
+            document.getElementById("current-rating-value").innerText = "Brak oceny";
+        }
+    }).catch((error) => {
+        console.error("Błąd pobierania danych z Firebase:", error);
+    });
+}
+
+document.getElementById("submit-rating").addEventListener("click", saveRating);
+
+window.onload = () => {
+    loadCurrentRating();
+};
 </script>
 </body>
 </html>
