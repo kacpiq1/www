@@ -299,8 +299,14 @@ function loadCurrentRating() {
     });
 }
 
-function saveRating() {
+async function saveRating() {
     if (selectedRating === 0) return;
+
+    const canVote = await canUserRate();
+    if (!canVote) {
+        alert("Możesz ocenić tylko raz na godzinę!");
+        return;
+    }
 
     const examName = getExamName();
     if (!examName) return;
@@ -310,9 +316,15 @@ function saveRating() {
 
     push(ratingsRef, selectedRating).then(() => {
         console.log("Ocena zapisana:", selectedRating);
-        document.getElementById("rating-modal").style.display = "none";
-        loadCurrentRating();
+        document.getElementById("rating-modal").style.display = "none"; 
+        loadCurrentRating(); 
     }).catch(error => console.error("Błąd zapisu oceny:", error));
+
+    const userIP = await getUserIP();
+    if (!userIP) return;
+
+    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${userIP}`);
+    set(userRef, { timestamp: Date.now() }); 
 }
 
         document.getElementById("submit-rating-modal").addEventListener("click", saveRating);
@@ -343,9 +355,40 @@ document.getElementById("close-modal").addEventListener("click", () => {
     document.getElementById("rating-modal").style.display = "none";
 });
 
+        async function getUserIP() {
+    try {
+        const response = await fetch("https://api64.ipify.org?format=json");
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error("Błąd pobierania IP:", error);
+        return null;
+    }
+}
+        
+async function canUserRate() {
+    const userIP = await getUserIP();
+    if (!userIP) return false; 
+
+    const examName = getExamName();
+    const sanitizedExamName = sanitizeExamName(examName);
+    
+    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${userIP}`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+        const lastVoteTime = snapshot.val().timestamp;
+        const currentTime = Date.now();
+        const oneHour = 60 * 60 * 1000; 
+
+        if (currentTime - lastVoteTime < oneHour) {
+            return false; 
+        }
+    }
+    return true; 
+}
 
 
-// Załadowanie średniej oceny przy wczytywaniu strony
 window.onload = () => {
     loadCurrentRating();
 };
