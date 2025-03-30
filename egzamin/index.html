@@ -106,17 +106,17 @@
         <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
         <div id="rating-modal" class="rating-modal">
     <div class="modal-content">
-        <span id="close-modal" class="close-modal">&times;</span>
-        <h2>Oceń arkusz</h2>
-        <ul class="ratings">
-            <li class="star"><i class="fa-solid fa-star"></i></li>
-            <li class="star"><i class="fa-solid fa-star"></i></li>
-            <li class="star"><i class="fa-solid fa-star"></i></li>
-            <li class="star"><i class="fa-solid fa-star"></i></li>
-            <li class="star"><i class="fa-solid fa-star"></i></li>
-        </ul>
-        <button id="submit-rating-modal">Zatwierdź ocenę</button>
+    <span id="close-modal" class="close-modal">&times;</span>
+    <h2>Oceń arkusz</h2>
+    <div class="rating-container">
+        <div class="rating-circle" data-value="1"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="2"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="3"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="4"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="5"><i class="fa-solid fa-star"></i></div>
     </div>
+    <button id="submit-rating-modal">Zatwierdź ocenę</button>
+</div>
 </div>
     </div>
     <div class="popup" id="popup" onmouseover="expandPopup()" onmouseout="collapsePopup()" onclick="redirectToRevolut()">
@@ -299,51 +299,50 @@ function loadCurrentRating() {
     });
 }
 
-function saveRating(selectedRating) {
+function saveRating() {
+    if (selectedRating === 0) return;
+
     const examName = getExamName();
     if (!examName) return;
 
     const sanitizedExamName = sanitizeExamName(examName);
-    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+    const ratingsRef = ref(db, `exam-ratings/${sanitizedExamName}/ratings`);
 
     push(ratingsRef, selectedRating).then(() => {
+        console.log("Ocena zapisana:", selectedRating);
+        document.getElementById("rating-modal").style.display = "none";
         loadCurrentRating();
-    }).catch((error) => {
-        console.error("Błąd zapisu oceny:", error);
-    });
+    }).catch(error => console.error("Błąd zapisu oceny:", error));
 }
+
+        document.getElementById("submit-rating-modal").addEventListener("click", saveRating);
 
 let selectedRating = 0;
-const stars = document.querySelectorAll('.star');
+const circles = document.querySelectorAll(".rating-circle");
 
-stars.forEach((star, index) => {
-    star.addEventListener('click', () => {
-        selectedRating = selectedRating === index + 1 ? 0 : index + 1;
-        updateStarSelection();
+circles.forEach(circle => {
+    circle.addEventListener("click", () => {
+        const value = parseInt(circle.dataset.value);
+        selectedRating = selectedRating === value ? 0 : value;
+        updateSelection();
     });
 });
 
-function updateStarSelection() {
-    stars.forEach((star, index) => {
-        star.classList.toggle('selected', index < selectedRating);
+function updateSelection() {
+    circles.forEach(circle => {
+        const value = parseInt(circle.dataset.value);
+        circle.classList.toggle("selected", value <= selectedRating);
     });
 }
 
-document.getElementById('open-rating-modal').addEventListener('click', () => {
-    document.getElementById('rating-modal').style.display = 'block';
+document.getElementById("open-rating-modal").addEventListener("click", () => {
+    document.getElementById("rating-modal").style.display = "block";
 });
 
-document.getElementById('close-modal').addEventListener('click', () => {
-    document.getElementById('rating-modal').style.display = 'none';
+document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("rating-modal").style.display = "none";
 });
 
-// Zapisanie oceny po kliknięciu "Zatwierdź"
-document.getElementById("submit-rating-modal").addEventListener('click', () => {
-    if (selectedRating > 0) {
-        saveRating(selectedRating);
-        document.getElementById('rating-modal').style.display = 'none';
-    }
-});
 
 
 // Załadowanie średniej oceny przy wczytywaniu strony
