@@ -254,30 +254,8 @@ function sanitizeExamName(examName) {
 // Funkcja pobierająca nazwę egzaminu (oryginalną nazwę, która jest wyświetlana)
 function getExamName() {
     const examName = document.getElementById("exam-file-name").innerText;
+    console.log("Nazwa egzaminu:", examName);  // Dodajemy log do konsoli
     return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
-}
-
-// Funkcja dodająca ocenę do bazy danych
-function saveRating() {
-    const rating = parseFloat(document.getElementById("exam-rating").value); // Pobieramy ocenę z inputa
-    
-    if (isNaN(rating) || rating < 1 || rating > 5) { // Sprawdzamy, czy ocena jest w zakresie 1-5
-        alert("Proszę podać ocenę od 1 do 5!");
-        return;
-    }
-
-    const examName = getExamName(); // Pobieramy nazwę egzaminu
-    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
-    
-    // Dodajemy ocenę do tablicy ocen w Firebase
-    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
-    push(ratingsRef, rating).then(() => {
-        alert("Ocena została zapisana!");
-        loadCurrentRating(); // Ładujemy aktualną średnią ocenę
-    }).catch((error) => {
-        console.error("Błąd zapisu oceny:", error);
-        alert("Wystąpił błąd podczas zapisywania oceny.");
-    });
 }
 
 // Funkcja obliczająca średnią ocenę z tablicy ocen
@@ -298,13 +276,39 @@ function loadCurrentRating() {
     get(ratingsRef).then((snapshot) => {
         if (snapshot.exists()) {
             const ratings = snapshot.val(); // Pobieramy tablicę ocen
+            console.log("Pobrane oceny z Firebase:", ratings);  // Dodajemy log do konsoli
             const averageRating = calculateAverage(ratings); // Obliczamy średnią ocenę
             document.getElementById("current-rating-value").innerText = `Średnia ocena: ${averageRating}`;
         } else {
+            console.log("Brak ocen w Firebase.");  // Logujemy brak ocen
             document.getElementById("current-rating-value").innerText = "Brak ocen";
         }
     }).catch((error) => {
         console.error("Błąd pobierania ocen:", error);
+    });
+}
+
+// Funkcja dodająca ocenę do bazy danych
+function saveRating() {
+    const rating = parseFloat(document.getElementById("exam-rating").value); // Pobieramy ocenę z inputa
+    
+    if (isNaN(rating) || rating < 1 || rating > 5) { // Sprawdzamy, czy ocena jest w zakresie 1-5
+        alert("Proszę podać ocenę od 1 do 5!");
+        return;
+    }
+
+    const examName = getExamName(); // Pobieramy nazwę egzaminu
+    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
+    
+    // Dodajemy ocenę do tablicy ocen w Firebase
+    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+    push(ratingsRef, rating).then(() => {
+        console.log("Ocena zapisana do Firebase:", rating);  // Logujemy zapisanie oceny
+        alert("Ocena została zapisana!");
+        loadCurrentRating(); // Ładujemy aktualną średnią ocenę
+    }).catch((error) => {
+        console.error("Błąd zapisu oceny:", error);
+        alert("Wystąpił błąd podczas zapisywania oceny.");
     });
 }
 
