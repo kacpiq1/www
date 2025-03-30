@@ -104,19 +104,18 @@
 
         <button id="zakoncz" style="display: none;">Zakończ egzamin</button>
         <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
-        <div class="rating-section">
-    <label for="exam-rating">Ocena egzaminu:</label>
-    <select id="exam-rating">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-    <button id="submit-rating">Zatwierdź ocenę</button>
-    <div id="current-rating">
-        <span>Ocena: </span><span id="current-rating-value">0</span>
+        <div id="rating-modal" class="rating-modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close-modal">&times;</span>
+        <h2>Oceń arkusz</h2>
+        <ul class="ratings">
+            <li class="star"><i class="fa-solid fa-star"></i></li>
+            <li class="star"><i class="fa-solid fa-star"></i></li>
+            <li class="star"><i class="fa-solid fa-star"></i></li>
+            <li class="star"><i class="fa-solid fa-star"></i></li>
+            <li class="star"><i class="fa-solid fa-star"></i></li>
+        </ul>
+        <button id="submit-rating-modal">Zatwierdź ocenę</button>
     </div>
 </div>
     </div>
@@ -299,32 +298,56 @@ function loadCurrentRating() {
         console.error("Błąd pobierania ocen:", error);
     });
 }
-// Funkcja dodająca ocenę do bazy danych
-function saveRating() {
-    const rating = parseFloat(document.getElementById("exam-rating").value); // Pobieramy ocenę z inputa
-    
-    if (isNaN(rating) || rating < 1 || rating > 5) { // Sprawdzamy, czy ocena jest w zakresie 1-5
-        alert("Proszę podać ocenę od 1 do 5!");
-        return;
-    }
 
-    const examName = getExamName(); // Pobieramy nazwę egzaminu
-    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
-    
-    // Dodajemy ocenę do tablicy ocen w Firebase
+function saveRating(selectedRating) {
+    const examName = getExamName();
+    const sanitizedExamName = sanitizeExamName(examName);
+
     const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
-    push(ratingsRef, rating).then(() => {
-        console.log("Ocena zapisana do Firebase:", rating);  // Logujemy zapisanie oceny
-        alert("Ocena została zapisana!");
-        loadCurrentRating(); // Ładujemy aktualną średnią ocenę
+    push(ratingsRef, selectedRating).then(() => {
+        loadCurrentRating();
     }).catch((error) => {
         console.error("Błąd zapisu oceny:", error);
-        alert("Wystąpił błąd podczas zapisywania oceny.");
     });
 }
 
-// Funkcja uruchamiająca zapis oceny przy kliknięciu
-document.getElementById("submit-rating").addEventListener("click", saveRating);
+// Obsługa kliknięcia w gwiazdki
+let selectedRating = 0;
+const stars = document.querySelectorAll('.star');
+
+stars.forEach((star, index) => {
+    star.addEventListener('click', () => {
+        selectedRating = index + 1;
+        updateStarSelection();
+    });
+});
+
+// Funkcja do aktualizacji wybranych gwiazdek
+function updateStarSelection() {
+    stars.forEach((star, index) => {
+        if (index < selectedRating) {
+            star.classList.add('selected');
+        } else {
+            star.classList.remove('selected');
+        }
+    });
+}
+
+// Zatwierdzenie oceny po kliknięciu
+document.getElementById("submit-rating-modal").addEventListener('click', () => {
+    if (selectedRating > 0) {
+        saveRating(selectedRating);
+    }
+});
+
+// Otwarcie i zamknięcie modalu
+document.getElementById('open-rating-modal').addEventListener('click', () => {
+    document.getElementById('rating-modal').style.display = 'block';
+});
+
+document.getElementById('close-modal').addEventListener('click', () => {
+    document.getElementById('rating-modal').style.display = 'none';
+});
 
 // Załadowanie średniej oceny przy wczytywaniu strony
 window.onload = () => {
