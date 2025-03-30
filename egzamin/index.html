@@ -301,9 +301,11 @@ function loadCurrentRating() {
 
 function saveRating(selectedRating) {
     const examName = getExamName();
-    const sanitizedExamName = sanitizeExamName(examName);
+    if (!examName) return;
 
+    const sanitizedExamName = sanitizeExamName(examName);
     const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+
     push(ratingsRef, selectedRating).then(() => {
         loadCurrentRating();
     }).catch((error) => {
@@ -311,36 +313,22 @@ function saveRating(selectedRating) {
     });
 }
 
-// Obsługa kliknięcia w gwiazdki
 let selectedRating = 0;
 const stars = document.querySelectorAll('.star');
 
 stars.forEach((star, index) => {
     star.addEventListener('click', () => {
-        selectedRating = index + 1;
+        selectedRating = selectedRating === index + 1 ? 0 : index + 1;
         updateStarSelection();
     });
 });
 
-// Funkcja do aktualizacji wybranych gwiazdek
 function updateStarSelection() {
     stars.forEach((star, index) => {
-        if (index < selectedRating) {
-            star.classList.add('selected');
-        } else {
-            star.classList.remove('selected');
-        }
+        star.classList.toggle('selected', index < selectedRating);
     });
 }
 
-// Zatwierdzenie oceny po kliknięciu
-document.getElementById("submit-rating-modal").addEventListener('click', () => {
-    if (selectedRating > 0) {
-        saveRating(selectedRating);
-    }
-});
-
-// Otwarcie i zamknięcie modalu
 document.getElementById('open-rating-modal').addEventListener('click', () => {
     document.getElementById('rating-modal').style.display = 'block';
 });
@@ -348,6 +336,15 @@ document.getElementById('open-rating-modal').addEventListener('click', () => {
 document.getElementById('close-modal').addEventListener('click', () => {
     document.getElementById('rating-modal').style.display = 'none';
 });
+
+// Zapisanie oceny po kliknięciu "Zatwierdź"
+document.getElementById("submit-rating-modal").addEventListener('click', () => {
+    if (selectedRating > 0) {
+        saveRating(selectedRating);
+        document.getElementById('rating-modal').style.display = 'none';
+    }
+});
+
 
 // Załadowanie średniej oceny przy wczytywaniu strony
 window.onload = () => {
