@@ -480,6 +480,8 @@ overlayDiv.style.display = "none";
 
         loadingDiv.style.display = "none";
 
+overlayDiv.style.display = "none";
+
 
 
       timeLeft = 150 * 60;
