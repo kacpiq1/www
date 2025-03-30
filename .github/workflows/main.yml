@@ -8,6 +8,7 @@ on:
 jobs:
   egzamin:
     runs-on: ubuntu-latest
+    environment: egzamin
 
     steps:
     - name: Checkout code
