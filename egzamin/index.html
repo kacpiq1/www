@@ -226,8 +226,9 @@
     }, 1000);
 </script>
     <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getDatabase, ref, push, query, orderByChild, onValue, equalTo, get, set , child} 
+            from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDxweHC9eBj-1iZPtrgPBPngqSZGO0A_hY",
