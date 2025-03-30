@@ -164,10 +164,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-  window.addEventListener('beforeunload', function(e) {
+   window.addEventListener('beforeunload', function(e) {
         if (currentExam && timeLeft > 0) {
             saveExamToStorage();
-
             e.preventDefault();
             e.returnValue = 'Trwa egzamin. Czy na pewno chcesz opuścić stronę?';
             return e.returnValue;
@@ -253,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         examFrame.style.display = "block";
         zakonczBtn.style.display = "block"; 
         zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
+      setExamFileName(currentExam.file);
 
       const downloadExamButton = document.getElementById("download-exam");
             const fileInfo = document.getElementById("plik");
