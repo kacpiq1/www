@@ -150,10 +150,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
-  
+
     checkSavedExam();
 
-  function saveExamToStorage() {
+function saveExamToStorage() {
         if (currentExam && timeLeft > 0) {
             const examData = {
                 examFile: currentExam.file,
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-   window.addEventListener('beforeunload', function(e) {
+    window.addEventListener('beforeunload', function(e) {
         if (currentExam && timeLeft > 0) {
             saveExamToStorage();
             e.preventDefault();
@@ -223,63 +223,50 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   losujBtn.addEventListener("click", function () {
-    if (isTechBreakActive()) {
-        alert("Przerwa techniczna jest w trakcie! Nie możesz teraz losować egzaminu.");
-        return; 
-    }
+        if (isTechBreakActive()) {
+            alert("Przerwa techniczna jest w trakcie! Nie możesz teraz losować egzaminu.");
+            return; 
+        }
+  
+        examFrame.style.display = "none";
+        keyFrame.style.display = "none";
+        zakonczBtn.style.display = "none";
+        loadingDiv.style.display = "block";
+        blurOverlay.style.display = "none"; 
+  
+        setTimeout(() => {
+            const podstawa = document.getElementById("podstawa").value;
+            const serwer = document.getElementById("serwer").value;
+            const klient = document.getElementById("klient").value;
+  
+            let filteredExams = exams.filter(exam => 
+                (podstawa === "" || exam.podstawa === podstawa) &&
+                (serwer === "" || exam.serwer === serwer) &&
+                (klient === "" || exam.klient === klient)
+            );
+  
+            if (filteredExams.length === 0) {
+                alert("Brak pasujących egzaminów.");
+                loadingDiv.style.display = "none";
+                return;
+            }
+  
+            currentExam = filteredExams[Math.floor(Math.random() * filteredExams.length)];
+  
+            examFrame.src = "egzamin/egzaminy/" + currentExam.file;
+            examFrame.style.display = "block";
+            zakonczBtn.style.display = "block"; 
+            zakonczBtn.dataset.key = "egzamin/egzaminy/" + currentExam.key;
+            setExamFileName(currentExam.file);
 
-    examFrame.style.display = "none";
-    keyFrame.style.display = "none";
-    zakonczBtn.style.display = "none";
-    loadingDiv.style.display = "block";
-    blurOverlay.style.display = "none"; 
-
-    setTimeout(() => {
-        const podstawa = document.getElementById("podstawa").value;
-        const serwer = document.getElementById("serwer").value;
-        const klient = document.getElementById("klient").value;
-
-        let filteredExams = exams.filter(exam => 
-            (podstawa === "" || exam.podstawa === podstawa) &&
-            (serwer === "" || exam.serwer === serwer) &&
-            (klient === "" || exam.klient === klient)
-        );
-
-        if (filteredExams.length === 0) {
-            alert("Brak pasujących egzaminów.");
+            
+  
             loadingDiv.style.display = "none";
-            return;
-        }
-
-        let randomExam = filteredExams[Math.floor(Math.random() * filteredExams.length)];
-
-        examFrame.src = "egzamin/egzaminy/" + randomExam.file;
-        examFrame.style.display = "block";
-        zakonczBtn.style.display = "block"; 
-        zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
-      setExamFileName(currentExam.file);
-
-      const downloadExamButton = document.getElementById("download-exam");
-            const fileInfo = document.getElementById("plik");
-            const fileName = randomExam.file;
-
-            downloadExamButton.href = "egzamin/egzaminy/" + fileName;
-            fileInfo.textContent = `Plik: ${fileName}`;
-
-      const ratingInfoFileName = document.getElementById("exam-file-name");
-        if (ratingInfoFileName) {
-            ratingInfoFileName.textContent = `${randomExam.file}`;
-        }
-
-      const mainPanel = document.getElementById('main-panel');
-       mainPanel.style.display = 'block';
-
-        loadingDiv.style.display = "none";
-
-      timeLeft = 150 * 60;
-        startTimer(); 
-    }, 1000);
-});
+  
+            timeLeft = 150 * 60;
+            startTimer(); 
+        }, 1000);
+    });
 
   zakonczBtn.addEventListener("click", function () {
       const confirmationOverlay = document.createElement("div");
