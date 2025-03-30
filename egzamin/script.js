@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let timeLeft = 150 * 60;
   let countdown;
+  let currentExam = null;
 
      function checkSavedExam() {
         const savedExam = localStorage.getItem('savedExam');
