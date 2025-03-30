@@ -258,7 +258,6 @@ function getExamName() {
     return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
 }
 
-// Funkcja obliczająca średnią ocenę z tablicy ocen
 function calculateAverage(ratings) {
     if (ratings && ratings.length > 0) {
         const total = ratings.reduce((sum, rating) => sum + rating, 0);
@@ -275,8 +274,13 @@ function loadCurrentRating() {
     const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
     get(ratingsRef).then((snapshot) => {
         if (snapshot.exists()) {
-            const ratings = snapshot.val(); // Pobieramy tablicę ocen
-            console.log("Pobrane oceny z Firebase:", ratings);  // Dodajemy log do konsoli
+            const ratingsObject = snapshot.val(); // Pobieramy dane jako obiekt
+            console.log("Pobrane oceny z Firebase:", ratingsObject);  // Dodajemy log do konsoli
+
+            // Przekształcamy obiekt w tablicę ocen
+            const ratings = Object.values(ratingsObject); // Przekształcamy wartości obiektu na tablicę
+            console.log("Tablica ocen:", ratings); // Dodajemy log z tablicą ocen
+
             const averageRating = calculateAverage(ratings); // Obliczamy średnią ocenę
             document.getElementById("current-rating-value").innerText = `Średnia ocena: ${averageRating}`;
         } else {
@@ -287,7 +291,6 @@ function loadCurrentRating() {
         console.error("Błąd pobierania ocen:", error);
     });
 }
-
 // Funkcja dodająca ocenę do bazy danych
 function saveRating() {
     const rating = parseFloat(document.getElementById("exam-rating").value); // Pobieramy ocenę z inputa
