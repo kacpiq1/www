@@ -254,6 +254,13 @@ document.addEventListener("DOMContentLoaded", function () {
         zakonczBtn.style.display = "block"; 
         zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
 
+      const downloadExamButton = document.getElementById("download-exam");
+            const fileInfo = document.getElementById("plik");
+            const fileName = randomExam.file;
+
+            downloadExamButton.href = "egzamin/egzaminy/" + fileName;
+            fileInfo.textContent = `Plik: ${fileName}`;
+
       const ratingInfoFileName = document.getElementById("exam-file-name");
         if (ratingInfoFileName) {
             ratingInfoFileName.textContent = `${randomExam.file}`;
