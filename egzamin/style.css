@@ -513,14 +513,31 @@ input:focus, select:focus {
         font-weight: bold;
     }
 
+.rating-modal {
+    display: none;
+    position: fixed;
+    z-index: 1040;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal-content {
     background-color: #242424;
-    margin: 15% auto;
     padding: 20px;
+    border-radius: 10px;
     border: 1px solid #888;
     width: 80%;
     max-width: 400px;
+    text-align: center;
+    position: relative;
 }
+
 
 .close-modal {
     color: #aaa;
