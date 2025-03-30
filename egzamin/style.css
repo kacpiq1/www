@@ -552,7 +552,6 @@ input:focus, select:focus {
     margin: 0;
     padding: 0;
     width: 100%;
-    direction: rtl;
     text-align: center;
 }
 
@@ -562,6 +561,7 @@ input:focus, select:focus {
     display: inline-block;
     transition: color 0.2s ease;
     color: #d3d3d3;
+    cursor: pointer;
 }
 
 .star i {
