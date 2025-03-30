@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const ratingInfoFileName = document.getElementById("exam-file-name");
         if (ratingInfoFileName) {
-            ratingInfoFileName.textContent = `'${randomExam.file}'`;
+            ratingInfoFileName.textContent = `${randomExam.file}`;
         }
 
         loadingDiv.style.display = "none";
