@@ -35,8 +35,8 @@ jobs:
       - name: Build project
         run: |
           npm install
-          npm run build  # lub inne polecenie budowania dla twojego projektu
+          npm run build
 
       - name: Deploy to Firebase
         run: |
-          firebase deploy --only hosting  # Zmienna dla twojego projektu Firebase (np. hosting)
+          firebase deploy --only hosting
