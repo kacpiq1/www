@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
      function checkSavedExam() {
     const savedExam = localStorage.getItem('savedExam');
+    
     if (savedExam) {
         const examData = JSON.parse(savedExam);
         const currentTime = Math.floor(Date.now() / 1000);
@@ -131,7 +132,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (remainingTime > 0) {
             const minutes = Math.floor(remainingTime / 60);
             const seconds = remainingTime % 60;
-            const shouldContinue = confirm(`Przeglądarka została zamknięta podczas trwania egzaminu ${examData.examFile}. Pozostały czas: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}. Czy kontynuować?`);
+
+            // Sprawdź, czy element pdfName istnieje przed próbą zmiany
+            const pdfNameElement = document.getElementById("pdfName");
+            if (pdfNameElement) {
+                // Jeśli element istnieje, ustawiamy jego wartość
+                pdfNameElement.value = examData.examFile;
+            } else {
+                console.error("Element o id 'pdfName' nie został znaleziony.");
+            }
+
+            // Potwierdzenie kontynuacji egzaminu
+            const shouldContinue = confirm(`Przeglądarka została zamknięta podczas trwania egzaminu ${examData.examFile}. Pozostały czas: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}. Czy kontynuować ten egzamin?`);
 
             if (shouldContinue) {
                 currentExam = exams.find(e => e.file === examData.examFile);
@@ -140,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 zakonczBtn.style.display = "block";
                 zakonczBtn.dataset.key = "egzamin/egzaminy/" + examData.examKey;
                 timeLeft = remainingTime;
-                startTimer(); 
+                startTimer();
             } else {
                 localStorage.removeItem('savedExam');
             }
