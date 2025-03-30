@@ -482,3 +482,17 @@ input:focus, select:focus {
         text-align: center;
         font-weight: bold
     }
+
+  #countdown {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        font-weight: bold;
+        color: #ff8c00;
+    }
+
+    #countdown-timer {
+        font-weight: bold;
+    }
