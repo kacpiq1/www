@@ -95,7 +95,7 @@
 
         <button id="losuj">Losuj egzamin</button>
          <div class="rating-info">
-                        <span style="font-weight:bold">⭐0,0 (0)</span><span id="exam-file-name"></span>
+                        <span id="rating-value" style="font-weight:bold">⭐0,0 (0)</span><span id="exam-file-name"></span>
                     </div>
 
         <div id="loading" style="display: none;">Ładowanie egzaminów...</div>
@@ -265,9 +265,9 @@ function getExamName() {
 function calculateAverage(ratings) {
     if (ratings && ratings.length > 0) {
         const total = ratings.reduce((sum, rating) => sum + rating, 0);
-        return (total / ratings.length).toFixed(1); // Obliczamy średnią ocenę, zaokrągloną do 1 miejsca po przecinku
+        return (total / ratings.length).toFixed(1); 
     }
-    return 0;
+    return 0.0; 
 }
 
 function loadCurrentRating() {
@@ -285,10 +285,13 @@ function loadCurrentRating() {
             console.log("Tablica ocen:", ratings); // Dodajemy log z tablicą ocen
 
             const averageRating = calculateAverage(ratings); // Obliczamy średnią ocenę
-            document.getElementById("current-rating-value").innerText = `Średnia ocena: ${averageRating}`;
+            const ratingCount = ratings.length; // Liczba ocen
+
+            // Aktualizowanie wyświetlanej średniej oceny oraz liczby ocen
+            document.getElementById("rating-value").innerHTML = `⭐${averageRating} (${ratingCount})`;
         } else {
             console.log("Brak ocen w Firebase.");  // Logujemy brak ocen
-            document.getElementById("current-rating-value").innerText = "Brak ocen";
+            document.getElementById("rating-value").innerText = "⭐0.0 (0)";
         }
     }).catch((error) => {
         console.error("Błąd pobierania ocen:", error);
