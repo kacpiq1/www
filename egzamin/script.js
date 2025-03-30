@@ -121,35 +121,34 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentExam = null;
 
      function checkSavedExam() {
-        const savedExam = localStorage.getItem('savedExam');
-        if (savedExam) {
-            const examData = JSON.parse(savedExam);
-            const currentTime = Math.floor(Date.now() / 1000);
-            const timeDiff = currentTime - examData.timestamp;
-            const remainingTime = examData.timeLeft - timeDiff;
-  
-            if (remainingTime > 0) {
-                const minutes = Math.floor(remainingTime / 60);
-                const seconds = remainingTime % 60;
-                
-                const shouldContinue = confirm(`Przeglądarka została zamknięta podczas trwania egzaminu ${examData.examFile}. Pozostały czas jaki został egzaminu to ${minutes}:${seconds < 10 ? '0' : ''}${seconds}. Czy kontynuować ten egzamin?`);
-                
-                if (shouldContinue) {
-                    currentExam = exams.find(e => e.file === examData.examFile);
-                    examFrame.src = "egzamin/egzaminy/" + examData.examFile;
-                    examFrame.style.display = "block";
-                    zakonczBtn.style.display = "block"; 
-                    zakonczBtn.dataset.key = "egzamin/egzaminy/" + examData.examKey;
-                    timeLeft = remainingTime;
-                    startTimer();
-                } else {
-                    localStorage.removeItem('savedExam');
-                }
+    const savedExam = localStorage.getItem('savedExam');
+    if (savedExam) {
+        const examData = JSON.parse(savedExam);
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timeDiff = currentTime - examData.timestamp;
+        const remainingTime = examData.timeLeft - timeDiff;
+
+        if (remainingTime > 0) {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            const shouldContinue = confirm(`Przeglądarka została zamknięta podczas trwania egzaminu ${examData.examFile}. Pozostały czas: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}. Czy kontynuować?`);
+
+            if (shouldContinue) {
+                currentExam = exams.find(e => e.file === examData.examFile);
+                examFrame.src = "egzamin/egzaminy/" + examData.examFile;
+                examFrame.style.display = "block";
+                zakonczBtn.style.display = "block";
+                zakonczBtn.dataset.key = "egzamin/egzaminy/" + examData.examKey;
+                timeLeft = remainingTime;
+                startTimer(); 
             } else {
                 localStorage.removeItem('savedExam');
             }
+        } else {
+            localStorage.removeItem('savedExam');
         }
     }
+}
 
     checkSavedExam();
 
@@ -174,23 +173,26 @@ function saveExamToStorage() {
         }
     });
 
-  function startTimer() {
-      clearInterval(countdown);
-      timeLeft = 150 * 60;
-      updateTimerDisplay();
-      timerDiv.style.display = "block";
-      timerDiv.classList.remove("pulse");
-      countdown = setInterval(() => {
-          if (timeLeft > 0) {
-              timeLeft--;
-              updateTimerDisplay();
-          } else {
-              clearInterval(countdown);
-              endExam();
-              localStorage.removeItem('savedExam');
-          }
-      }, 1000);
-  }
+ function startTimer() {
+    console.log("Czas przed startem:", timeLeft); // Debugowanie wartości timeLeft przed rozpoczęciem
+
+    clearInterval(countdown);
+    timeLeft = 150 * 60;
+    updateTimerDisplay();
+    timerDiv.style.display = "block";
+    timerDiv.classList.remove("pulse");
+    countdown = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+            console.log("Czas pozostały:", timeLeft); // Debugowanie wartości timeLeft podczas odliczania
+        } else {
+            clearInterval(countdown);
+            endExam();
+            localStorage.removeItem('savedExam');
+        }
+    }, 1000);
+}
 
   function setExamFileName(fileName) {
         document.getElementById("pdfName").value = fileName;
