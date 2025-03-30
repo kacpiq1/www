@@ -266,6 +266,9 @@ document.addEventListener("DOMContentLoaded", function () {
             ratingInfoFileName.textContent = `${randomExam.file}`;
         }
 
+      const mainPanel = document.getElementById('main-panel');
+       mainPanel.style.display = 'block';
+
         loadingDiv.style.display = "none";
 
       timeLeft = 150 * 60;
