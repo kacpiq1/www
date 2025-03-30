@@ -54,6 +54,10 @@
         <div id="przerwa-komunikat" class="przerwa-komunikat" style="display:none;">
             <p>Przerwa techniczna rozpocznie się 28.03.2025 o 18:30 i potrwa do 31.03.2025 14:30.<br> W tym czasie korzystanie ze strony i losowanie egzaminów będzie niedostępne.</p>
         </div>
+    <div id="countdown">
+        Do egzaminu pozostało: <span id="countdown-timer"></span>
+    </div>
+</div>
     </div>
     
     <div class="container">
@@ -165,6 +169,35 @@
 
         window.onload = checkTechnicalBreak;
     </script>
+<script>
+    // Ustaw datę docelową
+    var countDownDate = new Date("Jun 2, 2025 00:00:00").getTime();
+
+    // Aktualizuj odliczanie co 1 sekundę
+    var x = setInterval(function() {
+
+        // Pobierz dzisiejszą datę i godzinę
+        var now = new Date().getTime();
+        
+        // Oblicz różnicę czasu
+        var distance = countDownDate - now;
+        
+        // Oblicz dni, godziny, minuty i sekundy
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Wyświetl wynik
+        document.getElementById("countdown-timer").innerHTML = days + "d " + hours + "g " + minutes + "m " + seconds + "s";
+        
+        // Jeśli odliczanie się zakończy, wyświetl komunikat
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdown-timer").innerHTML = "Egzamin rozpoczęty!";
+        }
+    }, 1000);
+</script>
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
