@@ -256,6 +256,12 @@ function sanitizeExamName(examName) {
     return examName.replace(/[.#$\[\]]/g, "_");
 }
 
+// Funkcja pobierająca nazwę egzaminu (oryginalną nazwę, która jest wyświetlana)
+function getExamName() {
+    const examName = document.getElementById("exam-file-name").innerText;
+    return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
+}
+
 // Funkcja zapisu oceny do Firebase na podstawie nazwy egzaminu
 function saveRating() {
     const rating = document.getElementById("exam-rating").value;
@@ -267,9 +273,9 @@ function saveRating() {
     }
 
     // Sanityzacja nazwy egzaminu (usuwanie zabronionych znaków)
-    examName = sanitizeExamName(examName);
+    const sanitizedExamName = sanitizeExamName(examName);
 
-    const ratingRef = ref(db, 'exam-ratings/' + examName); // Używamy sanitized nazwy jako klucza
+    const ratingRef = ref(db, 'exam-ratings/' + sanitizedExamName); // Używamy sanitized nazwy jako klucza
 
     set(ratingRef, rating).then(() => {
         document.getElementById("current-rating-value").innerText = rating;
@@ -289,9 +295,9 @@ function loadCurrentRating() {
     }
 
     // Sanityzacja nazwy egzaminu
-    examName = sanitizeExamName(examName);
+    const sanitizedExamName = sanitizeExamName(examName);
 
-    const ratingRef = ref(db, 'exam-ratings/' + examName);
+    const ratingRef = ref(db, 'exam-ratings/' + sanitizedExamName);
     get(ratingRef).then((snapshot) => {
         if (snapshot.exists()) {
             const rating = snapshot.val();
@@ -304,7 +310,7 @@ function loadCurrentRating() {
     });
 }
 
-// Obsługa kliknięcia przycisku "Zatwierdź ocenę"
+// Funkcja, która zmienia ocenę w bazie i wyświetla ją
 document.getElementById("submit-rating").addEventListener("click", saveRating);
 
 // Załadowanie aktualnej oceny przy wczytywaniu strony
