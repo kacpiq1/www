@@ -272,26 +272,24 @@ function calculateAverage(ratings) {
 }
 
 function loadCurrentRating() {
-    const examName = getExamName(); // Pobieramy nazwę egzaminu
-    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
+    const examName = getExamName();
+    const sanitizedExamName = sanitizeExamName(examName);
 
     const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
     get(ratingsRef).then((snapshot) => {
         if (snapshot.exists()) {
-            const ratingsObject = snapshot.val(); // Pobieramy dane jako obiekt
-            console.log("Pobrane oceny z Firebase:", ratingsObject);  // Dodajemy log do konsoli
+            const ratingsObject = snapshot.val();
+            console.log("Pobrane oceny z Firebase:", ratingsObject); 
 
-            // Przekształcamy obiekt w tablicę ocen
-            const ratings = Object.values(ratingsObject); // Przekształcamy wartości obiektu na tablicę
-            console.log("Tablica ocen:", ratings); // Dodajemy log z tablicą ocen
+            const ratings = Object.values(ratingsObject);
+            console.log("Tablica ocen:", ratings); 
 
-            const averageRating = calculateAverage(ratings); // Obliczamy średnią ocenę
-            const ratingCount = ratings.length; // Liczba ocen
+            const averageRating = calculateAverage(ratings); 
+            const ratingCount = ratings.length; 
 
-            // Aktualizowanie wyświetlanej średniej oceny oraz liczby ocen
             document.getElementById("rating-value").innerHTML = `⭐${averageRating} (${ratingCount})`;
         } else {
-            console.log("Brak ocen w Firebase.");  // Logujemy brak ocen
+            console.log("Brak ocen w Firebase."); 
             document.getElementById("rating-value").innerText = "⭐0.0 (0)";
         }
     }).catch((error) => {
@@ -314,17 +312,18 @@ async function saveRating() {
     const sanitizedExamName = sanitizeExamName(examName);
     const ratingsRef = ref(db, `exam-ratings/${sanitizedExamName}/ratings`);
 
+    // Zapisujemy ocenę
     push(ratingsRef, selectedRating).then(() => {
         console.log("Ocena zapisana:", selectedRating);
         document.getElementById("rating-modal").style.display = "none"; 
-        loadCurrentRating(); // Załaduj średnią ocenę
+        loadCurrentRating();
     }).catch(error => console.error("Błąd zapisu oceny:", error));
 
     const userIP = await getUserIP();
     if (!userIP) return;
 
-    const sanitizedIP = sanitizeIP(userIP); 
-    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${sanitizedIP}`);
+    const sanitizedIP = sanitizeIP(userIP);
+    const userRef = ref(db, `exam-ratings/global/users/${sanitizedIP}`);
     set(userRef, { timestamp: Date.now() }); 
 }
         document.getElementById("submit-rating-modal").addEventListener("click", saveRating);
@@ -374,11 +373,9 @@ async function canUserRate() {
     const userIP = await getUserIP();
     if (!userIP) return false; 
 
-    const sanitizedIP = sanitizeIP(userIP);
-    const examName = getExamName();
-    const sanitizedExamName = sanitizeExamName(examName);
-    
-    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${sanitizedIP}`);
+    const sanitizedIP = sanitizeIP(userIP); 
+
+    const userRef = ref(db, `exam-ratings/global/users/${sanitizedIP}`);
     const snapshot = await get(userRef);
 
     if (snapshot.exists()) {
@@ -387,11 +384,12 @@ async function canUserRate() {
         const oneHour = 60 * 60 * 1000; 
 
         if (currentTime - lastVoteTime < oneHour) {
-            return false;
+            return false; 
         }
     }
-    return true;
+    return true; 
 }
+
 
 
 window.onload = () => {
