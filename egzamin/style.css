@@ -450,14 +450,14 @@ input:focus, select:focus {
         border-radius: 5px;
     }
 
-#info {
+.rating-info {
         font-size: 14px;
         color: #ccc;
         margin-top: 5px;
         text-align: left;
     }
 
-    #info span {
+    .rating-info span {
         display: inline-block;
         margin-right: 5px;
         padding: 3px 8px;
