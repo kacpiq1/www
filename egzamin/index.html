@@ -246,10 +246,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        function getExamName() {
-    const examName = document.getElementById("exam-file-name").innerText;
-    return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
-}
 
 function sanitizeExamName(examName) {
     // Zamieniamy kropki, znaki "$", "#", "[", "]" itp. na dozwolony znak, np. "_"
