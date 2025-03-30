@@ -323,18 +323,11 @@ stars.forEach((star, index) => {
     });
 });
 
-$(function (){
-  var star = '.star',
-      selected = '.selected';
-  
-  $(star).on('click', function(){
-    $(selected).each(function(){
-      $(this).removeClass('selected');
+function updateStarSelection() {
+    stars.forEach((star, index) => {
+        star.classList.toggle('selected', index < selectedRating);
     });
-    $(this).addClass('selected');
-  });
- 
-});
+}
 
 document.getElementById('open-rating-modal').addEventListener('click', () => {
     document.getElementById('rating-modal').style.display = 'block';
