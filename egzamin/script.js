@@ -131,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const loadingDiv = document.getElementById("spinner");
 
+const overlayDiv = document.getElementById("overlay");
 
 
   const iframeContainer = document.createElement("div");
@@ -391,6 +392,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadingDiv.style.display = "block";
 
+    overlayDiv.style.display = "block";
+
     blurOverlay.style.display = "none"; 
 
 
@@ -422,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Brak pasujących egzaminów.");
 
             loadingDiv.style.display = "none";
+overlayDiv.style.display = "none";
 
             return;
 
