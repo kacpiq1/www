@@ -317,16 +317,16 @@ async function saveRating() {
     push(ratingsRef, selectedRating).then(() => {
         console.log("Ocena zapisana:", selectedRating);
         document.getElementById("rating-modal").style.display = "none"; 
-        loadCurrentRating(); 
+        loadCurrentRating(); // Załaduj średnią ocenę
     }).catch(error => console.error("Błąd zapisu oceny:", error));
 
     const userIP = await getUserIP();
     if (!userIP) return;
 
-    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${userIP}`);
+    const sanitizedIP = sanitizeIP(userIP); 
+    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${sanitizedIP}`);
     set(userRef, { timestamp: Date.now() }); 
 }
-
         document.getElementById("submit-rating-modal").addEventListener("click", saveRating);
 
 let selectedRating = 0;
@@ -365,15 +365,20 @@ document.getElementById("close-modal").addEventListener("click", () => {
         return null;
     }
 }
+
+        function sanitizeIP(ip) {
+    return ip.replace(/\./g, "_");
+}
         
 async function canUserRate() {
     const userIP = await getUserIP();
     if (!userIP) return false; 
 
+    const sanitizedIP = sanitizeIP(userIP);
     const examName = getExamName();
     const sanitizedExamName = sanitizeExamName(examName);
     
-    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${userIP}`);
+    const userRef = ref(db, `exam-ratings/${sanitizedExamName}/users/${sanitizedIP}`);
     const snapshot = await get(userRef);
 
     if (snapshot.exists()) {
@@ -382,10 +387,10 @@ async function canUserRate() {
         const oneHour = 60 * 60 * 1000; 
 
         if (currentTime - lastVoteTime < oneHour) {
-            return false; 
+            return false;
         }
     }
-    return true; 
+    return true;
 }
 
 
