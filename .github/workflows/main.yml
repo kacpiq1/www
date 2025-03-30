@@ -29,7 +29,7 @@ jobs:
           curl -sL https://firebase.tools | bash
           
       - name: Firebase Login
-        run: firebase login:ci --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
+        run: firebase login:ci --token 1//0cHCTZaU_PxVmCgYIARAAGAwSNwF-L9IrD1b4MI7q98huB9IqwvM1t0Wl9Wx0xdQ2bRe6Ja5mJgjxUBKW-nA3n2GliZ64fu1VsBA
 
       - name: Build project
         run: |
