@@ -248,8 +248,7 @@
 
 
 function sanitizeExamName(examName) {
-    // Zamieniamy kropki, znaki "$", "#", "[", "]" itp. na dozwolony znak, np. "_"
-    return examName.replace(/[.#$\[\]]/g, "_");
+    return examName.replace(/[.#$\[\]]/g, "_"); // Usuwamy niedozwolone znaki
 }
 
 // Funkcja pobierająca nazwę egzaminu (oryginalną nazwę, która jest wyświetlana)
@@ -258,58 +257,61 @@ function getExamName() {
     return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
 }
 
-// Funkcja zapisu oceny do Firebase na podstawie nazwy egzaminu
+// Funkcja dodająca ocenę do bazy danych
 function saveRating() {
-    const rating = document.getElementById("exam-rating").value;
-    let examName = getExamName(); // Pobierz nazwę egzaminu
-
-    if (examName === "") {
-        alert("Nie wybrano egzaminu!");
+    const rating = parseFloat(document.getElementById("exam-rating").value); // Pobieramy ocenę z inputa
+    
+    if (isNaN(rating) || rating < 1 || rating > 5) { // Sprawdzamy, czy ocena jest w zakresie 1-5
+        alert("Proszę podać ocenę od 1 do 5!");
         return;
     }
 
-    // Sanityzacja nazwy egzaminu (usuwanie zabronionych znaków)
-    const sanitizedExamName = sanitizeExamName(examName);
-
-    const ratingRef = ref(db, 'exam-ratings/' + sanitizedExamName); // Używamy sanitized nazwy jako klucza
-
-    set(ratingRef, rating).then(() => {
-        document.getElementById("current-rating-value").innerText = rating;
+    const examName = getExamName(); // Pobieramy nazwę egzaminu
+    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
+    
+    // Dodajemy ocenę do tablicy ocen w Firebase
+    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+    push(ratingsRef, rating).then(() => {
         alert("Ocena została zapisana!");
+        loadCurrentRating(); // Ładujemy aktualną średnią ocenę
     }).catch((error) => {
-        console.error("Błąd zapisu w Firebase:", error);
+        console.error("Błąd zapisu oceny:", error);
         alert("Wystąpił błąd podczas zapisywania oceny.");
     });
 }
 
-// Funkcja wczytująca aktualną ocenę z Firebase
-function loadCurrentRating() {
-    let examName = getExamName();
-    if (examName === "") {
-        document.getElementById("current-rating-value").innerText = "Brak oceny";
-        return;
+// Funkcja obliczająca średnią ocenę z tablicy ocen
+function calculateAverage(ratings) {
+    if (ratings && ratings.length > 0) {
+        const total = ratings.reduce((sum, rating) => sum + rating, 0);
+        return (total / ratings.length).toFixed(1); // Obliczamy średnią ocenę, zaokrągloną do 1 miejsca po przecinku
     }
+    return 0;
+}
 
-    // Sanityzacja nazwy egzaminu
-    const sanitizedExamName = sanitizeExamName(examName);
+// Funkcja wczytująca oceny z Firebase i aktualizująca średnią
+function loadCurrentRating() {
+    const examName = getExamName(); // Pobieramy nazwę egzaminu
+    const sanitizedExamName = sanitizeExamName(examName); // Sanityzacja nazwy egzaminu
 
-    const ratingRef = ref(db, 'exam-ratings/' + sanitizedExamName);
-    get(ratingRef).then((snapshot) => {
+    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+    get(ratingsRef).then((snapshot) => {
         if (snapshot.exists()) {
-            const rating = snapshot.val();
-            document.getElementById("current-rating-value").innerText = rating;
+            const ratings = snapshot.val(); // Pobieramy tablicę ocen
+            const averageRating = calculateAverage(ratings); // Obliczamy średnią ocenę
+            document.getElementById("current-rating-value").innerText = `Średnia ocena: ${averageRating}`;
         } else {
-            document.getElementById("current-rating-value").innerText = "Brak oceny";
+            document.getElementById("current-rating-value").innerText = "Brak ocen";
         }
     }).catch((error) => {
-        console.error("Błąd pobierania danych z Firebase:", error);
+        console.error("Błąd pobierania ocen:", error);
     });
 }
 
-// Funkcja, która zmienia ocenę w bazie i wyświetla ją
+// Funkcja uruchamiająca zapis oceny przy kliknięciu
 document.getElementById("submit-rating").addEventListener("click", saveRating);
 
-// Załadowanie aktualnej oceny przy wczytywaniu strony
+// Załadowanie średniej oceny przy wczytywaniu strony
 window.onload = () => {
     loadCurrentRating();
 };
