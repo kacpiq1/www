@@ -259,7 +259,9 @@ function getExamName() {
 }
 
     document.getElementById("losuj").addEventListener("click", function() {
-    loadCurrentRating();
+        setTimeout(() => {
+        loadCurrentRating();
+    }, 2500);
 });
 
 function calculateAverage(ratings) {
