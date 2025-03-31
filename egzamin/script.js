@@ -1,6 +1,6 @@
 function isTechBreakActive() {
   const breakStart = new Date('2025-03-28T18:30:00');
-  const breakEnd = new Date('2025-03-31T14:30:00');
+  const breakEnd = new Date('2025-03-31T14:20:00');
   const currentDate = new Date();
 
   return currentDate >= breakStart && currentDate <= breakEnd;
