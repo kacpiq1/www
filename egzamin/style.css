@@ -706,6 +706,9 @@ td:first-child {
 }
 
 td:nth-child(2) {
+    font-size: 18px;
+}
+td:nth-child(3) {
     font-weight: bold;
     font-size: 18px;
 }
