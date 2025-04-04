@@ -535,6 +535,8 @@ input:focus, select:focus {
     max-width: 400px;
     text-align: center;
     position: relative;
+    overflow: auto;
+    max-height: 80%;
 }
 
 
