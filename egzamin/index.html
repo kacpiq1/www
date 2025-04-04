@@ -56,7 +56,7 @@
                 </a>
             </div>
         </div>
-         <a href="#" class="dropbtn">
+         <a href="#" class="dropbtn" id="open-ranking-modal">
                 <i class="fas fa-trophy"></i>Ranking
             </a>
 
@@ -104,6 +104,27 @@
 
         <button id="zakoncz" style="display: none;">Zakończ egzamin</button>
         <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
+
+        <div id="ranking-modal" class="rating-modal" style="display: none;">
+  <div class="modal-content">
+    <span id="close-ranking-modal" class="close-modal">&times;</span>
+    <h2>Ranking uczniów</h2>
+    <table id="ranking-table">
+      <thead>
+        <tr>
+          <th>Nr z dziennika</th>
+          <th>Suma pkt.</th>
+          <th>Średnia (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="3">Wczytywanie...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+        
         <div id="rating-modal" class="rating-modal" style="display:none">
     <div class="modal-content">
     <span id="close-modal" class="close-modal">&times;</span>
@@ -401,6 +422,92 @@ async function canUserRate() {
 window.onload = () => {
     loadCurrentRating();
 };
+</script>
+
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+        import { getDatabase, ref, get, child} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
+    authDomain: "kacpiq-egz-wyniki.firebaseapp.com",
+    projectId: "kacpiq-egz-wyniki",
+    storageBucket: "kacpiq-egz-wyniki.firebasestorage.app",
+    messagingSenderId: "925929166432",
+    appId: "1:925929166432:web:81756e7675f468b8d19505",
+    measurementId: "G-Z8ZFL73Q6Q"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+        document.getElementById("open-ranking-modal").addEventListener("click", async () => {
+  document.getElementById("ranking-modal").style.display = "flex";
+  await loadStudentRanking();
+});
+
+document.getElementById("close-ranking-modal").addEventListener("click", () => {
+  document.getElementById("ranking-modal").style.display = "none";
+});
+
+async function loadStudentRanking() {
+  const tbody = document.querySelector("#ranking-table tbody");
+  tbody.innerHTML = `<tr><td colspan="3">Wczytywanie...</td></tr>`;
+
+  try {
+    const snapshot = await get(ref(db, 'uczniowie'));
+    if (!snapshot.exists()) {
+      tbody.innerHTML = `<tr><td colspan="3">Brak danych</td></tr>`;
+      return;
+    }
+
+    const uczniowie = snapshot.val();
+    const ranking = [];
+
+    for (const numer in uczniowie) {
+      const egzaminy = uczniowie[numer].egzaminy || {};
+      let sumaWynik = 0;
+      let sumaMax = 0;
+
+      for (const egzaminId in egzaminy) {
+        const egzamin = egzaminy[egzaminId];
+        sumaWynik += egzamin.wynik || 0;
+        sumaMax += egzamin.max || 0;
+      }
+
+      if (sumaMax > 0) {
+        const procent = Math.round((sumaWynik / sumaMax) * 100);
+        ranking.push({
+          numer,
+          suma: `${sumaWynik}/${sumaMax}`,
+          procent,
+        });
+      }
+    }
+
+    // Sortowanie malejąco po procencie
+    ranking.sort((a, b) => b.procent - a.procent);
+
+    // Wstawienie do tabeli
+    tbody.innerHTML = "";
+    ranking.forEach((uczen) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${uczen.numer}</td>
+        <td>${uczen.suma}</td>
+        <td>${uczen.procent}%</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch (error) {
+    console.error("Błąd podczas ładowania rankingu:", error);
+    tbody.innerHTML = `<tr><td colspan="3">Błąd podczas ładowania danych</td></tr>`;
+  }
+}
 </script>
 </body>
 </html>
