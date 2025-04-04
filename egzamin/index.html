@@ -429,9 +429,7 @@ window.onload = () => {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
 
-        import { getDatabase, ref, get, child} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-
-        const db = getDatabase(app);
+  import { getDatabase, ref, get, child} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
@@ -445,6 +443,7 @@ window.onload = () => {
 
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+  const db = getDatabase(app);
 
         document.getElementById("open-ranking-modal").addEventListener("click", async () => {
   document.getElementById("ranking-modal").style.display = "flex";
