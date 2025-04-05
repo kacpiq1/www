@@ -492,6 +492,22 @@ overlayDiv.style.display = "none";
 
 });
 
+  document.getElementById("open-pay-modal").addEventListener("click", function () {
+    document.getElementById("pay-modal").style.display = "flex";
+  });
+
+  document.getElementById("close-pay-modal").addEventListener("click", function () {
+    document.getElementById("pay-modal").style.display = "none";
+  });
+
+
+  window.addEventListener("click", function (event) {
+    const modal = document.getElementById("pay-modal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+
 
 
   zakonczBtn.addEventListener("click", function () {
@@ -617,6 +633,7 @@ overlayDiv.style.display = "none";
           confirmationOverlay.remove();
 
       });
+
 
 
 
