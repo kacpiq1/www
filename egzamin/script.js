@@ -8,6 +8,7 @@ function isTechBreakActive() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const exams = [
+      { file: "INF_02_01_25_01_SG.pdf", key: "INF_02_01_25_01_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
       { file: "inf_02_2024_06_06_SG.pdf", key: "inf_02_2024_06_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
       { file: "inf_02_2024_06_05_SG.pdf", key: "inf_02_2024_06_05_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
       { file: "inf_02_2024_06_04_SG.pdf", key: "inf_02_2024_06_04_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
