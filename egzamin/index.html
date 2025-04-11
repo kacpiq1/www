@@ -543,20 +543,32 @@ async function loadStudentRanking() {
       }
     }
 
-    // Sortowanie malejąco po procencie
     ranking.sort((a, b) => b.procent - a.procent);
 
-    // Wstawienie do tabeli
-    tbody.innerHTML = "";
-    ranking.forEach((uczen) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${uczen.numer}</td>
-        <td>${uczen.suma}</td>
-        <td>${uczen.procent}%</td>
-      `;
-      tbody.appendChild(tr);
-    });
+      tbody.innerHTML = "";
+      let separatorInserted = false;
+
+      ranking.forEach((uczen) => {
+
+        if (!separatorInserted && uczen.procent < 75) {
+          const separatorRow = document.createElement("tr");
+          separatorRow.innerHTML = `
+            <td colspan="3" style="text-align:center; background-color: #ffe0e0; font-weight: bold;">
+              ─── Próg zdawalności 75% ───
+            </td>
+          `;
+          tbody.appendChild(separatorRow);
+          separatorInserted = true;
+        }
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${uczen.numer}</td>
+          <td>${uczen.suma}</td>
+          <td>${uczen.procent}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
 
   } catch (error) {
     console.error("Błąd podczas ładowania rankingu:", error);
