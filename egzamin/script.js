@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
       { file: "EE_08_02_22_01_SG.pdf", key: "EE_08_02_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" }
   ];
 
-  const totalExams = 142;
+  const totalExams = 144;
 
   const availableExams = exams.length;
 
