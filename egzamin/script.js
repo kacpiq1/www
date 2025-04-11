@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   examInfoDiv.style.position = "absolute";
 
-  examInfoDiv.style.top = "10px";
+  examInfoDiv.style.top = "100px";
 
   examInfoDiv.style.right = "10px";
 
