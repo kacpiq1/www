@@ -502,7 +502,7 @@ window.onload = () => {
       measurementId: "G-Z8ZFL73Q6Q"
     };
 
-    // Inicjalizacja
+    // Inicjalizacja Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
@@ -510,54 +510,61 @@ window.onload = () => {
     const provider = new GoogleAuthProvider();
 
     // Logowanie przez Google
-        document.getElementById("login-btn").addEventListener("click", async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
 
-    const allowedDomain = "@uczniowie.zs1.bochnia.pl";
-    if (!user.email.endsWith(allowedDomain)) {
-      alert("Dostęp tylko dla uczniów ZS1. Zaloguj się przez konto uczniowskie.");
-      await signOut(auth); // natychmiastowe wylogowanie
-      return;
-    }
+        console.log("Zalogowano jako:", user.email);
+        document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
 
-    // ✅ Tu możesz kontynuować - np. pokazać ranking itp.
-    console.log("Zalogowano jako:", user.email);
-      document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
-    document.getElementById("login-btn").style.display = "none";
+      } catch (error) {
+        console.error("Błąd logowania:", error);
+        alert("Nie udało się zalogować.");
+      }
+    });
 
-  } catch (error) {
-    console.error("Błąd logowania:", error);
-    alert("Nie udało się zalogować.");
-  }
-});
-
+    // Wylogowanie
     document.getElementById("logout-btn").addEventListener("click", async () => {
-  try {
-    await signOut(auth);
-    console.log("Wylogowano");
-  } catch (error) {
-    console.error("Błąd podczas wylogowania:", error);
-  }
-});
+      try {
+        await signOut(auth);
+        console.log("Wylogowano");
+      } catch (error) {
+        console.error("Błąd podczas wylogowania:", error);
+      }
+    });
+
     // Obsługa statusu logowania
     onAuthStateChanged(auth, (user) => {
-  const loginBtn = document.getElementById("login-btn");
-  const logoutBtn = document.getElementById("logout-btn");
-  const welcomeMsg = document.getElementById("user-info");
+      const loginBtn = document.getElementById("login-btn");
+      const logoutBtn = document.getElementById("logout-btn");
+      const welcomeMsg = document.getElementById("user-info");
+      const rankingBtn = document.getElementById("open-ranking-modal");
 
-  if (user && user.email.endsWith("@uczniowie.zs1.bochnia.pl")) {
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-    welcomeMsg.style.display = "block";
-    welcomeMsg.textContent = `Witaj, ${user.displayName || user.email}`;
-  } else {
-    loginBtn.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-    welcomeMsg.style.display = "none";
-  }
-});
+      if (user) {
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        welcomeMsg.style.display = "block";
+        welcomeMsg.textContent = `Witaj, ${user.displayName || user.email}`;
+
+        // Sprawdź domenę i włącz ranking
+        if (user.email.endsWith("@uczniowie.zs1.bochnia.pl")) {
+          rankingBtn.disabled = false;
+          rankingBtn.title = "";
+        } else {
+          rankingBtn.disabled = true;
+          rankingBtn.title = "Dostęp do danych tylko dla uczniów ZS1";
+        }
+      } else {
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        welcomeMsg.style.display = "none";
+        rankingBtn.disabled = true;
+        rankingBtn.title = "Zaloguj się, aby uzyskać dostęp";
+      }
+    });
 
     // Obsługa modala
     document.getElementById("open-ranking-modal").addEventListener("click", async () => {
