@@ -124,6 +124,8 @@
           <th>Średnia (%)</th>
         </tr>
       </thead>
+        <button id="login-btn">Zaloguj się przez Google</button>
+  <p id="user-info"></p>
       <tbody>
         <tr><td colspan="3">Wczytywanie...</td></tr>
       </tbody>
@@ -481,103 +483,130 @@ window.onload = () => {
 </script>
 
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    // Import Firebase modułów
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
-  import { getDatabase, ref, get, child} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    // Konfiguracja Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
+      authDomain: "kacpiq-egz-wyniki.firebaseapp.com",
+      databaseURL: "https://kacpiq-egz-wyniki-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "kacpiq-egz-wyniki",
+      storageBucket: "kacpiq-egz-wyniki.firebasestorage.app",
+      messagingSenderId: "925929166432",
+      appId: "1:925929166432:web:81756e7675f468b8d19505",
+      measurementId: "G-Z8ZFL73Q6Q"
+    };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
-    authDomain: "kacpiq-egz-wyniki.firebaseapp.com",
-    databaseURL: "https://kacpiq-egz-wyniki-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "kacpiq-egz-wyniki",
-    storageBucket: "kacpiq-egz-wyniki.firebasestorage.app",
-    messagingSenderId: "925929166432",
-    appId: "1:925929166432:web:81756e7675f468b8d19505",
-    measurementId: "G-Z8ZFL73Q6Q"
-  };
+    // Inicjalizacja
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getDatabase(app);
-
-        document.getElementById("open-ranking-modal").addEventListener("click", async () => {
-  document.getElementById("ranking-modal").style.display = "flex";
-  await loadStudentRanking();
-});
-
-document.getElementById("close-ranking-modal").addEventListener("click", () => {
-  document.getElementById("ranking-modal").style.display = "none";
-});
-
-async function loadStudentRanking() {
-  const tbody = document.querySelector("#ranking-table tbody");
-  tbody.innerHTML = `<tr><td colspan="3">Wczytywanie...</td></tr>`;
-
-  try {
-    const snapshot = await get(ref(db, 'uczniowie'));
-    if (!snapshot.exists()) {
-      tbody.innerHTML = `<tr><td colspan="3">Brak danych</td></tr>`;
-      return;
-    }
-
-    const uczniowie = snapshot.val();
-    const ranking = [];
-
-    for (const numer in uczniowie) {
-      const egzaminy = uczniowie[numer].egzaminy || {};
-      let sumaWynik = 0;
-      let sumaMax = 0;
-
-      for (const egzaminId in egzaminy) {
-        const egzamin = egzaminy[egzaminId];
-        sumaWynik += egzamin.wynik || 0;
-        sumaMax += egzamin.max || 0;
-      }
-
-      if (sumaMax > 0) {
-        const procent = Math.round((sumaWynik / sumaMax) * 100);
-        ranking.push({
-          numer,
-          suma: `${sumaWynik}/${sumaMax}`,
-          procent,
+    // Logowanie przez Google
+    document.getElementById("login-btn").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          console.log("Zalogowano:", user.displayName);
+          document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
+          document.getElementById("login-btn").style.display = "none";
+        })
+        .catch((error) => {
+          console.error("Błąd logowania:", error);
         });
+    });
+
+    // Obsługa statusu logowania
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
+        document.getElementById("login-btn").style.display = "none";
       }
-    }
+    });
 
-    ranking.sort((a, b) => b.procent - a.procent);
+    // Obsługa modala
+    document.getElementById("open-ranking-modal").addEventListener("click", async () => {
+      document.getElementById("ranking-modal").style.display = "flex";
+      await loadStudentRanking();
+    });
 
-      tbody.innerHTML = "";
-      let separatorInserted = false;
+    document.getElementById("close-ranking-modal").addEventListener("click", () => {
+      document.getElementById("ranking-modal").style.display = "none";
+    });
 
-      ranking.forEach((uczen) => {
+    // Ładowanie rankingu
+    async function loadStudentRanking() {
+      const tbody = document.querySelector("#ranking-table tbody");
+      tbody.innerHTML = `<tr><td colspan="3">Wczytywanie...</td></tr>`;
 
-        if (!separatorInserted && uczen.procent < 75) {
-          const separatorRow = document.createElement("tr");
-          separatorRow.innerHTML = `
-            <td colspan="3" style="text-align:center; background-color: #242424; font-weight: bold;">
-              ──── Próg zdawalności 75% ────
-            </td>
-          `;
-          tbody.appendChild(separatorRow);
-          separatorInserted = true;
+      try {
+        const snapshot = await get(ref(db, 'uczniowie'));
+        if (!snapshot.exists()) {
+          tbody.innerHTML = `<tr><td colspan="3">Brak danych</td></tr>`;
+          return;
         }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${uczen.numer}</td>
-          <td>${uczen.suma}</td>
-          <td>${uczen.procent}%</td>
-        `;
-        tbody.appendChild(tr);
-      });
+        const uczniowie = snapshot.val();
+        const ranking = [];
 
-  } catch (error) {
-    console.error("Błąd podczas ładowania rankingu:", error);
-    tbody.innerHTML = `<tr><td colspan="3">Błąd podczas ładowania danych</td></tr>`;
-  }
-}
-</script>
+        for (const numer in uczniowie) {
+          const egzaminy = uczniowie[numer].egzaminy || {};
+          let sumaWynik = 0;
+          let sumaMax = 0;
+
+          for (const egzaminId in egzaminy) {
+            const egzamin = egzaminy[egzaminId];
+            sumaWynik += egzamin.wynik || 0;
+            sumaMax += egzamin.max || 0;
+          }
+
+          if (sumaMax > 0) {
+            const procent = Math.round((sumaWynik / sumaMax) * 100);
+            ranking.push({
+              numer,
+              suma: `${sumaWynik}/${sumaMax}`,
+              procent,
+            });
+          }
+        }
+
+        ranking.sort((a, b) => b.procent - a.procent);
+
+        tbody.innerHTML = "";
+        let separatorInserted = false;
+
+        ranking.forEach((uczen) => {
+          if (!separatorInserted && uczen.procent < 75) {
+            const separatorRow = document.createElement("tr");
+            separatorRow.innerHTML = `
+              <td colspan="3" style="text-align:center; background-color: #242424; font-weight: bold;">
+                ──── Próg zdawalności 75% ────
+              </td>
+            `;
+            tbody.appendChild(separatorRow);
+            separatorInserted = true;
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${uczen.numer}</td>
+            <td>${uczen.suma}</td>
+            <td>${uczen.procent}%</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (error) {
+        console.error("Błąd podczas ładowania rankingu:", error);
+        tbody.innerHTML = `<tr><td colspan="3">Błąd podczas ładowania danych</td></tr>`;
+      }
+    }
+  </script>
 </body>
 </html>
