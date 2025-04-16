@@ -125,6 +125,7 @@
         </tr>
       </thead>
         <button id="login-btn">Zaloguj się przez Google</button>
+        <button id="logout-btn" style="display:none;">Wyloguj się</button>
   <p id="user-info"></p>
       <tbody>
         <tr><td colspan="3">Wczytywanie...</td></tr>
@@ -529,6 +530,15 @@ window.onload = () => {
   } catch (error) {
     console.error("Błąd logowania:", error);
     alert("Nie udało się zalogować.");
+  }
+});
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    console.log("Wylogowano");
+  } catch (error) {
+    console.error("Błąd podczas wylogowania:", error);
   }
 });
     // Obsługa statusu logowania
