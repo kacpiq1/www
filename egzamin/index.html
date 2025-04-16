@@ -509,7 +509,7 @@ window.onload = () => {
     const provider = new GoogleAuthProvider();
 
     // Logowanie przez Google
-        document.getElementById("login-button").addEventListener("click", async () => {
+        document.getElementById("login-btn").addEventListener("click", async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
