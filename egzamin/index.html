@@ -543,11 +543,21 @@ window.onload = () => {
 });
     // Obsługa statusu logowania
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
-        document.getElementById("login-btn").style.display = "none";
-      }
-    });
+  const loginBtn = document.getElementById("login-btn");
+  const logoutBtn = document.getElementById("logout-btn");
+  const welcomeMsg = document.getElementById("user-info");
+
+  if (user && user.email.endsWith("@uczniowie.zs1.bochnia.pl")) {
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+    welcomeMsg.style.display = "block";
+    welcomeMsg.textContent = `Witaj, ${user.displayName || user.email}`;
+  } else {
+    loginBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+    welcomeMsg.style.display = "none";
+  }
+});
 
     // Obsługa modala
     document.getElementById("open-ranking-modal").addEventListener("click", async () => {
