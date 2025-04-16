@@ -509,19 +509,28 @@ window.onload = () => {
     const provider = new GoogleAuthProvider();
 
     // Logowanie przez Google
-    document.getElementById("login-btn").addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          console.log("Zalogowano:", user.displayName);
-          document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
-          document.getElementById("login-btn").style.display = "none";
-        })
-        .catch((error) => {
-          console.error("Błąd logowania:", error);
-        });
-    });
+        document.getElementById("login-button").addEventListener("click", async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
+    const allowedDomain = "@uczniowie.zs1.bochnia.pl";
+    if (!user.email.endsWith(allowedDomain)) {
+      alert("Dostęp tylko dla uczniów ZS1. Zaloguj się przez konto uczniowskie.");
+      await signOut(auth); // natychmiastowe wylogowanie
+      return;
+    }
+
+    // ✅ Tu możesz kontynuować - np. pokazać ranking itp.
+    console.log("Zalogowano jako:", user.email);
+      document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
+    document.getElementById("login-btn").style.display = "none";
+
+  } catch (error) {
+    console.error("Błąd logowania:", error);
+    alert("Nie udało się zalogować.");
+  }
+});
     // Obsługa statusu logowania
     onAuthStateChanged(auth, (user) => {
       if (user) {
