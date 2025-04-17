@@ -631,6 +631,26 @@ window.onload = () => {
           userlogged.style.display = "block";
           userNotlogged.style.display = "none";
 
+          document.getElementById("user-name").textContent = user.displayName;
+                document.getElementById("user-email").textContent = user.email;
+                const avatarUrl = user.photoURL;
+                const avatarCircle = document.getElementById("avatar-circle");
+                const avatarIcon = document.getElementById("avatar-icon");
+
+                if (avatarUrl) {
+                    const img = document.createElement("img");
+                    img.src = avatarUrl;
+                    img.alt = "Avatar";
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.borderRadius = "50%";
+                    avatarCircle.innerHTML = "";  
+                    avatarCircle.appendChild(img); 
+                } else {
+
+                    avatarIcon.style.display = "block";
+                }
+
         // Sprawdź domenę i włącz ranking
         if (user.email.endsWith("@uczniowie.zs1.bochnia.pl")) {
           rankingBtn.disabled = false;
