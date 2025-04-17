@@ -874,7 +874,7 @@ tr:nth-child(3) td:first-child::before {
     margin: 10px 0;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     .user-dropdown-menu {
         background-color: #1e1e1e;
         color: #e5e5e5;
