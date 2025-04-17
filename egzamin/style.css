@@ -874,6 +874,36 @@ tr:nth-child(3) td:first-child::before {
     margin: 10px 0;
 }
 
+.pro-badge {
+    background-color: #eff3ff;
+    color: #4c4899;
+    border: 1px solid #d1d5db;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.trial-badge {
+    background-color: #eff3ff;
+    color: #227d4d;
+    border: 1px solid #d1d5db;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
 @media (prefers-color-scheme: light) {
     .user-dropdown-menu {
         background-color: #1e1e1e;
