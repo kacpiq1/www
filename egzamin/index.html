@@ -73,6 +73,50 @@
     <div id="countdown">
         Do egzaminu pozostało: <span id="countdown-timer"></span>
     </div>
+         <div class="user-menu-container">
+        <div class="user-avatar" id="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="user-dropdown-menu" id="user-dropdown">
+            <!-- Jeśli zalogowany -->
+            <div class="user-info" id="user-logged" style="display: none;">
+                <div class="user-header">
+                    <div class="avatar-circle"><i class="fas fa-user"></i></div>
+                    <div>
+                        <div class="user-name">Jan Kowalski</div>
+                        <div class="user-email">jan@example.com</div>
+                    </div>
+                </div>
+                <div class="dropdown-separator"></div>
+            
+                <a href="#"><i class="fas fa-id-card icon"></i> Profil</a>
+                <a href="#"><i class="fas fa-cog icon"></i> Ustawienia</a>
+                <a href="#"><i class="fas fa-crown icon"></i> Subskrypcja</a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#"><i class="fas fa-history icon"></i> Dziennik zmian</a>
+                <a href="#"><i class="fas fa-user-plus icon"></i> Zaproś użytkownika</a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#"><i class="fas fa-question-circle icon"></i> Pomoc</a>
+                <a href="#"><i class="fas fa-users icon"></i> Community</a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#" id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt icon"></i> Wyloguj się</a>
+            </div>
+            
+
+            <!-- Jeśli NIE zalogowany -->
+                <div class="user-info" id="user-not-logged" style="display: none;">
+                <a href="#" class="login-btn"><i class="fas fa-sign-in-alt icon"></i> Zaloguj się</a>
+                <a href="#"><i class="fas fa-user-plus icon"></i> Zarejestruj się</a>
+            </div>
+
+        </div>
+    </div>
 </div>
     </div>
     
