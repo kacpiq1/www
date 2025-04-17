@@ -489,6 +489,7 @@ body {
     const nameSpan = document.querySelector('.user-full-name');
     const userName = document.querySelector('.user-name');
     const emailSpan = document.querySelector('.user-email');
+    const emailName = document.querySelector('.email-name');
     const avatarDiv = document.querySelector('.user-avatar');
   
 
@@ -504,6 +505,7 @@ body {
         nameSpan.textContent = user.displayName;
         userName.textContent = user.displayName;
         emailSpan.textContent = user.email;
+        emailName.textContent = user.email;
         avatarDiv.textContent = user.displayName.charAt(0).toUpperCase();
   
         console.log('Zalogowano jako:', user.displayName);
