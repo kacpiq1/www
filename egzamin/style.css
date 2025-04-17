@@ -740,3 +740,222 @@ tr:nth-child(3) td:first-child::before {
       background: rgba(0, 0, 0, 0.3);
       z-index: 5;
     }
+
+.user-menu-container {
+    position: relative;
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.user-avatar:hover {
+    background-color: #444;
+}
+
+.user-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 260px;
+    padding: 15px;
+    z-index: 1002;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.user-dropdown-menu .user-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.avatar-circle {
+    background-color: #efefef;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #555;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.user-email {
+    font-size: 13px;
+    color: #888;
+}
+
+.user-dropdown-menu a {
+    display: block;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.user-dropdown-menu a:hover {
+    background-color: #eff3ff;
+    color: #4c4899;
+    border: 1px solid #d1d5db;
+}
+
+.user-dropdown-menu a i.icon {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #777;
+    transition: color 0.3s ease;
+}
+
+.user-dropdown-menu a:hover i.icon {
+    color: #4c4899;
+}
+
+/* Dla login/logout */
+.user-dropdown-menu .login-btn i.icon {
+    color: #227d4d;
+}
+.user-dropdown-menu .login-btn:hover i.icon {
+    color: #165c3b;
+}
+
+.user-dropdown-menu .logout-btn i.icon {
+    color: #b03a3a;
+}
+.user-dropdown-menu .logout-btn:hover i.icon {
+    color: #801c1c;
+}
+
+
+
+
+.user-dropdown-menu .login-btn:hover {
+    background-color: #e6f4ec;
+    color: #165c3b;
+    border-color: #b5d6c2;
+}
+
+
+
+.user-dropdown-menu .logout-btn:hover {
+    background-color: #fdeaea;
+    color: #801c1c;
+    border-color: #e4bcbc;
+}
+
+.dropdown-separator {
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .user-dropdown-menu {
+        background-color: #1e1e1e;
+        color: #e5e5e5;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .user-dropdown-menu .user-email {
+        color: #aaa;
+    }
+
+    .user-dropdown-menu a {
+        color: #e0e0e0;
+        border-color: transparent;
+    }
+
+    .user-dropdown-menu a:hover {
+        background-color: #2b2b40;
+        color: #a7b3ff;
+        border-color: #444;
+    }
+
+    .user-avatar {
+        background-color: #2e2e2e;
+        color: #fff;
+    }
+
+    .user-avatar:hover {
+        background-color: #3b3b3b;
+    }
+
+    .avatar-circle {
+        background-color: #3b3b3b;
+        color: #ddd;
+    }
+
+    .user-name {
+        color: #fff;
+    }
+
+    .user-email {
+        color: #aaa;
+    }
+
+    .user-dropdown-menu .login-btn:hover {
+        background-color: #143328;
+        color: #9af0b8;
+        border-color: #27694e;
+    }
+    
+    .user-dropdown-menu .logout-btn:hover {
+        background-color: #3c1e1e;
+        color: #ffb3b3;
+        border-color: #a44c4c;
+    }
+
+    .user-dropdown-menu a i.icon {
+        color: #aaa;
+    }
+    
+    .user-dropdown-menu a:hover i.icon {
+        color: #a7b3ff;
+    }
+    
+    .user-dropdown-menu .login-btn i.icon {
+        color: #72e3a0;
+    }
+    
+    .user-dropdown-menu .login-btn:hover i.icon {
+        color: #9af0b8;
+    }
+    
+    .user-dropdown-menu .logout-btn i.icon {
+        color: #ff8c8c;
+    }
+    
+    .user-dropdown-menu .logout-btn:hover i.icon {
+        color: #ffb3b3;
+    }
+
+    .dropdown-separator {
+        border-color: #333;
+    }
+    
+}
