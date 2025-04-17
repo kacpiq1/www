@@ -688,5 +688,28 @@ window.onload = () => {
       }
     }
   </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const avatar = document.getElementById("user-avatar");
+        const dropdown = document.getElementById("user-dropdown");
+        const isLoggedIn = false; 
+
+        if (isLoggedIn) {
+            document.getElementById("user-logged").style.display = "block";
+        } else {
+            document.getElementById("user-not-logged").style.display = "block";
+        }
+
+        avatar.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    });
+</script>
 </body>
 </html>
