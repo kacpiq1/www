@@ -81,10 +81,12 @@
             <!-- Jeśli zalogowany -->
             <div class="user-info" id="user-logged" style="display: none;">
                 <div class="user-header">
-                    <div class="avatar-circle"><i class="fas fa-user"></i></div>
+                    <div class="avatar-circle" id="avatar-circle">
+            <i id="avatar-icon" class="fas fa-user"></i>
+        </div>
                     <div>
-                        <div class="user-name">Jan Kowalski</div>
-                        <div class="user-email">jan@example.com</div>
+                        <div class="user-name">null</div>
+                        <div class="user-email">null@null.com</div>
                     </div>
                 </div>
                 <div class="dropdown-separator"></div>
@@ -565,6 +567,25 @@ window.onload = () => {
         document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
         document.getElementById("login-btn").style.display = "none";
         document.getElementById("logout-btn").style.display = "inline-block";
+          document.getElementById("user-name").textContent = user.displayName;
+                document.getElementById("user-email").textContent = user.email;
+                const avatarUrl = user.photoURL;
+                const avatarCircle = document.getElementById("avatar-circle");
+                const avatarIcon = document.getElementById("avatar-icon");
+
+                if (avatarUrl) {
+                    const img = document.createElement("img");
+                    img.src = avatarUrl;
+                    img.alt = "Avatar";
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.borderRadius = "50%";
+                    avatarCircle.innerHTML = "";  
+                    avatarCircle.appendChild(img); 
+                } else {
+
+                    avatarIcon.style.display = "block";
+                }
           spinner.style.display = "none";
           overlay.style.display = "none";
 
