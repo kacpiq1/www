@@ -890,7 +890,7 @@ tr:nth-child(3) td:first-child::before {
 }
 
 .trial-badge {
-    background-color: #eff3ff;
+    background-color: #e6f4ec;
     color: #227d4d;
     border: 1px solid #d1d5db;
     font-size: 10px;
