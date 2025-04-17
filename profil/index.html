@@ -266,7 +266,7 @@ body {
           
 
         <div class="greeting">
-            <span>Witaj, <span class="user-name">Imię</span></span>
+            <span>Witaj, <span id="user-name" class="user-name">null</span></span>
             <div class="date">
                 <span class="day-of-week">Czwartek, </span>
                 <span class="full-date">17 Kwietnia 2025</span>
@@ -378,12 +378,9 @@ body {
                 <h4 style="margin-bottom: 10px; font-weight: 600;">Mój adres e-mail</h4>
                 <div class="email-row">
                     <span class="email-icon">✉️</span>
-                    <span class="email-name">email@domena.com</span>
-                    <span class="email-date">1 miesiąc temu</span>
+                    <span id="user-email" class="email-name">null@null.com</span>
+                    <span class="email-date">nie dawno dodany</span>
                 </div>
-                <button class="edit-btn" style="margin-top: 15px; background-color: #f1f3f7; color: #333; border: 1px solid #ccc;">
-                    + Dodaj adres e-mail
-                </button>
             </div>
         </div>
     </div>
@@ -490,6 +487,7 @@ body {
     const logoutBtn = document.getElementById('logout-btn');
   
     const nameSpan = document.querySelector('.user-full-name');
+    const userName = document.querySelector('.user-name');
     const emailSpan = document.querySelector('.user-email');
     const avatarDiv = document.querySelector('.user-avatar');
   
@@ -504,6 +502,7 @@ body {
   
 
         nameSpan.textContent = user.displayName;
+        userName.textContent = user.displayName;
         emailSpan.textContent = user.email;
         avatarDiv.textContent = user.displayName.charAt(0).toUpperCase();
   
