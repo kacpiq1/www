@@ -555,6 +555,7 @@ window.onload = () => {
 
     // Logowanie przez Google
     document.getElementById("login-btn").addEventListener("click", async () => {
+        spinner.style.display = "block";
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
@@ -563,20 +564,25 @@ window.onload = () => {
         document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
         document.getElementById("login-btn").style.display = "none";
         document.getElementById("logout-btn").style.display = "inline-block";
+          spinner.style.display = "none";
 
       } catch (error) {
         console.error("Błąd logowania:", error);
         alert("Nie udało się zalogować.");
+          spinner.style.display = "none";
       }
     });
 
     // Wylogowanie
     document.getElementById("logout-btn").addEventListener("click", async () => {
+         spinner.style.display = "block";
       try {
         await signOut(auth);
         console.log("Wylogowano");
+          spinner.style.display = "none";
       } catch (error) {
         console.error("Błąd podczas wylogowania:", error);
+          spinner.style.display = "none";
       }
     });
 
@@ -586,6 +592,7 @@ window.onload = () => {
       const logoutBtn = document.getElementById("logout-btn");
       const welcomeMsg = document.getElementById("user-info");
         const userlogged = document.getElementById("user-logged");
+        const spinner = document.getElementById("spinner");
         const userNotlogged = document.getElementById("user-not-logged");
       const rankingBtn = document.getElementById("open-ranking-modal");
 
