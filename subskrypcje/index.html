@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subskrypcje – kacpiq.pl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #e8eaf6, #fff);
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #fff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #4c4899;
+      letter-spacing: -1px;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      color: #2c2c51;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #666;
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 35px 25px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .card .price {
+      font-size: 30px;
+      font-weight: bold;
+      color: #4c4899;
+      margin: 10px 0 20px;
+    }
+
+    .card .description {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .card .badge {
+      margin-bottom: 15px;
+    }
+
+    .card button {
+      background: linear-gradient(135deg, #6a64d8, #4c4899);
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      font-weight: bold;
+    }
+
+    .card button:hover {
+      background: linear-gradient(135deg, #4c4899, #3b3780);
+      transform: scale(1.03);
+    }
+
+    .card i {
+      font-size: 28px;
+      color: #4c4899;
+      margin-bottom: 15px;
+    }
+
+    .card .price .old-price {
+  text-decoration: line-through;
+  font-size: 18px;
+  color: #999;
+}
+
+.card .price .new-price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #4c4899;
+  margin-left: 10px;
+}
+
+.card .badge.pro-badge {
+  background-color: #ff4081;
+  color: white;
+  padding: 5px 15px;
+  font-size: 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #777;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+    }
+
+    /* UŻYTKOWNIK (Twój CSS w całości) */
+    .user-menu-container {
+      position: relative;
+      margin-left: auto;
+      margin-right: 15px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #333;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .user-avatar:hover {
+      background-color: #444;
+    }
+
+    .user-dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 260px;
+      padding: 15px;
+      z-index: 1002;
+      font-family: 'Inter', sans-serif;
+      color: #333;
+    }
+
+    .user-dropdown-menu.active {
+      display: block;
+    }
+
+    .user-dropdown-menu .user-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .avatar-circle {
+      background-color: #efefef;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .user-name {
+      font-weight: bold;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .user-dropdown-menu a {
+      display: block;
+      padding: 10px 12px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    .user-dropdown-menu a:hover {
+      background-color: #eff3ff;
+      color: #4c4899;
+      border: 1px solid #d1d5db;
+    }
+
+    .user-dropdown-menu a i.icon {
+      margin-right: 8px;
+      font-size: 16px;
+      color: #777;
+      transition: color 0.3s ease;
+    }
+
+    .user-dropdown-menu a:hover i.icon {
+      color: #4c4899;
+    }
+
+    .user-dropdown-menu .login-btn i.icon {
+      color: #227d4d;
+    }
+    .user-dropdown-menu .login-btn:hover i.icon {
+      color: #165c3b;
+    }
+
+    .user-dropdown-menu .logout-btn i.icon {
+      color: #b03a3a;
+    }
+    .user-dropdown-menu .logout-btn:hover i.icon {
+      color: #801c1c;
+    }
+
+    .user-dropdown-menu .login-btn:hover {
+      background-color: #e6f4ec;
+      color: #165c3b;
+      border-color: #b5d6c2;
+    }
+
+    .user-dropdown-menu .logout-btn:hover {
+      background-color: #fdeaea;
+      color: #801c1c;
+      border-color: #e4bcbc;
+    }
+
+    .dropdown-separator {
+      border-top: 1px solid #ddd;
+      margin: 10px 0;
+    }
+
+    .pro-badge {
+      background-color: #eff3ff;
+      color: #4c4899;
+      border: 1px solid #d1d5db;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    .pro-badge-info {
+      background-color: #eff3ff;
+      color: #4c4899;
+      border: 1px solid #d1d5db;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    .trial-badge {
+      background-color: #e6f4ec;
+      color: #227d4d;
+      border: 1px solid #d1d5db;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    /* Popup Modal */
+.modal {
+  display: none; /* Na początku modal jest ukryty */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Ciemne tło, by wyróżniał się modal */
+  padding-top: 100px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 20px; /* Większe zaokrąglenie rogów */
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.5s ease-out;
+  position: relative;
+}
+
+@keyframes modalFadeIn {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h2 {
+  font-size: 26px;
+  color: #2c2c51;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.modal .price {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4c4899;
+  margin: 20px 0;
+}
+
+.modal .price .old-price {
+  text-decoration: line-through;
+  font-size: 20px;
+  color: #888;
+}
+
+.modal .price .new-price {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff4081; /* Zmiana koloru na intensywniejszy różowy dla oferty */
+  margin-left: 10px;
+}
+
+.modal .description {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.modal ul {
+  list-style: disc;
+  padding-left: 20px;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.modal ul li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.modal .cyclical-info {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.modal button {
+  background: linear-gradient(135deg, #6a64d8, #4c4899);
+  color: white;
+  padding: 16px 30px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal button:hover {
+  background: linear-gradient(135deg, #4c4899, #3b3780);
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  font-size: 36px;
+  color: #4c4899;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #ff4081; /* Kolor zmienia się na różowy przy hoverze */
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">kacpiq.pl</div>
+  <div class="user-menu-container">
+    <div class="user-avatar" id="avatar" >N
+    </div>
+    <div class="user-dropdown-menu" id="dropdownMenu">
+        <!-- Jeśli zalogowany -->
+        <div class="user-info" id="user-logged" style="display: block;">
+            <div class="user-header">
+                <div class="avatar-circle" id="avatar-circle">
+        <i id="avatar-icon" class="fas fa-user"></i>
+    </div>
+                <div>
+                    <div id="user-name" class="user-name">null</div>
+                    <div id="user-email" class="user-email">null@null.com</div>
+                </div>
+            </div>
+            <div class="dropdown-separator"></div>
+        
+            <a href="https://www.kacpiq.pl/profil"><i class="fas fa-id-card icon"></i> Profil</a>
+            <a href="#"><i class="fas fa-cog icon"></i> Ustawienia</a>
+            <a  href="https://www.kacpiq.pl/subskrypcje"><i class="fas fa-crown icon"></i> Subskrypcja<span class="trial-badge">TRIAL</span></a>
+        
+            <div class="dropdown-separator"></div>
+        
+            <a href="#"><i class="fas fa-history icon"></i> Dziennik zmian</a>
+            <a href="#"><i class="fas fa-user-plus icon"></i> Zaproś użytkownika</a>
+        
+            <div class="dropdown-separator"></div>
+        
+            <a href="#"><i class="fas fa-question-circle icon"></i> Pomoc</a>
+            <a href="#"><i class="fas fa-users icon"></i> Community</a>
+        
+            <div class="dropdown-separator"></div>
+        
+            <a href="#" id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt icon"></i> Wyloguj się</a>
+        </div>
+        
+
+        <!-- Jeśli NIE zalogowany -->
+            <div class="user-info" id="user-not-logged" style="display: none;">
+            <a href="#" id="login-btn" class="login-btn"><i class="fas fa-sign-in-alt icon"></i> Zaloguj się</a>
+            <a href="#"><i class="fas fa-user-plus icon"></i> Zarejestruj się</a>
+        </div>
+
+    </div>
+</div>
+</div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Dołącz do premium społeczności kacpiq.pl</h1>
+    <p>Zyskaj dostęp do wyjątkowych treści, funkcji i wsparcia 24/7.</p>
+  </div>
+
+  <div class="pricing-cards">
+    <div class="card">
+      <i class="fas fa-rocket"></i>
+      <div class="badge trial-badge">Trial</div>
+      <h3>Darmowy dostęp</h3>
+      <div class="price">0 zł</div>
+      <div class="description">Ograniczony dostęp do platformy przez 7 dni.</div>
+      <button id="trialButton">Rozpocznij</button>
+    </div>
+
+    <!-- Modal Trial -->
+<div class="modal" id="trialModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeTrialModal">&times;</span>
+      <h2>Podsumowanie zamówienia</h2>
+      <h3 id="modal-subscription-name">Darmowy dostęp</h3>
+  
+      <div class="price" style="color: #28a745; font-size: 32px; margin: 20px 0;">
+        0 zł przez 7 dni
+      </div>
+  
+      <ul class="features">
+        <li>Dostęp do podstawowych funkcji</li>
+        <li>Możliwość testowania bez zobowiązań</li>
+        <li>Bez podpinania karty płatniczej</li>
+      </ul>
+  
+      <div class="cyclical-info">
+        To darmowy okres próbny. Po 7 dniach dostęp zostanie automatycznie zablokowany.
+      </div>
+  
+      <button id="startTrialButton">Rozpocznij okres próbny</button>
+    </div>
+  </div>
+  
+
+    <div class="card">
+        <i class="fas fa-crown"></i>
+        <div class="badge pro-badge-info">Pro</div>
+        <div class="badge pro-badge">PROMOCJA</div>
+        <h3>Subskrypcja Pro</h3>
+        <div class="price">
+          <span class="old-price">19 zł</span> <span class="new-price">7,50 zł / mies.</span>  <div class="badge pro-badge-info">-60%</div>
+        </div>
+        <div class="description"><strong>Tylko teraz zniżka 60%!</strong> <br>Pełny dostęp, aktualizacje i bonusy tylko dla subskrybentów.</div>
+        <button id="trialButton">Wykup teraz</button>
+      </div>
+      
+
+    <div class="card">
+      <i class="fas fa-bolt"></i>
+      <h3>Dostęp jednorazowy</h3>
+      <div class="price">9 zł</div>
+      <div class="description">Dostęp na 24 godziny bez odnawiania subskrypcji.</div>
+      <button id="singleButton">Kup dostęp</button>
+    </div>
+  </div>
+
+ <!-- Popup modal -->
+<div class="modal" id="proModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2>Podsumowanie zamówienia</h2>
+      
+      <!-- Nazwa subskrypcji i cena -->
+      <h3 id="modal-subscription-name">Subskrypcja Pro</h3>
+      <div id="modal-price" class="price">
+        <span class="old-price">19 zł</span> <span class="new-price">7,50 zł / mies.</span>
+      </div>
+      
+      <!-- Korzyści -->
+      <div id="modal-description">
+        <ul>
+          <li>Pełny dostęp do wszystkich funkcji</li>
+          <li>Aktualizacje na bieżąco</li>
+          <li>Bonusy tylko dla subskrybentów</li>
+          <li>Wsparcie 24/7</li>
+        </ul>
+      </div>
+  
+      <!-- Informacja o subskrypcji cyklicznej -->
+      <div class="cyclical-info">
+        <p><strong>Subskrypcja cykliczna:</strong> 7,50 zł/mies. w promocji do 30.04.2025, następnie 19 zł/mies. Opłata pobierana automatycznie co 30 dni z podanej metody płatności. Subskrypcję możesz anulować w każdej chwili w ustawieniach konta – po anulowaniu kolejne opłaty nie będą naliczane.</p>
+      </div>
+      
+      
+    
+    
+      
+      <!-- Przycisk zapłaty -->
+      <button id="payButton">Zapłać teraz</button>
+    </div>
+  </div>
+
+  <div class="modal" id="singleModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2>Podsumowanie zamówienia</h2>
+      
+      <!-- Nazwa subskrypcji i cena -->
+      <h3 id="modal-subscription-name">Dostęp jednorazowy</h3>
+      <div id="modal-price" class="price">
+        <span class="new-price">9 zł</span>
+      </div>
+      
+      <!-- Korzyści -->
+      <div id="modal-description">
+        <ul>
+          <li>Pełny dostęp do wszystkich funkcji</li>
+          <li>Aktualizacje na bieżąco</li>
+          <li>Bonusy tylko dla subskrybentów</li>
+          <li>Wsparcie 24/7</li>
+        </ul>
+      </div>
+  
+      <!-- Informacja o subskrypcji cyklicznej -->
+      <div class="cyclical-info">
+        <p><strong>Subskrypcja jednorazowa:</strong> 9zł na 24h. Opłata pobierana jednorazowo z podanej metody płatności. Subskrypcję anuluje się po 24h – po anulowaniu kolejne opłaty nie będą naliczane.</p>
+      </div>
+      
+      
+    
+    
+      
+      <!-- Przycisk zapłaty -->
+      <button id="payButton">Zapłać teraz</button>
+    </div>
+  </div>
+  
+  
+</main>
+
+<footer>
+  &copy; 2025 kacpiq.pl – Wszystkie prawa zastrzeżone.
+</footer>
+
+<script>
+  const avatar = document.getElementById("avatar");
+  const dropdown = document.getElementById("dropdownMenu");
+
+  avatar.addEventListener("click", () => {
+    dropdown.classList.toggle("active");
+  });
+
+  window.addEventListener("click", (e) => {
+    if (!e.target.closest(".user-menu-container")) {
+      dropdown.classList.remove("active");
+    }
+  });
+
+
+  // Funkcja do otwierania modala
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+  }
+
+  // Funkcja do zamykania modala
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  // Obsługa przycisku Trial
+  document.getElementById('trialButton').addEventListener('click', () => {
+    openModal('trialModal');
+  });
+
+  // Zamknięcie trial modala
+  document.getElementById('closeTrialModal').addEventListener('click', () => {
+    closeModal('trialModal');
+  });
+
+  // Obsługa przycisku Pro
+  const proButton = document.createElement('button');
+  proButton.id = 'proButton';
+  proButton.style.display = 'none';
+  document.body.appendChild(proButton); // sztuczka do rejestracji zdarzenia
+  document.querySelectorAll('#trialButton')[1].addEventListener('click', () => {
+    openModal('proModal');
+  });
+
+  // Obsługa przycisku Jednorazowy
+  document.getElementById('singleButton').addEventListener('click', () => {
+    openModal('singleModal');
+  });
+
+  // Zamknięcie pozostałych modali (jeśli istnieją)
+  document.querySelectorAll('.modal .close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.modal').style.display = 'none';
+    });
+  });
+
+  // Kliknięcie poza modalem – zamknij
+  window.addEventListener('click', (e) => {
+    document.querySelectorAll('.modal').forEach(modal => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  });
+
+
+</script>
+
+<script type="module">
+  // Import Firebase modułów
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+  // Konfiguracja Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
+    authDomain: "kacpiq-egz-wyniki.firebaseapp.com",
+    databaseURL: "https://kacpiq-egz-wyniki-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "kacpiq-egz-wyniki",
+    storageBucket: "kacpiq-egz-wyniki.firebasestorage.app",
+    messagingSenderId: "925929166432",
+    appId: "1:925929166432:web:81756e7675f468b8d19505",
+    measurementId: "G-Z8ZFL73Q6Q"
+  };
+
+  // Inicjalizacja Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Logowanie przez Google
+  document.getElementById("login-btn").addEventListener("click", async () => {
+      spinner.style.display = "block";
+      overlay.style.display = "block";
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      console.log("Zalogowano jako:", user.email);
+      document.getElementById("login-btn").style.display = "none";
+      document.getElementById("logout-btn").style.display = "inline-block";
+        document.getElementById("user-name").textContent = user.displayName;
+              document.getElementById("user-email").textContent = user.email;
+              const avatarUrl = user.photoURL;
+              const avatarCircle = document.getElementById("avatar-circle");
+              const avatarIcon = document.getElementById("avatar-icon");
+
+              if (avatarUrl) {
+                  const img = document.createElement("img");
+                  img.src = avatarUrl;
+                  img.alt = "Avatar";
+                  img.style.width = "100%";
+                  img.style.height = "100%";
+                  img.style.borderRadius = "50%";
+                  avatarCircle.innerHTML = "";  
+                  avatarCircle.appendChild(img); 
+              } else {
+
+                  avatarIcon.style.display = "block";
+              }
+
+
+    } catch (error) {
+      console.error("Błąd logowania:", error);
+
+    }
+  });
+
+  // Wylogowanie
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+
+    try {
+      await signOut(auth);
+      console.log("Wylogowano");
+
+    } catch (error) {
+      console.error("Błąd podczas wylogowania:", error);
+
+    }
+  });
+
+  // Obsługa statusu logowania
+  onAuthStateChanged(auth, (user) => {
+    const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+      const userlogged = document.getElementById("user-logged");
+      const userNotlogged = document.getElementById("user-not-logged");
+
+    if (user) {
+      loginBtn.style.display = "none";
+      logoutBtn.style.display = "inline-block";
+        userlogged.style.display = "block";
+        userNotlogged.style.display = "none";
+
+        document.getElementById("user-name").textContent = user.displayName;
+              document.getElementById("user-email").textContent = user.email;
+              const avatarUrl = user.photoURL;
+              const avatarCircle = document.getElementById("avatar-circle");
+              const avatarIcon = document.getElementById("avatar-icon");
+
+              if (avatarUrl) {
+                  const img = document.createElement("img");
+                  img.src = avatarUrl;
+                  img.alt = "Avatar";
+                  img.style.width = "100%";
+                  img.style.height = "100%";
+                  img.style.borderRadius = "50%";
+                  avatarCircle.innerHTML = "";  
+                  avatarCircle.appendChild(img); 
+              } else {
+
+                  avatarIcon.style.display = "block";
+              }
+       
+    }
+  });
+
+</script>
+
+</body>
+</html>
