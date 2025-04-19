@@ -62,6 +62,7 @@
     .logo img {
       width: 40px;
       height: 40px;
+      border-radius: 50%;
     }
 
     .logo h1 {
@@ -75,6 +76,7 @@
 
     .nav-item {
       margin-bottom: 0.5rem;
+      position: relative;
     }
 
     .nav-link {
@@ -99,9 +101,11 @@
     }
 
     .nav-dropdown {
-      margin-left: 2rem;
+      margin-left: 1rem;
       margin-top: 0.5rem;
       display: none;
+      border-left: 2px solid rgba(255,255,255,0.1);
+      padding-left: 0.5rem;
     }
 
     .nav-item.open .nav-dropdown {
@@ -146,10 +150,17 @@
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .user-avatar:hover {
+      transform: scale(1.1);
     }
 
     .notification-badge {
       position: relative;
+      cursor: pointer;
     }
 
     .notification-badge::after {
@@ -175,6 +186,12 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
     .card-header {
@@ -189,6 +206,7 @@
     .card-title {
       font-size: 1.25rem;
       font-weight: 600;
+      color: var(--primary-dark);
     }
 
     /* Stats */
@@ -207,6 +225,11 @@
       align-items: center;
       gap: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
     }
 
     .stat-icon {
@@ -255,6 +278,9 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.05);
     }
 
     .status-indicator {
@@ -297,6 +323,7 @@
       font-family: 'Inter', sans-serif;
     }
 
+    
     .btn-sm {
       padding: 0.35rem 0.75rem;
       font-size: 0.85rem;
@@ -309,6 +336,7 @@
 
     .btn-primary:hover {
       background: var(--primary-dark);
+      transform: translateY(-2px);
     }
 
     .btn-success {
@@ -316,14 +344,306 @@
       color: white;
     }
 
+    /* Notification styles */
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s;
+}
+
+.notification-item:hover {
+  background-color: #f9f9f9;
+}
+
+.notification-icon {
+  font-size: 1.25rem;
+  margin-right: 1rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(106, 100, 216, 0.1);
+  color: var(--primary);
+}
+
+.notification-icon.text-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--success);
+}
+
+.notification-icon.text-warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: var(--warning);
+}
+
+.notification-icon.text-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--danger);
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content p {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.notification-content small {
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+/* Server configuration styles */
+.config-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.config-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.config-section-title i {
+  margin-right: 0.5rem;
+  color: var(--primary);
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.config-item {
+  margin-bottom: 1.5rem;
+}
+
+.config-item label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.config-item input[type="range"] {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  background: #e0e0e0;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 0.5rem;
+}
+
+.config-item input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.config-item input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--primary-dark);
+}
+
+.range-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.config-description {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+.config-description i {
+  margin-right: 0.25rem;
+  color: var(--primary);
+}
+
+/* Alert styles for configuration */
+.config-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.config-alert i {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.config-alert.warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: var(--warning);
+  border-left: 4px solid var(--warning);
+}
+
+.config-alert.danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--danger);
+  border-left: 4px solid var(--danger);
+}
+
+.config-alert.info {
+  background-color: rgba(106, 100, 216, 0.1);
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
+}
+
+/* Toggle switch for configuration */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--success);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Configuration tabs */
+.config-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.config-tab {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: var(--gray);
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.config-tab:hover {
+  color: var(--primary);
+}
+
+.config-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.config-tab-content {
+  display: none;
+}
+
+.config-tab-content.active {
+  display: block;
+}
+
+/* Configuration buttons */
+.config-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .config-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .config-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .config-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+    .btn-success:hover {
+      background: #3d8b40;
+      transform: translateY(-2px);
+    }
+
     .btn-danger {
       background: var(--danger);
       color: white;
     }
 
+    .btn-danger:hover {
+      background: #d32f2f;
+      transform: translateY(-2px);
+    }
+
     .btn-warning {
       background: var(--warning);
       color: white;
+    }
+
+    .btn-warning:hover {
+      background: #e68a00;
+      transform: translateY(-2px);
     }
 
     .btn-outline {
@@ -334,16 +654,26 @@
 
     .btn-outline:hover {
       background: rgba(106, 100, 216, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
 
     /* Tables */
     .table-responsive {
       overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .table {
       width: 100%;
       border-collapse: collapse;
+      background: white;
     }
 
     .table th, .table td {
@@ -355,10 +685,11 @@
     .table th {
       font-weight: 600;
       color: var(--gray);
+      background: #f9f9f9;
     }
 
     .table tr:hover {
-      background: #f9f9f9;
+      background: #f5f5f5;
     }
 
     .badge {
@@ -366,6 +697,7 @@
       border-radius: 50px;
       font-size: 0.75rem;
       font-weight: 600;
+      display: inline-block;
     }
 
     .badge-primary {
@@ -393,6 +725,7 @@
       display: flex;
       border-bottom: 1px solid #eee;
       margin-bottom: 1.5rem;
+      overflow-x: auto;
     }
 
     .tab {
@@ -401,11 +734,25 @@
       border-bottom: 3px solid transparent;
       font-weight: 600;
       color: var(--gray);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .tab:hover {
+      color: var(--primary);
     }
 
     .tab.active {
       color: var(--primary);
       border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     /* Forms */
@@ -417,6 +764,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
+      color: var(--dark);
     }
 
     .form-control {
@@ -425,17 +773,26 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       font-family: inherit;
-      transition: border 0.3s;
+      transition: border 0.3s, box-shadow 0.3s;
     }
 
     .form-control:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(106, 100, 216, 0.2);
     }
 
     textarea.form-control {
       min-height: 120px;
       resize: vertical;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 12px;
     }
 
     /* Console */
@@ -454,11 +811,25 @@
     .console-line {
       margin-bottom: 0.5rem;
       line-height: 1.5;
+      word-break: break-all;
+    }
+
+    .console-line.info {
+      color: #d4d4d4;
+    }
+
+    .console-line.warning {
+      color: #ffcc66;
+    }
+
+    .console-line.error {
+      color: #f48771;
     }
 
     .console-command {
       display: flex;
       gap: 0.5rem;
+      margin-top: 1rem;
     }
 
     .console-prompt {
@@ -472,29 +843,37 @@
       color: white;
       font-family: 'Courier New', monospace;
       font-size: 0.9rem;
+      border-bottom: 1px solid #4ec9b0;
+      padding: 0.25rem 0;
     }
 
     .console-input:focus {
       outline: none;
+      border-bottom-color: #4ec9b0;
     }
 
     /* File manager */
     .file-manager {
       display: flex;
       height: 500px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .file-tree {
       width: 250px;
       border-right: 1px solid #eee;
       overflow-y: auto;
-      padding-right: 1rem;
+      padding: 1rem;
+      background: #f9f9f9;
     }
 
     .file-content {
       flex: 1;
-      padding-left: 1rem;
+      padding: 1rem;
       overflow-y: auto;
+      background: white;
     }
 
     .file-item {
@@ -504,14 +883,30 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      transition: background 0.3s;
     }
 
     .file-item:hover {
-      background: #f5f5f5;
+      background: #f0f0f0;
     }
 
     .file-item i {
       color: var(--gray);
+    }
+
+    .file-item.active {
+      background: rgba(106, 100, 216, 0.1);
+      color: var(--primary);
+    }
+
+    .file-item.active i {
+      color: var(--primary);
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
 
     /* Modals */
@@ -545,6 +940,7 @@
       overflow-y: auto;
       transform: translateY(20px);
       transition: transform 0.3s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     .modal.active .modal-content {
@@ -562,6 +958,7 @@
     .modal-title {
       font-size: 1.25rem;
       font-weight: 600;
+      color: var(--primary-dark);
     }
 
     .modal-close {
@@ -570,6 +967,11 @@
       font-size: 1.5rem;
       cursor: pointer;
       color: var(--gray);
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: var(--danger);
     }
 
     .modal-body {
@@ -582,6 +984,38 @@
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;
+    }
+
+    /* Server progress */
+    .server-progress {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s;
     }
 
     /* Responsive */
@@ -639,6 +1073,382 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #a8a8a8;
     }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 120px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Context menu */
+    .context-menu {
+      position: absolute;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 100;
+      display: none;
+      min-width: 200px;
+    }
+
+    .context-menu.active {
+      display: block;
+    }
+
+    .context-menu-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .context-menu-item:hover {
+      background: #f5f5f5;
+    }
+
+    .context-menu-item i {
+      margin-right: 8px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .context-menu-divider {
+      height: 1px;
+      background: #eee;
+      margin: 0.25rem 0;
+    }
+
+    /* Główna karta konfiguracji */
+#configCard {
+  border: none;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.03),
+    0 10px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#configCard:hover {
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.08),
+    0 15px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Nagłówek */
+#configCard .card-header {
+  padding: 1.5rem 2rem;
+  border-bottom: none;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  position: relative;
+}
+
+#configCard .card-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(106, 100, 216, 0.2) 50%, transparent 100%);
+}
+
+#configCard .card-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2a2758;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+#configCard .card-title i {
+  margin-right: 12px;
+  color: var(--primary);
+  font-size: 1.2em;
+}
+
+/* Grupa przycisków */
+#configCard .btn-group {
+  gap: 12px;
+}
+
+#configCard .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.25s ease-out;
+  box-shadow: none;
+  border: none;
+}
+
+#configCard .btn-outline {
+  background: white;
+  border: 1px solid #e0e2ff;
+  color: var(--primary);
+}
+
+#configCard .btn-outline:hover {
+  background: rgba(106, 100, 216, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(106, 100, 216, 0.1);
+}
+
+#configCard .btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #7d77e0 100%);
+  box-shadow: 0 2px 6px rgba(106, 100, 216, 0.3);
+}
+
+#configCard .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(106, 100, 216, 0.4);
+  filter: brightness(1.05);
+}
+
+/* Zakładki */
+#configCard .tabs {
+  display: flex;
+  border-bottom: none;
+  padding: 0 2rem;
+  margin: 0;
+  background: linear-gradient(180deg, #fbfcff 0%, #f7f8ff 100%);
+  position: relative;
+  z-index: 1;
+}
+
+#configCard .tabs::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+#configCard .tab {
+  padding: 1rem 1.5rem;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6c757d;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  font-family: 'Inter', sans-serif;
+}
+
+#configCard .tab:hover {
+  color: var(--primary);
+}
+
+#configCard .tab.active {
+  color: var(--primary-dark);
+}
+
+#configCard .tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 3px 3px 0 0;
+  animation: tabUnderline 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes tabUnderline {
+  from { width: 0; opacity: 0; }
+  to { width: 40px; opacity: 1; }
+}
+
+/* Zawartość zakładek */
+#configCard .tab-content {
+  padding: 2rem;
+  background: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Grupy formularzy */
+#configCard .form-group {
+  margin-bottom: 1.75rem;
+  position: relative;
+}
+
+#configCard .form-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #3a384f;
+  font-size: 0.95rem;
+  letter-spacing: 0.2px;
+}
+
+/* Pola input */
+#configCard .form-control {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid #e0e2ff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  background-color: #fbfcff;
+  color: #3a384f;
+}
+
+#configCard .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(106, 100, 216, 0.15);
+  outline: none;
+  background-color: white;
+}
+
+/* Select */
+#configCard select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236a64d8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+}
+
+/* Suwaki */
+#configCard input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #e0e2ff;
+  border-radius: 3px;
+  outline: none;
+  margin: 1.5rem 0;
+}
+
+#configCard input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 4px solid var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#configCard input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.range-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #8a8aa3;
+  margin-top: -0.5rem;
+  padding: 0 0.5rem;
+}
+
+/* Mały tekst */
+#configCard .form-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: #8a8aa3;
+  line-height: 1.5;
+}
+
+/* Animacje */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#configCard .tab-content.active {
+  animation: fadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+  #configCard .card-header {
+    padding: 1.25rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  #configCard .btn-group {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: flex-end;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  #configCard .tabs {
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  #configCard .tab {
+    padding: 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  #configCard .tab-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Efekt glassmorphism dla aktywnej karty */
+@media (min-width: 992px) {
+  #configCard {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+}
   </style>
 </head>
 <body>
@@ -671,9 +1481,26 @@
             <span>Ustawienia</span>
           </a>
           <div class="nav-dropdown">
-            <a href="#" class="nav-link">Konfiguracja</a>
-            <a href="#" class="nav-link">Pluginy</a>
-            <a href="#" class="nav-link">Światy</a>
+            <a href="#" class="nav-link">
+              <i class="fas fa-sliders-h"></i>
+              <span>Konfiguracja</span>
+            </a>
+            <a href="#" class="nav-link">
+              <i class="fas fa-puzzle-piece"></i>
+              <span>Pluginy</span>
+            </a>
+            <a href="#" class="nav-link">
+              <i class="fas fa-globe"></i>
+              <span>Światy</span>
+            </a>
+            <a href="#" class="nav-link">
+              <i class="fas fa-shield-alt"></i>
+              <span>Bezpieczeństwo</span>
+            </a>
+            <a href="#" class="nav-link">
+              <i class="fas fa-network-wired"></i>
+              <span>Sieć</span>
+            </a>
           </div>
         </div>
 
@@ -734,11 +1561,12 @@
         <h2>Panel Zarządzania Serwerem</h2>
         
         <div class="user-menu">
-          <button class="btn btn-outline">
+          <button class="btn btn-outline tooltip" id="notificationsBtn">
             <i class="fas fa-bell"></i>
             <span class="notification-badge"></span>
+            <span class="tooltip-text">Powiadomienia</span>
           </button>
-          <img src="https://lh3.googleusercontent.com/a/ACg8ocIw1i-TxaKA4scgD3v5XSk--u_1YLkJrL-bTvegrF4rb8MY7A=s96-c" alt="User" class="user-avatar">
+          <img src="https://lh3.googleusercontent.com/a/ACg8ocIw1i-TxaKA4scgD3v5XSk--u_1YLkJrL-bTvegrF4rb8MY7A=s96-c" alt="User" class="user-avatar" id="userAvatar">
         </div>
       </header>
 
@@ -790,38 +1618,62 @@
         <div class="card-header">
           <h3 class="card-title">Sterowanie Serwerem</h3>
           <div class="server-status">
-            <div class="status-indicator online"></div>
-            <span>Online</span>
+            <div class="status-indicator offline" id="serverStatusIndicator"></div>
+            <span id="serverStatusText">Offline</span>
           </div>
         </div>
 
-        <div class="btn-group" style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-success">
+        <div class="btn-group">
+          <button class="btn btn-success" id="startServerBtn">
             <i class="fas fa-play"></i> Uruchom
           </button>
-          <button class="btn btn-warning">
+          <button class="btn btn-warning" id="restartServerBtn" disabled>
             <i class="fas fa-redo"></i> Restart
           </button>
-          <button class="btn btn-danger">
+          <button class="btn btn-danger" id="stopServerBtn" disabled>
             <i class="fas fa-stop"></i> Zatrzymaj
           </button>
-          <button class="btn btn-outline">
+          <button class="btn btn-outline" id="consoleBtn">
             <i class="fas fa-terminal"></i> Konsola
           </button>
+          <button class="btn btn-outline" id="backupBtn">
+            <i class="fas fa-save"></i> Backup
+          </button>
+          <button class="btn btn-outline" id="settingsBtn">
+            <i class="fas fa-cog"></i> Ustawienia
+          </button>
+        </div>
+
+        <div class="server-progress" id="serverProgress">
+          <div class="progress-info">
+            <span>Uruchamianie serwera...</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+          </div>
         </div>
       </div>
 
       <!-- Players online -->
-      <div class="card">
+      <div class="card" id="playersCard">
         <div class="card-header">
-          <h3 class="card-title">Gracze Online (8/20)</h3>
-          <button class="btn btn-sm btn-outline">
-            <i class="fas fa-sync-alt"></i> Odśwież
-          </button>
+          <h3 class="card-title">Gracze Online (<span id="onlinePlayersCount">0</span>/20)</h3>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" id="refreshPlayersBtn">
+              <i class="fas fa-sync-alt"></i> Odśwież
+            </button>
+            <button class="btn btn-sm btn-outline" id="addPlayerBtn">
+              <i class="fas fa-user-plus"></i> Dodaj
+            </button>
+            <button class="btn btn-sm btn-outline" id="playerListBtn">
+              <i class="fas fa-list"></i> Lista
+            </button>
+          </div>
         </div>
 
         <div class="table-responsive">
-          <table class="table">
+          <table class="table" id="playersTable">
             <thead>
               <tr>
                 <th>Nick</th>
@@ -831,140 +1683,269 @@
                 <th>Akcje</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Kacpiq</td>
-                <td>192.168.1.1</td>
-                <td>2h 45m</td>
-                <td>24ms</td>
-                <td>
-                  <button class="btn btn-sm btn-outline">
-                    <i class="fas fa-comment"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline">
-                    <i class="fas fa-user-cog"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-ban"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Notch</td>
-                <td>192.168.1.2</td>
-                <td>1h 12m</td>
-                <td>45ms</td>
-                <td>
-                  <button class="btn btn-sm btn-outline">
-                    <i class="fas fa-comment"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline">
-                    <i class="fas fa-user-cog"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-ban"></i>
-                  </button>
-                </td>
-              </tr>
+            <tbody id="playersList">
+              <!-- Gracze będą dodawani dynamicznie -->
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- Server console -->
-      <div class="card">
+      <div class="card" id="consoleCard">
         <div class="card-header">
           <h3 class="card-title">Konsola Serwera</h3>
-          <div>
-            <button class="btn btn-sm btn-outline">
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" id="clearConsoleBtn">
               <i class="fas fa-trash"></i> Wyczyść
             </button>
-            <button class="btn btn-sm btn-outline">
+            <button class="btn btn-sm btn-outline" id="pauseConsoleBtn">
               <i class="fas fa-pause"></i> Wstrzymaj
+            </button>
+            <button class="btn btn-sm btn-outline" id="saveLogsBtn">
+              <i class="fas fa-download"></i> Zapisz
             </button>
           </div>
         </div>
 
-        <div class="console">
-          <div class="console-line">[12:34:56 INFO]: Starting minecraft server version 1.19.2</div>
-          <div class="console-line">[12:34:56 INFO]: Loading properties</div>
-          <div class="console-line">[12:34:57 INFO]: Default game type: SURVIVAL</div>
-          <div class="console-line">[12:34:57 INFO]: Generating keypair</div>
-          <div class="console-line">[12:34:58 INFO]: Starting Minecraft server on *:25565</div>
-          <div class="console-line">[12:34:58 INFO]: Using epoll channel type</div>
-          <div class="console-line">[12:34:58 INFO]: Preparing level "world"</div>
-          <div class="console-line">[12:35:01 INFO]: Done (4.123s)! For help, type "help"</div>
-          <div class="console-line">[12:35:02 INFO]: Kacpiq[/192.168.1.1:12345] logged in with entity id 123 at ([world] 12.3, 45.6, 78.9)</div>
-          <div class="console-line">[12:35:05 INFO]: Notch[/192.168.1.2:54321] logged in with entity id 124 at ([world] -12.3, 45.6, -78.9)</div>
+        <div class="console" id="serverConsole">
+          <!-- Logi będą dodawane dynamicznie -->
           <div class="console-command">
             <span class="console-prompt">></span>
-            <input type="text" class="console-input" placeholder="Wpisz komendę...">
+            <input type="text" class="console-input" id="consoleInput" placeholder="Wpisz komendę...">
           </div>
         </div>
       </div>
 
       <!-- File manager -->
-      <div class="card">
+      <div class="card" id="fileManagerCard">
         <div class="card-header">
           <h3 class="card-title">Menedżer Plików</h3>
-          <div>
-            <button class="btn btn-sm btn-outline">
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" id="uploadFileBtn">
               <i class="fas fa-upload"></i> Upload
             </button>
-            <button class="btn btn-sm btn-outline">
+            <button class="btn btn-sm btn-outline" id="newFolderBtn">
               <i class="fas fa-folder-plus"></i> Nowy Folder
+            </button>
+            <button class="btn btn-sm btn-outline" id="refreshFilesBtn">
+              <i class="fas fa-sync-alt"></i> Odśwież
+            </button>
+            <button class="btn btn-sm btn-danger" id="deleteFileBtn" disabled>
+              <i class="fas fa-trash"></i> Usuń
             </button>
           </div>
         </div>
 
         <div class="file-manager">
-          <div class="file-tree">
-            <div class="file-item">
-              <i class="fas fa-folder"></i>
-              <span>plugins</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-folder"></i>
-              <span>world</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-folder"></i>
-              <span>world_nether</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-folder"></i>
-              <span>world_the_end</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>server.properties</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>eula.txt</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>banned-players.json</span>
+          <div class="file-tree" id="fileTree">
+            <!-- Struktura plików będzie generowana dynamicznie -->
+          </div>
+          <div class="file-content" id="fileContent">
+            <!-- Zawartość folderu będzie wyświetlana tutaj -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Plugins manager -->
+      <div class="card" id="pluginsCard">
+        <div class="card-header">
+          <h3 class="card-title">Zarządzanie Pluginami</h3>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" id="refreshPluginsBtn">
+              <i class="fas fa-sync-alt"></i> Odśwież
+            </button>
+            <button class="btn btn-sm btn-primary" id="installPluginBtn">
+              <i class="fas fa-download"></i> Instaluj Plugin
+            </button>
+            <button class="btn btn-sm btn-outline" id="updatePluginsBtn">
+              <i class="fas fa-arrow-up"></i> Aktualizuj
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table" id="pluginsTable">
+            <thead>
+              <tr>
+                <th>Nazwa</th>
+                <th>Wersja</th>
+                <th>Autor</th>
+                <th>Status</th>
+                <th>Akcje</th>
+              </tr>
+            </thead>
+            <tbody id="pluginsList">
+              <!-- Pluginy będą dodawane dynamicznie -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Server configuration -->
+      <div class="card" id="configCard">
+        <div class="card-header">
+          <h3 class="card-title">Konfiguracja Serwera</h3>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline" id="reloadConfigBtn">
+              <i class="fas fa-sync-alt"></i> Przeładuj
+            </button>
+            <button class="btn btn-sm btn-primary" id="saveConfigBtn">
+              <i class="fas fa-save"></i> Zapisz
+            </button>
+            <button class="btn btn-sm btn-outline" id="resetConfigBtn">
+              <i class="fas fa-undo"></i> Resetuj
+            </button>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="basic">Podstawowe</button>
+          <button class="tab" data-tab="advanced">Zaawansowane</button>
+          <button class="tab" data-tab="world">Świat</button>
+          <button class="tab" data-tab="network">Sieć</button>
+          <button class="tab" data-tab="performance">Wydajność</button>
+        </div>
+
+        <div class="tab-content active" id="basicConfig">
+          <div class="form-group">
+            <label class="form-label">Nazwa serwera</label>
+            <input type="text" class="form-control" id="serverName" value="Mój Serwer Minecraft">
+          </div>
+          <div class="form-group">
+            <label class="form-label">MOTD</label>
+            <input type="text" class="form-control" id="serverMotd" value="Witaj na serwerze!">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Maksymalna liczba graczy</label>
+            <input type="number" class="form-control" id="maxPlayers" value="20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tryb gry</label>
+            <select class="form-control" id="gameMode">
+              <option value="0">Survival</option>
+              <option value="1">Creative</option>
+              <option value="2">Adventure</option>
+              <option value="3">Spectator</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Poziom trudności</label>
+            <select class="form-control" id="difficulty">
+              <option value="0">Pokojowy</option>
+              <option value="1">Łatwy</option>
+              <option value="2" selected>Normalny</option>
+              <option value="3">Trudny</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">PvP</label>
+            <select class="form-control" id="pvpEnabled">
+              <option value="true" selected>Włączone</option>
+              <option value="false">Wyłączone</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tab-content" id="advancedConfig">
+          <div class="form-group">
+            <label class="form-label">Widok dystansu (Render Distance)</label>
+            <input type="range" class="form-control" id="renderDistance" min="2" max="32" value="10">
+            <div style="display: flex; justify-content: space-between;">
+              <span>2</span>
+              <span id="renderDistanceValue">10</span>
+              <span>32</span>
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-label">Limit ticków (Tick Rate)</label>
+            <input type="range" class="form-control" id="tickRate" min="10" max="100" value="20">
+            <div style="display: flex; justify-content: space-between;">
+              <span>10</span>
+              <span id="tickRateValue">20</span>
+              <span>100</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Whitelist</label>
+            <select class="form-control" id="whitelistEnabled">
+              <option value="false" selected>Wyłączona</option>
+              <option value="true">Włączona</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Weryfikacja online</label>
+            <select class="form-control" id="onlineMode">
+              <option value="true" selected>Włączona</option>
+              <option value="false">Wyłączona</option>
+            </select>
+          </div>
+        </div>
 
-          <div class="file-content">
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>server.properties</span>
-              <span style="margin-left: auto; color: var(--gray);">12 KB</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>eula.txt</span>
-              <span style="margin-left: auto; color: var(--gray);">1 KB</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>banned-players.json</span>
-              <span style="margin-left: auto; color: var(--gray);">4 KB</span>
-            </div>
+        <div class="tab-content" id="worldConfig">
+          <div class="form-group">
+            <label class="form-label">Typ świata</label>
+            <select class="form-control" id="worldType">
+              <option value="DEFAULT" selected>Standardowy</option>
+              <option value="FLAT">Płaski</option>
+              <option value="LARGE_BIOMES">Duże biomety</option>
+              <option value="AMPLIFIED">Wzmocniony</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Generowanie struktur</label>
+            <select class="form-control" id="generateStructures">
+              <option value="true" selected>Włączone</option>
+              <option value="false">Wyłączone</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Seed świata</label>
+            <input type="text" class="form-control" id="worldSeed" value="">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Limit wysokości</label>
+            <input type="number" class="form-control" id="maxBuildHeight" value="256" min="64" max="512">
+          </div>
+        </div>
+
+        <div class="tab-content" id="networkConfig">
+          <div class="form-group">
+            <label class="form-label">Port serwera</label>
+            <input type="number" class="form-control" id="serverPort" value="25565" min="1" max="65535">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Maksymalny rozmiar pakietu</label>
+            <input type="number" class="form-control" id="maxPacketSize" value="2097152">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kompresja pakietów</label>
+            <input type="number" class="form-control" id="networkCompression" value="-1">
+            <small class="form-text text-muted">-1 wyłącza kompresję, 0-9 określa poziom kompresji</small>
+          </div>
+        </div>
+
+        <div class="tab-content" id="performanceConfig">
+          <div class="form-group">
+            <label class="form-label">Maksymalna liczba chunków</label>
+            <input type="number" class="form-control" id="maxChunks" value="1000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Limit entity</label>
+            <input type="number" class="form-control" id="entityLimit" value="100">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Optymalizacja światów</label>
+            <select class="form-control" id="worldOptimization">
+              <option value="true" selected>Włączone</option>
+              <option value="false">Wyłączone</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Automatyczne zapisywanie</label>
+            <select class="form-control" id="autoSave">
+              <option value="true" selected>Włączone</option>
+              <option value="false">Wyłączone</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1005,14 +1986,14 @@
           <select class="form-control">
             <option value="0">Pokojowy</option>
             <option value="1">Łatwy</option>
-            <option value="2">Normalny</option>
+            <option value="2" selected>Normalny</option>
             <option value="3">Trudny</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">PvP</label>
           <select class="form-control">
-            <option value="true">Włączone</option>
+            <option value="true" selected>Włączone</option>
             <option value="false">Wyłączone</option>
           </select>
         </div>
@@ -1024,115 +2005,969 @@
     </div>
   </div>
 
+  <!-- Modal for installing plugins -->
+  <div class="modal" id="installPluginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Instalacja Pluginu</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Wybierz plugin</label>
+          <select class="form-control" id="pluginSelect">
+            <option value="">-- Wybierz plugin --</option>
+            <option value="worldedit">WorldEdit</option>
+            <option value="essentials">EssentialsX</option>
+            <option value="luckperms">LuckPerms</option>
+            <option value="vault">Vault</option>
+            <option value="worldguard">WorldGuard</option>
+            <option value="multiverse">Multiverse-Core</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lub wklej URL pliku .jar</label>
+          <input type="text" class="form-control" id="pluginUrl" placeholder="https://example.com/plugin.jar">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lub prześlij plik</label>
+          <input type="file" class="form-control" id="pluginFile">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelInstallPluginBtn">Anuluj</button>
+        <button class="btn btn-primary" id="confirmInstallPluginBtn">Instaluj</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for player actions -->
+  <div class="modal" id="playerActionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="playerActionTitle">Akcja dla gracza</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="playerActionContent">
+        <!-- Zawartość zmienna w zależności od akcji -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelPlayerActionBtn">Anuluj</button>
+        <button class="btn btn-primary" id="confirmPlayerActionBtn">Potwierdź</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for file upload -->
+  <div class="modal" id="fileUploadModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload pliku</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Wybierz plik</label>
+          <input type="file" class="form-control" id="fileInput">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ścieżka docelowa</label>
+          <input type="text" class="form-control" id="filePath" value="/" readonly>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelUploadBtn">Anuluj</button>
+        <button class="btn btn-primary" id="confirmUploadBtn">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for notifications -->
+  <div class="modal" id="notificationsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Powiadomienia</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="notification-item">
+          <div class="notification-icon">
+            <i class="fas fa-server text-success"></i>
+          </div>
+          <div class="notification-content">
+            <p>Serwer został pomyślnie uruchomiony</p>
+            <small class="text-muted">5 minut temu</small>
+          </div>
+        </div>
+        <div class="notification-item">
+          <div class="notification-icon">
+            <i class="fas fa-user-plus text-primary"></i>
+          </div>
+          <div class="notification-content">
+            <p>Nowy gracz dołączył do serwera: Kacpiq</p>
+            <small class="text-muted">15 minut temu</small>
+          </div>
+        </div>
+        <div class="notification-item">
+          <div class="notification-icon">
+            <i class="fas fa-exclamation-triangle text-warning"></i>
+          </div>
+          <div class="notification-content">
+            <p>Niski poziom wolnej pamięci RAM (1.2 GB)</p>
+            <small class="text-muted">1 godzinę temu</small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline">Wyczyść wszystkie</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User context menu -->
+  <div class="context-menu" id="userContextMenu">
+    <div class="context-menu-item">
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    </div>
+    <div class="context-menu-item">
+      <i class="fas fa-cog"></i>
+      <span>Ustawienia</span>
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Wyloguj</span>
+    </div>
+  </div>
+
   <script>
-    // Toggle sidebar on mobile
-    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-      toggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const parent = this.closest('.nav-item');
-        parent.classList.toggle('open');
-      });
+    // Stan serwera
+    const serverState = {
+      status: 'offline', // offline, starting, online
+      players: [],
+      plugins: [
+        { name: 'EssentialsX', version: '2.19.7', author: 'Essentials Team', enabled: true },
+        { name: 'WorldEdit', version: '7.2.12', author: 'EngineHub', enabled: true },
+        { name: 'LuckPerms', version: '5.4.49', author: 'Luck', enabled: true }
+      ],
+      files: {
+        '/': ['server.properties', 'eula.txt', 'banned-players.json', 'ops.json'],
+        '/plugins': ['EssentialsX.jar', 'WorldEdit.jar', 'LuckPerms.jar'],
+        '/world': ['level.dat', 'region', 'data', 'playerdata'],
+        '/world_nether': ['DIM-1'],
+        '/world_the_end': ['DIM1']
+      },
+      config: {
+        name: 'Mój Serwer Minecraft',
+        motd: 'Witaj na serwerze!',
+        maxPlayers: 20,
+        gameMode: 0,
+        difficulty: 2,
+        pvp: true,
+        renderDistance: 10,
+        tickRate: 20,
+        whitelist: false,
+        onlineMode: true,
+        worldType: 'DEFAULT',
+        generateStructures: true,
+        worldSeed: '',
+        maxBuildHeight: 256,
+        serverPort: 25565,
+        maxPacketSize: 2097152,
+        networkCompression: -1,
+        maxChunks: 1000,
+        entityLimit: 100,
+        worldOptimization: true,
+        autoSave: true
+      }
+    };
+
+    // Symulowani gracze
+    const samplePlayers = [
+      { name: 'Kacpiq', ip: '192.168.1.1', playtime: '2h 45m', ping: 24 },
+      { name: 'Notch', ip: '192.168.1.2', playtime: '1h 12m', ping: 45 },
+      { name: 'Steve', ip: '192.168.1.3', playtime: '0h 30m', ping: 62 }
+    ];
+
+    // Inicjalizacja UI
+    document.addEventListener('DOMContentLoaded', function() {
+      updateServerStatus();
+      renderPlayers();
+      renderPlugins();
+      renderFileTree();
+      setupEventListeners();
+      simulateServerLogs();
+      updateConfigUI();
     });
 
-    // Open modals
+    // Aktualizacja statusu serwera w UI
+    function updateServerStatus() {
+      const indicator = document.getElementById('serverStatusIndicator');
+      const text = document.getElementById('serverStatusText');
+      const startBtn = document.getElementById('startServerBtn');
+      const stopBtn = document.getElementById('stopServerBtn');
+      const restartBtn = document.getElementById('restartServerBtn');
+
+      indicator.className = 'status-indicator ' + serverState.status;
+      text.textContent = serverState.status === 'online' ? 'Online' : 
+                         serverState.status === 'starting' ? 'Uruchamianie...' : 'Offline';
+
+      startBtn.disabled = serverState.status !== 'offline';
+      stopBtn.disabled = serverState.status !== 'online';
+      restartBtn.disabled = serverState.status !== 'online';
+
+      // Aktualizuj liczbę graczy online
+      document.getElementById('onlinePlayersCount').textContent = 
+        serverState.status === 'online' ? serverState.players.length : 0;
+    }
+
+    // Renderowanie listy graczy
+    function renderPlayers() {
+      const tbody = document.getElementById('playersList');
+      tbody.innerHTML = '';
+
+      if (serverState.status !== 'online') {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="5" style="text-align: center; color: var(--gray);">Serwer jest offline</td>';
+        tbody.appendChild(tr);
+        return;
+      }
+
+      if (serverState.players.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="5" style="text-align: center; color: var(--gray);">Brak graczy online</td>';
+        tbody.appendChild(tr);
+        return;
+      }
+
+      serverState.players.forEach(player => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <i class="fas fa-user" style="margin-right: 8px; color: var(--primary);"></i>
+            ${player.name}
+          </td>
+          <td>${player.ip}</td>
+          <td>${player.playtime}</td>
+          <td>
+            <span class="badge ${player.ping < 50 ? 'badge-success' : player.ping < 100 ? 'badge-warning' : 'badge-danger'}">
+              ${player.ping}ms
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline player-msg-btn" data-player="${player.name}" title="Wyślij wiadomość">
+                <i class="fas fa-comment"></i>
+              </button>
+              <button class="btn btn-sm btn-outline player-kick-btn" data-player="${player.name}" title="Wyrzuć gracza">
+                <i class="fas fa-user-slash"></i>
+              </button>
+              <button class="btn btn-sm btn-danger player-ban-btn" data-player="${player.name}" title="Zbanuj gracza">
+                <i class="fas fa-ban"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Dodaj event listeners do przycisków akcji
+      document.querySelectorAll('.player-msg-btn').forEach(btn => {
+        btn.addEventListener('click', () => showPlayerActionModal('msg', btn.dataset.player));
+      });
+      document.querySelectorAll('.player-kick-btn').forEach(btn => {
+        btn.addEventListener('click', () => showPlayerActionModal('kick', btn.dataset.player));
+      });
+      document.querySelectorAll('.player-ban-btn').forEach(btn => {
+        btn.addEventListener('click', () => showPlayerActionModal('ban', btn.dataset.player));
+      });
+    }
+
+    // Renderowanie listy pluginów
+    function renderPlugins() {
+      const tbody = document.getElementById('pluginsList');
+      tbody.innerHTML = '';
+
+      serverState.plugins.forEach(plugin => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <i class="fas fa-puzzle-piece" style="margin-right: 8px; color: var(--primary);"></i>
+            ${plugin.name}
+          </td>
+          <td>${plugin.version}</td>
+          <td>${plugin.author || 'Nieznany'}</td>
+          <td>
+            <span class="badge ${plugin.enabled ? 'badge-success' : 'badge-danger'}">
+              ${plugin.enabled ? 'Włączony' : 'Wyłączony'}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-sm ${plugin.enabled ? 'btn-danger' : 'btn-success'} toggle-plugin-btn" data-plugin="${plugin.name}" title="${plugin.enabled ? 'Wyłącz' : 'Włącz'}">
+                <i class="fas fa-power-off"></i>
+              </button>
+              <button class="btn btn-sm btn-outline config-plugin-btn" data-plugin="${plugin.name}" title="Konfiguruj">
+                <i class="fas fa-cog"></i>
+              </button>
+              <button class="btn btn-sm btn-danger remove-plugin-btn" data-plugin="${plugin.name}" title="Usuń">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Dodaj event listeners do przycisków pluginów
+      document.querySelectorAll('.toggle-plugin-btn').forEach(btn => {
+        btn.addEventListener('click', () => togglePlugin(btn.dataset.plugin));
+      });
+      document.querySelectorAll('.remove-plugin-btn').forEach(btn => {
+        btn.addEventListener('click', () => removePlugin(btn.dataset.plugin));
+      });
+      document.querySelectorAll('.config-plugin-btn').forEach(btn => {
+        btn.addEventListener('click', () => configurePlugin(btn.dataset.plugin));
+      });
+    }
+
+    // Renderowanie drzewa plików
+    function renderFileTree() {
+      const fileTree = document.getElementById('fileTree');
+      fileTree.innerHTML = '';
+
+      for (const path in serverState.files) {
+        const folderName = path === '/' ? 'Główny folder' : path.split('/').pop();
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+          <i class="fas fa-folder${path === '/' ? '-open' : ''}"></i>
+          <span>${folderName}</span>
+        `;
+        div.addEventListener('click', () => {
+          // Usuń klasę active ze wszystkich elementów
+          document.querySelectorAll('.file-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          // Dodaj klasę active do klikniętego elementu
+          div.classList.add('active');
+          renderFileContent(path);
+        });
+        fileTree.appendChild(div);
+      }
+    }
+
+    // Renderowanie zawartości plików
+    function renderFileContent(path) {
+      const fileContent = document.getElementById('fileContent');
+      fileContent.innerHTML = '<div style="color: var(--gray); margin-bottom: 1rem;">Ścieżka: ' + path + '</div>';
+
+      if (!serverState.files[path] || serverState.files[path].length === 0) {
+        fileContent.innerHTML += '<div style="color: var(--gray); text-align: center; padding: 2rem;">Folder jest pusty</div>';
+        return;
+      }
+
+      serverState.files[path].forEach(file => {
+        const isFolder = !file.includes('.');
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+          <i class="fas ${isFolder ? 'fa-folder' : 'fa-file-alt'}"></i>
+          <span>${file}</span>
+          ${!isFolder ? '<span style="margin-left: auto; color: var(--gray);">' + (Math.floor(Math.random() * 100) + 1) + ' KB</span>' : ''}
+        `;
+        
+        if (!isFolder) {
+          div.addEventListener('click', () => {
+            if (file === 'server.properties') {
+              openModal('serverPropertiesModal');
+            }
+          });
+        }
+        
+        fileContent.appendChild(div);
+      });
+    }
+
+    // Symulacja logów serwera
+    function simulateServerLogs() {
+      const consoleElement = document.getElementById('serverConsole');
+      
+      function addLog(message, type = 'info') {
+        const div = document.createElement('div');
+        div.className = `console-line ${type}`;
+        
+        let prefix = '';
+        const now = new Date();
+        const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        
+        switch(type) {
+          case 'info': prefix = `[${time} INFO]`; break;
+          case 'warn': prefix = `[${time} WARN]`; break;
+          case 'error': prefix = `[${time} ERROR]`; break;
+        }
+        
+        div.textContent = `${prefix} ${message}`;
+        consoleElement.insertBefore(div, consoleElement.querySelector('.console-command'));
+        consoleElement.scrollTop = consoleElement.scrollHeight;
+      }
+      
+      // Symuluj logi w zależności od statusu serwera
+      if (serverState.status === 'starting') {
+        addLog('Starting minecraft server version 1.19.2');
+        addLog('Loading properties');
+        addLog('Default game type: SURVIVAL');
+        
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+          progress += 5;
+          document.getElementById('progressBar').style.width = `${progress}%`;
+          document.getElementById('progressPercent').textContent = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(progressInterval);
+            serverState.status = 'online';
+            serverState.players = samplePlayers.slice(0, 2); // 2 graczy online
+            updateServerStatus();
+            renderPlayers();
+            addLog('Done (4.123s)! For help, type "help"');
+            document.getElementById('serverProgress').style.display = 'none';
+            document.getElementById('stopServerBtn').disabled = false;
+            document.getElementById('restartServerBtn').disabled = false;
+            
+            // Symuluj logowanie graczy
+            setTimeout(() => {
+              addLog(`${serverState.players[0].name}[/${serverState.players[0].ip}] logged in with entity id 123 at ([world] 12.3, 45.6, 78.9)`);
+              addLog(`${serverState.players[1].name}[/${serverState.players[1].ip}] logged in with entity id 124 at ([world] -12.3, 45.6, -78.9)`);
+            }, 500);
+          }
+        }, 200);
+      } else if (serverState.status === 'online') {
+        addLog('Minecraft server is already running');
+      }
+    }
+
+    // Uruchamianie serwera
+    function startServer() {
+      serverState.status = 'starting';
+      updateServerStatus();
+      document.getElementById('serverProgress').style.display = 'block';
+      simulateServerLogs();
+      addServerLog('[SYSTEM] Uruchamianie serwera...');
+    }
+
+    // Zatrzymywanie serwera
+    function stopServer() {
+      serverState.status = 'offline';
+      serverState.players = [];
+      updateServerStatus();
+      renderPlayers();
+      addServerLog('[SYSTEM] Serwer został zatrzymany');
+      document.getElementById('serverConsole').innerHTML = '<div class="console-command"><span class="console-prompt">></span><input type="text" class="console-input" id="consoleInput" placeholder="Wpisz komendę..."></div>';
+    }
+
+    // Restart serwera
+    function restartServer() {
+      addServerLog('[SYSTEM] Restartowanie serwera...');
+      stopServer();
+      setTimeout(startServer, 2000);
+    }
+
+    // Dodawanie logu do konsoli
+    function addServerLog(message, type = 'info') {
+      const consoleElement = document.getElementById('serverConsole');
+      const div = document.createElement('div');
+      div.className = `console-line ${type}`;
+      
+      let prefix = '';
+      const now = new Date();
+      const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+      
+      switch(type) {
+        case 'info': prefix = `[${time} INFO]`; break;
+        case 'warn': prefix = `[${time} WARN]`; break;
+        case 'error': prefix = `[${time} ERROR]`; break;
+      }
+      
+      div.textContent = `${prefix} ${message}`;
+      consoleElement.insertBefore(div, consoleElement.querySelector('.console-command'));
+      consoleElement.scrollTop = consoleElement.scrollHeight;
+    }
+
+    // Włączanie/wyłączanie pluginów
+    function togglePlugin(pluginName) {
+      const plugin = serverState.plugins.find(p => p.name === pluginName);
+      if (plugin) {
+        plugin.enabled = !plugin.enabled;
+        renderPlugins();
+        addServerLog(`[PLUGIN] ${pluginName} ${plugin.enabled ? 'włączony' : 'wyłączony'}`);
+      }
+    }
+
+    // Konfiguracja pluginu
+    function configurePlugin(pluginName) {
+      addServerLog(`[PLUGIN] Otwieranie konfiguracji pluginu: ${pluginName}`);
+      alert(`Konfiguracja pluginu ${pluginName} - ta funkcja jest w budowie`);
+    }
+
+    // Usuwanie pluginów
+    function removePlugin(pluginName) {
+      if (confirm(`Czy na pewno chcesz usunąć plugin ${pluginName}?`)) {
+        serverState.plugins = serverState.plugins.filter(p => p.name !== pluginName);
+        renderPlugins();
+        addServerLog(`[PLUGIN] ${pluginName} został usunięty`);
+      }
+    }
+
+    // Pokazywanie modala akcji dla gracza
+    function showPlayerActionModal(action, playerName) {
+      const modal = document.getElementById('playerActionModal');
+      const title = document.getElementById('playerActionTitle');
+      const content = document.getElementById('playerActionContent');
+      
+      switch(action) {
+        case 'msg':
+          title.textContent = `Wiadomość do ${playerName}`;
+          content.innerHTML = `
+            <div class="form-group">
+              <label class="form-label">Wiadomość</label>
+              <textarea class="form-control" id="playerMessage" rows="3" placeholder="Wpisz wiadomość..."></textarea>
+            </div>
+          `;
+          break;
+          
+        case 'kick':
+          title.textContent = `Wyrzuć gracza ${playerName}`;
+          content.innerHTML = `
+            <div class="form-group">
+              <label class="form-label">Powód</label>
+              <input type="text" class="form-control" id="kickReason" placeholder="Opcjonalny powód">
+            </div>
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i> Gracz będzie mógł ponownie dołączyć do serwera.
+            </div>
+          `;
+          break;
+          
+        case 'ban':
+          title.textContent = `Zbanuj gracza ${playerName}`;
+          content.innerHTML = `
+            <div class="form-group">
+              <label class="form-label">Powód</label>
+              <input type="text" class="form-control" id="banReason" placeholder="Opcjonalny powód">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Czas bana</label>
+              <select class="form-control" id="banDuration">
+                <option value="1h">1 godzina</option>
+                <option value="1d">1 dzień</option>
+                <option value="7d">1 tydzień</option>
+                <option value="30d">1 miesiąc</option>
+                <option value="permanent">Permanentnie</option>
+              </select>
+            </div>
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-circle"></i> Gracz nie będzie mógł dołączyć do serwera do czasu wygaśnięcia bana.
+            </div>
+          `;
+          break;
+      }
+      
+      // Ustaw dane dla przycisku potwierdzenia
+      document.getElementById('confirmPlayerActionBtn').dataset.action = action;
+      document.getElementById('confirmPlayerActionBtn').dataset.player = playerName;
+      
+      openModal('playerActionModal');
+    }
+
+    // Otwieranie modala
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
 
-    // Close modals
-    document.querySelectorAll('.modal-close, .btn-outline').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.closest('.modal').classList.remove('active');
-      });
-    });
+    // Zamykanie modala
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
 
-    // Server control buttons
-    document.querySelectorAll('.btn-success, .btn-warning, .btn-danger').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const statusIndicator = document.querySelector('.status-indicator');
-        const statusText = document.querySelector('.server-status span:last-child');
-        
-        statusIndicator.classList.remove('online', 'offline', 'starting');
-        statusText.textContent = 'Zmiana statusu...';
-        
-        if (this.classList.contains('btn-success')) {
-          statusIndicator.classList.add('starting');
-          setTimeout(() => {
-            statusIndicator.classList.remove('starting');
-            statusIndicator.classList.add('online');
-            statusText.textContent = 'Online';
-          }, 2000);
-        } else if (this.classList.contains('btn-danger')) {
-          statusIndicator.classList.add('offline');
-          statusText.textContent = 'Offline';
-        } else if (this.classList.contains('btn-warning')) {
-          statusIndicator.classList.add('starting');
-          setTimeout(() => {
-            statusIndicator.classList.remove('starting');
-            statusIndicator.classList.add('online');
-            statusText.textContent = 'Online';
-          }, 2000);
+    // Aktualizacja UI konfiguracji
+    function updateConfigUI() {
+      // Podstawowe ustawienia
+      document.getElementById('serverName').value = serverState.config.name;
+      document.getElementById('serverMotd').value = serverState.config.motd;
+      document.getElementById('maxPlayers').value = serverState.config.maxPlayers;
+      document.getElementById('gameMode').value = serverState.config.gameMode;
+      document.getElementById('difficulty').value = serverState.config.difficulty;
+      document.getElementById('pvpEnabled').value = serverState.config.pvp.toString();
+      
+      // Zaawansowane ustawienia
+      document.getElementById('renderDistance').value = serverState.config.renderDistance;
+      document.getElementById('renderDistanceValue').textContent = serverState.config.renderDistance;
+      document.getElementById('tickRate').value = serverState.config.tickRate;
+      document.getElementById('tickRateValue').textContent = serverState.config.tickRate;
+      document.getElementById('whitelistEnabled').value = serverState.config.whitelist.toString();
+      document.getElementById('onlineMode').value = serverState.config.onlineMode.toString();
+      
+      // Ustawienia świata
+      document.getElementById('worldType').value = serverState.config.worldType;
+      document.getElementById('generateStructures').value = serverState.config.generateStructures.toString();
+      document.getElementById('worldSeed').value = serverState.config.worldSeed;
+      document.getElementById('maxBuildHeight').value = serverState.config.maxBuildHeight;
+      
+      // Ustawienia sieci
+      document.getElementById('serverPort').value = serverState.config.serverPort;
+      document.getElementById('maxPacketSize').value = serverState.config.maxPacketSize;
+      document.getElementById('networkCompression').value = serverState.config.networkCompression;
+      
+      // Ustawienia wydajności
+      document.getElementById('maxChunks').value = serverState.config.maxChunks;
+      document.getElementById('entityLimit').value = serverState.config.entityLimit;
+      document.getElementById('worldOptimization').value = serverState.config.worldOptimization.toString();
+      document.getElementById('autoSave').value = serverState.config.autoSave.toString();
+    }
+
+    // Ustawienie event listeners
+    function setupEventListeners() {
+      // Rozwijanie menu Ustawienia
+      document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          const navItem = this.closest('.nav-item');
+          navItem.classList.toggle('open');
+        });
+      });
+
+      // Przyciski sterowania serwerem
+      document.getElementById('startServerBtn').addEventListener('click', startServer);
+      document.getElementById('stopServerBtn').addEventListener('click', stopServer);
+      document.getElementById('restartServerBtn').addEventListener('click', restartServer);
+      document.getElementById('consoleBtn').addEventListener('click', () => {
+        document.getElementById('consoleCard').scrollIntoView({ behavior: 'smooth' });
+      });
+      document.getElementById('backupBtn').addEventListener('click', () => {
+        addServerLog('[SYSTEM] Tworzenie backupu serwera...');
+        setTimeout(() => {
+          addServerLog('[SYSTEM] Backup został pomyślnie utworzony');
+        }, 1500);
+      });
+      document.getElementById('settingsBtn').addEventListener('click', () => {
+        document.getElementById('configCard').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Konsola serwera
+      document.getElementById('clearConsoleBtn').addEventListener('click', () => {
+        const consoleElement = document.getElementById('serverConsole');
+        consoleElement.innerHTML = '<div class="console-command"><span class="console-prompt">></span><input type="text" class="console-input" id="consoleInput" placeholder="Wpisz komendę..."></div>';
+      });
+
+      document.getElementById('pauseConsoleBtn').addEventListener('click', function() {
+        this.classList.toggle('active');
+        if (this.classList.contains('active')) {
+          this.innerHTML = '<i class="fas fa-play"></i> Wznów';
+          addServerLog('[SYSTEM] Konsola została wstrzymana');
+        } else {
+          this.innerHTML = '<i class="fas fa-pause"></i> Wstrzymaj';
+          addServerLog('[SYSTEM] Konsola została wznowiona');
         }
       });
-    });
 
-    // Console input
-    document.querySelector('.console-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        const command = this.value;
-        if (command.trim()) {
-          const consoleOutput = document.querySelector('.console');
-          const newLine = document.createElement('div');
-          newLine.className = 'console-line';
-          newLine.textContent = `> ${command}`;
-          consoleOutput.insertBefore(newLine, this.parentNode);
+      document.getElementById('consoleInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const command = this.value.trim();
+          if (command) {
+            addServerLog(`> ${command}`);
+            
+            // Symuluj odpowiedź na komendę
+            if (command === 'help') {
+              addServerLog('Dostępne komendy: help, say, kick, ban, op, gamemode, time, weather');
+            } else if (command.startsWith('say ')) {
+              const message = command.substring(4);
+              addServerLog(`[Server] ${message}`);
+            } else if (command === 'list') {
+              const players = serverState.players.map(p => p.name).join(', ');
+              addServerLog(`Gracze online (${serverState.players.length}): ${players}`);
+            } else if (command === 'stop') {
+              stopServer();
+            } else if (command === 'restart') {
+              restartServer();
+            } else {
+              addServerLog(`Nieznana komenda: ${command}`, 'error');
+            }
+            
+            this.value = '';
+          }
+        }
+      });
+
+      // Menedżer plików
+      document.getElementById('uploadFileBtn').addEventListener('click', () => {
+        openModal('fileUploadModal');
+      });
+
+      document.getElementById('newFolderBtn').addEventListener('click', () => {
+        const folderName = prompt('Podaj nazwę nowego folderu:');
+        if (folderName) {
+          const path = '/';
+          if (!serverState.files[path + folderName]) {
+            serverState.files[path + folderName] = [];
+            renderFileTree();
+            addServerLog(`[FILE] Utworzono folder ${folderName}`);
+          } else {
+            alert('Folder o tej nazwie już istnieje!');
+          }
+        }
+      });
+
+      document.getElementById('refreshFilesBtn').addEventListener('click', () => {
+        renderFileTree();
+        addServerLog('[FILE] Odświeżono strukturę plików');
+      });
+
+      // Instalacja pluginów
+      document.getElementById('installPluginBtn').addEventListener('click', () => {
+        openModal('installPluginModal');
+      });
+
+      document.getElementById('confirmInstallPluginBtn').addEventListener('click', () => {
+        const pluginSelect = document.getElementById('pluginSelect');
+        const pluginUrl = document.getElementById('pluginUrl').value;
+        const pluginFile = document.getElementById('pluginFile').files[0];
+        
+        if (pluginSelect.value || pluginUrl || pluginFile) {
+          let pluginName;
           
-          // Simulate response
-          if (command === 'help') {
-            const response = document.createElement('div');
-            response.className = 'console-line';
-            response.textContent = 'Dostępne komendy: help, say, kick, ban, op';
-            consoleOutput.insertBefore(response, this.parentNode);
+          if (pluginFile) {
+            pluginName = pluginFile.name.replace('.jar', '');
+          } else {
+            pluginName = pluginSelect.value || pluginUrl.split('/').pop().replace('.jar', '');
           }
           
-          this.value = '';
-          consoleOutput.scrollTop = consoleOutput.scrollHeight;
-        }
-      }
-    });
-
-    // File item click
-    document.querySelectorAll('.file-item').forEach(item => {
-      item.addEventListener('click', function() {
-        if (this.querySelector('i').classList.contains('fa-folder')) {
-          // Simulate folder navigation
-          const folderName = this.querySelector('span').textContent;
-          document.querySelector('.file-content').innerHTML = `
-            <div class="file-item">
-              <i class="fas fa-folder-open"></i>
-              <span>${folderName}</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>plik1.txt</span>
-              <span style="margin-left: auto; color: var(--gray);">1 KB</span>
-            </div>
-            <div class="file-item">
-              <i class="fas fa-file-alt"></i>
-              <span>plik2.json</span>
-              <span style="margin-left: auto; color: var(--gray);">3 KB</span>
-            </div>
-          `;
-        } else if (this.querySelector('span').textContent === 'server.properties') {
-          openModal('serverPropertiesModal');
+          if (!serverState.plugins.some(p => p.name.toLowerCase() === pluginName.toLowerCase())) {
+            serverState.plugins.push({
+              name: pluginName,
+              version: '1.0.0',
+              author: 'Nieznany',
+              enabled: true
+            });
+            
+            if (!serverState.files['/plugins']) {
+              serverState.files['/plugins'] = [];
+            }
+            
+            serverState.files['/plugins'].push(`${pluginName}.jar`);
+            
+            renderPlugins();
+            renderFileTree();
+            addServerLog(`[PLUGIN] ${pluginName} został zainstalowany`);
+            closeModal('installPluginModal');
+            
+            // Wyczyść formularz
+            pluginSelect.value = '';
+            document.getElementById('pluginUrl').value = '';
+            document.getElementById('pluginFile').value = '';
+          } else {
+            alert('Ten plugin jest już zainstalowany!');
+          }
+        } else {
+          alert('Wybierz plugin, podaj URL lub prześlij plik!');
         }
       });
-    });
 
-    // Simulate loading
-    setTimeout(() => {
-      document.querySelectorAll('.nav-item')[1].classList.add('open');
-    }, 500);
+      // Akcje na graczach
+      document.getElementById('confirmPlayerActionBtn').addEventListener('click', function() {
+        const action = this.dataset.action;
+        const playerName = this.dataset.player;
+        
+        switch(action) {
+          case 'msg':
+            const message = document.getElementById('playerMessage').value;
+            if (message) {
+              addServerLog(`[MSG] Wiadomość do ${playerName}: ${message}`);
+              alert(`Wysłano wiadomość do ${playerName}: ${message}`);
+            }
+            break;
+            
+          case 'kick':
+            const kickReason = document.getElementById('kickReason').value || 'brak podanego powodu';
+            addServerLog(`[KICK] Gracz ${playerName} został wyrzucony. Powód: ${kickReason}`);
+            serverState.players = serverState.players.filter(p => p.name !== playerName);
+            renderPlayers();
+            alert(`Gracz ${playerName} został wyrzucony z serwera`);
+            break;
+            
+          case 'ban':
+            const banReason = document.getElementById('banReason').value || 'brak podanego powodu';
+            const banDuration = document.getElementById('banDuration').value;
+            addServerLog(`[BAN] Gracz ${playerName} został zbanowany. Powód: ${banReason}, Czas: ${banDuration}`);
+            serverState.players = serverState.players.filter(p => p.name !== playerName);
+            renderPlayers();
+            alert(`Gracz ${playerName} został zbanowany na okres ${banDuration}`);
+            break;
+        }
+        
+        closeModal('playerActionModal');
+      });
+
+      // Powiadomienia
+      document.getElementById('notificationsBtn').addEventListener('click', () => {
+        openModal('notificationsModal');
+      });
+
+      // Menu użytkownika
+      document.getElementById('userAvatar').addEventListener('click', function(e) {
+        const menu = document.getElementById('userContextMenu');
+        menu.style.top = `${e.clientY}px`;
+        menu.style.left = `${e.clientX}px`;
+        menu.classList.toggle('active');
+        
+        // Zamknij menu po kliknięciu gdzie indziej
+        document.addEventListener('click', function closeMenu(event) {
+          if (!menu.contains(event.target) && event.target !== document.getElementById('userAvatar')) {
+            menu.classList.remove('active');
+            document.removeEventListener('click', closeMenu);
+          }
+        });
+      });
+
+      // Zamknij przyciski modalów
+      document.querySelectorAll('.modal-close, .btn-outline').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (this.closest('.modal')) {
+            this.closest('.modal').classList.remove('active');
+          }
+        });
+      });
+
+      // Odświeżanie listy graczy
+      document.getElementById('refreshPlayersBtn').addEventListener('click', () => {
+        if (serverState.status === 'online') {
+          // Symuluj losową zmianę liczby graczy
+          if (Math.random() > 0.5 && serverState.players.length < samplePlayers.length) {
+            serverState.players.push(samplePlayers[serverState.players.length]);
+          } else if (serverState.players.length > 1) {
+            serverState.players.pop();
+          }
+          
+          renderPlayers();
+          addServerLog('[SYSTEM] Odświeżono listę graczy');
+        }
+      });
+
+      // Dodawanie gracza
+      document.getElementById('addPlayerBtn').addEventListener('click', () => {
+        if (serverState.status === 'online' && serverState.players.length < samplePlayers.length) {
+          const newPlayer = samplePlayers[serverState.players.length];
+          serverState.players.push(newPlayer);
+          renderPlayers();
+          addServerLog(`[SYSTEM] Gracz ${newPlayer.name} dołączył do serwera`);
+        } else if (serverState.players.length >= samplePlayers.length) {
+          alert('Brak więcej przykładowych graczy do dodania!');
+        } else {
+          alert('Serwer musi być online, aby dodać gracza!');
+        }
+      });
+
+      // Tabs w konfiguracji
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.dataset.tab;
+          
+          // Usuń aktywną klasę ze wszystkich zakładek
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          // Dodaj aktywną klasę do klikniętej zakładki
+          this.classList.add('active');
+          
+          // Ukryj wszystkie panele zawartości
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          
+          // Pokaż odpowiedni panel
+          document.getElementById(tabId + 'Config').classList.add('active');
+        });
+      });
+
+      // Slidery w konfiguracji
+      document.getElementById('renderDistance').addEventListener('input', function() {
+        document.getElementById('renderDistanceValue').textContent = this.value;
+      });
+
+      document.getElementById('tickRate').addEventListener('input', function() {
+        document.getElementById('tickRateValue').textContent = this.value;
+      });
+
+      // Zapisywanie konfiguracji
+      document.getElementById('saveConfigBtn').addEventListener('click', () => {
+        // Podstawowe ustawienia
+        serverState.config.name = document.getElementById('serverName').value;
+        serverState.config.motd = document.getElementById('serverMotd').value;
+        serverState.config.maxPlayers = parseInt(document.getElementById('maxPlayers').value);
+        serverState.config.gameMode = document.getElementById('gameMode').value;
+        serverState.config.difficulty = document.getElementById('difficulty').value;
+        serverState.config.pvp = document.getElementById('pvpEnabled').value === 'true';
+        
+        // Zaawansowane ustawienia
+        serverState.config.renderDistance = parseInt(document.getElementById('renderDistance').value);
+        serverState.config.tickRate = parseInt(document.getElementById('tickRate').value);
+        serverState.config.whitelist = document.getElementById('whitelistEnabled').value === 'true';
+        serverState.config.onlineMode = document.getElementById('onlineMode').value === 'true';
+        
+        // Ustawienia świata
+        serverState.config.worldType = document.getElementById('worldType').value;
+        serverState.config.generateStructures = document.getElementById('generateStructures').value === 'true';
+        serverState.config.worldSeed = document.getElementById('worldSeed').value;
+        serverState.config.maxBuildHeight = parseInt(document.getElementById('maxBuildHeight').value);
+        
+        // Ustawienia sieci
+        serverState.config.serverPort = parseInt(document.getElementById('serverPort').value);
+        serverState.config.maxPacketSize = parseInt(document.getElementById('maxPacketSize').value);
+        serverState.config.networkCompression = parseInt(document.getElementById('networkCompression').value);
+        
+        // Ustawienia wydajności
+        serverState.config.maxChunks = parseInt(document.getElementById('maxChunks').value);
+        serverState.config.entityLimit = parseInt(document.getElementById('entityLimit').value);
+        serverState.config.worldOptimization = document.getElementById('worldOptimization').value === 'true';
+        serverState.config.autoSave = document.getElementById('autoSave').value === 'true';
+        
+        addServerLog('[CONFIG] Konfiguracja serwera została zapisana');
+        alert('Konfiguracja serwera została zapisana!');
+      });
+
+      // Resetowanie konfiguracji
+      document.getElementById('resetConfigBtn').addEventListener('click', () => {
+        if (confirm('Czy na pewno chcesz zresetować konfigurację do ustawień domyślnych?')) {
+          // Przywróć domyślne ustawienia
+          serverState.config = {
+            name: 'Mój Serwer Minecraft',
+            motd: 'Witaj na serwerze!',
+            maxPlayers: 20,
+            gameMode: 0,
+            difficulty: 2,
+            pvp: true,
+            renderDistance: 10,
+            tickRate: 20,
+            whitelist: false,
+            onlineMode: true,
+            worldType: 'DEFAULT',
+            generateStructures: true,
+            worldSeed: '',
+            maxBuildHeight: 256,
+            serverPort: 25565,
+            maxPacketSize: 2097152,
+            networkCompression: -1,
+            maxChunks: 1000,
+            entityLimit: 100,
+            worldOptimization: true,
+            autoSave: true
+          };
+          
+          updateConfigUI();
+          addServerLog('[CONFIG] Konfiguracja serwera została zresetowana');
+          alert('Konfiguracja serwera została zresetowana do ustawień domyślnych!');
+        }
+      });
+    }
   </script>
 </body>
 </html>
