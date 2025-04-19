@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zaawansowany Panel Serwera Minecraft - kacpiq.pl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6a64d8;
+      --primary-dark: #4c4899;
+      --secondary: #ff4081;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fb;
+      color: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Layout */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+      padding: 0 1rem;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-menu {
+      margin-top: 2rem;
+    }
+
+    .nav-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .nav-link i {
+      width: 24px;
+      text-align: center;
+    }
+
+    .nav-dropdown {
+      margin-left: 2rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+      display: block;
+    }
+
+    .dropdown-toggle::after {
+      content: '\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      margin-left: auto;
+      font-size: 0.8rem;
+      transition: transform 0.3s;
+    }
+
+    .nav-item.open .dropdown-toggle::after {
+      transform: rotate(180deg);
+    }
+
+    /* Main content */
+    .main-content {
+      padding: 2rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .notification-badge {
+      position: relative;
+    }
+
+    .notification-badge::after {
+      content: '3';
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      background: var(--secondary);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .stat-icon.primary {
+      background: rgba(106, 100, 216, 0.1);
+      color: var(--primary);
+    }
+
+    .stat-icon.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+
+    .stat-icon.warning {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+    }
+
+    .stat-icon.danger {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+
+    .stat-info h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-info p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* Server status */
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .status-indicator.online {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .status-indicator.offline {
+      background: var(--danger);
+    }
+
+    .status-indicator.starting {
+      background: var(--warning);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(106, 100, 216, 0.1);
+    }
+
+    /* Tables */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .table th {
+      font-weight: 600;
+      color: var(--gray);
+    }
+
+    .table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .badge {
+      padding: 0.35rem 0.65rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-primary {
+      background: rgba(106, 100, 216, 0.1);
+      color: var(--primary);
+    }
+
+    .badge-success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      font-weight: 600;
+      color: var(--gray);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      transition: border 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Console */
+    .console {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    .console-line {
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .console-command {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .console-prompt {
+      color: #4ec9b0;
+    }
+
+    .console-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    .console-input:focus {
+      outline: none;
+    }
+
+    /* File manager */
+    .file-manager {
+      display: flex;
+      height: 500px;
+    }
+
+    .file-tree {
+      width: 250px;
+      border-right: 1px solid #eee;
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .file-content {
+      flex: 1;
+      padding-left: 1rem;
+      overflow-y: auto;
+    }
+
+    .file-item {
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-item:hover {
+      background: #f5f5f5;
+    }
+
+    .file-item i {
+      color: var(--gray);
+    }
+
+    /* Modals */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        z-index: 100;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+
+    /* Animations */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="https://www.kacpiq.pl/img/code-256.png" alt="Logo">
+        <h1>kacpiq.pl</h1>
+      </div>
+
+      <nav class="nav-menu">
+        <div class="nav-item">
+          <a href="#" class="nav-link active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-server"></i>
+            <span>Mój Serwer</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link dropdown-toggle">
+            <i class="fas fa-cog"></i>
+            <span>Ustawienia</span>
+          </a>
+          <div class="nav-dropdown">
+            <a href="#" class="nav-link">Konfiguracja</a>
+            <a href="#" class="nav-link">Pluginy</a>
+            <a href="#" class="nav-link">Światy</a>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-terminal"></i>
+            <span>Konsola</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Pliki</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-users"></i>
+            <span>Gracze</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-chart-line"></i>
+            <span>Statystyki</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-shield-alt"></i>
+            <span>Backupy</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-credit-card"></i>
+            <span>Płatności</span>
+          </a>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-question-circle"></i>
+            <span>Pomoc</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <header class="header">
+        <h2>Panel Zarządzania Serwerem</h2>
+        
+        <div class="user-menu">
+          <button class="btn btn-outline">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge"></span>
+          </button>
+          <img src="https://lh3.googleusercontent.com/a/ACg8ocIw1i-TxaKA4scgD3v5XSk--u_1YLkJrL-bTvegrF4rb8MY7A=s96-c" alt="User" class="user-avatar">
+        </div>
+      </header>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon primary">
+            <i class="fas fa-server"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Serwer PRO</h3>
+            <p>Twój obecny plan</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon success">
+            <i class="fas fa-memory"></i>
+          </div>
+          <div class="stat-info">
+            <h3>4 GB</h3>
+            <p>Przydział RAM</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon warning">
+            <i class="fas fa-hdd"></i>
+          </div>
+          <div class="stat-info">
+            <h3>15 GB</h3>
+            <p>Przestrzeń dyskowa</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon danger">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>8/20</h3>
+            <p>Aktywni gracze</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Server control -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Sterowanie Serwerem</h3>
+          <div class="server-status">
+            <div class="status-indicator online"></div>
+            <span>Online</span>
+          </div>
+        </div>
+
+        <div class="btn-group" style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-success">
+            <i class="fas fa-play"></i> Uruchom
+          </button>
+          <button class="btn btn-warning">
+            <i class="fas fa-redo"></i> Restart
+          </button>
+          <button class="btn btn-danger">
+            <i class="fas fa-stop"></i> Zatrzymaj
+          </button>
+          <button class="btn btn-outline">
+            <i class="fas fa-terminal"></i> Konsola
+          </button>
+        </div>
+      </div>
+
+      <!-- Players online -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Gracze Online (8/20)</h3>
+          <button class="btn btn-sm btn-outline">
+            <i class="fas fa-sync-alt"></i> Odśwież
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nick</th>
+                <th>IP</th>
+                <th>Playtime</th>
+                <th>Ping</th>
+                <th>Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kacpiq</td>
+                <td>192.168.1.1</td>
+                <td>2h 45m</td>
+                <td>24ms</td>
+                <td>
+                  <button class="btn btn-sm btn-outline">
+                    <i class="fas fa-comment"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline">
+                    <i class="fas fa-user-cog"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Notch</td>
+                <td>192.168.1.2</td>
+                <td>1h 12m</td>
+                <td>45ms</td>
+                <td>
+                  <button class="btn btn-sm btn-outline">
+                    <i class="fas fa-comment"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline">
+                    <i class="fas fa-user-cog"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Server console -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Konsola Serwera</h3>
+          <div>
+            <button class="btn btn-sm btn-outline">
+              <i class="fas fa-trash"></i> Wyczyść
+            </button>
+            <button class="btn btn-sm btn-outline">
+              <i class="fas fa-pause"></i> Wstrzymaj
+            </button>
+          </div>
+        </div>
+
+        <div class="console">
+          <div class="console-line">[12:34:56 INFO]: Starting minecraft server version 1.19.2</div>
+          <div class="console-line">[12:34:56 INFO]: Loading properties</div>
+          <div class="console-line">[12:34:57 INFO]: Default game type: SURVIVAL</div>
+          <div class="console-line">[12:34:57 INFO]: Generating keypair</div>
+          <div class="console-line">[12:34:58 INFO]: Starting Minecraft server on *:25565</div>
+          <div class="console-line">[12:34:58 INFO]: Using epoll channel type</div>
+          <div class="console-line">[12:34:58 INFO]: Preparing level "world"</div>
+          <div class="console-line">[12:35:01 INFO]: Done (4.123s)! For help, type "help"</div>
+          <div class="console-line">[12:35:02 INFO]: Kacpiq[/192.168.1.1:12345] logged in with entity id 123 at ([world] 12.3, 45.6, 78.9)</div>
+          <div class="console-line">[12:35:05 INFO]: Notch[/192.168.1.2:54321] logged in with entity id 124 at ([world] -12.3, 45.6, -78.9)</div>
+          <div class="console-command">
+            <span class="console-prompt">></span>
+            <input type="text" class="console-input" placeholder="Wpisz komendę...">
+          </div>
+        </div>
+      </div>
+
+      <!-- File manager -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Menedżer Plików</h3>
+          <div>
+            <button class="btn btn-sm btn-outline">
+              <i class="fas fa-upload"></i> Upload
+            </button>
+            <button class="btn btn-sm btn-outline">
+              <i class="fas fa-folder-plus"></i> Nowy Folder
+            </button>
+          </div>
+        </div>
+
+        <div class="file-manager">
+          <div class="file-tree">
+            <div class="file-item">
+              <i class="fas fa-folder"></i>
+              <span>plugins</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-folder"></i>
+              <span>world</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-folder"></i>
+              <span>world_nether</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-folder"></i>
+              <span>world_the_end</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>server.properties</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>eula.txt</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>banned-players.json</span>
+            </div>
+          </div>
+
+          <div class="file-content">
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>server.properties</span>
+              <span style="margin-left: auto; color: var(--gray);">12 KB</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>eula.txt</span>
+              <span style="margin-left: auto; color: var(--gray);">1 KB</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>banned-players.json</span>
+              <span style="margin-left: auto; color: var(--gray);">4 KB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for server properties -->
+  <div class="modal" id="serverPropertiesModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Edytuj server.properties</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Nazwa serwera</label>
+          <input type="text" class="form-control" value="Mój Serwer Minecraft">
+        </div>
+        <div class="form-group">
+          <label class="form-label">MOTD</label>
+          <input type="text" class="form-control" value="Witaj na serwerze!">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Maksymalna liczba graczy</label>
+          <input type="number" class="form-control" value="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tryb gry</label>
+          <select class="form-control">
+            <option value="0">Survival</option>
+            <option value="1">Creative</option>
+            <option value="2">Adventure</option>
+            <option value="3">Spectator</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poziom trudności</label>
+          <select class="form-control">
+            <option value="0">Pokojowy</option>
+            <option value="1">Łatwy</option>
+            <option value="2">Normalny</option>
+            <option value="3">Trudny</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PvP</label>
+          <select class="form-control">
+            <option value="true">Włączone</option>
+            <option value="false">Wyłączone</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline">Anuluj</button>
+        <button class="btn btn-primary">Zapisz zmiany</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar on mobile
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const parent = this.closest('.nav-item');
+        parent.classList.toggle('open');
+      });
+    });
+
+    // Open modals
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Close modals
+    document.querySelectorAll('.modal-close, .btn-outline').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.closest('.modal').classList.remove('active');
+      });
+    });
+
+    // Server control buttons
+    document.querySelectorAll('.btn-success, .btn-warning, .btn-danger').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const statusIndicator = document.querySelector('.status-indicator');
+        const statusText = document.querySelector('.server-status span:last-child');
+        
+        statusIndicator.classList.remove('online', 'offline', 'starting');
+        statusText.textContent = 'Zmiana statusu...';
+        
+        if (this.classList.contains('btn-success')) {
+          statusIndicator.classList.add('starting');
+          setTimeout(() => {
+            statusIndicator.classList.remove('starting');
+            statusIndicator.classList.add('online');
+            statusText.textContent = 'Online';
+          }, 2000);
+        } else if (this.classList.contains('btn-danger')) {
+          statusIndicator.classList.add('offline');
+          statusText.textContent = 'Offline';
+        } else if (this.classList.contains('btn-warning')) {
+          statusIndicator.classList.add('starting');
+          setTimeout(() => {
+            statusIndicator.classList.remove('starting');
+            statusIndicator.classList.add('online');
+            statusText.textContent = 'Online';
+          }, 2000);
+        }
+      });
+    });
+
+    // Console input
+    document.querySelector('.console-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const command = this.value;
+        if (command.trim()) {
+          const consoleOutput = document.querySelector('.console');
+          const newLine = document.createElement('div');
+          newLine.className = 'console-line';
+          newLine.textContent = `> ${command}`;
+          consoleOutput.insertBefore(newLine, this.parentNode);
+          
+          // Simulate response
+          if (command === 'help') {
+            const response = document.createElement('div');
+            response.className = 'console-line';
+            response.textContent = 'Dostępne komendy: help, say, kick, ban, op';
+            consoleOutput.insertBefore(response, this.parentNode);
+          }
+          
+          this.value = '';
+          consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+      }
+    });
+
+    // File item click
+    document.querySelectorAll('.file-item').forEach(item => {
+      item.addEventListener('click', function() {
+        if (this.querySelector('i').classList.contains('fa-folder')) {
+          // Simulate folder navigation
+          const folderName = this.querySelector('span').textContent;
+          document.querySelector('.file-content').innerHTML = `
+            <div class="file-item">
+              <i class="fas fa-folder-open"></i>
+              <span>${folderName}</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>plik1.txt</span>
+              <span style="margin-left: auto; color: var(--gray);">1 KB</span>
+            </div>
+            <div class="file-item">
+              <i class="fas fa-file-alt"></i>
+              <span>plik2.json</span>
+              <span style="margin-left: auto; color: var(--gray);">3 KB</span>
+            </div>
+          `;
+        } else if (this.querySelector('span').textContent === 'server.properties') {
+          openModal('serverPropertiesModal');
+        }
+      });
+    });
+
+    // Simulate loading
+    setTimeout(() => {
+      document.querySelectorAll('.nav-item')[1].classList.add('open');
+    }, 500);
+  </script>
+</body>
+</html>
