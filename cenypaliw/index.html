@@ -4,310 +4,224 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cenypaliw/fuelstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <title>Ceny Paliw Orlen</title>
 </head>
 <body>
 
-    <div class="loading" id="loading" style="display: block;"></div>
-    <div class="container" id="container">
-
-<div class="warn-bar">
-        <i class='bx bx-warn'></i>Występują problemy związane z pobieraniem danych cen paliw. Przepraszamy za zainstaniałą sytuację, pracujemy na jej naprawą.
-    </div>
- 
-        <h1>Ceny Paliw Orlen</h1>
-<!--<button class="coupon-button" onclick="showCouponModal()">Aktywuj aktualne kupony</button>
-      <br></br>-->
-      <div class="modal" id="couponModal">
-    <div class="modal-content">
-        <span class="close" onclick="closeCouponModal()">&times;</span>
-        <h2>Wybierz kupon</h2>
-        <label for="couponSelect">Wybierz kupon:</label>
-        <select id="couponSelect" onchange="applyCoupon()">
-            <option value="0">Brak kuponu</option>
-            <option value="-0.35">-35 gr/l</option>
-            <option value="-0.45">-45 gr/l | Karta Dużej Rodziny</option>
-        </select>
-        <p id="couponMessage"></p>
-        <p id="couponExpiry" style="display:none;"></p>
-        <p id="couponCountdown" style="display:none;"></p>
-      <p class="legend">
-            <span class="red-dot"></span> - Zastosowany kupon
-        </p>
-    </div>
-</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Paliwo</th>
-                    <th>Na stacjach (PLN)</th>
-                    <th>Cena hurtowa (PLN)</th>
-                </tr>
-            </thead>
-            <tbody id="fuelTableBody">
-                <!-- Dane zostaną tutaj wstawione przez JavaScript -->
-            </tbody>
-<tfoot>
-                <tr>
-                    <td colspan="3" class="update-info" id="updateInfo"></td>
-                </tr>
-            </tfoot>
-        </table>
-        
-        <div class="countdown" id="countdown"></div>
-        <div class="notification" id="notification"></div>
-<div class="modal" id="errorModal">
-    <div class="modal-content">
-        <span class="close" onclick="closeErrorModal()">&times;</span>
-        <h2>Wystąpił błąd</h2>
-        <p id="errorMessage"></p>
-        <button onclick="sendErrorReport()">Zgłoś błąd</button>
-    </div>
-</div>
-
-        <h1>Prognozowane ceny paliw</h1>
-
-<table>
-    <thead>
-        <tr>
-            <th>Paliwo</th>
-            <th>Prognozowana cena (PLN)</th>
-        </tr>
-    </thead>
-    <tbody id="forecastFuelTableBody">
-        <!-- Dane zostaną tutaj wstawione przez JavaScript -->
-    </tbody>
-  <tfoot>
-                <tr>
-                    <td colspan="3" class="fore-fuel-info">W okresie 20.01-26.01.2025</td>
-                </tr>
-            </tfoot>
-</table>
-
-
-        <div class="theme-toggle" onclick="toggleTheme()">
-            <i class='bx bxs-adjust'></i>
-        </div>
-        <div class="history-toggle" onclick="toggleHistory()">
-            <i class='bx bx-history'></i>
-        </div>
-    </div>
-
-   <div class="modal" id="historyModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHistoryModal()">&times;</span>
-            <h2>Historia Cen Paliw</h2>
-
-            <div class="info-bar">
-        <i class='bx bx-info'></i> Problemy z pobieraniem danych zostały naprawione.
-    </div>
-            <label for="fuelType">Wybierz paliwo:</label>
-            <select id="fuelType" onchange="fetchHistoryData()">
-                <option value="41-Pb95">EFECTA 95</option>
-                <option value="43-ONEkodiesel">EFECTA DIESEL</option>
-                <option value="42-Pb98">VERVA 98</option>
-                <option value="44-ONArctic2">VERVA DIESEL</option>
-            </select>
-            <label for="year">Wybierz rok:</label>
-            <select id="year" onchange="fetchHistoryData()">
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-                 <option value="2018">2018</option>
-                 <option value="2017">2017</option>
-                 <option value="2016">2016</option>
-                 <option value="2015">2015</option>
-                 <option value="2014">2014</option>
-                 <option value="2013">2013</option>
-                 <option value="2012">2012</option>
-                 <option value="2011">2011</option>
-                 <option value="2010">2010</option>
-                 <option value="2009">2009</option>
-                <option value="2008">2008</option>
-                <option value="2007">2007</option>
-                <option value="2006">2006</option>
-                <option value="2005">2005</option>
-                <option value="2004">2004</option>
-            </select>
-            <button onclick="showPriceHistoryChart()">Wyświetl wykres cen</button>
-            <div class="view-options">
-                <label>
-                    <input type="radio" name="dataView" value="daily" checked onclick="fetchHistoryData()">
-                    Dziennie
-                </label>
-                <label>
-                    <input type="radio" name="dataView" value="monthly" onclick="fetchHistoryData()">
-                    Miesięcznie
-                </label>
-                
-            </div>
-            <br></br>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Cena (PLN)</th>
-                    </tr>
-                </thead>
-                <div id="loadingHistory" style="display: none; text-align: center;">
-                    <i class='bx bx-loader bx-spin' style="font-size: 50px;"></i>
-                </div>
-                <tbody id="historyTableBody">
-                    <!-- Dane zostaną tutaj wstawione przez JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="modal" id="priceHistoryModal">
-        <div class="modal-content">
-            <span class="close" onclick="closePriceHistoryModal()">&times;</span>
-            <h2>Wykres cen paliw</h2>
-            <div class="chart">
-                <canvas id="priceHistoryChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </div>
+    <div id="particles-js"></div>
     
-    <div class="modal" id="historyLoadingModal">
-        <div class="modal-content">
-            <h2>Trwa ładowanie danych...</h2>
-        </div>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <h2 style="color: var(--text); margin-top: 1rem;">Ładowanie danych...</h2>
     </div>
 
-    <div class="modal" id="historyErrorModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHistoryErrorModal()">&times;</span>
-            <h2>Wystąpił błąd</h2>
-            <p id="historyErrorMessage"></p>
+    <div class="container animate-up" id="container" style="display: none;">
+        <div class="alert alert-info animate">
+            <i class='bx bx-info-circle'></i>
+            <span>Witaj w nowej odświeżonej wersji naszej strony.</span>
+        </div>
+
+        <h1 class="animate">Aktualne Ceny Paliw</h1>
+        
+        <div class="fuel-grid" id="fuelGrid">
+            <!-- Fuel cards will be inserted here by JavaScript -->
+        </div>
+
+        <div class="update-info animate" id="updateInfo">
+            Ostatnia aktualizacja: ładowanie...
+        </div>
+
+        <div class="action-buttons animate">
+            <button class="btn btn-primary" onclick="showCouponModal()">
+                <i class='bx bxs-discount'></i> Aktywuj kupon
+            </button>
+            <button class="btn btn-secondary" onclick="toggleHistory()">
+                <i class='bx bx-history'></i> Historia cen
+            </button>
+        </div>
+
+        <h1 class="animate">Prognozowane Ceny Paliw</h1>
+        
+        <div class="fuel-grid" id="forecastGrid">
+            <!-- Forecast cards will be inserted here by JavaScript -->
+        </div>
+
+        <div class="update-info animate">
+            Prognoza na okres 21.04-27.04.2025
         </div>
     </div>
-
-    <script>
-        // Funkcja wywoływana przy zamknięciu modala dla błędu ładowania historii cen paliw
-        function closeHistoryErrorModal() {
-            document.getElementById('historyErrorModal').style.display = 'none';
-        }
-
-        // Funkcja wyświetlająca modale w przypadku błędu
-        function displayHistoryError(errorMessage) {
-            document.getElementById('historyErrorMessage').textContent = errorMessage;
-            document.getElementById('historyErrorModal').style.display = 'block';
-        }
-
-        // Funkcja wyświetlająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
-        function displayHistoryLoadingModal() {
-            document.getElementById('historyLoadingModal').style.display = 'none';
-        }
-
-        // Funkcja zamykająca modal z informacją o oczekiwaniu na dane z API historii cen paliw
-        function closeHistoryLoadingModal() {
-            document.getElementById('historyLoadingModal').style.display = 'none';
-        }
-</script>
-
-    <div class="modal" id="mobileModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeMobileModal()">&times;</span>
-            <h2>Uwaga!</h2>
-            <p>Interfejs graficzny nie jest przystosowany do użytkowania na urządzeniach mobilnych.</p>
-        </div>
-    </div>
-
-<!--<div id="taxChangeModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Zmiany opodatkowania paliw</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rodzaj Paliwa</th>
-                        <th>Stare Opod.</th>
-                        <th>Nowe Opod.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>EFECTA 95</td>
-                        <td>26%</td>
-                        <td>26%</td>
-                    </tr>
-                    <tr>
-                        <td>EFECTA DIESEL</td>
-                        <td>26%</td>
-                        <td>26%</td>
-                    </tr>
-                    <tr>
-                        <td>VERVA DIESEL</td>
-                        <td>26%</td>
-                        <td>26%</td>
-                    </tr>
-                    <tr>
-                        <td>VERVA 98</td>
-                        <td>31%</td>
-                        <td style="color: red;">32%</td>
-                    </tr>
-                    <tr>
-                        <td>LPG</td>
-                        <td>27%</td>
-                        <td style="color: green;">26%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>-->
 
     <div class="modal" id="infoModal">
         <div class="modal-content">
             <span class="close" onclick="closeInfoModal()">&times;</span>
-            <h2>Informacja!</h2>
-            <p>Informujemy, że dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. Ceny na stacjach paliw są obliczane w następujący sposób: EFECTA 95, EFECTA DIESEL i VERVA DIESEL podlegają opodatkowaniu w wysokości 26%, natomiast VERVA 98 podlega opodatkowaniu w wysokości 32%. LPG podlega opodatkowaniu w wysokości 26%. Podane ceny są prognozowane i mogą się różnić w zależności od stacji.
-
-<br></br>Opodatkowanie zostało uwzględnione, aby ceny jak najbardziej odzwierciedlały rzeczywistość (opodatkowanie może być zmieniane, co będzie widoczne w informacjach). Historia cen paliw również uwzględnia takie samo opodatkowanie. Hurtowe ceny paliw nie są opodatkowane.
-
-<br></br>Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych.</p>
-
-<h2>Aktualizacja informacji:</h2>
-<p>- Od dnia 24.06.2024 w historii cen paliw są dostępne także hurtowe ceny paliw.
-<br></br>- Od dnia 12.08.2024 w sekcji aktualności będą dostępne informacje dotyczące marży Orlen.
-</p>
-        <button onclick="closeInfoModalAndAcknowledge()">Zapoznałem(-am) się</button>
-        </div>
-    </div>
-
-        <div class="modal" id="resetModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeInfoModal()">&times;</span>
-            <h2>Wystąpił błąd!</h2>
-            <p>Przepraszamy, wystąpił problem podczas ładowania strony. 
-            Może to być spowodowane problemem z połączeniem internetowym, 
-            błędem w działaniu domeny, niekompatybilnością przeglądarki lub niepowodzonym pobraniem danych.</p>
-    
-            <h3>Co możesz zrobić?</h3>
-            <ul>
-                <li>Sprawdź swoje połączenie z internetem.</li>
-                <li>Odśwież stronę, aby spróbować ponownie załadować zawartość.</li>
-                <li>Jeśli problem będzie się powtarzał, skontaktuj się z administratorem domeny.</li>
+            <h2>Ważne Informacje</h2>
+            
+            <p style="margin-bottom: 1rem;">
+                Dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. 
+                Ceny na stacjach paliw są obliczane z uwzględnieniem odpowiedniego opodatkowania:
+            </p>
+            
+            <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                <li>EFECTA 95, EFECTA DIESEL i VERVA DIESEL - 26%</li>
+                <li>VERVA 98 - 32%</li>
+                <li>LPG - 26%</li>
             </ul>
-    
-            <button onclick="resetButton()">Zresetuj stronę</button>
-            <button onclick="closeResetModal()">Zamknij</button>
+            
+            <p style="margin-bottom: 1.5rem;">
+                Podane ceny są prognozowane i mogą się różnić w zależności od stacji. 
+                Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych.
+            </p>
+            
+            <div class="alert alert-info">
+                <i class='bx bx-info-circle'></i> Od 24.06.2024 w historii cen dostępne są także hurtowe ceny paliw.
+            </div>
+            
+            <button class="btn btn-primary" onclick="closeInfoModalAndAcknowledge()" style="margin-top: 1.5rem; width: 100%;">
+                <i class='bx bx-check'></i> Rozumiem
+            </button>
         </div>
     </div>
+
+    <!-- Coupon Modal -->
+    <div class="modal" id="couponModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCouponModal()">&times;</span>
+            <h2>Wybierz Kupon Rabatowy</h2>
+            
+            <div class="form-group">
+                <label for="couponSelect">Dostępne kupony:</label>
+                <select id="couponSelect" onchange="applyCoupon()">
+                    <option value="0">Brak kuponu</option>
+                    <option value="-0.35">-35 gr/l (Standardowy)</option>
+                    <option value="-0.45">-45 gr/l (Karta Dużej Rodziny)</option>
+                </select>
+            </div>
+            
+            <div class="alert alert-info" id="couponMessage">
+                Wybierz kupon z listy aby zastosować zniżkę
+            </div>
+            
+            <div class="countdown-timer" id="couponExpiry" style="display: none;">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">00</div>
+                    <div class="countdown-label">Dni</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Godziny</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Minuty</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Sekundy</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                <i class='bx bx-info-circle'></i> Rabaty nie dotyczą cen LPG
+            </p>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryModal()">&times;</span>
+            <h2>Historia Cen Paliw</h2>
+            
+            <!-- <div class="alert alert-info">
+                <i class='bx bx-check-circle'></i> Problemy z pobieraniem danych zostały naprawione.
+            </div>-->
+            
+            <div class="form-group">
+                <label for="fuelType">Rodzaj paliwa:</label>
+                <select id="fuelType" onchange="fetchHistoryData()">
+                    <option value="41-Pb95">EFECTA 95</option>
+                    <option value="43-ONEkodiesel">EFECTA DIESEL</option>
+                    <option value="42-Pb98">VERVA 98</option>
+                    <option value="44-ONArctic2">VERVA DIESEL</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Rok:</label>
+                <select id="year" onchange="fetchHistoryData()">
+                    <!-- Years will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Widok danych:</label>
+                <div style="display: flex; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="radio" name="dataView" value="daily" checked onclick="fetchHistoryData()">
+                        Dzienny
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="radio" name="dataView" value="monthly" onclick="fetchHistoryData()">
+                        Miesięczny
+                    </label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="showPriceHistoryChart()" style="margin-top: 1rem;">
+                <i class='bx bx-line-chart'></i> Pokaż wykres
+            </button>
+            
+            <div id="loadingHistory" style="display: none; text-align: center; padding: 2rem;">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Ładowanie danych historycznych...</p>
+            </div>
+            
+            <div style="overflow-x: auto; margin-top: 2rem;">
+                <table class="history-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cena (PLN)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="priceHistoryModal">
+        <div class="modal-content">
+            <span class="close" onclick="closePriceHistoryModal()">&times;</span>
+            <h2>Wykres Cen Paliw</h2>
+            
+            <div class="chart-container">
+                <canvas id="priceHistoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class='bx bxs-adjust'></i>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <footer class="animate">
+        © 2025 kacpiq.pl - Wszelkie prawa zastrzeżone
+    </footer>
 
     <script src="cenypaliw/fuelscript.js"></script>
 
-<footer>
-        © 2025 kacpiq.pl - Wszelkie prawa zastrzeżone
-    </footer>
 </body>
 </html>
