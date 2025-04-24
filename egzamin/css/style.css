@@ -1521,6 +1521,54 @@ tr:hover {
     color: var(--danger-color);
 }
 
+/* Beta Alert */
+.beta-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--warning-color);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    max-width: 400px;
+    box-shadow: var(--box-shadow);
+    z-index: 9999;
+    animation: slideIn 0.5s ease-out;
+    border-left: 5px solid var(--danger-color);
+    display: none;
+}
+
+.beta-content h3 {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.beta-content p {
+    margin-bottom: 1rem;
+}
+
+.beta-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.beta-alert.hide {
+    animation: slideOut 0.5s ease-in forwards;
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
 
 /* Donation Button */
 .donation-btn {
