@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Losowanie egzaminu INF.02</title>
+    <link rel="stylesheet" href="egzamin/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="egzamin/script.js" defer></script>
+</head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@500&display=swap');
+    </style>
+<body>
+     <div class="nav-panel">
+        <a href="https://www.kacpiq.pl/egzamin/lista-egzaminow" target="_blank">Lista egzaminów</a>
+        
+        <div class="dropdown">
+            <a href="#" class="dropbtn">
+                <i class="fas fa-arrow-down"></i>Pobierz
+            </a>
+            <div class="dropdown-content">
+
+                <a href="#" id="download-windows">
+                    <i class="fab fa-windows"></i>Pobierz na Windows
+                    <div class="version-info">Wersja: N/A</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>Windows 7</span><span>Windows 10</span><span>Windows 11</span><span>(64bit)</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                    <div class="info">Planowane wydanie: 05.04.2025</div>
+                </a>
+                
+                <a href="#" id="download-linux">
+                    <i class="fab fa-linux"></i>Pobierz na Linux
+                    <div class="version-info">Wersja: N/A</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>Ubuntu 18.04+</span><span>Debian 8+</span><span>Fedora 24+</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                </a>
+                
+                <a href="#" id="download-macos">
+                    <i class="fab fa-apple"></i>Pobierz na MacOS
+                    <div class="version-info">Wersja: N/A</div>
+                    <div class="supported-systems">
+                        Obsługiwane systemy: <span>macOS 10.11 (El Capitan)+</span><span>(64bit)</span>
+                    </div>
+                    <div class="unavailable-info">Aplikacja jeszcze nie jest dostępna</div>
+                </a>
+                <a href="#" id="download-exam" download>
+                    <i class="fa-solid fa-download"></i>Pobierz arkusz
+                    <div id="plik" class="version-info">Plik: Nie wylosowano egzaminu.</div>
+                    <div class="supported-systems">
+                        Rozszerzenie: <span>.pdf</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+         <a href="#" class="dropbtn" id="open-ranking-modal">
+                <i class="fas fa-trophy"></i>Ranking
+            </a>
+
+         <a href="#" class="dropbtn" id="open-pay-modal">
+                <i class="fas fa-chalkboard-teacher"></i>Kursy
+            </a>
+
+        <div id="przerwa-komunikat" class="przerwa-komunikat" style="display:none;">
+            <p>Przerwa techniczna rozpocznie się 28.03.2025 o 18:30 i potrwa do 31.03.2025 14:30.<br> W tym czasie korzystanie ze strony i losowanie egzaminów będzie niedostępne.</p>
+        </div>
+    <div id="countdown">
+        Do egzaminu pozostało: <span id="countdown-timer"></span>
+    </div>
+         <div class="user-menu-container">
+        <div class="user-avatar" id="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="user-dropdown-menu" id="user-dropdown">
+            <!-- Jeśli zalogowany -->
+            <div class="user-info" id="user-logged" style="display: none;">
+                <div class="user-header">
+                    <div class="avatar-circle" id="avatar-circle">
+            <i id="avatar-icon" class="fas fa-user"></i>
+        </div>
+                    <div>
+                        <div id="user-name" class="user-name">null</div>
+                        <div id="user-email" class="user-email">null@null.com</div>
+                    </div>
+                </div>
+                <div class="dropdown-separator"></div>
+            
+                <a href="https://www.kacpiq.pl/profil"><i class="fas fa-id-card icon"></i> Profil</a>
+                <a href="#"><i class="fas fa-cog icon"></i> Ustawienia</a>
+                <a  href="https://www.kacpiq.pl/subskrypcje"><i class="fas fa-crown icon"></i> Subskrypcja<span class="trial-badge">TRIAL</span></a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#"><i class="fas fa-history icon"></i> Dziennik zmian</a>
+                <a href="#"><i class="fas fa-user-plus icon"></i> Zaproś użytkownika</a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#"><i class="fas fa-question-circle icon"></i> Pomoc</a>
+                <a href="#"><i class="fas fa-users icon"></i> Community</a>
+            
+                <div class="dropdown-separator"></div>
+            
+                <a href="#" id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt icon"></i> Wyloguj się</a>
+            </div>
+            
+
+            <!-- Jeśli NIE zalogowany -->
+                <div class="user-info" id="user-not-logged" style="display: none;">
+                <a href="#" id="login-btn" class="login-btn"><i class="fas fa-sign-in-alt icon"></i> Zaloguj się</a>
+                <a href="#"><i class="fas fa-user-plus icon"></i> Zarejestruj się</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+    </div>
+    
+    <div class="container">
+        <h1 style:font-family: 'Reload';>Losowanie egzaminu INF.02</h1>
+
+        <label>Podstawa programowa:</label>
+        <select id="podstawa">
+            <option value="">Wszystkie</option>
+            <option value="2019">2019</option>
+            <option value="2017">2017</option>
+        </select>
+
+        <label>System operacyjny serwera:</label>
+        <select id="serwer">
+            <option value="">Dowolny</option>
+            <option value="Linux">Linux</option>
+            <option value="Windows Server">Windows Server</option>
+        </select>
+
+        <label>System operacyjny klienta:</label>
+        <select id="klient">
+            <option value="">Dowolny</option>
+            <option value="Windows">Windows</option>
+            <option value="Linux">Linux</option>
+        </select>
+
+        <button id="losuj">Losuj egzamin</button>
+         <div id="main-panel" class="rating-info" style="display:none">
+                        <span id="rating-value" style="font-weight:bold">⭐0,0 (0)</span><span id="exam-file-name"></span><span id="open-rating-modal" style="cursor: pointer;"><i class="fa-solid fa-star"></i></span>
+                    </div>
+  <div style="display: none;" class="overlay" id="overlay"></div>
+        <div class="spinner" id="spinner" style="display: none;"></div>
+
+        <iframe id="examFrame" style="display: none;" width="100%" height="600px"></iframe>
+
+        <button id="zakoncz" style="display: none;">Zakończ egzamin</button>
+        <iframe id="keyFrame" style="display: none;" width="100%" height="300px"></iframe>
+
+        <div id="ranking-modal" class="rating-modal" style="display: none;">
+  <div class="modal-content">
+    <span id="close-ranking-modal" class="close-modal">&times;</span>
+    <h2>Ranking uczniów</h2>
+    <table id="ranking-table">
+      <thead>
+        <tr>
+          <th>Nr z dziennika</th>
+          <th>Suma pkt.</th>
+          <th>Średnia (%)</th>
+        </tr>
+      </thead>
+        <button id="login-btn">Zaloguj się przez Google</button>
+        <button id="logout-btn" style="display:none;">Wyloguj się</button>
+  <p id="user-info"></p>
+      <tbody>
+        <tr><td colspan="3">Wczytywanie...</td></tr>
+      </tbody>
+    </table>
+      <div class="rating-info" style="text-align:center">
+    <span>Ranking jest przechowywany do dn. <strong>29.08.2025</strong>.</span>
+    <span>Po tym dniu ranking zostanie <strong>wyłączony</strong>.</span>
+          
+</div>
+  </div>
+</div>
+
+        <div id="pay-modal" class="rating-modal" style="display: none;">
+  <div class="modal-content">
+    <span id="close-pay-modal" class="close-modal">&times;</span>
+    <h2>Kursy dostępne</h2>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between;">
+      
+      <div style="flex: 1; min-width: 250px;">
+        <h3>INF.02</h3>
+        <ul>
+          <li>✅ Wysoka jakość audio i wideo!</li>
+          <li>✅ Najniższa cena na rynku!</li>
+          <li>✅ Dostęp od razu po kupnie!</li>
+        </ul>
+        <a href="https://kurs-inf02.learnpool.pl/stworzkonto" target="_blank">
+          <button style="margin-top: 10px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px;">
+            Kup za 39,99 zł
+          </button>
+        </a>
+      </div>
+      
+      <div style="flex: 1; min-width: 250px;">
+        <h3>INF.03</h3>
+        <ul>
+          <li>✅ Wysoka jakość audio i wideo!</li>
+          <li>✅ Najniższa cena na rynku!</li>
+          <li>✅ Dostęp od razu po kupnie!</li>
+        </ul>
+        <a href="https://kurs-inf03.learnpool.pl/stworzkonto" target="_blank">
+          <button style="margin-top: 10px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px;">
+            Kup za 49,99 zł
+          </button>
+        </a>
+      </div>
+<div class="rating-info" style="text-align:center">
+    <span style="text-align:center" >
+        Przy kupnie zostaniesz przekierowany do strony <strong>kurs-inf02.learnpool.pl</strong>.</span>
+</div>
+    </div>
+  </div>
+</div>
+
+        
+        <div id="rating-modal" class="rating-modal" style="display:none">
+    <div class="modal-content">
+    <span id="close-modal" class="close-modal">&times;</span>
+    <h2 style="display: inline;">Oceń arkusz</h2>
+        <div id="info-test" class="rating-info" style="display:inline">
+            <span style="display: inline;"><strong>Faza testowa</strong></span>
+        </div>
+    <div class="rating-container">
+        <div class="rating-circle" data-value="1"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="2"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="3"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="4"><i class="fa-solid fa-star"></i></div>
+        <div class="rating-circle" data-value="5"><i class="fa-solid fa-star"></i></div>
+    </div>
+        <div class="rating-info" style="text-align:center">
+    <span>Możemy przechowywać informacje takie jak <strong>adres IP</strong>.</span>
+</div>
+    <button id="submit-rating-modal">Zatwierdź ocenę</button>
+        <div class="rating-info" style="text-align:center">
+    <span>Wygasa w dn. <strong>28.04.2025</strong>.</span>
+</div>
+</div>
+</div>
+    </div>
+    <div class="popup" id="popup" onmouseover="expandPopup()" onmouseout="collapsePopup()" onclick="redirectToRevolut()">
+        <img src="https://cdn.brandfetch.io/idkTaHd18D/w/400/h/400/theme/dark/icon.png?c=1dxbfHSJFAPEGdCLU4o5B" alt="R">
+        <div class="popup-text" id="popupText">
+            <div id="popupMessage">@kacpiq</div>
+        </div>
+    </div>
+    <script>
+        const messages = [
+            "@kacpiq"
+        ];
+        let index = 0;
+        let messageTimeout;
+    
+        function changeMessage() {
+            const messageDiv = document.getElementById("popupMessage");
+            messageDiv.style.opacity = 0;
+    
+            clearTimeout(messageTimeout);
+    
+            setTimeout(() => {
+                if (index < messages.length) {
+                    messageDiv.innerText = messages[index];
+                    messageDiv.style.opacity = 1;
+                    index++;
+                } else {
+                    messageDiv.innerText = '';
+                }
+            }, 500);
+        }
+    
+        function expandPopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.add("expanded");
+            popupText.classList.add("visible");
+    
+            messageTimeout = setInterval(changeMessage, 3000);
+        }
+    
+        function collapsePopup() {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popupText");
+    
+            popup.classList.remove("expanded");
+            popupText.classList.remove("visible");
+    
+            clearInterval(messageTimeout);
+        }
+    
+        function redirectToRevolut() {
+            window.open("https://revolut.me/kacpiq", "_blank");
+        }
+
+         function disableScript() {
+            const script = document.getElementById("script");
+            script.setAttribute("disabled", "true");
+        }
+
+        function checkTechnicalBreak() {
+            const startDate = new Date('2025-03-28T18:30:00');
+            const endDate = new Date('2025-03-31T14:30:00');
+            const currentDate = new Date();
+
+            if (currentDate >= startDate && currentDate <= endDate) {
+                document.getElementById("przerwa-komunikat").style.display = 'block';
+
+                document.getElementById("losuj").disabled = true;
+
+                disableScript();
+            }
+        }
+
+
+        window.onload = checkTechnicalBreak;
+    </script>
+<script>
+    // Ustaw datę docelową
+    var countDownDate = new Date("Jun 2, 2025 00:00:00").getTime();
+
+    // Aktualizuj odliczanie co 1 sekundę
+    var x = setInterval(function() {
+
+        // Pobierz dzisiejszą datę i godzinę
+        var now = new Date().getTime();
+        
+        // Oblicz różnicę czasu
+        var distance = countDownDate - now;
+        
+        // Oblicz dni, godziny, minuty i sekundy
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Wyświetl wynik
+        document.getElementById("countdown-timer").innerHTML = days + "d " + hours + "g " + minutes + "m " + seconds + "s";
+        
+        // Jeśli odliczanie się zakończy, wyświetl komunikat
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdown-timer").innerHTML = "Egzamin rozpoczęty!";
+        }
+    }, 1000);
+</script>
+    <script type="module">
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getDatabase, ref, push, query, orderByChild, onValue, equalTo, get, set , child} 
+            from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+        // Konfiguracja Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxweHC9eBj-1iZPtrgPBPngqSZGO0A_hY",
+            authDomain: "kacpiq-egzamin.firebaseapp.com",
+            databaseURL: "https://kacpiq-egzamin-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kacpiq-egzamin",
+            storageBucket: "kacpiq-egzamin.firebasestorage.app",
+            messagingSenderId: "1060401996008",
+            appId: "1:1060401996008:web:a382e44d487e8a079ae95d",
+            measurementId: "G-KSJX5H1GFT"
+        };
+
+        // Inicjalizacja Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+
+function sanitizeExamName(examName) {
+    return examName.replace(/[.#$\[\]]/g, "_"); // Usuwamy niedozwolone znaki
+}
+
+// Funkcja pobierająca nazwę egzaminu (oryginalną nazwę, która jest wyświetlana)
+function getExamName() {
+    const examName = document.getElementById("exam-file-name").innerText;
+    console.log("Nazwa egzaminu:", examName);  // Dodajemy log do konsoli
+    return examName.trim(); // Zwracamy nazwę egzaminu bez dodatkowych spacji
+}
+
+    document.getElementById("losuj").addEventListener("click", function() {
+        setTimeout(() => {
+        loadCurrentRating();
+    }, 2500);
+});
+
+function calculateAverage(ratings) {
+    if (ratings && ratings.length > 0) {
+        const total = ratings.reduce((sum, rating) => sum + rating, 0);
+        return (total / ratings.length).toFixed(1); 
+    }
+    return 0.0; 
+}
+
+function loadCurrentRating() {
+    const examName = getExamName();
+    const sanitizedExamName = sanitizeExamName(examName);
+
+    const ratingsRef = ref(db, 'exam-ratings/' + sanitizedExamName + '/ratings');
+    get(ratingsRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const ratingsObject = snapshot.val();
+            console.log("Pobrane oceny z Firebase:", ratingsObject); 
+
+            const ratings = Object.values(ratingsObject);
+            console.log("Tablica ocen:", ratings); 
+
+            const averageRating = calculateAverage(ratings); 
+            const ratingCount = ratings.length; 
+
+            document.getElementById("rating-value").innerHTML = `⭐${averageRating} (${ratingCount})`;
+        } else {
+            console.log("Brak ocen w Firebase."); 
+            document.getElementById("rating-value").innerText = "⭐0.0 (0)";
+        }
+    }).catch((error) => {
+        console.error("Błąd pobierania ocen:", error);
+    });
+}
+
+async function saveRating() {
+    if (selectedRating === 0) return;
+
+    const canVote = await canUserRate();
+    if (!canVote) {
+        alert("Możesz ocenić tylko raz na godzinę!");
+        return;
+    }
+
+    const examName = getExamName();
+    if (!examName) return;
+
+    const sanitizedExamName = sanitizeExamName(examName);
+    const ratingsRef = ref(db, `exam-ratings/${sanitizedExamName}/ratings`);
+
+    // Zapisujemy ocenę
+    push(ratingsRef, selectedRating).then(() => {
+        console.log("Ocena zapisana:", selectedRating);
+        document.getElementById("rating-modal").style.display = "none"; 
+        loadCurrentRating();
+    }).catch(error => console.error("Błąd zapisu oceny:", error));
+
+    const userIP = await getUserIP();
+    if (!userIP) return;
+
+    const sanitizedIP = sanitizeIP(userIP);
+    const userRef = ref(db, `exam-ratings/global/users/${sanitizedIP}`);
+    set(userRef, { timestamp: Date.now() }); 
+}
+        document.getElementById("submit-rating-modal").addEventListener("click", saveRating);
+
+let selectedRating = 0;
+const circles = document.querySelectorAll(".rating-circle");
+
+circles.forEach(circle => {
+    circle.addEventListener("click", () => {
+        const value = parseInt(circle.dataset.value);
+        selectedRating = selectedRating === value ? 0 : value;
+        updateSelection();
+    });
+});
+
+function updateSelection() {
+    circles.forEach(circle => {
+        const value = parseInt(circle.dataset.value);
+        circle.classList.toggle("selected", value <= selectedRating);
+    });
+}
+
+document.getElementById("open-rating-modal").addEventListener("click", () => {
+    document.getElementById("rating-modal").style.display = "flex";
+});
+
+document.getElementById("close-modal").addEventListener("click", () => {
+    document.getElementById("rating-modal").style.display = "none";
+});
+
+        async function getUserIP() {
+    try {
+        const response = await fetch("https://api64.ipify.org?format=json");
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error("Błąd pobierania IP:", error);
+        return null;
+    }
+}
+
+        function sanitizeIP(ip) {
+    return ip.replace(/\./g, "_");
+}
+        
+async function canUserRate() {
+    const userIP = await getUserIP();
+    if (!userIP) return false; 
+
+    const sanitizedIP = sanitizeIP(userIP); 
+
+    const userRef = ref(db, `exam-ratings/global/users/${sanitizedIP}`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+        const lastVoteTime = snapshot.val().timestamp;
+        const currentTime = Date.now();
+        const oneHour = 60 * 60 * 1000; 
+
+        if (currentTime - lastVoteTime < oneHour) {
+            return false; 
+        }
+    }
+    return true; 
+}
+
+
+
+window.onload = () => {
+    loadCurrentRating();
+};
+</script>
+
+    <script type="module">
+    // Import Firebase modułów
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    // Konfiguracja Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA303t0WQ0EyjXLHrRa0PiE8lgK1-Ch0FE",
+      authDomain: "kacpiq-egz-wyniki.firebaseapp.com",
+      databaseURL: "https://kacpiq-egz-wyniki-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "kacpiq-egz-wyniki",
+      storageBucket: "kacpiq-egz-wyniki.firebasestorage.app",
+      messagingSenderId: "925929166432",
+      appId: "1:925929166432:web:81756e7675f468b8d19505",
+      measurementId: "G-Z8ZFL73Q6Q"
+    };
+
+    // Inicjalizacja Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Logowanie przez Google
+    document.getElementById("login-btn").addEventListener("click", async () => {
+        spinner.style.display = "block";
+        overlay.style.display = "block";
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        console.log("Zalogowano jako:", user.email);
+        document.getElementById("user-info").textContent = `Zalogowano jako: ${user.displayName}`;
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+          document.getElementById("user-name").textContent = user.displayName;
+                document.getElementById("user-email").textContent = user.email;
+                const avatarUrl = user.photoURL;
+                const avatarCircle = document.getElementById("avatar-circle");
+                const avatarIcon = document.getElementById("avatar-icon");
+
+                if (avatarUrl) {
+                    const img = document.createElement("img");
+                    img.src = avatarUrl;
+                    img.alt = "Avatar";
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.borderRadius = "50%";
+                    avatarCircle.innerHTML = "";  
+                    avatarCircle.appendChild(img); 
+                } else {
+
+                    avatarIcon.style.display = "block";
+                }
+          spinner.style.display = "none";
+          overlay.style.display = "none";
+
+      } catch (error) {
+        console.error("Błąd logowania:", error);
+          spinner.style.display = "none";
+          overlay.style.display = "none";
+      }
+    });
+
+    // Wylogowanie
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+         spinner.style.display = "block";
+        overlay.style.display = "block";
+      try {
+        await signOut(auth);
+        console.log("Wylogowano");
+          spinner.style.display = "none";
+          overlay.style.display = "none";
+      } catch (error) {
+        console.error("Błąd podczas wylogowania:", error);
+          spinner.style.display = "none";
+          overlay.style.display = "none";
+      }
+    });
+
+    // Obsługa statusu logowania
+    onAuthStateChanged(auth, (user) => {
+      const loginBtn = document.getElementById("login-btn");
+      const logoutBtn = document.getElementById("logout-btn");
+      const welcomeMsg = document.getElementById("user-info");
+        const userlogged = document.getElementById("user-logged");
+        const spinner = document.getElementById("spinner");
+        const overlay = document.getElementById("overlay");
+        const userNotlogged = document.getElementById("user-not-logged");
+      const rankingBtn = document.getElementById("open-ranking-modal");
+
+      if (user) {
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        welcomeMsg.style.display = "block";
+        welcomeMsg.textContent = `Witaj, ${user.displayName || user.email}`;
+          userlogged.style.display = "block";
+          userNotlogged.style.display = "none";
+
+          document.getElementById("user-name").textContent = user.displayName;
+                document.getElementById("user-email").textContent = user.email;
+                const avatarUrl = user.photoURL;
+                const avatarCircle = document.getElementById("avatar-circle");
+                const avatarIcon = document.getElementById("avatar-icon");
+
+                if (avatarUrl) {
+                    const img = document.createElement("img");
+                    img.src = avatarUrl;
+                    img.alt = "Avatar";
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.borderRadius = "50%";
+                    avatarCircle.innerHTML = "";  
+                    avatarCircle.appendChild(img); 
+                } else {
+
+                    avatarIcon.style.display = "block";
+                }
+
+        // Sprawdź domenę i włącz ranking
+        if (user.email.endsWith("@uczniowie.zs1.bochnia.pl")) {
+          rankingBtn.disabled = false;
+          rankingBtn.title = "";
+        } else {
+          rankingBtn.disabled = true;
+          rankingBtn.title = "Dostęp do danych tylko dla uczniów ZS1";
+        }
+      } else {
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        welcomeMsg.style.display = "none";
+          userlogged.style.display = "none";
+          userNotlogged.style.display = "block";
+        rankingBtn.disabled = true;
+        rankingBtn.title = "Zaloguj się, aby uzyskać dostęp";
+      }
+    });
+
+    // Obsługa modala
+    document.getElementById("open-ranking-modal").addEventListener("click", async () => {
+      document.getElementById("ranking-modal").style.display = "flex";
+      await loadStudentRanking();
+    });
+
+    document.getElementById("close-ranking-modal").addEventListener("click", () => {
+      document.getElementById("ranking-modal").style.display = "none";
+    });
+
+    // Ładowanie rankingu
+    async function loadStudentRanking() {
+      const tbody = document.querySelector("#ranking-table tbody");
+      tbody.innerHTML = `<tr><td colspan="3">Wczytywanie...</td></tr>`;
+
+      try {
+        const snapshot = await get(ref(db, 'uczniowie'));
+        if (!snapshot.exists()) {
+          tbody.innerHTML = `<tr><td colspan="3">Brak danych</td></tr>`;
+          return;
+        }
+
+        const uczniowie = snapshot.val();
+        const ranking = [];
+
+        for (const numer in uczniowie) {
+          const egzaminy = uczniowie[numer].egzaminy || {};
+          let sumaWynik = 0;
+          let sumaMax = 0;
+
+          for (const egzaminId in egzaminy) {
+            const egzamin = egzaminy[egzaminId];
+            sumaWynik += egzamin.wynik || 0;
+            sumaMax += egzamin.max || 0;
+          }
+
+          if (sumaMax > 0) {
+            const procent = Math.round((sumaWynik / sumaMax) * 100);
+            ranking.push({
+              numer,
+              suma: `${sumaWynik}/${sumaMax}`,
+              procent,
+            });
+          }
+        }
+
+        ranking.sort((a, b) => b.procent - a.procent);
+
+        tbody.innerHTML = "";
+        let separatorInserted = false;
+
+        ranking.forEach((uczen) => {
+          if (!separatorInserted && uczen.procent < 75) {
+            const separatorRow = document.createElement("tr");
+            separatorRow.innerHTML = `
+              <td colspan="3" style="text-align:center; background-color: #242424; font-weight: bold;">
+                ──── Próg zdawalności 75% ────
+              </td>
+            `;
+            tbody.appendChild(separatorRow);
+            separatorInserted = true;
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${uczen.numer}</td>
+            <td>${uczen.suma}</td>
+            <td>${uczen.procent}%</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (error) {
+        console.error("Błąd podczas ładowania rankingu:", error);
+        tbody.innerHTML = `<tr><td colspan="3">Błąd podczas ładowania danych</td></tr>`;
+      }
+    }
+  </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const avatar = document.getElementById("user-avatar");
+        const dropdown = document.getElementById("user-dropdown");
+        const isLoggedIn = false; 
+
+        if (isLoggedIn) {
+            document.getElementById("user-logged").style.display = "block";
+        } else {
+            document.getElementById("user-not-logged").style.display = "block";
+        }
+
+        avatar.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    });
+</script>
+</body>
+</html>
