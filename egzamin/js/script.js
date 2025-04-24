@@ -1,5 +1,52 @@
 // Main exam functionality
 document.addEventListener("DOMContentLoaded", function () {
+    // Show beta alert
+const betaAlert = document.getElementById("beta-alert");
+const stayOnBetaBtn = document.getElementById("stay-on-beta");
+
+// Check if user has already dismissed the alert
+if (!localStorage.getItem('betaAlertDismissed')) {
+    setTimeout(() => {
+        betaAlert.style.display = "block";
+    }, 2000);
+}
+
+// Handle stay on beta button
+stayOnBetaBtn.addEventListener("click", function() {
+    betaAlert.classList.add("hide");
+    localStorage.setItem('betaAlertDismissed', 'true');
+    
+    setTimeout(() => {
+        betaAlert.style.display = "none";
+    }, 500);
+});
+
+// Make alert draggable
+let isDragging = false;
+let offsetX, offsetY;
+
+betaAlert.querySelector(".beta-content").addEventListener("mousedown", function(e) {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
+        return;
+    }
+    
+    isDragging = true;
+    offsetX = e.clientX - betaAlert.getBoundingClientRect().left;
+    offsetY = e.clientY - betaAlert.getBoundingClientRect().top;
+    betaAlert.style.cursor = 'grabbing';
+});
+
+document.addEventListener("mousemove", function(e) {
+    if (!isDragging) return;
+    
+    betaAlert.style.left = (e.clientX - offsetX) + 'px';
+    betaAlert.style.top = (e.clientY - offsetY) + 'px';
+});
+
+document.addEventListener("mouseup", function() {
+    isDragging = false;
+    betaAlert.style.cursor = '';
+});
     // Exam data
     const exams = [
         { file: "INF_02_01_25_01_SG.pdf", key: "INF_02_01_25_01_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
