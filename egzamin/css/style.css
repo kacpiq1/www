@@ -1549,7 +1549,7 @@ tr:hover {
 /* Responsive */
 @media (max-width: 992px) {
     .navbar-container {
-        flex-direction: column;
+        flex-direction: inherit;
         align-items: stretch;
         gap: 1rem;
     }
