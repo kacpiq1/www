@@ -3,44 +3,1078 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:type" content="website">
-  <title>VALORANT | Skins Collection</title>
-  <link rel="stylesheet" href="skins/styles.css">
+  <title>VALORANT | COLLECTION</title>
   <link rel="icon" href="https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt53405c7c9a9a9f00/5eb26f54402b8b4d13a56656/valorant-favicon.png">
+  <style>
+    /* ===== VALORANT GLOBAL STYLES ===== */
+    :root {
+      --valorant-red: #ff4655;
+      --valorant-dark: #0f1923;
+      --valorant-light: #ece8e1;
+      --valorant-blue: #0f4c81;
+      --valorant-black: #111;
+      --valorant-white: #fff;
+      --valorant-gold: #d1b78a;
+      --valorant-silver: #a6a6a6;
+      --valorant-border: rgba(255, 255, 255, 0.15);
+    }
+
+    @font-face {
+      font-family: 'Tungsten';
+      src: url('https://fonts.cdnfonts.com/css/tungsten') format('woff2');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'DINNextW1G';
+      src: url('https://fonts.cdnfonts.com/css/din-next-w1g') format('woff2');
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--valorant-dark);
+      color: var(--valorant-light);
+      font-family: 'DINNextW1G', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ===== VALORANT HEADER ===== */
+    .valorant-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      background-color: rgba(15, 25, 35, 0.95);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 70, 85, 0.2);
+      backdrop-filter: blur(5px);
+    }
+
+    .valorant-logo {
+      height: 32px;
+      width: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .valorant-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      height: 100%;
+    }
+
+    .nav-link {
+      color: var(--valorant-light);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-family: 'Tungsten', sans-serif;
+      font-size: 24px;
+      letter-spacing: 1px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 0 5px;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link.active {
+      color: var(--valorant-red);
+    }
+
+    .nav-link:not(.active):hover {
+      color: var(--valorant-white);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background-color: var(--valorant-red);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .main-container {
+      display: flex;
+      min-height: calc(100vh - 80px);
+      margin-top: 80px;
+    }
+
+    .sidebar-left {
+      width: 88px;
+      background-color: rgba(15, 25, 35, 0.9);
+      border-right: 1px solid var(--valorant-border);
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 32px;
+      max-width: calc(100% - 288px);
+    }
+
+    .sidebar-right {
+      width: 200px;
+      background-color: rgba(15, 25, 35, 0.9);
+      border-left: 1px solid var(--valorant-border);
+      padding: 24px 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    /* ===== SIDEBAR TABS ===== */
+    .sidebar-tabs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sidebar-tab {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar-tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 70, 85, 0.2) 0%, rgba(255, 70, 85, 0) 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-tab.active {
+      background-color: var(--valorant-red);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(255, 70, 85, 0.3);
+    }
+
+    .sidebar-tab:hover:not(.active) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-tab:hover::before {
+      opacity: 1;
+    }
+
+    .sidebar-tab img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* ===== SEARCH & FILTERS ===== */
+    .search-container {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      max-width: 520px;
+    }
+
+    .valorant-search {
+      width: 100%;
+      padding: 16px 20px 16px 48px;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--valorant-border);
+      border-radius: 4px;
+      color: var(--valorant-white);
+      font-family: 'DINNextW1G', sans-serif;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .valorant-search:focus {
+      border-color: var(--valorant-red);
+      box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.3);
+    }
+
+    .valorant-search::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      width: 20px;
+      height: 20px;
+    }
+
+    .filters-container {
+      display: flex;
+      gap: 16px;
+    }
+
+    .valorant-select {
+      padding: 12px 16px;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--valorant-border);
+      border-radius: 4px;
+      color: var(--valorant-white);
+      font-family: 'DINNextW1G', sans-serif;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 36px;
+    }
+
+    .valorant-select:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .valorant-select:focus {
+      border-color: var(--valorant-red);
+      box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.3);
+    }
+
+    /* ===== SKINS GRID ===== */
+    .valorant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .skin-card {
+      background: linear-gradient(145deg, #1b2735, #2b3a4b);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .skin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 70, 85, 0.15) 0%, rgba(255, 70, 85, 0) 50%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .skin-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 70, 85, 0.3);
+    }
+
+    .skin-card:hover::before {
+      opacity: 1;
+    }
+
+    .skin-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .skin-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .skin-card h3 {
+      padding: 16px;
+      font-size: 16px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--valorant-white);
+      background-color: rgba(15, 25, 35, 0.8);
+      margin: 0;
+      position: relative;
+      z-index: 2;
+      font-family: 'Tungsten', sans-serif;
+      font-weight: 700;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .skin-tier-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background-color: rgba(15, 25, 35, 0.8);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .skin-tier-badge img {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ===== BUNDLE CONTAINER ===== */
+    .valorant-bundle {
+      position: relative;
+      background-color: rgba(15, 25, 35, 0.8);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 70, 85, 0.3);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .valorant-bundle:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .bundle-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e6e/5eb26f54402b8b4d13a56656/Valorant_Logo_V.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      z-index: 1;
+    }
+
+    .bundle-content {
+      position: relative;
+      z-index: 2;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bundle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bundle-title {
+      font-size: 20px;
+      color: var(--valorant-white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Tungsten', sans-serif;
+      font-weight: 700;
+    }
+
+    .bundle-timer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--valorant-red);
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .bundle-skins-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .bundle-skins-grid .skin-card {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .bundle-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bundle-rarity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--valorant-white);
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .bundle-rarity img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bundle-price {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      color: var(--valorant-white);
+      font-family: 'Tungsten', sans-serif;
+      font-weight: 700;
+    }
+
+    .bundle-price img {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ===== MODAL STYLES ===== */
+    .valorant-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-container {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      background-color: var(--valorant-dark);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 70, 85, 0.3);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background-color: rgba(15, 25, 35, 0.9);
+      border-bottom: 1px solid rgba(255, 70, 85, 0.2);
+    }
+
+    .skin-tier {
+      width: 32px;
+      height: 32px;
+      margin-right: 16px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .skin-tier img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .skin-title {
+      font-size: 28px;
+      color: var(--valorant-white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex: 1;
+      font-family: 'Tungsten', sans-serif;
+      font-weight: 700;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      color: var(--valorant-white);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 8px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    .close-button:hover {
+      background-color: rgba(255, 70, 85, 0.2);
+      color: var(--valorant-red);
+      transform: rotate(90deg);
+    }
+
+    .modal-content {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .skin-preview {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 320px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--valorant-border);
+    }
+
+    .skin-image {
+      max-width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      transition: all 0.3s ease;
+    }
+
+    #skin-video {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .no-video-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 16px;
+      text-align: center;
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .skin-variants, .skin-levels {
+      background-color: rgba(15, 25, 35, 0.8);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--valorant-border);
+    }
+
+    .variants-header, .levels-header {
+      margin-bottom: 16px;
+    }
+
+    .variants-header h3, .levels-header h3 {
+      color: var(--valorant-white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 18px;
+      position: relative;
+      padding-bottom: 8px;
+      font-family: 'Tungsten', sans-serif;
+      font-weight: 700;
+    }
+
+    .variants-header h3::after, .levels-header h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--valorant-red);
+    }
+
+    .variants-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .chroma-icon {
+      width: 56px;
+      height: 56px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      object-fit: cover;
+    }
+
+    .chroma-icon:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    .chroma-icon.active {
+      border-color: var(--valorant-red);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.3);
+    }
+
+    .levels-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .level-button {
+      padding: 10px 16px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--valorant-border);
+      border-radius: 4px;
+      color: var(--valorant-white);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .level-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .level-button.active-level {
+      background-color: var(--valorant-red);
+      border-color: var(--valorant-red);
+      color: var(--valorant-white);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .valorant-button {
+      padding: 14px 24px;
+      background-color: var(--valorant-red);
+      border: none;
+      border-radius: 4px;
+      color: var(--valorant-white);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DINNextW1G', sans-serif;
+      font-size: 14px;
+    }
+
+    .valorant-button:hover {
+      background-color: #e03a48;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      background-color: rgba(15, 25, 35, 0.9);
+      border-top: 1px solid rgba(255, 70, 85, 0.2);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    .modal-footer a {
+      color: var(--valorant-red);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .modal-footer a:hover {
+      color: var(--valorant-white);
+      text-decoration: underline;
+    }
+
+    /* ===== BACKGROUND EFFECTS ===== */
+    .valorant-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .bg-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e6e/5eb26f54402b8b4d13a56656/Valorant_Logo_V.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.04;
+      animation: bg-pulse 20s infinite alternate;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(15, 25, 35, 0.9) 0%, rgba(15, 25, 35, 0.95) 100%);
+    }
+
+    @keyframes bg-pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.04;
+      }
+      100% {
+        transform: scale(1.05);
+        opacity: 0.08;
+      }
+    }
+
+    /* ===== LOADING SCREEN ===== */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3000;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #intro-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 2999;
+    }
+
+    .valorant-spinner {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+    }
+
+    .spinner-inner {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid transparent;
+      border-top-color: var(--valorant-red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner-outer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid transparent;
+      border-bottom-color: var(--valorant-red);
+      border-radius: 50%;
+      animation: spin-reverse 1.5s linear infinite;
+    }
+
+    .loading-image {
+      max-width: 320px;
+      max-height: 240px;
+      object-fit: contain;
+      opacity: 0.8;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 70, 85, 0.3);
+    }
+
+    #loading-text {
+      color: var(--valorant-white);
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-family: 'DINNextW1G', sans-serif;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    @media (max-width: 1200px) {
+      .sidebar-left {
+        width: 80px;
+      }
+      
+      .sidebar-right {
+        width: 180px;
+      }
+      
+      .content-area {
+        max-width: calc(100% - 260px);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .valorant-header {
+        padding: 0 32px;
+      }
+      
+      .content-area {
+        padding: 24px;
+      }
+      
+      .valorant-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .sidebar-left {
+        width: 100%;
+        height: 72px;
+        padding: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--valorant-border);
+      }
+      
+      .sidebar-tabs {
+        flex-direction: row;
+        justify-content: center;
+        padding: 0 16px;
+        gap: 16px;
+      }
+      
+      .sidebar-tab {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .content-area {
+        max-width: 100%;
+        padding: 20px;
+      }
+      
+      .sidebar-right {
+        width: 100%;
+        padding: 20px;
+        border-left: none;
+        border-top: 1px solid var(--valorant-border);
+      }
+      
+      .valorant-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+      }
+      
+      .modal-container {
+        width: 95%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .valorant-header {
+        padding: 0 20px;
+        height: 72px;
+      }
+      
+      .valorant-logo {
+        height: 28px;
+      }
+      
+      .header-nav {
+        gap: 16px;
+      }
+      
+      .nav-link {
+        font-size: 20px;
+      }
+      
+      .valorant-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+      
+      .skin-card h3 {
+        font-size: 14px;
+        padding: 12px;
+      }
+      
+      .search-wrapper {
+        max-width: 100%;
+      }
+      
+      .valorant-search {
+        padding: 14px 16px 14px 44px;
+        font-size: 14px;
+      }
+      
+      .filters-container {
+        flex-direction: column;
+      }
+      
+      .valorant-select {
+        width: 100%;
+      }
+      
+      .modal-content {
+        padding: 16px;
+        gap: 16px;
+      }
+      
+      .skin-preview {
+        min-height: 240px;
+      }
+      
+      .skin-title {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .valorant-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+      
+      .skin-card h3 {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Intro Animation -->
   <div id="intro-screen">
     <video id="intro-video" autoplay muted>
-      <source src="source/intro.mp4" type="video/mp4">
-      Trwa ładowanie strony...
+      <source src="https://assets.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt158572ec37653cf3/5eb26f54402b8b4d13a5665a/agent-background-generic.mp4" type="video/mp4">
     </video>
   </div>
   
-  <div id="loading-screen" style="display: none;">
-    <div id="overlay">
-      <div class="valorant-spinner">
-        <div class="spinner-inner"></div>
-        <div class="spinner-outer"></div>
-      </div>
-      <img src="source/loading-image.jpg" alt="Loading..." class="loading-image">
-      <p id="loading-text">0/0</p>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="valorant-spinner">
+      <div class="spinner-inner"></div>
+      <div class="spinner-outer"></div>
     </div>
+    <img src="https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e6e/5eb26f54402b8b4d13a56656/Valorant_Logo_V.jpg" alt="Loading..." class="loading-image">
+    <p id="loading-text">LOADING...</p>
   </div>
   
+  <!-- Main Header -->
   <header class="valorant-header">
     <div class="header-left">
       <img src="https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt6e3c7a9e3755e5dc/5eb26f5b974fb633f72e887e/valorant-logo.png" alt="VALORANT Logo" class="valorant-logo">
     </div>
     <div class="header-right">
       <div class="header-nav">
+        <a href="#" class="nav-link">HOME</a>
         <a href="#" class="nav-link active">COLLECTION</a>
-        <a href="#" class="nav-link">BUNDLES</a>
         <a href="#" class="nav-link">AGENTS</a>
+        <a href="#" class="nav-link">BATTLEPASS</a>
       </div>
     </div>
   </header>
   
+  <!-- Main Content -->
   <div class="main-container">
+    <!-- Left Sidebar -->
     <div class="sidebar-left">
       <div class="sidebar-tabs">
         <div class="sidebar-tab active" data-tab="weapons">
@@ -52,15 +1086,20 @@
         <div class="sidebar-tab" data-tab="buddies">
           <img src="https://media.valorant-api.com/buddies/60a934d8-4cc3-04e4-859e-3a03a6c6f94c/displayicon.png" alt="Buddies">
         </div>
+        <div class="sidebar-tab" data-tab="cards">
+          <img src="https://media.valorant-api.com/playercards/9fb348bc-41a0-91ad-8a3e-818035c4e561/displayicon.png" alt="Player Cards">
+        </div>
       </div>
     </div>
     
+    <!-- Main Content Area -->
     <div class="content-area">
+      <!-- Search and Filters -->
       <div class="search-container">
         <div class="search-wrapper">
           <input type="text" id="search-input" placeholder="SEARCH SKINS..." class="valorant-search" />
           <div class="search-icon">
-            <svg viewBox="0 0 24 24" width="24" height="24">
+            <svg viewBox="0 0 24 24" width="20" height="20">
               <path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
           </div>
@@ -76,11 +1115,13 @@
         </div>
       </div>
       
+      <!-- Skins Grid -->
       <div id="skins-list" class="valorant-grid">
-        <!-- Skins will be loaded here -->
+        <!-- Skins will be loaded here by JavaScript -->
       </div>
     </div>
     
+    <!-- Right Sidebar -->
     <div class="sidebar-right">
       <div id="bundle-container" class="valorant-bundle">
         <div class="bundle-background"></div>
@@ -88,7 +1129,6 @@
           <div class="bundle-header">
             <h2 class="bundle-title">CYRAX</h2>
             <div class="bundle-timer">
-              <span class="timer-icon">⏱️</span>
               <span id="bundle-timer">00:00:00:00</span>
             </div>
           </div>
@@ -108,6 +1148,7 @@
     </div>
   </div>
 
+  <!-- Skin Detail Modal -->
   <div id="skin-detail" class="valorant-modal">
     <div class="modal-overlay"></div>
     <div class="modal-container">
@@ -164,874 +1205,473 @@
     </div>
   </div>
   
+  <!-- Background Effects -->
   <div class="valorant-bg">
     <div class="bg-particles"></div>
     <div class="bg-overlay"></div>
   </div>
 
-  <script src="script.js"></script>
-  <style>
-    /* Base Styles */
-    :root {
-      --valorant-red: #ff4655;
-      --valorant-dark: #0f1923;
-      --valorant-light: #ece8e1;
-      --valorant-blue: #0f4c81;
-      --valorant-black: #111;
-      --valorant-white: #fff;
-      --valorant-gold: #d1b78a;
-      --valorant-silver: #a6a6a6;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'DINNextW1G', sans-serif;
-    }
-    
-    body {
-      background-color: var(--valorant-dark);
-      color: var(--valorant-light);
-      overflow-x: hidden;
-      min-height: 100vh;
-      position: relative;
-    }
-    
-    /* Valorant Header */
-    .valorant-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 40px;
-      background-color: rgba(15, 25, 35, 0.9);
-      z-index: 100;
-      border-bottom: 1px solid rgba(255, 70, 85, 0.3);
-    }
-    
-    .valorant-logo {
-      height: 40px;
-      width: auto;
-    }
-    
-    .header-nav {
-      display: flex;
-      gap: 30px;
-    }
-    
-    .nav-link {
-      color: var(--valorant-light);
-      text-decoration: none;
-      text-transform: uppercase;
-      font-weight: bold;
-      letter-spacing: 1px;
-      font-size: 14px;
-      position: relative;
-      padding: 10px 0;
-      transition: color 0.3s;
-    }
-    
-    .nav-link.active {
-      color: var(--valorant-red);
-    }
-    
-    .nav-link:not(.active):hover {
-      color: var(--valorant-white);
-    }
-    
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--valorant-red);
-      transition: width 0.3s;
-    }
-    
-    .nav-link.active::after {
-      width: 100%;
-    }
-    
-    /* Main Layout */
-    .main-container {
-      display: flex;
-      min-height: calc(100vh - 80px);
-      margin-top: 80px;
-    }
-    
-    .sidebar-left {
-      width: 80px;
-      background-color: rgba(15, 25, 35, 0.8);
-      border-right: 1px solid rgba(255, 70, 85, 0.2);
-      padding: 20px 0;
-    }
-    
-    .content-area {
-      flex: 1;
-      padding: 30px;
-      max-width: calc(100% - 280px);
-    }
-    
-    .sidebar-right {
-      width: 200px;
-      background-color: rgba(15, 25, 35, 0.8);
-      border-left: 1px solid rgba(255, 70, 85, 0.2);
-      padding: 20px;
-    }
-    
-    /* Sidebar Tabs */
-    .sidebar-tabs {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-    }
-    
-    .sidebar-tab {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .sidebar-tab.active {
-      background-color: var(--valorant-red);
-      transform: scale(1.1);
-    }
-    
-    .sidebar-tab:hover:not(.active) {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    .sidebar-tab img {
-      width: 30px;
-      height: 30px;
-      object-fit: contain;
-    }
-    
-    /* Search & Filters */
-    .search-container {
-      margin-bottom: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .search-wrapper {
-      position: relative;
-      max-width: 500px;
-    }
-    
-    .valorant-search {
-      width: 100%;
-      padding: 15px 20px 15px 50px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-      color: var(--valorant-white);
-      font-size: 16px;
-      outline: none;
-      transition: all 0.3s;
-    }
-    
-    .valorant-search:focus {
-      border-color: var(--valorant-red);
-      box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.3);
-    }
-    
-    .valorant-search::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .filters-container {
-      display: flex;
-      gap: 15px;
-    }
-    
-    .valorant-select {
-      padding: 12px 20px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-      color: var(--valorant-white);
-      font-size: 14px;
-      outline: none;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .valorant-select:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .valorant-select:focus {
-      border-color: var(--valorant-red);
-      box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.3);
-    }
-    
-    /* Skins Grid */
-    .valorant-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    
-    .skin-card {
-      background: linear-gradient(145deg, #1b2735, #2b3a4b);
-      border: 2px solid var(--valorant-red);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-    }
-    
-    .skin-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(255, 70, 85, 0.1) 0%, rgba(255, 70, 85, 0) 50%);
-      z-index: 1;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    .skin-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .skin-card:hover::before {
-      opacity: 1;
-    }
-    
-    .skin-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 0.3s;
-    }
-    
-    .skin-card:hover img {
-      transform: scale(1.05);
-    }
-    
-    .skin-card h3 {
-      padding: 15px;
-      font-size: 14px;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--valorant-white);
-      background-color: rgba(15, 25, 35, 0.8);
-      margin: 0;
-      position: relative;
-      z-index: 2;
-    }
-    
-    /* Bundle Container */
-    .valorant-bundle {
-      position: relative;
-      background-color: rgba(15, 25, 35, 0.8);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 70, 85, 0.3);
-      transition: all 0.3s;
-    }
-    
-    .valorant-bundle:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .bundle-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e6e/5eb26f54402b8b4d13a56656/Valorant_Logo_V.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.2;
-      z-index: 1;
-    }
-    
-    .bundle-content {
-      position: relative;
-      z-index: 2;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    
-    .bundle-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .bundle-title {
-      font-size: 18px;
-      color: var(--valorant-white);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .bundle-timer {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      color: var(--valorant-red);
-    }
-    
-    .bundle-skins-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    
-    .bundle-skins-grid .skin-card {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .bundle-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .bundle-rarity {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      color: var(--valorant-white);
-    }
-    
-    .bundle-rarity img {
-      width: 20px;
-      height: 20px;
-    }
-    
-    .bundle-price {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 14px;
-      color: var(--valorant-white);
-      font-weight: bold;
-    }
-    
-    .bundle-price img {
-      width: 16px;
-      height: 16px;
-    }
-    
-    /* Modal Styles */
-    .valorant-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .modal-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-    }
-    
-    .modal-container {
-      position: relative;
-      width: 90%;
-      max-width: 900px;
-      max-height: 90vh;
-      background-color: var(--valorant-dark);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 70, 85, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .modal-header {
-      display: flex;
-      align-items: center;
-      padding: 20px;
-      background-color: rgba(15, 25, 35, 0.8);
-      border-bottom: 1px solid rgba(255, 70, 85, 0.3);
-    }
-    
-    .skin-tier {
-      width: 30px;
-      height: 30px;
-      margin-right: 15px;
-    }
-    
-    .skin-tier img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    
-    .skin-title {
-      font-size: 24px;
-      color: var(--valorant-white);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      flex: 1;
-    }
-    
-    .close-button {
-      background: none;
-      border: none;
-      color: var(--valorant-white);
-      cursor: pointer;
-      transition: all 0.3s;
-      padding: 5px;
-      border-radius: 4px;
-    }
-    
-    .close-button:hover {
-      color: var(--valorant-red);
-      transform: rotate(90deg);
-    }
-    
-    .modal-content {
-      padding: 20px;
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-    
-    .skin-preview {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 300px;
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .skin-image {
-      max-width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      transition: all 0.3s;
-    }
-    
-    #skin-video {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      display: none;
-    }
-    
-    .no-video-message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 16px;
-      text-align: center;
-    }
-    
-    .skin-variants, .skin-levels {
-      background-color: rgba(15, 25, 35, 0.8);
-      border-radius: 8px;
-      padding: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .variants-header, .levels-header {
-      margin-bottom: 15px;
-    }
-    
-    .variants-header h3, .levels-header h3 {
-      color: var(--valorant-white);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 16px;
-      position: relative;
-      padding-bottom: 5px;
-    }
-    
-    .variants-header h3::after, .levels-header h3::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 2px;
-      background-color: var(--valorant-red);
-    }
-    
-    .variants-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    
-    .chroma-icon {
-      width: 50px;
-      height: 50px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-      object-fit: cover;
-    }
-    
-    .chroma-icon:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .chroma-icon.active {
-      border-color: var(--valorant-red);
-      transform: scale(1.1);
-    }
-    
-    .levels-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    
-    .level-button {
-      padding: 8px 15px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-      color: var(--valorant-white);
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 14px;
-    }
-    
-    .level-button:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    .level-button.active-level {
-      background-color: var(--valorant-red);
-      border-color: var(--valorant-red);
-    }
-    
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-    }
-    
-    .valorant-button {
-      padding: 12px 20px;
-      background-color: var(--valorant-red);
-      border: none;
-      border-radius: 4px;
-      color: var(--valorant-white);
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .valorant-button:hover {
-      background-color: #e03a48;
-      transform: translateY(-2px);
-    }
-    
-    .modal-footer {
-      padding: 15px 20px;
-      background-color: rgba(15, 25, 35, 0.8);
-      border-top: 1px solid rgba(255, 70, 85, 0.3);
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
-      text-align: center;
-    }
-    
-    .modal-footer a {
-      color: var(--valorant-red);
-      text-decoration: none;
-    }
-    
-    .modal-footer a:hover {
-      text-decoration: underline;
-    }
-    
-    /* Background Effects */
-    .valorant-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-    
-    .bg-particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt29d7c4f6bc077e6e/5eb26f54402b8b4d13a56656/Valorant_Logo_V.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.05;
-      animation: bg-pulse 20s infinite alternate;
-    }
-    
-    .bg-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(15, 25, 35, 0.8) 0%, rgba(15, 25, 35, 0.9) 100%);
-    }
-    
-    @keyframes bg-pulse {
-      0% {
-        transform: scale(1);
-        opacity: 0.05;
-      }
-      100% {
-        transform: scale(1.1);
-        opacity: 0.1;
+  <!-- JavaScript -->
+  <script>
+    // ===== GLOBAL VARIABLES =====
+    const skinsListContainer = document.getElementById('skins-list');
+    const skinDetailModal = document.getElementById('skin-detail');
+    const closeButton = document.querySelector('.close-button');
+    const skinNameElement = document.getElementById('skin-name');
+    const skinIconElement = document.getElementById('skin-icon');
+    const tierIconElement = document.getElementById('tier-icon');
+    const variantsContainer = document.getElementById('variants-container');
+    const skinVideoElement = document.getElementById('skin-video');
+    const noVideoMessage = document.getElementById('no-video-message');
+    const bundleFilter = document.getElementById('bundle-filter');
+    const weaponTypeFilter = document.getElementById('weapon-type-filter');
+    const searchInput = document.getElementById('search-input');
+    const bundleSkinsContainer = document.getElementById('bundle-skins');
+    const loadingScreen = document.getElementById('loading-screen');
+    const introScreen = document.getElementById('intro-screen');
+    const loadingText = document.getElementById('loading-text');
+
+    const API_URL = 'https://valorant-api.com/v1/weapons/skins';
+    const TIER_API_URL = 'https://valorant-api.com/v1/contenttiers/';
+
+    let skinsData = [];
+    let currentLevel = 0;
+    let currentChroma = 0;
+
+    const availableWeaponTypes = ['CLASSIC', 'SHORTY', 'FRENZY', 'GHOST', 'SHERIFF', 'STINGER', 'SPECTRE', 'BUCKY', 'JUDGE', 'BULLDOG', 'GUARDIAN', 'PHANTOM', 'VANDAL', 'MARSHAL', 'OUTLAW', 'OPERATOR', 'ARES', 'ODIN'];
+
+    const TIER_COLORS = { 
+      "0cebb8be-46d7-c12a-d306-e9907bfc5a25": "#009E81", 
+      "e046854e-406c-37f4-6607-19a9ba8426fc": "#F4965A", 
+      "60bca009-4182-7998-dee7-b8a2558dc369": "#D0558C", 
+      "12683d76-48d7-84a3-4e09-6985794f0445": "#5A9FE1", 
+      "411e4a55-4e59-7757-41f0-86a53f101bb5": "#FAD763" 
+    };
+
+    // ===== INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show intro animation for 3 seconds
+      setTimeout(() => {
+        introScreen.style.display = 'none';
+        loadingScreen.style.display = 'flex';
+        fetchData();
+      }, 3000);
+    });
+
+    // ===== DATA FETCHING =====
+    async function fetchData() {
+      try {
+        loadingText.textContent = 'LOADING CONTENT TIERS...';
+        await fetchTiers();
+        
+        loadingText.textContent = 'LOADING WEAPON SKINS...';
+        await fetchSkins();
+        
+        loadingText.textContent = 'LOADING IMAGES...';
+        checkImagesLoaded();
+        
+        // Hide loading screen after all is done
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+        }, 1000);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        loadingText.textContent = 'ERROR LOADING DATA. PLEASE REFRESH.';
       }
     }
-    
-    /* Loading Screen */
-    #intro-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9999;
-      background-color: #000;
+
+    async function fetchSkins() {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      skinsData = data.data;
+      populateFilters(skinsData);
+      displaySkins(skinsData);
+      checkURLForSkin();
+      addSkinsToBundle();
     }
-    
-    #intro-screen video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 9998;
-    }
-    
-    .valorant-spinner {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      margin-bottom: 20px;
-    }
-    
-    .spinner-inner {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 4px solid transparent;
-      border-top-color: var(--valorant-red);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    .spinner-outer {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 4px solid transparent;
-      border-bottom-color: var(--valorant-red);
-      border-radius: 50%;
-      animation: spin-reverse 1.5s linear infinite;
-    }
-    
-    .loading-image {
-      max-width: 300px;
-      max-height: 200px;
-      object-fit: contain;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-    
-    #loading-text {
-      color: var(--valorant-white);
-      font-size: 16px;
-      letter-spacing: 1px;
-    }
-    
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-    
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(-360deg);
-      }
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 1024px) {
-      .sidebar-left {
-        width: 60px;
-      }
+
+    async function fetchTiers() {
+      const response = await fetch(TIER_API_URL);
+      const data = await response.json();
       
-      .sidebar-right {
-        width: 180px;
-      }
-      
-      .content-area {
-        max-width: calc(100% - 240px);
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .main-container {
-        flex-direction: column;
-      }
-      
-      .sidebar-left {
-        width: 100%;
-        height: 60px;
-        padding: 0;
-      }
-      
-      .sidebar-tabs {
-        flex-direction: row;
-        justify-content: center;
-        padding: 10px;
-      }
-      
-      .content-area {
-        max-width: 100%;
-        padding: 20px;
-      }
-      
-      .sidebar-right {
-        width: 100%;
-        padding: 20px;
-      }
-      
-      .valorant-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-      
-      .modal-container {
-        width: 95%;
+      if (data.status === 200 && data.data) {
+        data.data.forEach(tier => {
+          const tierColor = TIER_COLORS[tier.uuid] || '#545e6c';
+          TIER_COLORS[tier.uuid] = tierColor;
+        });
       }
     }
-    
-    @media (max-width: 480px) {
-      .valorant-header {
-        padding: 0 20px;
-        height: 60px;
+
+    // ===== FILTER FUNCTIONS =====
+    function populateFilters(skins) {
+      const bundles = new Set();
+      const weaponTypes = new Set();
+
+      skins.forEach(skin => {
+        if (skin.displayName) {
+          const bundleName = skin.displayName.split(' ')[0];
+          bundles.add(bundleName);
+        }
+        if (skin.weapon && skin.weapon.displayName) {
+          weaponTypes.add(skin.weapon.displayName);
+        }
+      });
+
+      // Populate bundle filter
+      bundleFilter.innerHTML = '<option value="">ALL BUNDLES</option>';
+      bundles.forEach(bundle => {
+        const option = document.createElement('option');
+        option.value = bundle;
+        option.textContent = bundle;
+        bundleFilter.appendChild(option);
+      });
+
+      // Populate weapon type filter
+      weaponTypeFilter.innerHTML = '<option value="">ALL WEAPONS</option>';
+      availableWeaponTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        weaponTypeFilter.appendChild(option);
+      });
+    }
+
+    function filterSkins() {
+      const selectedBundle = bundleFilter.value;
+      const selectedWeaponType = weaponTypeFilter.value;
+      const searchQuery = searchInput.value.toLowerCase();
+
+      const filteredSkins = skinsData.filter(skin => {
+        const matchesBundle = selectedBundle ? skin.displayName.split(' ')[0] === selectedBundle : true;
+        const matchesWeaponType = selectedWeaponType ? skin.displayName.toLowerCase().includes(selectedWeaponType.toLowerCase()) : true;
+        const matchesSearchQuery = skin.displayName.toLowerCase().includes(searchQuery);
+
+        return matchesBundle && matchesWeaponType && matchesSearchQuery;
+      });
+
+      displaySkins(filteredSkins);
+    }
+
+    // ===== SKIN DISPLAY FUNCTIONS =====
+    function displaySkins(skins) {
+      skinsListContainer.innerHTML = '';
+
+      skins.forEach(skin => {
+        const skinCard = document.createElement('div');
+        skinCard.classList.add('skin-card');
+        
+        // Set tier color if available
+        if (skin.contentTierUuid) {
+          const borderColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c';
+          skinCard.style.borderColor = borderColor;
+          skinCard.style.setProperty('--tier-background-color', borderColor);
+        }
+
+        skinCard.innerHTML = `
+          <img src="${skin.displayIcon}" alt="${skin.displayName}" loading="lazy">
+          <h3>${skin.displayName}</h3>
+        `;
+
+        // Add tier badge if available
+        if (skin.contentTierUuid) {
+          const tierBadge = document.createElement('div');
+          tierBadge.classList.add('skin-tier-badge');
+          tierBadge.innerHTML = `<img src="https://media.valorant-api.com/contenttiers/${skin.contentTierUuid}/displayicon.png" alt="Tier">`;
+          skinCard.appendChild(tierBadge);
+        }
+
+        skinCard.addEventListener('click', () => showSkinDetail(skin));
+        skinsListContainer.appendChild(skinCard);
+      });
+    }
+
+    // ===== SKIN DETAIL FUNCTIONS =====
+    async function showSkinDetail(skin) {
+      skinNameElement.textContent = skin.displayName;
+      skinIconElement.src = skin.displayIcon || '';
+
+      // Fetch tier icon if available
+      if (skin.contentTierUuid) {
+        try {
+          const tierResponse = await fetch(`${TIER_API_URL}${skin.contentTierUuid}`);
+          const tierData = await tierResponse.json();
+          tierIconElement.src = tierData.data.displayIcon || '';
+        } catch (error) {
+          console.error('Error loading tier icon:', error);
+        }
       }
-      
-      .valorant-logo {
-        height: 30px;
+
+      variantsContainer.innerHTML = '';
+      let defaultVideo = '';
+
+      // Display chromas (variants)
+      if (skin.chromas && skin.chromas.length > 0) {
+        skin.chromas.forEach((chroma, index) => {
+          const chromaIcon = document.createElement('img');
+          chromaIcon.src = chroma.swatch || skin.displayIcon || '';
+          chromaIcon.classList.add('chroma-icon');
+          chromaIcon.alt = `Variant ${index + 1}`;
+
+          // Set active chroma
+          if (index === currentChroma) {
+            chromaIcon.classList.add('active');
+          }
+
+          chromaIcon.addEventListener('click', () => {
+            currentChroma = index;
+            let videoUrl = chroma.streamedVideo || '';
+
+            // If no video in chroma, check levels
+            if (!videoUrl && skin.levels && skin.levels.length > 0) {
+              for (let level of skin.levels) {
+                if (level.streamedVideo) {
+                  videoUrl = level.streamedVideo;
+                  break;
+                }
+              }
+            }
+
+            // Update video and active state
+            if (videoUrl) {
+              skinVideoElement.src = videoUrl;
+              skinVideoElement.style.display = 'block';
+              noVideoMessage.style.display = 'none';
+              skinIconElement.style.display = 'none';
+              skinVideoElement.play().catch(e => console.log('Autoplay prevented:', e));
+            } else {
+              skinVideoElement.style.display = 'none';
+              noVideoMessage.style.display = 'block';
+              skinIconElement.style.display = 'block';
+            }
+
+            // Update active chroma
+            document.querySelectorAll('.chroma-icon').forEach(icon => {
+              icon.classList.remove('active');
+            });
+            chromaIcon.classList.add('active');
+          });
+
+          variantsContainer.appendChild(chromaIcon);
+        });
+
+        // Trigger click on default chroma
+        document.querySelectorAll('.chroma-icon')[currentChroma]?.click();
       }
+
+      // Display levels
+      const levelsContainer = document.createElement('div');
+      levelsContainer.id = 'levels-container';
+      levelsContainer.className = 'levels-grid';
       
-      .header-nav {
-        gap: 15px;
+      if (skin.levels && skin.levels.length > 0) {
+        skin.levels.forEach((level, index) => {
+          const levelButton = document.createElement('button');
+          levelButton.textContent = `LEVEL ${index + 1}`;
+          levelButton.classList.add('level-button');
+          
+          if (index === currentLevel) {
+            levelButton.classList.add('active-level');
+          }
+
+          levelButton.addEventListener('click', () => {
+            currentLevel = index;
+            document.querySelectorAll('.level-button').forEach(btn => {
+              btn.classList.remove('active-level');
+            });
+            levelButton.classList.add('active-level');
+
+            if (level.streamedVideo) {
+              skinVideoElement.src = level.streamedVideo;
+              skinVideoElement.style.display = 'block';
+              noVideoMessage.style.display = 'none';
+              skinIconElement.style.display = 'none';
+              skinVideoElement.play().catch(e => console.log('Autoplay prevented:', e));
+            } else {
+              skinVideoElement.style.display = 'none';
+              noVideoMessage.style.display = 'block';
+              skinIconElement.style.display = 'block';
+            }
+          });
+
+          levelsContainer.appendChild(levelButton);
+        });
+
+        // Set default video from levels if no chroma video
+        for (let level of skin.levels) {
+          if (level.streamedVideo) {
+            defaultVideo = level.streamedVideo;
+            break;
+          }
+        }
+
+        // Trigger click on default level
+        document.querySelectorAll('.level-button')[currentLevel]?.click();
       }
+
+      // Add share button
+      const shareButton = document.createElement('button');
+      shareButton.className = 'valorant-button share-button';
+      shareButton.innerHTML = `
+        <svg viewBox="0 0 24 24" width="16" height="16">
+          <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+        </svg>
+        SHARE
+      `;
+      shareButton.addEventListener('click', () => shareSkin(skin.uuid));
+
+      // Clear and rebuild modal content
+      const skinLevelsContainer = document.querySelector('.skin-levels');
+      skinLevelsContainer.innerHTML = `
+        <div class="levels-header">
+          <h3>LEVELS</h3>
+        </div>
+      `;
+      skinLevelsContainer.appendChild(levelsContainer);
       
-      .nav-link {
-        font-size: 12px;
+      const modalActions = document.querySelector('.modal-actions');
+      modalActions.innerHTML = '';
+      modalActions.appendChild(shareButton);
+
+      // Set default video
+      if (defaultVideo) {
+        skinVideoElement.src = defaultVideo;
+        skinVideoElement.style.display = 'block';
+        noVideoMessage.style.display = 'none';
+        skinIconElement.style.display = 'none';
+      } else {
+        skinVideoElement.style.display = 'none';
+        noVideoMessage.style.display = 'block';
+        skinIconElement.style.display = 'block';
       }
-      
-      .valorant-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 15px;
-      }
-      
-      .skin-card h3 {
-        font-size: 12px;
-        padding: 10px;
-      }
-      
-      .search-wrapper {
-        max-width: 100%;
-      }
-      
-      .valorant-search {
-        padding: 12px 15px 12px 40px;
-        font-size: 14px;
-      }
-      
-      .filters-container {
-        flex-direction: column;
-      }
-      
-      .valorant-select {
-        width: 100%;
+
+      // Show modal
+      skinDetailModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ===== UTILITY FUNCTIONS =====
+    function shareSkin(skinId) {
+      const url = `${window.location.origin}${window.location.pathname}?skin=${skinId}&level=${currentLevel}&chroma=${currentChroma}`;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Skin link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy link: ', err);
+      });
+    }
+
+    function checkURLForSkin() {
+      const params = new URLSearchParams(window.location.search);
+      const skinId = params.get('skin');
+      currentLevel = parseInt(params.get('level')) || 0;
+      currentChroma = parseInt(params.get('chroma')) || 0;
+
+      if (skinId) {
+        const skin = getSkinById(skinId);
+        if (skin) {
+          showSkinDetail(skin);
+        }
       }
     }
-  </style>
+
+    function getSkinById(id) {
+      return skinsData.find(skin => skin.uuid === id);
+    }
+
+    function checkImagesLoaded() {
+      const images = Array.from(document.querySelectorAll('#skins-list img'));
+      let loadedCount = 0;
+      
+      images.forEach(img => {
+        if (img.complete) {
+          loadedCount++;
+          updateLoadingText(loadedCount, images.length);
+        } else {
+          img.addEventListener('load', () => {
+            loadedCount++;
+            updateLoadingText(loadedCount, images.length);
+          });
+          img.addEventListener('error', () => {
+            loadedCount++;
+            updateLoadingText(loadedCount, images.length);
+          });
+        }
+      });
+      
+      if (images.length === 0) {
+        loadingText.textContent = 'LOADING COMPLETE';
+      }
+    }
+
+    function updateLoadingText(loaded, total) {
+      loadingText.textContent = `LOADING ASSETS... ${loaded}/${total}`;
+      if (loaded === total) {
+        loadingText.textContent = 'LOADING COMPLETE';
+      }
+    }
+
+    function addSkinsToBundle() {
+      bundleSkinsContainer.innerHTML = '';
+      const cyraxSkins = skinsData.filter(skin => 
+        skin.displayName && skin.displayName.includes('CYRAX')
+      ).slice(0, 4); // Limit to 4 skins for the bundle
+
+      cyraxSkins.forEach(skin => {
+        const skinCard = document.createElement('div');
+        skinCard.classList.add('skin-card');
+        
+        if (skin.contentTierUuid) {
+          const borderColor = TIER_COLORS[skin.contentTierUuid] || '#545e6c';
+          skinCard.style.borderColor = borderColor;
+        }
+
+        skinCard.innerHTML = `
+          <img src="${skin.displayIcon}" alt="${skin.displayName}" loading="lazy">
+          <h3>${skin.displayName}</h3>
+        `;
+
+        bundleSkinsContainer.appendChild(skinCard);
+      });
+    }
+
+    // ===== EVENT LISTENERS =====
+    bundleFilter.addEventListener('change', filterSkins);
+    weaponTypeFilter.addEventListener('change', filterSkins);
+    searchInput.addEventListener('input', filterSkins);
+    closeButton.addEventListener('click', () => {
+      skinDetailModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      
+      // Pause video when closing modal
+      if (skinVideoElement) {
+        skinVideoElement.pause();
+      }
+    });
+
+    // Close modal when clicking outside
+    skinDetailModal.addEventListener('click', (e) => {
+      if (e.target === skinDetailModal || e.target.classList.contains('modal-overlay')) {
+        skinDetailModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Pause video when closing modal
+        if (skinVideoElement) {
+          skinVideoElement.pause();
+        }
+      }
+    });
+
+    // Handle keyboard events
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && skinDetailModal.style.display === 'flex') {
+        skinDetailModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Pause video when closing modal
+        if (skinVideoElement) {
+          skinVideoElement.pause();
+        }
+      }
+    });
+  </script>
 </body>
 </html>
