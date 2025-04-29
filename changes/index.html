@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zmiany - kacpiq.pl</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --bg-color: #f8f9fa;
+            --primary: #121212;
+            --secondary: #555;
+            --accent: #3a86ff;
+            --transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            color: var(--primary);
+            font-family: 'Manrope', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .snake-line {
+            position: absolute;
+            background-color: var(--accent);
+            opacity: 0.15;
+            z-index: 1;
+            animation: snakeAnimation 3s ease-out forwards;
+        }
+        
+        @keyframes snakeAnimation {
+            0% {
+                width: 0;
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.15;
+            }
+            80% {
+                opacity: 0.15;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header {
+            margin-bottom: 6rem;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-weight: 800;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin: 0;
+            line-height: 1.1;
+            transform: translateY(30px);
+            opacity: 0;
+            letter-spacing: -0.03em;
+        }
+        
+        .logo-wrapper {
+            position: relative;
+            height: 50vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5rem 0;
+        }
+        
+        .logo-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: var(--transition);
+            will-change: transform, opacity;
+        }
+        
+        .old-logo {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: brightness(0.95);
+        }
+        
+        .new-logo {
+            opacity: 0;
+            transform: scale(0.95) translateY(15px);
+        }
+
+        .new-logo-visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .footer {
+            margin-top: 6rem;
+            overflow: hidden;
+        }
+        
+        p {
+            font-weight: 400;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--secondary);
+            transform: translateY(20px);
+            opacity: 0;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .accent-line {
+            display: inline-block;
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+            margin: 2rem 0;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes scaleXIn {
+            to {
+                transform: scaleX(1);
+            }
+        }
+        
+        @keyframes logoTransitionOut {
+            to {
+                opacity: 0;
+                transform: scale(0.92) translateY(-15px);
+                filter: brightness(0.7) blur(1px);
+            }
+        }
+        
+        @keyframes logoTransitionIn {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .shine-effect {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.03) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="title">Nadchodzą<br>wielkie zmiany</h1>
+            <div class="accent-line" id="accentLine"></div>
+        </div>
+        
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <img src="https://www.kacpiq.pl/img/kacpiq_old.png"
+                     alt="Current Brand" 
+                     class="logo old-logo" 
+                     id="oldLogo">
+                     
+                <img src="https://raw.githubusercontent.com/kacpiq1/www/refs/heads/main/img/kacpiq.ico" 
+                     alt="New Brand" 
+                     class="logo new-logo" 
+                     id="newLogo">
+                
+                <div class="shine-effect" id="shine"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p id="message">Zajrzyj wkrótce, zapewniamy że nie potrwa to długo ;)</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function createSnakeLine() {
+                const line = document.createElement('div');
+                line.className = 'snake-line';
+                
+                const isHorizontal = Math.random() > 0.5;
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                if (isHorizontal) {
+
+                    const length = Math.random() * 200 + 50;
+                    const posX = Math.random() * (viewportWidth - length);
+                    const posY = Math.random() * viewportHeight;
+                    
+                    line.style.width = '0';
+                    line.style.height = '2px';
+                    line.style.left = `${posX}px`;
+                    line.style.top = `${posY}px`;
+                    line.style.animation = 'snakeAnimation 3s ease-out forwards';
+                    
+                    setTimeout(() => {
+                        line.style.width = `${length}px`;
+                    }, 10);
+                } else {
+
+                    const length = Math.random() * 200 + 50;
+                    const posX = Math.random() * viewportWidth;
+                    const posY = Math.random() * (viewportHeight - length);
+                    
+                    line.style.width = '2px';
+                    line.style.height = '0';
+                    line.style.left = `${posX}px`;
+                    line.style.top = `${posY}px`;
+                    line.style.animation = 'snakeAnimation 3s ease-out forwards';
+                    
+                    setTimeout(() => {
+                        line.style.height = `${length}px`;
+                    }, 10);
+                }
+                
+                document.body.appendChild(line);
+                
+                setTimeout(() => {
+                    line.remove();
+                }, 3000);
+
+                const nextTime = Math.random() * 2000 + 500;
+                setTimeout(createSnakeLine, nextTime);
+            }
+            
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createSnakeLine, i * 800);
+            }
+            
+            setTimeout(() => {
+                document.getElementById('title').style.animation = 'fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                document.getElementById('accentLine').style.animation = 'scaleXIn 0.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            }, 300);
+            
+            // Logo transition
+            setTimeout(() => {
+                const oldLogo = document.getElementById('oldLogo');
+                const newLogo = document.getElementById('newLogo');
+                const shine = document.getElementById('shine');
+                
+                oldLogo.style.animation = 'logoTransitionOut 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                
+                setTimeout(() => {
+                    newLogo.classList.add('new-logo-visible');
+                    
+                    setTimeout(() => {
+                        shine.style.transition = 'left 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                        shine.style.left = '150%';
+                    }, 300);
+                }, 800);
+            }, 1500);
+            
+            setTimeout(() => {
+                document.getElementById('message').style.animation = 'fadeUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            }, 2500);
+            
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    location.reload();
+                }
+            };
+        });
+    </script>
+</body>
+</html>
