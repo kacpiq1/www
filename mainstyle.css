@@ -440,9 +440,7 @@ span {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 9%;
 }
 
 .home-grid {
