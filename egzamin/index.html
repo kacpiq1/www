@@ -563,7 +563,32 @@
     <script src="egzamin/js/auth.js" defer></script>
     <script src="egzamin/js/rating.js" defer></script>
     <script src="egzamin/js/ranking.js" defer></script>
-    
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("privacy-modal");
+    const acceptButton = document.getElementById("accept-policy");
+
+    const currentPolicyVersion = "2025-05-02";
+
+    const acceptedPolicyVersion = localStorage.getItem("privacyPolicyVersion");
+
+    if (acceptedPolicyVersion !== currentPolicyVersion) {
+        modal.style.display = "flex";
+    } else {
+        modal.style.display = "none";
+    }
+
+    acceptButton.addEventListener("click", () => {
+        modal.classList.add("hide-animation"); 
+        setTimeout(() => {
+            localStorage.setItem("privacyPolicyVersion", currentPolicyVersion); 
+            modal.style.display = "none"; 
+        }, 300);
+    });
+
+});
+	</script>
     <script>
         // Initialize countdown
         var countDownDate = new Date("Jun 2, 2025 00:00:00").getTime();
