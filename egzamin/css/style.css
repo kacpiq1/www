@@ -520,7 +520,7 @@ a:hover {
 }
 
 /* Treść modala */
-.modal-content {
+.modal-content-pv {
     background-color: var(--second-bg-color);
     padding: 20px;
     border-radius: 8px;
@@ -569,22 +569,6 @@ a:hover {
     color: #007bff;
 }
 
-
-.button-primary {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s;
-    margin-top: 60px
-}
-
-.button-primary:hover {
-    background-color: #0056b3; 
-}
 
 
 @keyframes fadeIn {
