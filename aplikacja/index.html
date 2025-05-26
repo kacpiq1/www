@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KacpiQ - Aplikacja do nauki INF.02 i INF.03</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="5,5" /></svg>');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+            width: 100%;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            min-width: 110px;
+            animation: pulse 2s infinite;
+        }
+        
+        .countdown-item:nth-child(1) { animation-delay: 0s; }
+        .countdown-item:nth-child(2) { animation-delay: 0.2s; }
+        .countdown-item:nth-child(3) { animation-delay: 0.4s; }
+        .countdown-item:nth-child(4) { animation-delay: 0.6s; }
+        
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .features {
+            padding: 6rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 4rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--dark);
+            max-width: 700px;
+            margin: 0 auto 4rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            text-align: center;
+        }
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--dark);
+            opacity: 0.9;
+        }
+        
+        .app-preview {
+            padding: 6rem 0;
+            background: linear-gradient(to right, var(--light), #f0f1f5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phone-mockup {
+            width: 340px;
+            height: 700px;
+            background: #000;
+            border-radius: 50px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            transition: all 0.5s ease;
+            animation: float 6s ease-in-out infinite;
+            border: 12px solid #1a1a1a;
+        }
+        
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+        
+        .phone-screen {
+            position: absolute;
+            top: 30px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 35px;
+            overflow: hidden;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-slides {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .preview-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .preview-slide.active {
+            opacity: 1;
+        }
+        
+        .exam-info {
+            padding: 6rem 0;
+            background: var(--dark);
+            color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 1rem 2.5rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .qualification-list {
+            list-style: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .qualification-item {
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .qualification-item.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .qualification-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+        
+        .qualification-item p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        .cta {
+            padding: 6rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent), #e84393);
+            color: white;
+        }
+        
+        .cta h2 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+            line-height: 1.3;
+        }
+        
+        .cta p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        .newsletter-form {
+            max-width: 600px;
+            margin: 2.5rem auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 1.2rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .newsletter-btn {
+            padding: 1.2rem 2.5rem;
+            background: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .newsletter-btn:hover {
+            background: black;
+            transform: translateY(-3px);
+        }
+        
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .social-link:hover {
+            color: var(--accent);
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: float-particle linear infinite;
+        }
+        
+        @keyframes float-particle {
+            to {
+                transform: translateY(-100vh);
+            }
+        }
+        
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.1rem;
+                padding: 0 20px;
+            }
+            
+            .phone-mockup {
+                width: 280px;
+                height: 580px;
+                border-radius: 40px;
+            }
+            
+            .phone-screen {
+                top: 50px;
+                border-radius: 30px;
+            }
+            
+            .cta h2 {
+                font-size: 2.5rem;
+            }
+            
+            .cta p {
+                font-size: 1.1rem;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .qualification-item {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="particles" id="particles"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>KacpiQ - Twoje przygotowanie do egzaminu</h1>
+                <p>Innowacyjna aplikacja do nauki do kwalifikacji INF.02 i INF.03 już we wrześniu 2025!</p>
+                
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">00</div>
+                        <div>Dni</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div>Godziny</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div>Minuty</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div>Sekundy</div>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <a href="#newsletter" class="btn btn-outline">Powiadom mnie o premierze</a>
+                    <a href="#features" class="btn">Poznaj funkcje</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Dlaczego KacpiQ?</h2>
+            <p class="section-subtitle">Kompleksowe rozwiązanie dla uczniów przygotowujących się do egzaminów zawodowych z kwalifikacji INF.02 i INF.03</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Kompletne materiały</h3>
+                    <p>Wszystko czego potrzebujesz do zdania egzaminu w jednym miejscu - teoria, zadania praktyczne, testy i przykładowe rozwiązania.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Inteligentne powtórki</h3>
+                    <p>System powtórek oparty na algorytmach spacjowania, który pomaga efektywnie zapamiętać informacje na długi czas.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Gamifikacja</h3>
+                    <p>Zdobywaj osiągnięcia, odblokowuj poziomy i rywalizuj z innymi użytkownikami - nauka przez zabawę!</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Dostępność</h3>
+                    <p>Ucz się kiedy chcesz i gdzie chcesz - aplikacja dostępna na iOS, Android i przeglądarkę internetową.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Statystyki</h3>
+                    <p>Śledź swoje postępy i identyfikuj słabe punkty dzięki szczegółowym analizom i wykresom.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <h3>Wsparcie ekspertów</h3>
+                    <p>Dostęp do społeczności i pomocy doświadczonych nauczycieli oraz egzaminatorów.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="app-preview">
+        <div class="container">
+            <h2 class="section-title">Zobacz jak działa KacpiQ</h2>
+            <p class="section-subtitle">Przegląd najważniejszych funkcji aplikacji na przykładzie wirtualnego telefonu.</p>
+            
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="preview-slides">
+                        <div class="preview-slide active" style="background-image: url('https://raw.githubusercontent.com/kacpiq1/www/6328256fb76c1bb1b8023d7595c49de5397e1bac/img/appINF.png');"></div>
+                        <div class="preview-slide" style="background-image: url('https://github.com/kacpiq1/www/blob/main/img/appINF1.png?raw=true');"></div>
+                        <div class="preview-slide" style="background-image: url('https://github.com/kacpiq1/www/blob/main/img/appINF2.png?raw=true');"></div>
+<div class="preview-slide" style="background-image: url('https://github.com/kacpiq1/www/blob/main/img/appINF3.png?raw=true');"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="exam-info">
+        <div class="container">
+            <h2 class="section-title">Przygotowanie do kwalifikacji</h2>
+            <p class="section-subtitle">Kompleksowe materiały dla obydwu kwalifikacji w jednej aplikacji</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="inf02">INF.02</button>
+                <button class="tab-btn" data-tab="inf03">INF.03</button>
+            </div>
+            
+            <div class="tab-content active" id="inf02">
+                <ul class="qualification-list">
+                    <li class="qualification-item">
+                        <h3>Administracja i eksploatacja systemów komputerowych</h3>
+                        <p>Pełne przygotowanie do części teoretycznej i praktycznej egzaminu, w tym konfiguracja systemów operacyjnych, zarządzanie użytkownikami i zabezpieczenia.</p>
+                    </li>
+                    <li class="qualification-item">
+                        <h3>Bazy danych i SQL</h3>
+                        <p>Setki zadań z tworzenia i zarządzania bazami danych, projektowania relacji, pisania zapytań SQL i optymalizacji.</p>
+                    </li>
+                    <li class="qualification-item">
+                        <h3>Sieci komputerowe</h3>
+                        <p>Konfiguracja urządzeń sieciowych, adresacja IP, routing, rozwiązywanie problemów sieciowych i bezpieczeństwo w sieci.</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="tab-content" id="inf03">
+                <ul class="qualification-list">
+                    <li class="qualification-item">
+                        <h3>Tworzenie aplikacji internetowych</h3>
+                        <p>HTML5, CSS3, JavaScript (ES6+), frameworki frontendowe (React, Vue), responsywny design i dostępność.</p>
+                    </li>
+                    <li class="qualification-item">
+                        <h3>Programowanie backendowe</h3>
+                        <p>PHP, Python, Node.js - tworzenie pełnoprawnych aplikacji, REST API, autentykacja i bezpieczeństwo.</p>
+                    </li>
+                    <li class="qualification-item">
+                        <h3>Projektowanie baz danych</h3>
+                        <p>Zaawansowane techniki projektowania, normalizacja, optymalizacja zapytań, transakcje i indeksy.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="newsletter">
+        <div class="container">
+            <h2>Gotowy na rewolucję w nauce?</h2>
+            <p>Zapisz się na listę oczekujących i bądź pierwszy, gdy aplikacja będzie gotowa!</p>
+            
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Twój email" required>
+                <button type="submit" class="newsletter-btn">Zapisz mnie!</button>
+            </form>
+            
+            <p>Premiera już we wrześniu 2025!</p>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="copyright">© 2025 KacpiQ. Wszystkie prawa zastrzeżone.<br>Strona stworzona z myślą o uczniach przygotowujących się do egzaminów zawodowych.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+
+        function updateCountdown() {
+            const targetDate = new Date("September 1, 2025 00:00:00").getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("days").textContent = days.toString().padStart(2, "0");
+            document.getElementById("hours").textContent = hours.toString().padStart(2, "0");
+            document.getElementById("minutes").textContent = minutes.toString().padStart(2, "0");
+            document.getElementById("seconds").textContent = seconds.toString().padStart(2, "0");
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tabId = btn.getAttribute("data-tab");
+                
+
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+
+                btn.classList.add("active");
+                document.getElementById(tabId).classList.add("active");
+            });
+        });
+
+        function showNextSlide() {
+            const slides = document.querySelectorAll(".preview-slide");
+            let currentIndex = 0;
+            
+            slides.forEach((slide, index) => {
+                if (slide.classList.contains("active")) {
+                    slide.classList.remove("active");
+                    currentIndex = index;
+                }
+            });
+            
+            currentIndex = (currentIndex + 1) % slides.length;
+            slides[currentIndex].classList.add("active");
+        }
+        
+        setInterval(showNextSlide, 3000);
+
+        function checkVisibility() {
+            const featureCards = document.querySelectorAll(".feature-card");
+            const qualItems = document.querySelectorAll(".qualification-item");
+            
+            featureCards.forEach((card, index) => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (cardPosition < screenPosition) {
+                    setTimeout(() => {
+                        card.classList.add("visible");
+                    }, index * 150);
+                }
+            });
+            
+            qualItems.forEach((item, index) => {
+                const itemPosition = item.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (itemPosition < screenPosition) {
+                    setTimeout(() => {
+                        item.classList.add("visible");
+                    }, index * 150);
+                }
+            });
+        }
+        
+        window.addEventListener("scroll", checkVisibility);
+        window.addEventListener("load", checkVisibility);
+
+        function createParticles() {
+            const particlesContainer = document.getElementById("particles");
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement("div");
+                particle.classList.add("particle");
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+ 
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+  
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        const newsletterForm = document.querySelector(".newsletter-form");
+        newsletterForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector("input").value;
+
+            alert(`Informujemy, że uruchomimy zapisywanie się wkrótce.`);
+            newsletterForm.querySelector("input").value = "";
+        });
+    </script>
+</body>
+</html>
