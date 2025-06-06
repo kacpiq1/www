@@ -289,9 +289,15 @@
                 <p class="hero-subtitle">Przygotuj się do egzaminu INF.02 i EE.08 z naszym nowoczesnym systemem losowania arkuszy</p>
                 
                 <div class="countdown-container">
-                    <div class="countdown-label">Do egzaminu pozostało:</div>
-                    <div class="countdown-timer" id="countdown-timer"></div>
+                    <div class="countdown-label">Egzamin pisemny (teoretyczny):</div>
+                    <div id="countdown-timer" class="countdown-timer1"><p><strong>Egzamin zakończony!</strong></p></div>
                 </div>
+
+		    <div class="countdown-container">
+                    <div class="countdown-label">Do egzaminu praktycznego pozostało:</div>
+                    <div class="countdown-timer1" id="countdown-timer"></div>
+                </div>
+		    
             </div>
             
             <div class="hero-stats">
@@ -591,7 +597,7 @@
 	</script>
     <script>
         // Initialize countdown
-        var countDownDate = new Date("Jun 2, 2025 00:00:00").getTime();
+        var countDownDate = new Date("Jun 6, 2025 08:00:00").getTime();
         
         var x = setInterval(function() {
             var now = new Date().getTime();
@@ -607,7 +613,57 @@
             
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("countdown-timer").innerHTML = "Egzamin rozpoczęty!";
+                document.getElementById("countdown-timer").innerHTML = "Egzamin zakończony zaliczeniem!";
+            }
+        }, 1000);
+        
+        // Technical break check
+        function checkTechnicalBreak() {
+            const startDate = new Date('2025-04-24T18:30:00');
+            const endDate = new Date('2025-04-24T18:40:00');
+            const currentDate = new Date();
+            
+            if (currentDate >= startDate && currentDate <= endDate) {
+                document.getElementById("przerwa-komunikat").style.display = 'flex';
+                document.getElementById("losuj").disabled = true;
+            }
+        }
+        
+        window.addEventListener('load', checkTechnicalBreak);
+        
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                html.setAttribute('data-theme', 'light');
+                this.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                this.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+    </script>
+	<script>
+        // Initialize countdown
+        var countDownDate1 = new Date("Jun 11, 2025 08:00:00").getTime();
+        
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown-timer").innerHTML = 
+                `${days}d ${hours}g ${minutes}m ${seconds}s`;
+            
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown-timer1").innerHTML = "Egzamin rozpoczęty!";
             }
         }, 1000);
         
