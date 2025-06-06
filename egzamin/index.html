@@ -295,7 +295,7 @@
 
 		    <div class="countdown-container">
                     <div class="countdown-label">Do egzaminu praktycznego pozostało:</div>
-                    <div class="countdown-timer1" id="countdown-timer"></div>
+                    <div class="countdown-timer" id="countdown-timer1"></div>
                 </div>
 		    
             </div>
@@ -613,7 +613,7 @@
             
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("countdown-timer").innerHTML = "Egzamin zakończony zaliczeniem!";
+                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin zakończony!</strong></p>";
             }
         }, 1000);
         
