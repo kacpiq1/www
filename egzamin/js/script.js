@@ -106,10 +106,14 @@ document.addEventListener("mouseup", function() {
         { file: "ee_08_2018_06_01_kolor.pdf", key: "ee_08_2018_06_01_zo_kolor.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
         { file: "EE_08_04_22_01_SG.pdf", key: "EE_08_04_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
         { file: "EE_08_03_22_01_SG.pdf", key: "EE_08_03_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Linux", klient: "Windows" },
-        { file: "EE_08_02_22_01_SG.pdf", key: "EE_08_02_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" }
+        { file: "EE_08_02_22_01_SG.pdf", key: "EE_08_02_22_01_SG_zo.pdf", podstawa: "2017", serwer: "Windows Server", klient: "Linux" },
+
+        { file: "INF_02_01_25_02_SG.pdf", key: "INF_02_01_25_02_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+        { file: "INF_02_01_25_03_SG.pdf", key: "INF_02_01_25_03_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
+        { file: "INF_02_01_25_04_SG.pdf", key: "INF_02_01_25_04_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" }
     ];
 
-    const totalExams = 143;
+    const totalExams = 147;
     const availableExams = exams.length;
     let count2019 = exams.filter(exam => exam.podstawa === "2019").length;
     let count2017 = exams.filter(exam => exam.podstawa === "2017").length;
