@@ -294,8 +294,8 @@
                 </div>
 
 		    <div class="countdown-container">
-                    <div class="countdown-label">Do egzaminu praktycznego pozostało:</div>
-                    <div class="countdown-timer" id="countdown-timer"></div>
+                    <div class="countdown-label" >Do egzaminu praktycznego pozostało:</div>
+                    <div class="countdown-timer" id="countdown-timer" style="margin-bottom: 0rem;"></div>
                 </div>
 		    
             </div>
@@ -597,7 +597,7 @@
 	</script>
     <script>
         // Initialize countdown
-        var countDownDate = new Date("Jun 11, 2025 17:00:00").getTime();
+        var countDownDate = new Date("Jun 12, 2025 08:00:00").getTime();
         
         var x = setInterval(function() {
             var now = new Date().getTime();
@@ -613,7 +613,7 @@
             
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty (sesja 17:00). POWODZENIA!</strong></p>";
+                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty (sesja 8:00). POWODZENIA!</strong></p>";
             }
         }, 1000);
         
