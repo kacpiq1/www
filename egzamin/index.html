@@ -597,7 +597,7 @@
 	</script>
     <script>
         // Initialize countdown
-        var countDownDate = new Date("Jun 11, 2025 08:00:00").getTime();
+        var countDownDate = new Date("Jun 11, 2025 17:00:00").getTime();
         
         var x = setInterval(function() {
             var now = new Date().getTime();
@@ -613,7 +613,7 @@
             
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("countdown-timer1").innerHTML = "<p><strong>Egzamin rozpoczęty (sesja 8:00). POWODZENIA!</strong></p>";
+                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty (sesja 8:00). POWODZENIA!</strong></p>";
             }
         }, 1000);
         
