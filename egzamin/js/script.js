@@ -61,9 +61,11 @@ document.addEventListener("mouseup", function() {
         { file: "inf_02_2023_01_03_SG_kolor.pdf", key: "inf_02_2023_01_03_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" },
         { file: "inf_02_2023_01_02_SG_kolor.pdf", key: "inf_02_2023_01_02_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
         { file: "inf_02_2023_01_01_SG_kolor.pdf", key: "inf_02_2023_01_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
+        { file: "inf_02_2023_06_01_SG.pdf", key: "inf_02_2023_06_01_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "inf_02_2021_06_01_SG_kolor.pdf", key: "inf_02_2021_06_01_SG_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "inf_02_2021_06_01_SD_kolor.pdf", key: "inf_02_2021_06_01_SD_zo_kolor.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
-  
+        { file: "inf_02_2021_06_02.pdf", key: "inf_02_2021_06_02_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
+
         { file: "INF_02_04_23_06_SG.pdf", key: "INF_02_04_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Linux", klient: "Windows" },
         { file: "INF_02_04_22_06_SG.pdf", key: "INF_02_04_22_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
         { file: "INF_02_03_23_06_SG.pdf", key: "INF_02_03_23_06_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Linux" },
@@ -113,7 +115,7 @@ document.addEventListener("mouseup", function() {
         { file: "INF_02_01_25_04_SG.pdf", key: "INF_02_01_25_04_SG_zo.pdf", podstawa: "2019", serwer: "Windows Server", klient: "Windows" }
     ];
 
-    const totalExams = 147;
+    const totalExams = 149;
     const availableExams = exams.length;
     let count2019 = exams.filter(exam => exam.podstawa === "2019").length;
     let count2017 = exams.filter(exam => exam.podstawa === "2017").length;
