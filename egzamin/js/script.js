@@ -164,10 +164,10 @@ document.addEventListener("mouseup", function() {
 
                 if (shouldContinue) {
                     currentExam = exams.find(e => e.file === examData.examFile);
-                    examFrame.src = "egzamin/egzaminy/" + examData.examFile;
+                    examFrame.src = "egzaminy/" + examData.examFile;
                     examFrame.style.display = "block";
                     zakonczBtn.style.display = "block";
-                    zakonczBtn.dataset.key = "egzamin/egzaminy/" + examData.examKey;
+                    zakonczBtn.dataset.key = "egzaminy/" + examData.examKey;
                     timeLeft = remainingTime;
                     startTimer();
                 } else {
@@ -285,13 +285,13 @@ document.addEventListener("mouseup", function() {
             let randomExam = filteredExams[Math.floor(Math.random() * filteredExams.length)];
             currentExam = randomExam;
 
-            examFrame.src = "egzamin/egzaminy/" + randomExam.file;
+            examFrame.src = "egzaminy/" + randomExam.file;
             examFrame.style.display = "block";
             zakonczBtn.style.display = "block";
-            zakonczBtn.dataset.key = "egzamin/egzaminy/" + randomExam.key;
+            zakonczBtn.dataset.key = "egzaminy/" + randomExam.key;
 
             // Update download link
-            downloadExamButton.href = "egzamin/egzaminy/" + randomExam.file;
+            downloadExamButton.href = "egzaminy/" + randomExam.file;
             fileInfo.textContent = randomExam.file;
 
             // Update exam info
