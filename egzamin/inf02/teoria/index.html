@@ -670,5 +670,39 @@
         loadQuestions();
         changeMode('all');
     </script>
+    <script>
+
+const menuToggle = document.getElementById('menu-toggle');
+const navbarContent = document.getElementById('navbar-content');
+
+menuToggle.addEventListener('click', () => {
+    navbarContent.classList.toggle('active');
+    menuToggle.innerHTML = navbarContent.classList.contains('active') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+});
+
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            navbarContent.classList.remove('active');
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+    });
+});
+
+document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                html.setAttribute('data-theme', 'light');
+                this.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                this.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+    </script>
 </body>
 </html>
