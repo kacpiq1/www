@@ -3,213 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egzaminy INF.02 | Losowanie egzaminów zawodowych</title>
-    <meta name="description" content="Nowoczesne losowanie egzaminów zawodowych INF.02 i EE.08 z losowaniem arkuszy i kluczami dla egzaminującego.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="egzamin/css/style.css">
+    <title>kacpiq.pl - Egzaminy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="stylesheet" href="egzamin/css/style.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .qualification-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .qualification-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qualification-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .qualification-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 2rem;
+            transition: var(--transition);
+        }
+        
+        .qualification-card:hover .qualification-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+        
+        .qualification-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .qualification-description {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 1rem auto 0;
+            line-height: 1.6;
+        }
+
+        .exam-options {
+            display: none;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-out;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-theory {
+            background-color: #6a4c93;
+            color: white;
+            box-shadow: 0 4px 6px rgba(106, 76, 147, 0.1);
+        }
+
+        .btn-theory:hover {
+            background-color: #5a3d80;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(106, 76, 147, 0.2);
+        }
+
+        .btn-practice {
+            background-color: #1982c4;
+            color: white;
+            box-shadow: 0 4px 6px rgba(25, 130, 196, 0.1);
+        }
+
+        .btn-practice:hover {
+            background-color: #1472b0;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(25, 130, 196, 0.2);
+        }
+
+        .badge-new {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background-color: var(--danger-color);
+            color: white;
+            padding: 0.25rem 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 120px;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+
+
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+
+        /* Progress indicator */
+        .progress-indicator {
+            width: 100%;
+            height: 5px;
+            background-color: var(--bg-tertiary);
+            border-radius: 5px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-animated {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Improved Alert System */
+        .tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    height: 40px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    top: 125%; /* Zmieniamy z bottom na top */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.875rem;
+    box-shadow: var(--box-shadow);
+    pointer-events: none;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Responsywność tooltipów */
+@media (max-width: 768px) {
+    .tooltip .tooltiptext {
+        width: 100px;
+        font-size: 0.75rem;
+        top: 100%; /* Zmieniamy z bottom na top */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Responsywność tooltipów */
+@media (max-width: 768px) {
+    .tooltip .tooltiptext {
+        width: 100px;
+        font-size: 0.75rem;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Przyciski zamykania modalów */
+.modal-close {
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-muted);
+}
+
+.modal-close:hover {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: var(--danger-color);
+    transform: rotate(90deg);
+}
+
+/* Animacje dla przycisków */
+.btn {
+    transition: all 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Poprawki dla alertów */
+.alert-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 3000;
+    max-width: calc(100% - 2rem);
+    width: 400px;
+}
+
+@media (max-width: 768px) {
+    .alert-container {
+        width: calc(100% - 2rem);
+        left: 1rem;
+        right: 1rem;
+        top: auto;
+        bottom: 1rem;
+    }
+}
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(0);
+            opacity: 1;
+            transition: all 0.3s ease;
+            background-color: var(--bg-card);
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            border-left-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .alert-warning {
+            border-left-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+
+        .alert-error {
+            border-left-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .alert-info {
+            border-left-color: var(--info-color);
+            color: var(--info-color);
+        }
+
+        .alert i {
+            font-size: 1.25rem;
+        }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .fade-out {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .qualification-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1rem;
+            }
+
+            .alert-container {
+                width: calc(100% - 2rem);
+                left: 1rem;
+                right: 1rem;
+                top: auto;
+                bottom: 1rem;
+            }
+        }
+
+        /* New Features */
+        .feature-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .quick-access {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .quick-access-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .quick-access-btn:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateY(-3px);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            padding-left: 3rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.875rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-    <div id="privacy-modal" class="modal-pv">
-        <div class="modal-content-pv">
-            <h1>Polityka Prywatności</h1>
-            <p>
-                Niniejsza Polityka Prywatności określa zasady przetwarzania danych osobowych użytkowników serwisu internetowego kacpiq.pl,
-        w tym zasad logowania za pomocą konta Google oraz przechowywania informacji użytkowników w usłudze Firebase, która weszła w życie<strong> 1 stycznia 2025 roku</strong>.
-            </p>
-            <br>
-            <h2>Administrator Danych</h2>
-            <p>
-                Administratorem Twoich danych osobowych jest właściciel serwisu kacpiq.pl. W razie pytań dotyczących przetwarzania danych osobowych prosimy o kontakt pod adresem e-mail: <strong>kontakt@kacpiq.pl</strong>.
-            </p>
-            <br>
-            <h2>Zakres zbieranych danych</h2>
-            <p>
-                W zależności od sposobu korzystania z serwisu, możemy gromadzić następujące dane:
-            </p>
-            <ul>
-                <li><strong>Adres e-mail:</strong> Twój główny adres e-mail powiązany z kontem Google.</li>
-                <li><strong>Informacje profilowe:</strong> Imię, nazwisko oraz inne publicznie dostępne informacje z Twojego profilu Google.</li>
-                <li><strong>Identyfikator OpenID:</strong> Unikalny identyfikator umożliwiający uwierzytelnienie.</li>
-		<li><strong>Informacje publiczne z profilu Google:</strong> Takie jak zdjęcie profilowe (jeśli dostępne).</li>
-		<li><strong>Wyniki egzaminów:</strong> Zapisywane i przechowywane w bazie danych Firebase jako część Twojego profilu użytkownika.</li>
-            </ul>
-            <br>
-		<h2>Źródło danych</h2>
-            <p>
-                Dane osobowe pozyskiwane są bezpośrednio od użytkowników lub poprzez zewnętrzne usługi, takie jak logowanie Google (OAuth 2.0).
-            </p>
-            <br>
-            <h2>Cel przetwarzania danych</h2>
-            <p>
-                Zebrane dane będą przetwarzane w celu:
-            </p>
-            <ul>
-                <li>Umożliwienia logowania i uwierzytelniania użytkowników w serwisie.</li>
-                <li>Personalizacji Twojego doświadczenia w serwisie.</li>
-                <li>Zapewnienia bezpieczeństwa i przeciwdziałania nadużyciom.</li>
-                <li>Kontaktowania się z Tobą w sprawach związanych z korzystaniem z serwisu.</li>
-		<li>Prowadzenia ewidencji wyników egzaminów i quizów.</li>
-		<li>Prowadzenia statystyk, analiz i optymalizacji działania serwisu.</li>
-		<li>Zapisywania danych użytkownika w bazie danych Firebase.</li>
-            </ul>
-            <br>
-            <h2>Podstawa prawna przetwarzania</h2>
-            <p>
-                Przetwarzanie Twoich danych osobowych odbywa się na podstawie:
-            </p>
-            <ul>
-                <li><strong>Art. 6 ust. 1 lit. a RODO:</strong> Twojej dobrowolnej zgody udzielonej podczas procesu logowania.</li>
-                <li><strong>Art. 6 ust. 1 lit. b RODO:</strong> Niezbędności przetwarzania do wykonania umowy o świadczenie usług drogą elektroniczną.</li>
-                <li><strong>Art. 6 ust. 1 lit. f RODO:</strong> Prawnie uzasadnionego interesu administratora, jakim jest zapewnienie bezpieczeństwa serwisu.</li>
-            </ul>
-            <br>
-            <h2>Przechowywanie danych</h2>
-            <p>
-                Twoje dane będą przechowywane przez okres niezbędny do realizacji celów, dla których zostały zebrane, lub do momentu wycofania zgody na ich przetwarzanie.
-            </p>
-            <br>
-            <h2>Twoje prawa</h2>
-            <p>
-                Przysługuje Ci prawo do:
-            </p>
-            <ul>
-                <li>Dostępu do treści swoich danych oraz otrzymania ich kopii.</li>
-                <li>Sprostowania (poprawienia) swoich danych.</li>
-                <li>Usunięcia danych w przypadkach przewidzianych prawem.</li>
-                <li>Ograniczenia przetwarzania danych.</li>
-                <li>Przenoszenia danych.</li>
-                <li>Wniesienia sprzeciwu wobec przetwarzania danych.</li>
-                <li>Wycofania zgody na przetwarzanie danych w dowolnym momencie.</li>
-                <li>Wniesienia skargi do organu nadzorczego (Prezesa Urzędu Ochrony Danych Osobowych).</li>
-            </ul>
-            <br>
-		<h2>Technologie śledzące i pliki cookies</h2>
-            <p>
-                Serwis wykorzystuje pliki cookies oraz podobne technologie do analizowania statystyk, poprawy jakości usług i personalizacji treści.
-        Możesz zarządzać cookies w ustawieniach przeglądarki. Korzystanie z serwisu bez zmiany ustawień oznacza zgodę na ich użycie.
-            </p>
-            <br>
-            <h2>Udostępnianie danych</h2>
-            <p>
-                Twoje dane osobowe mogą być udostępniane podmiotom współpracującym z administratorem w zakresie niezbędnym do realizacji celów przetwarzania, z zachowaniem wszelkich gwarancji zapewniających bezpieczeństwo danych.
-		    Serwis korzysta z usług Firebase (Google LLC) do przechowywania danych użytkowników, w tym danych logowania i wyników egzaminów.
-        Przechowywane dane obejmują: imię, nazwisko, adres e-mail, identyfikator użytkownika oraz dane edukacyjne.
-            </p>
-            <br>
-            <h2>Zmiany w Polityce Prywatności</h2>
-            <p>
-                Zastrzegamy sobie prawo do wprowadzania zmian w niniejszej Polityce Prywatności. O wszelkich zmianach będziemy informować użytkowników poprzez publikację nowej treści polityki na naszej stronie.
-            </p>
-            <br>
-            <p>
-                <em>Data ostatniej aktualizacji: <strong>2 maja 2025 roku.</strong></em>
-            </p>
-	    <p>
-                Data wejścia w życie: 1 stycznia 2025 roku.
-            </p>
-            <button id="accept-policy" class="btn-primary"><strong>Akceptuję</strong></button>
-        </div>
-    </div>
-    <!-- Floating Donation Button -->
-    <div class="donation-btn" onclick="window.open('https://revolut.me/kacpiq', '_blank')">
-        <i class="fas fa-heart"></i>
-        <span>Wesprzyj projekt</span>
-    </div>
+    <div class="alert-container" id="alertContainer"></div>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-brand">
+            <a href="https://www.kacpiq.pl" class="navbar-brand">
                 <i class="fas fa-laptop-code"></i>
                 <span>kacpiq.pl</span>
-            </div>
-            
+            </a>
             <div class="navbar-links">
-                <a href="https://www.kacpiq.pl/egzamin/lista-egzaminow" target="_blank" class="nav-link">
-                    <i class="fas fa-list"></i>
-                    <span>Lista egzaminów</span>
+                <a href="#" class="nav-link" id="about-project-btn">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O projekcie</span>
                 </a>
-                
-                <div class="dropdown">
-                    <button class="nav-link dropdown-toggle">
-                        <i class="fas fa-download"></i>
-                        <span>Pobierz</span>
-                        <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item" id="download-windows">
-                            <i class="fab fa-windows"></i>
-                            <div>
-                                <span class="dropdown-item-title">Windows</span>
-                                <small>Wersja: N/A | Windows 7/10/11 (64bit)</small>
-                                <div class="badge badge-warning">Planowane wydanie: 30.08.2025</div>
-                            </div>
-                        </a>
-                        
-                        <a href="#" class="dropdown-item" id="download-linux">
-                            <i class="fab fa-linux"></i>
-                            <div>
-                                <span class="dropdown-item-title">Linux</span>
-                                <small>Wersja: N/A | Ubuntu/Debian/Fedora</small>
-                                <div class="badge badge-danger">Niedostępne</div>
-                            </div>
-                        </a>
-                        
-                        <a href="#" class="dropdown-item" id="download-macos">
-                            <i class="fab fa-apple"></i>
-                            <div>
-                                <span class="dropdown-item-title">macOS</span>
-                                <small>Wersja: N/A | macOS 10.11+</small>
-                                <div class="badge badge-danger">Niedostępne</div>
-                            </div>
-                        </a>
-                        
-                        <a href="#" class="dropdown-item" id="download-exam">
-                            <i class="fas fa-file-pdf"></i>
-                            <div>
-                                <span class="dropdown-item-title">Arkusz PDF</span>
-                                <small id="plik">Nie wylosowano egzaminu</small>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                
-                <a href="#" class="nav-link" id="open-ranking-modal">
-                    <i class="fas fa-trophy"></i>
-                    <span>Ranking</span>
+                <a href="#" class="nav-link" id="stats-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statystyki</span>
                 </a>
-                
-                <a href="#" class="nav-link" id="open-pay-modal">
-                    <i class="fas fa-video"></i>
-                    <span>Kursy</span>
+                <a href="#" class="nav-link" id="faq-btn">
+                    <i class="fas fa-question-circle"></i>
+                    <span>FAQ</span>
+                </a>
+                <a href="mailto:kontakt@kacpiq.pl" class="nav-link" id="contact-btn">
+                    <i class="fas fa-envelope"></i>
+                    <span>Kontakt</span>
                 </a>
             </div>
-            
             <div class="navbar-actions">
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </div>
-                
-                <div class="user-menu" id="user-menu">
+                <div class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></div>
+                <div class="user-menu">
+                    <div class="user-menu" id="user-menu">
                     <div class="user-avatar" id="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <div class="user-dropdown" id="user-dropdown">
-                        <!-- Logged in state -->
-                        <div class="user-info" id="user-logged" style="display: none;">
+                    <div class="user-dropdown" id="user-dropdown" style="display: none;">
+
+                        <div class="user-info" id="user-logged" style="display: block;">
                             <div class="user-header">
-                                <div class="avatar-circle" id="avatar-circle">
-                                    <i id="avatar-icon" class="fas fa-user"></i>
-                                </div>
+                                <div class="avatar-circle" id="avatar-circle"><img src="https://lh3.googleusercontent.com/a/ACg8ocIw1i-TxaKA4scgD3v5XSk--u_1YLkJrL-bTvegrF4rb8MY7A=s96-c" alt="Avatar"></div>
                                 <div>
-                                    <div id="user-name" class="user-name">Nie zalogowano</div>
-                                    <div id="user-email" class="user-email">Zaloguj się aby zobaczyć więcej</div>
+                                    <div id="user-name" class="user-name">Test</div>
+                                    <div id="user-email" class="user-email">test@kacpiq.pl</div>
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
@@ -243,8 +562,7 @@
                             </a>
                         </div>
                         
-                        <!-- Not logged in state -->
-                        <div class="user-info" id="user-not-logged">
+                        <div class="user-info" id="user-not-logged" style="display: none;">
                             <a href="#" id="login-btn" class="dropdown-item">
                                 <i class="fas fa-sign-in-alt"></i> Zaloguj się
                             </a>
@@ -254,349 +572,596 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Technical Break Banner -->
-        <div id="przerwa-komunikat" class="break-banner" style="display:flex;">
-            <div class="break-content">
-                <i class="fas fa-tools"></i>
-                <span>Uprzejmie informujemy, iż z dniem 15 czerwca 2025 r. ulega zmianie adres strony dotyczącej egzaminu INF.02 na: <strong>https://kacpiq.pl/egzamin/inf02</strong>.</span>
+                    <div class="user-dropdown">
+                        <div class="user-header">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div class="user-name">Gość</div>
+                                <div class="user-email">niezalogowany</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="login-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <div>
+                                <span class="dropdown-item-title">Zaloguj się</span>
+                                <small>Aby śledzić postępy</small>
+                            </div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <div>
+                                <span class="dropdown-item-title">Ustawienia</span>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item text-danger">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <div>
+                                <span class="dropdown-item-title">Wyjście</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
-    
-<div id="beta-alert" class="beta-alert">
-    <div class="beta-content">
-        <h3><i class="fas fa-exclamation-triangle"></i> Wersja Beta</h3>
-        <p>Jesteś w odświeżonej wersji beta strony. Nie wszystkie elementy mogą działać poprawnie.</p>
-        <div class="beta-buttons">
-            <a href="https://www.kacpiq.pl/egzamin/stara-wersja.html" class="btn btn-warning">
-                <i class="fas fa-arrow-left"></i> Powróć do starej wersji (zalecane)
-            </a>
-            <button id="stay-on-beta" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Zostań na wersji beta
-            </button>
-        </div>
-    </div>
-</div>
 
-    <!-- Main Content -->
     <main class="main-container">
-        <div class="hero-section">
-            <div class="hero-content">
-                <h1>Wylosuj egzamin zawodowy</h1>
-                <p class="hero-subtitle">Przygotuj się do egzaminu INF.02 i EE.08 z naszym nowoczesnym systemem losowania arkuszy</p>
-                
-                <div class="countdown-container">
-                    <div class="countdown-label">Egzamin pisemny (teoretyczny):</div>
-                    <div id="countdown-timer1" class="countdown-timer1"><p style="margin-bottom: 0rem;"><strong>Egzamin zakończony!</strong></p></div>
+        <div class="modal" id="aboutModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-info-circle"></i> O projekcie</h2>
+                    <button id="modal-close" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
                 </div>
+                <div class="modal-body">
+                    <h3>Przygotowanie do egzaminów zawodowych</h3>
+                    <p>Platforma została stworzona, aby pomóc w kompleksowym przygotowaniu do teoretycznej i praktycznej części egzaminów zawodowych w branży IT.</p>
+                    
+                    <h4 class="mt-4">Najważniejsze funkcje:</h4>
+                    <ul>
+                        <li><strong>Tryb nauki</strong> - przeglądanie wszystkich pytań z podświetloną poprawną odpowiedzią</li>
+                        <li><strong>Tryb egzaminacyjny</strong> - symulacja prawdziwego egzaminu z limitem czasu</li>
+                        <li><strong>Tryb praktyczny</strong> - zadania symulujące rzeczywiste problemy</li>
+                        <li><strong>Statystyki postępów</strong> - szczegółowe dane o Twoich wynikach</li>
+                        <li><strong>Personalizacja</strong> - tworzenie własnych zestawów pytań</li>
+                        <li><strong>Ranking</strong> - porównanie wyników z innymi użytkownikami</li>
+                    </ul>
+                    
+                    <div class="mt-4" style="background-color: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius);">
+                        <h4><i class="fas fa-database"></i> Baza pytań</h4>
+                        <div class="hero-stats">
+                            <div class="stat-card">
+                                <div class="stat-value">624</div>
+                                <div class="stat-label">Pytań teoretycznych</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">60</div>
+                                <div class="stat-label">Arkuszy praktycznych</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">10+</div>
+                                <div class="stat-label">Kategorii tematycznych</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">Wersja:</h4>
+                    <p>2.0.0 <span class="feature-badge">Najnowsza</span></p>
+                    
+                    <h4 class="mt-3">Autor:</h4>
+                    <p>kacpiq.pl</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-close" class="btn btn-warning btn-block">
+                        <i class="fas fa-times"></i> Zamknij
+                    </button>
+                    <button class="btn btn-primary" onclick="showDonationModal()">
+                        <i class="fas fa-heart"></i> Wsparcie projektu
+                    </button>
+                </div>
+            </div>
+        </div>
 
-		    <div class="countdown-container">
-                    <div class="countdown-label" >Do egzaminu praktycznego (Dzień 4 - Sesja 1) pozostało:</div>
-                    <div class="countdown-timer" id="countdown-timer" style="margin-bottom: 0rem;"></div>
+        <div class="modal" id="statsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-chart-bar"></i> Twoje statystyki</h2>
+                    <button id="modal-close" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
                 </div>
-		    
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Zaloguj się, aby śledzić swoje postępy na różnych urządzeniach.
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-questions">0</div>
+                            <div class="stat-label">Wszystkich pytań</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-value" id="learned-questions">0</div>
+                            <div class="stat-label">Nauczonych pytań</div>
+                            <div class="progress-indicator">
+                                <div class="progress-bar-animated" id="learned-progress"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-value" id="correct-answers">0%</div>
+                            <div class="stat-label">Skuteczność</div>
+                            <div class="progress-indicator">
+                                <div class="progress-bar-animated" id="correctness-progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">Statystyki kategorii:</h4>
+                    <div id="category-stats-modal" class="mt-3"></div>
+                    
+                    <div class="mt-4">
+                        <h4>Ostatnia aktywność:</h4>
+                        <div id="recent-activity" style="font-size: 0.9rem; color: var(--text-muted);">
+                            Brak danych o ostatniej aktywności
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-close" class="btn btn-warning btn-block">
+                        <i class="fas fa-times"></i> Zamknij
+                    </button>
+                    <button class="btn btn-primary" onclick="startExam('INF02', 'theory'), window.location.href='https://www.kacpiq.pl/egzamin/inf02/teoria'">
+                        <i class="fas fa-bolt"></i> Kontynuuj naukę
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="donationModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-heart"></i> Wsparcie projektu</h2>
+                    <button id="modal-close" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p>Dziękujemy za zainteresowanie wsparciem naszego projektu! Twoja pomoc pozwoli nam na:</p>
+                    <ul>
+                        <li>Dalszy rozwój platformy</li>
+                        <li>Dodawanie nowych pytań i zadań</li>
+                        <li>Ulepszanie istniejących funkcji</li>
+                        <li>Utworzenie mobilnej aplikacji</li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <h4>Wybierz metodę wsparcia:</h4>
+                        <div class="courses-grid">
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <h3 style="font-size: 1.2rem;">Jednorazowe</h3>
+                                    <div class="course-price">0,01 PLN+</div>
+                                </div>
+                                <ul class="course-features">
+                                    <li><i class="fas fa-check"></i> Podziękowanie</li>
+                                    <li><i class="fas fa-check"></i> Wpis na liście darczyńców</li>
+                                    <li><i class="fas fa-check"></i> Dostęp do wszystkich funkcji</li>
+                                </ul>
+                                <button class="btn btn-primary btn-block">Wesprzyj</button>
+                            </div>
+                            
+                            <div class="course-card" style="border: 2px solid var(--warning-color);">
+                                <div class="course-header">
+                                    <h3 style="font-size: 1.2rem;">Miesięczne</h3>
+                                    <div class="course-price">20 PLN</div>
+                                </div>
+                                <ul class="course-features">
+                                    <li><i class="fas fa-check"></i> Wszystko z pakietu jednorazowego</li>
+                                    <li><i class="fas fa-check"></i> Wcześniejszy dostęp do nowości</li>
+                                    <li><i class="fas fa-check"></i> Możliwość zgłaszania funkcji</li>
+                                </ul>
+                                <button class="btn btn-warning btn-block">NIEDOSTĘPNE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning btn-block" id="modal-close">
+                        <i class="fas fa-times"></i> Może później
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="loginModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-sign-in-alt"></i> Logowanie</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-select" placeholder="Wprowadź swój email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Hasło</label>
+                        <input type="password" id="login-password" class="form-select" placeholder="Wprowadź hasło">
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-google btn-block">
+                            <i class="fab fa-google"></i> Zaloguj się przez Google
+                        </button>
+                    </div>
+                    <div class="mt-2 text-center">
+                        <a href="#" style="color: var(--accent-color);">Zapomniałeś hasła?</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="document.getElementById('registerModal').style.display='flex'; document.getElementById('loginModal').style.display='none';">
+                        <i class="fas fa-user-plus"></i> Zarejestruj się
+                    </button>
+                    <button class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Zaloguj
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="faqModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-question-circle"></i> Najczęstsze pytania</h2>
+                    <button id="close-pay-modal" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="faq-item">
+                        <h4>Jak korzystać z platformy?</h4>
+                        <p>Wybierz kwalifikację (np. INF.02), a następnie tryb nauki (teoria lub praktyka). Możesz uczyć się w trybie swobodnym lub symulować egzamin.</p>
+                    </div>
+                    <div class="faq-item mt-3">
+                        <h4>Czy moje postępy są zapisywane?</h4>
+                        <p>Tak, jeśli jesteś zalogowany, Twoje postępy są zapisywane i synchronizowane między urządzeniami.</p>
+                    </div>
+                    <div class="faq-item mt-3">
+                        <h4>Jak często aktualizowana jest baza pytań?</h4>
+                        <p>Baza pytań jest aktualizowana co miesiąc, aby odzwierciedlać aktualne wymagania egzaminacyjne.</p>
+                    </div>
+                    <div class="faq-item mt-3">
+                        <h4>Czy platforma jest darmowa?</h4>
+                        <p>Tak, podstawowe funkcje są całkowicie darmowe. Istnieje również opcja wsparcia projektu.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-close" class="btn btn-warning btn-block">
+                        <i class="fas fa-times"></i> Zamknij
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <section class="page-header">
+            <h1>Przygotuj się do egzaminu zawodowego</h1>
+            <p class="page-subtitle">
+                Kompleksowa platforma do nauki przed egzaminami INF.02 i INF.03. Wybierz kwalifikację, aby rozpocząć naukę w trybie teoretycznym lub praktycznym.
+                <span class="text-success"><i class="fas fa-check-circle"></i> Ponad 100 zadowolonych użytkowników!</span>
+            </p>
+            
+            <div class="quick-access">
+                <button class="btn btn-primary select-btn" onclick="startExam('INF02', 'theory'), window.location.href='https://www.kacpiq.pl/egzamin/inf02/teoria'">
+                    <i class="fas fa-bolt"></i> Szybki start INF.02
+                </button>
+                <button class="btn btn-primary select-btn" onclick="startExam('INF03', 'theory')">
+                    <i class="fas fa-bolt"></i> Szybki start INF.03
+                </button>
+                <button class="btn btn-primary select-btn" onclick="showStatsModal()">
+                    <i class="fas fa-chart-line"></i> Twoje statystyki
+                </button>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Wyszukaj pytania, kategorie...">
             </div>
             
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="total-exams">144</div>
-                    <div class="stat-label">Dostępnych egzaminów</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="available-exams">0</div>
-                    <div class="stat-label">Gotowych do użycia</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="users-count">20+</div>
-                    <div class="stat-label">Zadowolonych użytkowników</div>
-                </div>
+            <div class="countdown-container">
+                <span class="countdown-label">Najbliższa sesja egzaminacyjna:</span>
+                <span class="countdown-timer" id="exam-countdown">Ładowanie...</span>
             </div>
-        </div>
+        </section>
 
-        <!-- Exam Selection Panel -->
-        <div class="exam-panel">
-            <div class="panel-header">
-                <h2><i class="fas fa-random"></i> Losowanie egzaminu</h2>
-                <div class="exam-info">
-                    <span id="exam-file-name"></span>
-                    <div class="rating-info" id="rating-info" style="display:none">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <span id="rating-value">0.0</span>
-                            <span>(</span><span id="rating-count">0</span><span>)</span>
-                        </div>
-                        <button id="open-rating-modal" class="btn-rate">
-                            <i class="far fa-star"></i> Oceń
+        <section class="qualification-section">
+            <div class="qualification-cards">
+                <!-- Kwalifikacja INF.02 -->
+                <div class="qualification-card">
+                    <div class="badge-new">NOWOŚĆ</div>
+                    <div class="qualification-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 class="qualification-title">INF.02</h3>
+                    <p class="qualification-description">
+                        Administracja i eksploatacja systemów komputerowych, urządzeń peryferyjnych i lokalnych sieci komputerowych. Egzamin obejmuje zagadnienia z zakresu konfiguracji systemów operacyjnych, zarządzania sieciami i bezpieczeństwa IT.
+                    </p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-animated" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted">Twój postęp: wkrótce!</small>
+                    
+                    <button class="btn btn-primary select-btn" onclick="selectQualification(this, 'INF.02')">
+                        Wybierz kwalifikację
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="exam-options">
+                        <button class="btn btn-theory" onclick="startExam('INF.02', 'theory'), window.location.href='https://www.kacpiq.pl/egzamin/inf02/teoria'" >
+                            <i class="fas fa-book"></i> Tryb teoretyczny
+                        </button>
+                        <button class="btn btn-practice" onclick="startExam('INF.02', 'practice'), window.location.href='https://www.kacpiq.pl/egzamin/inf02'">
+                            <i class="fas fa-laptop-code"></i> Tryb praktyczny
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="resetSelection(this)">
+                            <i class="fas fa-undo"></i> Cofnij wybór
+                        </button>
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="qualification-title">INF.03</h3>
+                    <p class="qualification-description">
+                        Tworzenie i administrowanie stronami i aplikacjami internetowymi oraz bazami danych. Egzamin obejmuje programowanie w językach webowych, zarządzanie bazami danych i tworzenie responsywnych interfejsów.
+                    </p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar-animated" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted">Twój postęp: wkrótce!</small>
+                    
+                    <button class="btn btn-primary select-btn" onclick="selectQualification(this, 'INF.03')">
+                        Wybierz kwalifikację
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="exam-options">
+                        <button class="btn btn-theory" onclick="startExam('INF.03', 'theory')">
+                            <i class="fas fa-book"></i> Tryb teoretyczny
+                        </button>
+                        <button class="btn btn-practice" onclick="startExam('INF.03', 'practice')">
+                            <i class="fas fa-laptop-code"></i> Tryb praktyczny
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="resetSelection(this)">
+                            <i class="fas fa-undo"></i> Cofnij wybór
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="podstawa">
-                        <i class="fas fa-book"></i> Podstawa programowa
-                    </label>
-                    <select id="podstawa" class="form-select">
-                        <option value="">Wszystkie</option>
-                        <option value="2019">2019</option>
-                        <option value="2017">2017</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="serwer">
-                        <i class="fas fa-server"></i> System serwera
-                    </label>
-                    <select id="serwer" class="form-select">
-                        <option value="">Dowolny</option>
-                        <option value="Linux">Linux</option>
-                        <option value="Windows Server">Windows Server</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="klient">
-                        <i class="fas fa-desktop"></i> System klienta
-                    </label>
-                    <select id="klient" class="form-select">
-                        <option value="">Dowolny</option>
-                        <option value="Windows">Windows</option>
-                        <option value="Linux">Linux</option>
-                    </select>
-                </div>
-                
-                <button id="losuj" class="btn-primary">
-                    <i class="fas fa-random"></i> Losuj egzamin
-                </button>
-            </div>
-        </div>
-
-        <!-- Exam Display Area -->
-        <div class="exam-display">
-            <div class="exam-timer" id="timer" style="display: none;">
-                <div class="timer-progress">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="timer-text" id="timer-text">150:00</div>
-            </div>
-            
-            <div class="iframe-container">
-                <iframe id="examFrame" style="display: none;"></iframe>
-                
-                <div class="blur-overlay" id="blur-overlay">
-                    <div class="overlay-content">
-                        <h3>Egzamin zakończony!</h3>
-                        <p>Czas minął. Możesz teraz sprawdzić odpowiedzi.</p>
-                    </div>
-                </div>
-                
-                <div class="loading-overlay" id="loading-overlay">
-                    <div class="spinner">
-                        <div class="spinner-inner"></div>
-                    </div>
-                    <p>Ładowanie egzaminu...</p>
-                </div>
-            </div>
-            
-            <div class="exam-actions">
-                <button id="zakoncz" class="btn-secondary" style="display: none;">
-                    <i class="fas fa-stop-circle"></i> Zakończ egzamin
-                </button>
-                
-                <iframe id="keyFrame" style="display: none; position: relative;
-                height: 700px;
-                width: 100%;"></iframe>
-            </div>
-        </div>
+        </section>
     </main>
 
-    <!-- Rating Modal -->
-    <div id="rating-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Oceń arkusz</h3>
-                <button id="close-modal" class="modal-close">
-                    <i class="fas fa-times"></i>
+    <!-- Footer -->
+    <footer style="background-color: var(--bg-secondary); padding: 2rem; text-align: center; color: var(--text-muted); margin-top: 3rem; border-top: 1px solid var(--border-color);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">kacpiq.pl</h4>
+                    <p style="font-size: 0.9rem;">Kompleksowe przygotowanie do egzaminów zawodowych w branży IT</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Szybkie linki</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a id="about-btn-footer" style="color: var(--text-muted); text-decoration: none; cursor: pointer;">O projekcie</a></li>
+                        <li><a id="faq-btn-footer" style="color: var(--text-muted); text-decoration: none; cursor: pointer;">FAQ</a></li>
+                        <li><a href="mailto:kontakt@kacpiq.pl" style="color: var(--text-muted); text-decoration: none;">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Kontakt</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><i href="mailto:kontakt@kacpiq.pl" class="fas fa-envelope"></i> kontakt@kacpiq.pl</li>
+                    </ul>
+                </div>
+            </div>
+            <p>© 2025 kacpiq.pl. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+
+    <div class="donation-btn" onclick="showDonationModal()">
+        <i class="fas fa-heart"></i>
+        <span>Wesprzyj projekt</span>
+    </div>
+
+    <div class="beta-alert" id="betaAlert">
+        <div class="beta-content">
+            <h3><i class="fas fa-flask"></i> Tryb beta!</h3>
+            <p>Korzystasz z wersji beta platformy. Możesz napotkać tymczasowe problemy. Dziękujemy za pomoc w testowaniu!</p>
+            <div class="beta-buttons">
+                <button class="btn btn-warning" onclick="hideBetaAlert()">
+                    <i class="fas fa-thumbs-up"></i> Rozumiem
                 </button>
-            </div>
-            <div class="modal-body">
-                <div class="rating-container">
-                    <div class="rating-circle" data-value="1">
-                        <i class="far fa-star"></i>
-                    </div>
-                    <div class="rating-circle" data-value="2">
-                        <i class="far fa-star"></i>
-                    </div>
-                    <div class="rating-circle" data-value="3">
-                        <i class="far fa-star"></i>
-                    </div>
-                    <div class="rating-circle" data-value="4">
-                        <i class="far fa-star"></i>
-                    </div>
-                    <div class="rating-circle" data-value="5">
-                        <i class="far fa-star"></i>
-                    </div>
-                </div>
-                <div class="rating-feedback">
-                    <p>Twoja ocena pomoże nam ulepszyć system!</p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="submit-rating" class="btn-primary">
-                    <i class="fas fa-check"></i> Zatwierdź ocenę
+                <button class="btn btn-secondary" onclick="showFeedbackModal()">
+                    <i class="fas fa-comment"></i> Zgłoś problem
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Ranking Modal -->
-    <div id="ranking-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Ranking uczniów</h3>
-                <button id="close-ranking-modal" class="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table id="ranking-table">
-                        <thead>
-                            <tr>
-                                <th>Nr z dziennika</th>
-                                <th>Suma pkt.</th>
-                                <th>Średnia (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td colspan="3">Wczytywanie...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="ranking-info">
-                    <p>Ranking jest przechowywany do <strong>29.08.2025</strong>.</p>
-                    <p>Po tym dniu ranking zostanie <strong>wyłączony</strong>.</p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="login-btn-ranking" class="btn-google">
-                    <i class="fab fa-google"></i> Zaloguj się przez Google
-                </button>
-                <button id="logout-btn-ranking" class="btn-secondary" style="display:none;">
-                    <i class="fas fa-sign-out-alt"></i> Wyloguj się
-                </button>
-            </div>
-        </div>
-    </div>
+    <div class="particles" id="particles"></div>
 
-    <!-- Courses Modal -->
-    <div id="pay-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Dostępne kursy</h3>
-                <button id="close-pay-modal" class="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="courses-grid">
-                    <div class="course-card">
-                        <div class="course-header">
-                            <h4>INF.02</h4>
-                            <div class="course-price">39,99 zł</div>
-                        </div>
-                        <ul class="course-features">
-                            <li><i class="fas fa-check-circle"></i> Wysoka jakość audio i wideo</li>
-                            <li><i class="fas fa-check-circle"></i> Najniższa cena na rynku</li>
-                            <li><i class="fas fa-check-circle"></i> Dostęp od razu po kupnie</li>
-                        </ul>
-                        <a href="https://kurs-inf02.learnpool.pl/stworzkonto" target="_blank" class="btn-primary">
-                            <i class="fas fa-shopping-cart"></i> Kup teraz
-                        </a>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-header">
-                            <h4>INF.03</h4>
-                            <div class="course-price">49,99 zł</div>
-                        </div>
-                        <ul class="course-features">
-                            <li><i class="fas fa-check-circle"></i> Wysoka jakość audio i wideo</li>
-                            <li><i class="fas fa-check-circle"></i> Najniższa cena na rynku</li>
-                            <li><i class="fas fa-check-circle"></i> Dostęp od razu po kupnie</li>
-                        </ul>
-                        <a href="https://kurs-inf03.learnpool.pl/stworzkonto" target="_blank" class="btn-primary">
-                            <i class="fas fa-shopping-cart"></i> Kup teraz
-                        </a>
-                    </div>
-                </div>
-                <div class="course-info">
-                    <p>Przy kupnie zostaniesz przekierowany do strony <strong>kurs-inf02.learnpool.pl</strong>.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Potwierdzenie</h3>
-            </div>
-            <div class="modal-body">
-                <p id="confirmation-text">Czy na pewno chcesz zakończyć egzamin?</p>
-                <div class="timer-info" id="confirmation-timer">
-                    Pozostały czas: <span id="remaining-time">150:00</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="confirm-btn" class="btn-danger">
-                    <i class="fas fa-stop-circle"></i> Tak, zakończ
-                </button>
-                <button id="cancel-btn" class="btn-secondary">
-                    <i class="fas fa-times"></i> Anuluj
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="egzamin/js/script.js" defer></script>
-    <script src="egzamin/js/auth.js" defer></script>
-    <script src="egzamin/js/rating.js" defer></script>
-    <script src="egzamin/js/ranking.js" defer></script>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("privacy-modal");
-    const acceptButton = document.getElementById("accept-policy");
-
-    const currentPolicyVersion = "2025-05-02";
-
-    const acceptedPolicyVersion = localStorage.getItem("privacyPolicyVersion");
-
-    if (acceptedPolicyVersion !== currentPolicyVersion) {
-        modal.style.display = "flex";
-    } else {
-        modal.style.display = "none";
-    }
-
-    acceptButton.addEventListener("click", () => {
-        modal.classList.add("hide-animation"); 
-        setTimeout(() => {
-            localStorage.setItem("privacyPolicyVersion", currentPolicyVersion); 
-            modal.style.display = "none"; 
-        }, 300);
-    });
-
-});
-	</script>
     <script>
-        // Initialize countdown
+        let alertQueue = [];
+        let isShowingAlert = false;
+
+        function showAlert(message, type, duration = 5000) {
+            const alert = {
+                message,
+                type,
+                duration
+            };
+            
+            alertQueue.push(alert);
+            
+            if (!isShowingAlert) {
+                showNextAlert();
+            }
+        }
+
+        function showNextAlert() {
+            if (alertQueue.length === 0) {
+                isShowingAlert = false;
+                return;
+            }
+            
+            isShowingAlert = true;
+            const alert = alertQueue.shift();
+            
+            const alertElement = document.createElement('div');
+            alertElement.className = `alert alert-${alert.type}`;
+            alertElement.innerHTML = `
+                <i class="fas fa-${alert.type === 'success' ? 'check-circle' : 
+                                      alert.type === 'error' ? 'times-circle' : 
+                                      alert.type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${alert.message}
+                <button class="alert-close">&times;</button>
+            `;
+            
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.appendChild(alertElement);
+
+            alertElement.querySelector('.alert-close').addEventListener('click', function() {
+                alertElement.classList.add('fade-out');
+                setTimeout(() => {
+                    alertElement.remove();
+                    showNextAlert();
+                }, 300);
+            });
+
+            setTimeout(() => {
+                if (alertElement.parentNode) {
+                    alertElement.classList.add('fade-out');
+                    setTimeout(() => {
+                        alertElement.remove();
+                        showNextAlert();
+                    }, 300);
+                }
+            }, alert.duration);
+        }
+
+        function selectQualification(button, qualification) {
+            const card = button.closest('.qualification-card');
+            const options = card.querySelector('.exam-options');
+
+            button.classList.add('fade-out');
+
+            setTimeout(() => {
+                button.style.display = 'none';
+                options.style.display = 'flex';
+
+                updateStats();
+
+                showAlert(`Wybrano kwalifikację ${qualification}. Wybierz tryb nauki.`, 'info');
+            }, 300);
+        }
+
+        function resetSelection(button) {
+            const card = button.closest('.qualification-card');
+            const selectBtn = card.querySelector('.select-btn');
+            const options = card.querySelector('.exam-options');
+            
+            options.style.display = 'none';
+            selectBtn.style.display = 'inline-flex';
+            selectBtn.classList.remove('fade-out');
+            selectBtn.style.opacity = '1';
+            selectBtn.style.transform = 'scale(1)';
+        }
+
+        function startExam(qualification, type) {
+            showAlert(`Rozpoczynasz egzamin: ${qualification} (${type === 'theory' ? 'Teoria' : 'Praktyka'})`, 'success');
+
+            setTimeout(() => {
+                showAlert(`Trwa przygotowywanie strony dla kwalifikacji ${qualification}...`, 'info', 3000);
+            }, 1000);
+            
+            // :
+            // window.location.href = `exam.html?qualification=${qualification}&type=${type}`;
+        }
+
+        function showDonationModal() {
+            document.getElementById('donationModal').style.display = 'flex';
+            showAlert('Dziękujemy za zainteresowanie wsparciem projektu!', 'info');
+        }
+
+        function showStatsModal() {
+            updateStats();
+            document.getElementById('statsModal').style.display = 'flex';
+        }
+
+        function updateStats() {
+            document.getElementById('total-questions').textContent = '624';
+            document.getElementById('learned-questions').textContent = '0';
+            document.getElementById('correct-answers').textContent = '0%';
+            document.getElementById('learned-progress').style.width = '0%';
+            document.getElementById('correctness-progress').style.width = '0%';
+
+            document.getElementById('recent-activity').innerHTML = `
+                <div><i class="fas fa-check-circle text-success"></i> INF.02 - Teoria (-%) - dzisiaj</div>
+                <div><i class="fas fa-check-circle text-success"></i> INF.02 - Praktyka (-%) - wczoraj</div>
+                <div><i class="fas fa-times-circle text-danger"></i> INF.03 - Teoria (-%) - x dni temu</div>
+            `;
+
+            const categories = [
+                { name: 'Systemy operacyjne', learned: 0, total: 0, correct: 0 },
+                { name: 'Sieci komputerowe', learned: 0, total: 0, correct: 0 },
+                { name: 'Bezpieczeństwo IT', learned: 0, total: 0, correct: 0 },
+                { name: 'Urządzenia peryferyjne', learned: 0, total: 0, correct: 0 }
+            ];
+            
+            let categoryHTML = '';
+            categories.forEach(category => {
+                const learnedPercentage = Math.round((category.learned / category.total) * 100);
+                const correctPercentage = category.correct;
+                
+                categoryHTML += `
+                    <div class="mt-3">
+                        <h5>${category.name}</h5>
+                        <p>Nauczone: ${category.learned}/${category.total} (${learnedPercentage}%)</p>
+                        <div class="progress-bar-container mb-2">
+                            <div class="timer-progress">
+                                <div class="progress-bar" style="width: ${learnedPercentage}%"></div>
+                            </div>
+                        </div>
+                        
+                        <p>Skuteczność: ${correctPercentage}% poprawnych odpowiedzi</p>
+                        <div class="progress-bar-container">
+                            <div class="timer-progress">
+                                <div class="progress-bar" style="width: ${correctPercentage}%; background: ${correctPercentage >= 80 ? 'var(--success-color)' : correctPercentage >= 60 ? 'var(--warning-color)' : 'var(--danger-color)'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('category-stats-modal').innerHTML = categoryHTML;
+        }
+
+        function hideBetaAlert() {
+            document.getElementById('betaAlert').classList.add('hide');
+            localStorage.setItem('betaAlertClosed', 'true');
+            showAlert('Dziękujemy za zrozumienie!', 'success');
+        }
+
+        function showFeedbackModal() {
+            showAlert('Formularz zgłoszeniowy zostanie wyświetlony tutaj.', 'info');
+            hideBetaAlert();
+        }
+
         var countDownDate = new Date("Jun 16, 2025 08:00:00").getTime();
         
         var x = setInterval(function() {
@@ -608,43 +1173,146 @@
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
             
-            document.getElementById("countdown-timer").innerHTML = 
-                `${days}d ${hours}g ${minutes}m ${seconds}s`;
+            document.getElementById("exam-countdown").innerHTML = 
+                `${hours}g ${minutes}m ${seconds}s`;
             
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty. POWODZENIA!</strong></p>";
+                document.getElementById("exam-countdown").innerHTML = "<p><strong>Egzamin rozpoczęty. POWODZENIA!</strong></p>";
             }
         }, 1000);
-        
-        // Technical break check
-        function checkTechnicalBreak() {
-            const startDate = new Date('2025-04-24T18:30:00');
-            const endDate = new Date('2025-04-24T18:40:00');
-            const currentDate = new Date();
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 30 : 50;
             
-            if (currentDate >= startDate && currentDate <= endDate) {
-                document.getElementById("przerwa-komunikat").style.display = 'flex';
-                document.getElementById("losuj").disabled = true;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `-${size}px`;
+
+                const duration = Math.random() * 30 + 20;
+                const delay = Math.random() * 10;
+                particle.style.animation = `float ${duration}s linear ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
             }
         }
-        
-        window.addEventListener('load', checkTechnicalBreak);
-        
-        // Theme toggle
-        document.getElementById('theme-toggle').addEventListener('click', function() {
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.querySelector('.theme-toggle');
             const html = document.documentElement;
-            const isDark = html.getAttribute('data-theme') === 'dark';
+
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-theme', savedTheme);
+
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+                showAlert(`Zmieniono motyw na ${newTheme === 'dark' ? 'ciemny' : 'jasny'}`, 'info');
+            });
             
-            if (isDark) {
-                html.setAttribute('data-theme', 'light');
-                this.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                this.innerHTML = '<i class="fas fa-moon"></i>';
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             }
+
+            const modals = document.querySelectorAll('.modal');
+            const modalCloseButtons = document.querySelectorAll('.modal-close');
+            
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    modals.forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            
+            if (!localStorage.getItem('betaAlertClosed')) {
+                setTimeout(() => {
+                    document.getElementById('betaAlert').style.display = 'flex';
+                }, 3000);
+            }
+            
+
+            createParticles();
+
+            document.getElementById('about-project-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('aboutModal').style.display = 'flex';
+            });
+            
+            document.getElementById('stats-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                updateStats();
+                document.getElementById('statsModal').style.display = 'flex';
+            });
+            
+            document.getElementById('faq-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('faqModal').style.display = 'flex';
+            });
+
+            document.getElementById('faq-btn-footer').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('faqModal').style.display = 'flex';
+            });
+
+            document.getElementById('about-btn-footer').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('aboutModal').style.display = 'flex';
+            });
+            
+            document.getElementById('login-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+            
+            document.querySelectorAll('.modal-close').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+             document.querySelectorAll('#modal-close').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+
+            setTimeout(() => {
+                showAlert('Witaj na platformie kacpiq.pl/egzamin! Rozpocznij naukę już teraz.', 'info');
+            }, 1000);
+            
+    //        setTimeout(() => {
+    //            showAlert('Nowość! Dodaliśmy 10 nowych arkuszy do kwalifikacji INF.02', 'success');
+    //        }, 3000);
+            
+    //        setTimeout(() => {
+    //            showAlert('Pamiętaj, że nie wszystkie funkcje są jeszcze dostępne.', 'info');
+    //        }, 4000);
+    //    });
         });
     </script>
-	
 </body>
 </html>
