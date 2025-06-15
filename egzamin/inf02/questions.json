@@ -1,0 +1,1207 @@
+{
+  "INF02": [
+    {
+      "id": 1,
+      "question": "Układy sekwencyjne zbudowane z zespołu przerzutników, najczęściej synchronicznych typu D, służące do przechowywania danych, to",
+      "answers": {
+        "A": "bramki",
+        "B": "kodery",
+        "C": "rejestry",
+        "D": "dekodery"
+      },
+      "correct": "C",
+      "category": "Sieci komputerowe"
+    },
+    {
+      "id": 2,
+      "question": "Transformator impulsowy w przedstawionym zasilaczu oznaczono symbolem",
+      "answers": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 3,
+      "question": "Na przedstawionej płycie głównej możliwy jest montaż procesora z obudową typu",
+      "answers": {
+        "A": "LGA",
+        "B": "PGA",
+        "C": "SECC",
+        "D": "SPGA"
+      },
+      "correct": "A",
+      "category": "Sieci komputerowe"
+    },
+    {
+      "id": 4,
+      "question": "Kompatybilne podzespoły oznaczono w tabeli numerami",
+      "answers": {
+        "A": "1, 3, 5",
+        "B": "1, 4, 6",
+        "C": "2, 4, 5",
+        "D": "2, 4, 6"
+      },
+      "correct": "C",
+      "category": "Sieci komputerowe"
+    },
+    {
+      "id": 5,
+      "question": "Przed rozpoczęciem modernizacji komputerów osobistych oraz serwerów, polegającej na dołożeniu nowych modułów pamięci RAM, należy sprawdzić",
+      "answers": {
+        "A": "model pamięci RAM, maksymalną pojemność i liczbę modułów obsługiwaną przez płytę główną.",
+        "B": "pojemność i rodzaj interfejsu dysku twardego oraz rodzaj gniazda zainstalowanej pamięci RAM.",
+        "C": "producenta pamięci RAM oraz interfejsy zewnętrzne zainstalowanej płyty głównej.",
+        "D": "gniazdo interfejsu karty graficznej oraz moc zainstalowanego zasilacza."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 6,
+      "question": "Do aktualizacji systemów Linux można wykorzystać programy",
+      "answers": {
+        "A": "cron i mount",
+        "B": "defrag i YaST",
+        "C": "apt-get i zypper",
+        "D": "aptitude i amaro"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 7,
+      "question": "Aby umożliwić komunikację urządzenia mobilnego z komputerem przez interfejs Bluetooth, należy",
+      "answers": {
+        "A": "skonfigurować urządzenie mobilne przez przeglądarkę.",
+        "B": "połączyć urządzenia kablem krosowym.",
+        "C": "utworzyć sieć WAN dla urządzeń.",
+        "D": "wykonać parowanie urządzeń."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 8,
+      "question": "Która licencja ma charakter grupowy oraz umożliwia instytucjom komercyjnym lub organizacjom edukacyjnym, państwowym, charytatywnym zakup na korzystnych warunkach większej liczby oprogramowania firmy Microsoft?",
+      "answers": {
+        "A": "MPL",
+        "B": "OEM",
+        "C": "APSL",
+        "D": "MOLP"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 9,
+      "question": "Topologia fizyczna sieci, w której jako medium transmisyjne stosuje się fale radiowe, jest nazywana topologią",
+      "answers": {
+        "A": "ad-hoc",
+        "B": "magistrali",
+        "C": "pierścienia",
+        "D": "CSMA/CD"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 10,
+      "question": "Który ze standardów Gigabit Ethernet umożliwia budowę segmentów sieci o długości 550 m/5000 m z prędkością transmisji 1 Gb/s?",
+      "answers": {
+        "A": "1000Base-T",
+        "B": "1000Base-FX",
+        "C": "1000Base-LX",
+        "D": "1000Base-SX"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 11,
+      "question": "Protokołem kontrolnym rodziny TCP/IP, którego rolą jest między innymi wykrywanie awarii urządzeń sieciowych, jest",
+      "answers": {
+        "A": "FDDI",
+        "B": "ICMP",
+        "C": "IMAP",
+        "D": "SMTP"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+
+    {
+      "id": 12,
+      "question": "Aby można było wykorzystać aparat telefoniczny PSTN do wykonywania połączeń za pomocą sieci komputerowej, należy go podłączyć do",
+      "answers": {
+        "A": "modemu analogowego",
+        "B": "mostka sieciowego",
+        "C": "repetera sygnału",
+        "D": "bramki VoIP"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 13,
+      "question": "Wskaż narzędzie służące do mocowania pojedynczych żył kabla miedzianego w złączach.",
+      "answers": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 14,
+      "question": "Za pomocą programu Acrylic Wi-Fi Home wykonano test, którego wyniki przedstawiono na zrzucie. Na ich podstawie można stwierdzić, że dostępna sieć bezprzewodowa",
+      "answers": {
+        "A": "jest nieszyfrowana.",
+        "B": "korzysta z kanałów 10 ÷ 12.",
+        "C": "ma bardzo dobrą jakość sygnału.",
+        "D": "osiąga maksymalną szybkość transferu 72 Mbps."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 15,
+      "question": "Który adres IP należy do klasy A?",
+      "answers": {
+        "A": "239.0.255.15",
+        "B": "217.12.45.1",
+        "C": "129.10.0.17",
+        "D": "125.11.0.7"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 16,
+      "question": "Wskaż adres rozgłoszeniowy sieci, do której należy host o adresie 88.89.90.91/6?",
+      "answers": {
+        "A": "91.255.255.255",
+        "B": "88.255.255.255",
+        "C": "91.89.255.255",
+        "D": "88.89.255.255"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 17,
+      "question": "Aby w systemie Windows wykonać śledzenie trasy pakietów do serwera strony internetowej, należy wykorzystać polecenie",
+      "answers": {
+        "A": "ping",
+        "B": "tracert",
+        "C": "netstat",
+        "D": "iproute"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 18,
+      "question": "Na schemacie obrazującym zasadę działania monitora plazmowego numerem 6 oznaczono",
+      "answers": {
+        "A": "warstwę fosforową.",
+        "B": "warstwę dielektryka.",
+        "C": "elektrody adresujące.",
+        "D": "elektrody wyświetlacza."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 19,
+      "question": "Na ilustracji zaznaczono strzałkami funkcję przycisków znajdujących się na obudowie projektora multimedialnego. Za pomocą tych przycisków można",
+      "answers": {
+        "A": "przełączać sygnały wejściowe",
+        "B": "regulować zniekształcony obraz.",
+        "C": "zmieniać poziom jasności obrazu.",
+        "D": "regulować odwzorowanie przestrzeni kolorów"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 20,
+      "question": "Pierwszą czynnością niezbędną do zabezpieczenia rutera przed dostępem do jego panelu konfiguracyjnego przez osoby niepowołane jest",
+      "answers": {
+        "A": "włączenie filtrowania adresów MAC.",
+        "B": "włączenie szyfrowania kluczem WEP",
+        "C": "zmiana domyślnej nazwy sieci (SSID) na unikatową",
+        "D": "zmiana nazwy login i hasła wbudowanego konta administratora."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 21,
+      "question": "Aby wyczyścić z kurzu wnętrze obudowy drukarki fotograficznej, należy użyć",
+      "answers": {
+        "A": "sprężonego powietrza w pojemniku z wydłużoną rurką.",
+        "B": "szczotki z twardym włosiem",
+        "C": "opaski antystatycznej.",
+        "D": "środka smarującego."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 22,
+      "question": "Na podstawie zrzutu ekranu przedstawiającego konfigurację przełącznika można stwierdzić, że",
+      "answers": {
+        "A": "czas między wysyłaniem kolejnych komunikatów o poprawnej pracy urządzenia wynosi 3 sekundy.",
+        "B": "maksymalny czas krążenia w sieci komunikatów protokołu BPDU wynosi 20 sekund.",
+        "C": "minimalny czas krążenia w sieci komunikatów protokołu BPDU wynosi 25 sekund.",
+        "D": "maksymalny czas pomiędzy zmianami statusu łącza wynosi 5 sekund."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 23,
+      "question": "Przedstawione polecenia, uruchomione w interfejsie CLI rutera firmy CISCO, spowodują",
+      "answers": {
+        "A": "dopuszczenie ruchu pochodzącego z sieci o adresie 10.0.0.1",
+        "B": "określenie puli adresów wewnętrznych 10.0.0.1 ÷ 255.255.255.0",
+        "C": "ustawienie interfejsu zewnętrznego o adresie 10.0.0.1/24 dla technologii NAT",
+        "D": "ustawienie interfejsu wewnętrznego o adresie 10.0.0.1/24 dla technologii NAT"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 24,
+      "question": "Schemat przedstawia zasadę działania sieci VPN o nazwie",
+      "answers": {
+        "A": "Client - to - Site",
+        "B": "Site - to - Site",
+        "C": "Gateway",
+        "D": "L2TP"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 25,
+      "question": "Przedstawione narzędzie może być wykorzystane do",
+      "answers": {
+        "A": "podgrzania i zamontowania elementu elektronicznego.",
+        "B": "sprawdzenia długości badanego kabla sieciowego.",
+        "C": "pomiaru wartości napięcia w zasilaczu.",
+        "D": "utrzymania drukarki w czystości."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 26,
+      "question": "Wskaż program systemu Linux, służący do kompresji danych.",
+      "answers": {
+        "A": "arj",
+        "B": "tar",
+        "C": "gzip",
+        "D": "shar"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 27,
+      "question": "Wskaż sygnał oznaczający błąd karty graficznej komputera wyposażonego w BIOS POST firmy AWARD.",
+      "answers": {
+        "A": "1 długi, 1 krótki.",
+        "B": "1 długi, 2 krótkie.",
+        "C": "1 długi, 5 krótkich.",
+        "D": "1 długi, 9 krótkich."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 28,
+      "question": "Po sprawdzeniu komputera programem diagnostycznym wykryto, że temperatura pracy karty graficznej posiadającej wyjścia HDMI i D-SUB, osadzonej w gnieździe PCI Express komputera stacjonarnego, wynosi 87°C. W takim przypadku serwisant powinien",
+      "answers": {
+        "A": "zamienić kabel sygnałowy D-SUB na HDMI.",
+        "B": "sprawdzić, czy wentylator jest sprawny i czy nie jest zakurzony.",
+        "C": "zainstalować dodatkowy moduł pamięci RAM, aby odciążyć kartę.",
+        "D": "wymienić dysk twardy na nowy, o podobnej wielkości i prędkości obrotowej."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 29,
+      "question": "SuperPi to program wykorzystywany do sprawdzenia",
+      "answers": {
+        "A": "wydajności dysków twardych.",
+        "B": "obciążenia i wydajności kart graficznych.",
+        "C": "ilości niewykorzystanej pamięci operacyjnej RAM.",
+        "D": "wydajności procesorów o zwiększonej częstotliwości."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 30,
+      "question": "Odzyskanie listy kontaktów w telefonie komórkowym z zainstalowanym systemem Android jest możliwe, gdy użytkownik wcześniej wykonał synchronizację danych urządzenia z Google Drive za pomocą",
+      "answers": {
+        "A": "konta Yahoo",
+        "B": "konta Google",
+        "C": "konta Microsoft",
+        "D": "dowolnego konta pocztowego z portalu Onet"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 31,
+      "question": "Aby wyeliminować podstawowe zagrożenia związane z bezpieczeństwem pracy na komputerze podłączonym do sieci Internet, w pierwszej kolejności należy",
+      "answers": {
+        "A": "odsunąć komputer od źródła ciepła, nie przygniatać przewodów zasilających komputera i urządzeń peryferyjnych.",
+        "B": "zainstalować program antywirusowy, zaktualizować bazy wirusów, włączyć firewall i wykonać aktualizację systemu.",
+        "C": "wyczyścić wnętrze jednostki centralnej, nie jeść i nie pić przy komputerze oraz nie podawać swojego hasła innym użytkownikom",
+        "D": "sprawdzić temperaturę podzespołów, podłączyć komputer do zasilacza UPS oraz nie wchodzić na podejrzane strony internetowe."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 32,
+      "question": "Serwisant wykonał w ramach zlecenia czynności wymienione w tabeli. Koszt zlecenia obejmuje cenę usług zawartych w tabeli oraz koszt pracy serwisanta, którego stawka godzinowa wynosi 60,00 zł netto. Ustal całkowity koszt zlecenia brutto. Stawka podatku VAT na usługi wynosi 23%.",
+      "answers": {
+        "A": "492,00 zł",
+        "B": "455,20 zł",
+        "C": "436,80 zł",
+        "D": "400,00 zł"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 33,
+      "question": "Aby w systemie Windows zmienić parametry konfiguracyjne Menu Start i paska zadań należy wykorzystać przystawkę",
+      "answers": {
+        "A": "dcpol.msc",
+        "B": "azman.msc",
+        "C": "gpedit.msc",
+        "D": "fsmgmt.msc"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 34,
+      "question": "Konfigurację interfejsu sieciowego w systemie Linux można wykonać, edytując plik",
+      "answers": {
+        "A": "/ etc / hosts",
+        "B": "/ etc / host.conf",
+        "C": "/ etc / resolv.conf",
+        "D": "/ etc / network / interfaces"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 35,
+      "question": "W systemie Linux polecenie touch służy do",
+      "answers": {
+        "A": "utworzenia pliku lub zmiany daty modyfikacji lub daty ostatniego dostępu.",
+        "B": "obliczenia liczby wierszy, słów i znaków w pliku.",
+        "C": "wyszukania podanego wzorca w tekście pliku.",
+        "D": "przeniesienia lub zmiany nazwy pliku."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 36,
+      "question": "Aby w systemie Windows Server wykonać rezerwację adresów IP na podstawie adresów fizycznych MAC urządzeń, należy skonfigurować usługę",
+      "answers": {
+        "A": "DNS",
+        "B": "NAT",
+        "C": "RRAS",
+        "D": "DHCP"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 37,
+      "question": "Po wydaniu przedstawionego polecenia systemu Windows, wartość 11 zostanie ustawiona dla",
+      "answers": {
+        "A": "maksymalnej liczby dni ważności konta.",
+        "B": "minimalnej liczby znaków w hasłach użytkowników.",
+        "C": "maksymalnej liczby dni między zmianami haseł użytkowników.",
+        "D": "minimalnej liczby minut, przez które użytkownik może być zalogowany."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 38,
+      "question": "Protokół RDP jest wykorzystywany w usłudze",
+      "answers": {
+        "A": "SCP w systemie Windows.",
+        "B": "terminalowej w systemie Linux.",
+        "C": "pulpitu zdalnego w systemie Windows.",
+        "D": "poczty elektronicznej w systemie Linux"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 39,
+      "question": "Narzędziem systemu Windows służącym do sprawdzenia prób logowania do systemu jest dziennik",
+      "answers": {
+        "A": "Setup",
+        "B": "System",
+        "C": "aplikacji",
+        "D": "zabezpieczeń"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 40,
+      "question": "Program fsck jest wykorzystywany w systemie Linux do",
+      "answers": {
+        "A": "wykrycia struktury sieci i diagnostyki przepustowości sieci lokalnej.",
+        "B": "monitorowania parametrów pracy i wydajności podzespołów komputera.",
+        "C": "dokonania oceny stanu systemu plików i wykrycia uszkodzonych sektorów.",
+        "D": "przeprowadzenia testów wydajnościowych serwera WWW poprzez wysłanie dużej liczby żądań."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 41,
+      "question": "Który zapis w systemie binarnym odpowiada liczbie 91 zapisanej w systemie szesnastkowym?",
+      "answers": {
+        "A": "10010001",
+        "B": "10001001",
+        "C": "10001011",
+        "D": "10011001"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 42,
+      "question": "Którą bramkę logiczną opisuje wyrażenie",
+      "answers": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 43,
+      "question": "Na rysunku przedstawiona jest karta",
+      "answers": {
+        "A": "kontrolera RAID",
+        "B": "kontrolera SCSII",
+        "C": "sieciowa Token Ring",
+        "D": "sieciowa Fibre Channel"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 44,
+      "question": "Na rysunku przedstawiono schemat blokowy karty",
+      "answers": {
+        "A": "sieciowej.",
+        "B": "graficznej.",
+        "C": "dźwiękowej.",
+        "D": "telewizyjnej."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 45,
+      "question": "Na rysunku przedstawiono fragment dokumentacji technicznej płyty głównej GA-K8NF-9-RH rev. 2.x. Wynika z niej, że maksymalna liczba możliwych do zamontowania kart rozszerzeń (pomijając interfejs USB) wynosi ",
+      "answers": {
+        "A": "6",
+        "B": "5",
+        "C": "3",
+        "D": "2"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 46,
+      "question": "Na rysunku przedstawiono tylny panel stacji roboczej. Strzałką oznaczono port",
+      "answers": {
+        "A": "HDMI",
+        "B": "eSATA",
+        "C": "USB 3.0",
+        "D": "DisplayPort"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 47,
+      "question": "Na rysunku przedstawiono komunikat systemowy. Jakie działanie powinien wykonać użytkownik, aby usunąć błąd?",
+      "answers": {
+        "A": "Podłączyć monitor do złącza HDMI.",
+        "B": "Odświeżyć okno Menedżer urządzeń.",
+        "C": "Zainstalować sterownik do karty graficznej.",
+        "D": "Zainstalować sterownik do Karty HD Graphics. "
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 48,
+      "question": "Shareware to rodzaj licencji polegającej na",
+      "answers": {
+        "A": "używaniu programu bezpłatnie, bez żadnych ograniczeń.",
+        "B": "bezpłatnym rozprowadzaniu aplikacji bez ujawniania kodu źródłowego.",
+        "C": "bezpłatnym rozpowszechnianiu programu na czas testów przed zakupem.",
+        "D": "korzystaniu z programu przez określony czas, po którym program przestaje działać."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 49,
+      "question": "Ataki na systemy komputerowe polegające na podstępnym wyłudzaniu od użytkownika jego osobistych danych, przy wykorzystaniu zazwyczaj formy fałszywych powiadomień z instytucji czy od dostawców systemów e-płatności i innych ogólnie znanych organizacji, to",
+      "answers": {
+        "A": "DDoS",
+        "B": "phishing",
+        "C": "brute force",
+        "D": "SYN flooding"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 50,
+      "question": "Który z symboli oznacza zastrzeżenie praw autorskich?",
+      "answers": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 51,
+      "question": "Który typ fizycznej topologii sieci komputerowej przedstawiono na rysunku?",
+      "answers": {
+        "A": "Siatki.",
+        "B": "Gwiazdy.",
+        "C": "Magistrali.",
+        "D": "Podwójnego pierścienia."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 52,
+      "question": "Ile domen kolizyjnych i rozgłoszeniowych jest widocznych na schemacie?",
+      "answers": {
+        "A": "9 domen kolizyjnych i 1 domena rozgłoszeniowa",
+        "B": "9 domen kolizyjnych i 4 domeny rozgłoszeniowe.",
+        "C": "1 domena kolizyjna i 9 domen rozgłoszeniowych.",
+        "D": "4 domeny kolizyjne i 9 domen rozgłoszeniowych."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 53,
+      "question": "Zasady budowy systemu okablowania strukturalnego, specyfikacja parametrów kabli oraz procedury testowania obowiązujące w Polsce zostały zawarte w normach ",
+      "answers": {
+        "A": "EN 50167",
+        "B": "EN 50169",
+        "C": "PN-EN 50173",
+        "D": "PN-EN 50310"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 54,
+      "question": "Który adres IPv6 jest prawidłowy?",
+      "answers": {
+        "A": "1234:9ABC::123::DEF4 ",
+        "B": "1234:9ABC::123:DEF4",
+        "C": "1234-9ABC-123-DEF4",
+        "D": "1234.9ABC.123.DEF4"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 55,
+      "question": "Który z protokołów w systemach operacyjnych Linux wykorzystywany jest w sieciach LAN?",
+      "answers": {
+        "A": "IP",
+        "B": "IPX",
+        "C": "NetBEUI",
+        "D": "AppleTalk"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 56,
+      "question": "Przedstawione na rysunku urządzenie",
+      "answers": {
+        "A": "służy do przechwytywania i nagrywania pakietów danych w sieciach komputerowych.",
+        "B": "odpowiada za przekazywanie ramki między segmentami sieci z doborem portu, na który jest przekazywana.",
+        "C": "umożliwia zamianę sygnału pochodzącego z okablowania miedzianego na okablowanie światłowodowe.",
+        "D": "odpowiada za wytworzenie na wyjściu sygnału analogowego, będącego wzmocnionym sygnałem wejściowym, kosztem zużycia energii pobieranej ze źródła prądu."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 57,
+      "question": "Które urządzenie zastosowane w sieci komputerowej nie zmienia liczby domen kolizyjnych?",
+      "answers": {
+        "A": "Ruter.",
+        "B": "Serwer.",
+        "C": "Przełącznik.",
+        "D": "Koncetrator."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 58,
+      "question": "Na rysunku przedstawiono zakończenie kabla",
+      "answers": {
+        "A": "typu skrętka.",
+        "B": "telefonicznego.",
+        "C": "koncentrycznego.",
+        "D": "światłowodowego."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 59,
+      "question": "Przedstawione na rysunku urządzenie wraz ze specyfikacją techniczną można wykorzystać do pomiarów okablowania",
+      "answers": {
+        "A": "telefonicznego.",
+        "B": "skrętki cat. 5e / 6.",
+        "C": "koncentrycznego.",
+        "D": "światłowodowego."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 60,
+      "question": "Który tryb pracy Access Pointa jest stosowany dla zapewnienia urządzeniom bezprzewodowym dostępu do przewodowej sieci LAN?",
+      "answers": {
+        "A": "Most bezprzewodowy.",
+        "B": "Punkt dostępowy.",
+        "C": "Tryb klienta.",
+        "D": "Repeater."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 61,
+      "question": "Jeżeli adres IP stacji roboczej ma postać 176.16.50.10/26 to adres rozgłoszeniowy oraz maksymalna liczba hostów w sieci wynoszą odpowiednio",
+      "answers": {
+        "A": "176.16.50.1; 26 hostów.",
+        "B": "176.16.50.36; 6 hostów.",
+        "C": "176.16.50.63; 62 hosty.",
+        "D": "176.16.50.62; 63 hosty."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 62,
+      "question": "Sieć, w której pracuje stacja robocza o adresie IP 192.168.100.50/28, podzielono na 4 podsieci. Prawidłowa lista podsieci to",
+      "answers": {
+        "A": "192.168.100.48/30; 192.168.100.52/30; 192.168.100.56/30; 192.168.100.60/30",
+        "B": "192.168.100.48/29; 192.168.100.54/29; 192.168.100.56/29; 192.168.100.58/29 ",
+        "C": "192.168.100.50/28; 192.168.100.52/28; 192.168.100.56/28; 192.168.100.60/28 ",
+        "D": "192.168.100.48/27; 192.168.100.52/27; 192.168.100.56/27; 192.168.100.58/27"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 63,
+      "question": "Na rysunku przedstawiono wynik testu okablowania. Zinterpretuj wynik pomiaru.",
+      "answers": {
+        "A": "Błąd zwarcia.",
+        "B": "Błąd rozwarcia.",
+        "C": "Odwrócenie pary.",
+        "D": "Rozdzielenie pary."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 64,
+      "question": "Na rysunku przedstawiono fragment wyniku działania programu do testowania sieci. Wskazuje to na zastosowanie sieciowego polecenia testującego",
+      "answers": {
+        "A": "arp",
+        "B": "route",
+        "C": "tracert",
+        "D": "netstat"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 65,
+      "question": "Które z protokołów przekazują okresowe kopie tablic rutingu do sąsiedniego rutera i nie mają pełnej informacji o odległych ruterach?",
+      "answers": {
+        "A": "RIP, IGRP",
+        "B": "EGP, BGP",
+        "C": "OSPF, RIP",
+        "D": "EIGPR, OSPF"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 66,
+      "question": "Rozdzielczość optyczna to jeden z parametrów ",
+      "answers": {
+        "A": "skanera.",
+        "B": "drukarki.",
+        "C": "modemu.",
+        "D": "monitora."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 67,
+      "question": "Na rysunku przedstawiono interfejs w komputerze przeznaczony do podłączenia",
+      "answers": {
+        "A": "monitora LCD.",
+        "B": "plotera tnącego.",
+        "C": "drukarki laserowej.",
+        "D": "skanera lustrzanego."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 68,
+      "question": "Które oprogramowanie należy zainstalować, aby umożliwić zeskanowanie tekstu z wydrukowanego dokumentu do edytora tekstu?",
+      "answers": {
+        "A": "Program ERP",
+        "B": "Program CAD",
+        "C": "Program OCR",
+        "D": "Program COM +"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 69,
+      "question": "Użytkownicy z grupy Pracownicy nie mogą drukować dokumentów przy użyciu serwera wydruku na systemie operacyjnym Windows Server. Mają oni przydzielone uprawnienia tylko „Zarządzanie dokumentami”. Co należy zrobić, aby rozwiązać opisany problem?",
+      "answers": {
+        "A": "Dla grupy Pracownicy należy nadać uprawnienia „Drukuj”",
+        "B": "Dla grupy Administratorzy należy usunąć uprawnienia „Drukuj”",
+        "C": "Dla grupy Pracownicy należy usunąć uprawnienia „Zarządzanie dokumentami”",
+        "D": "Dla grupy Administratorzy należy usunąć uprawnienia „Zarządzanie dokumentami”"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 70,
+      "question": "Na rysunku przedstawiającym budowę drukarki, w której nierównomiernie podawany jest toner na bęben, należy wymienić wałek magnetyczny, który jest oznaczony numerem ",
+      "answers": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 71,
+      "question": "Który protokół działa w warstwie aplikacji modelu ISO/OSI umożliwiając wymianę informacji kontrolnych pomiędzy urządzeniami sieciowymi?",
+      "answers": {
+        "A": "DNS",
+        "B": "POP3",
+        "C": "SNMP",
+        "D": "SMTP"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 72,
+      "question": "Na rysunku przedstawiono konfigurację urządzenia. Do których portów należy podłączyć serwer o adresie IP 192.168.20.254/24 oraz stację roboczą o adresie IP 192.168.20.10/24, aby zapewnić komunikację tych urządzeń w sieci?",
+      "answers": {
+        "A": "Do portów 1 i 2",
+        "B": "Do portów 2 i 3",
+        "C": "Do portów 1 i 3",
+        "D": "Do portów 3 i 4"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 73,
+      "question": "Na rysunku przedstawiono konfigurację urządzenia, z której wynika, że",
+      "answers": {
+        "A": "utworzono dwa nowe VLAN-y: ID13, ID48 ",
+        "B": "do VLAN z ID48 przypisano wszystkie porty. ",
+        "C": "utworzono trzy nowe VLAN-y: ID1, ID13, ID48",
+        "D": "VLAN z ID48 jest skonfigurowany jako zarządzalny."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 74,
+      "question": "Na rysunku przedstawiono okno konfiguracyjne rutera. Ustawione parametry świadczą o tym, że",
+      "answers": {
+        "A": "na komputerze o adresie MAC 44-8A-5B-5A-56-D0 ustawiono adres IP 192.168.17.30 za pomocą Panelu Sterowania.",
+        "B": "komputer o adresie MAC 44-8A-5B-5A-56-D0 i adresie IP 192.168.17.30 nie będzie mógł połączyć się z urządzeniami tej sieci.",
+        "C": "komputer o adresie MAC 44-8A-5B-5A-56-D0 i adresie IP 192.168.17.30 został wykluczony z sieci.",
+        "D": "komputerowi o adresie MAC 44-8A-5B-5A-56-D0 usługa DHCP rutera przydzieli adres IP 192.168.17.30 "
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 75,
+      "question": "Który typ zabezpieczeń w sieci WiFi posiada najlepszy poziom zabezpieczeń?",
+      "answers": {
+        "A": "WEP",
+        "B": "WPA",
+        "C": "WPA2",
+        "D": "NTFS"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 76,
+      "question": "Jeżeli przy uruchamianiu komputera procedura POST zasygnalizuje błąd odczytu/zapisu pamięci CMOS, to należy",
+      "answers": {
+        "A": "przywrócić ustawienia fabryczne BIOS Setup.",
+        "B": "zaprogramować pamięć EEPROM płyty głównej.",
+        "C": "wymienić baterię układu lub wymienić płytę główną.",
+        "D": "wymontować moduł pamięci RAM, oczyścić styki modułu pamięci i zamontować pamięć ponownie."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 77,
+      "question": "Które polecenie powinien zastosować root w systemie Ubuntu Linux, aby zaktualizować wszystkie pakiety (cały system) do nowej wersji wraz z nowym jądrem?",
+      "answers": {
+        "A": "apt-get update",
+        "B": "apt-get upgrade",
+        "C": "apt-get dist-upgrade",
+        "D": "apt-get install nazwa_pakietu"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+      "id": 78,
+      "question": "Które polecenie w systemie Linux nada uprawnienia do pisania dla wszystkich obiektów w /usr/share dla wszystkich użytkowników, nie zmieniając pozostałych uprawnień?",
+      "answers": {
+        "A": "chmod a-w /usr/share",
+        "B": "chmod ugo+rw /usr/share ",
+        "C": "chmod -R a+w /usr/share",
+        "D": "chmod -R o+r /usr/share "
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+        {
+  "id": 79,
+  "question": "Aby w systemie Windows 10 wykonać przedstawioną konfigurację słuchawek w Panelu sterowania, należy użyć apletu",
+  "answers": {
+    "A": "ekran.",
+    "B": "dźwięk.",
+    "C": "menedżer urządzeń.",
+    "D": "menedżer poświadczeń."
+  },
+  "correct": "B",
+  "category": "Systemy operacyjne"
+},
+        {
+      "id": 80,
+      "question": "Aby profil stał się obowiązkowym, należy zmienić rozszerzenie pliku ntuser.dat na",
+      "answers": {
+        "A": "ntuser.sys",
+        "B": "ntuser.man",
+        "C": "$ntuser.bat",
+        "D": "$ntuser.exe"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 81,
+      "question": "Przedstawiony na rysunku element elektroniczny to",
+      "answers": {
+        "A": "cewka.",
+        "B": "rezystor.",
+        "C": "tranzystor.",
+        "D": "kondensator."
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 82,
+      "question": "W dokumentacji technicznej efektywność głośnika podłączonego do komputera zapisuje się w jednostce",
+      "answers": {
+        "A": "J",
+        "B": "W",
+        "C": "dB",
+        "D": "kHz"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 83,
+      "question": "Na urządzeniu zasilanym prądem stałym znajduje się przedstawione oznaczenie. Wynika z niego, że urządzenie pobiera moc około",
+      "answers": {
+        "A": "2,5 W",
+        "B": "7,5 W",
+        "C": "11,0 W",
+        "D": "18,75 W"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 84,
+      "question": "Gniazdo LGA znajdujące się na płycie głównej komputera stacjonarnego umożliwia zainstalowanie procesora",
+      "answers": {
+        "A": "Intel Core i5",
+        "B": "Athlon 64 X2",
+        "C": "AMD Sempron",
+        "D": "Intel Pentium II Xeon"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 85,
+      "question": "Aby serwer umożliwiał transmisję danych w pasmach częstotliwości 2,4 GHz oraz 5 GHz, należy zainstalować w nim kartę sieciową pracującą w standardzie",
+      "answers": {
+        "A": "802.11a",
+        "B": "802.11b",
+        "C": "802.11g",
+        "D": "802.11n"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 86,
+      "question": "Do instalacji oraz deinstalacji oprogramowania w systemie Ubuntu służy menadżer",
+      "answers": {
+        "A": "ls",
+        "B": "tar",
+        "C": "apt",
+        "D": "kast"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 87,
+      "question": "Wydając w wierszu poleceń systemu Windows Server polecenie convert, można przeprowadzić",
+      "answers": {
+        "A": "defragmentację dysku.",
+        "B": "zmianę systemu plików.",
+        "C": "naprawę systemu plików.",
+        "D": "naprawę logicznej struktury dysku."
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 88,
+      "question": "Aby zaktualizować zmiany w konfiguracji systemu operacyjnego Windows wykonane za pomocą edytora zasad grup, można posłużyć się poleceniem",
+      "answers": {
+        "A": "restore",
+        "B": "dompol",
+        "C": "services",
+        "D": "gpupdate"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 89,
+      "question": "Przedstawiona na rysunku topologia sieci to",
+      "answers": {
+        "A": "bus",
+        "B": "star",
+        "C": "ring",
+        "D": "mesh"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 90,
+      "question": "Łącze światłowodowe wykorzystywane do transmisji danych w standardzie 10GBASE-SR może mieć długość wynoszącą maksymalnie",
+      "answers": {
+        "A": "2 km",
+        "B": "4 km",
+        "C": "200 m",
+        "D": "400 m"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 91,
+      "question": "Który protokół jest wykorzystywany do transmisji danych w warstwie transportowej modelu ISO/OSI?",
+      "answers": {
+        "A": "ARP",
+        "B": "TCP",
+        "C": "HTTP",
+        "D": "LDAP"
+      },
+      "correct": "B",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 92,
+      "question": "Pomiar tłumienia w kablowym torze transmisyjnym pozwala określić",
+      "answers": {
+        "A": "czas opóźnienia propagacji.",
+        "B": "błędy instalacyjne typu zamiana pary.",
+        "C": "różnice miedzy przesłuchami zdalnymi.",
+        "D": "spadek mocy sygnału w danej parze przewodu."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 93,
+      "question": "Odpowiednikiem adresu pętli zwrotnej jest w IPv6 adres",
+      "answers": {
+        "A": "0:0/32",
+        "B": "::fff/64",
+        "C": "::1/128",
+        "D": ":1:1:1/96"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 94,
+      "question": "Który zapis adresu IPv4 wraz z maską jest błędny?",
+      "answers": {
+        "A": "16.1.1.1/5",
+        "B": "100.0.0.0/8",
+        "C": "18.4.0.0, maska 255.0.0.0",
+        "D": "192.168.0.1, maska 255.250.255.0"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 95,
+      "question": "Dana jest sieć o adresie 172.16.0.0/16. Które z adresów sieci 172.16.0.0/16 są prawidłowe, jeśli zostaną wydzielone cztery podsieci o masce 18 bitowej?",
+      "answers": {
+        "A": "172.16.0.0, 172.16.64.0, 172.16.128.0, 172.16.192.0",
+        "B": "172.16.0.0, 172.16.0.64, 172.16.0.128, 172.16.0.192",
+        "C": "172.16.64.0, 172.16.0.128, 172.16.192.0, 172.16.0.255",
+        "D": "172.16.64.0, 172.16.64.64, 172.16.64.128, 172.16.64.192"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 96,
+      "question": "Administrator sieci LAN zauważył przejście w tryb awaryjny urządzenia typu UPS. Świadczy to o awarii systemu",
+      "answers": {
+        "A": "zasilania.",
+        "B": "okablowania.",
+        "C": "urządzeń aktywnych.",
+        "D": "chłodzenia i wentylacji."
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 97,
+      "question": "Szerokopasmowy dostęp do Internetu przy różnej prędkości pobierania i wysyłania danych zapewnia technologia",
+      "answers": {
+        "A": "MSK",
+        "B": "ISDN",
+        "C": "QAM",
+        "D": "ADSL"
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 98,
+      "question": "Wewnętrzny protokół trasowania, którego metryką jest wektor odległości, to",
+      "answers": {
+        "A": "RIP",
+        "B": "EGP",
+        "C": "IS-IS",
+        "D": "OSPF"
+      },
+      "correct": "A",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 99,
+      "question": "Jaką nazwę nosi indentyfikator, który musi być identyczny, by urządzenia sieciowe mogły pracować w danej sieci bezprzewodowej?",
+      "answers": {
+        "A": "IP",
+        "B": "URL",
+        "C": "SSID",
+        "D": "MAC"
+      },
+      "correct": "C",
+      "category": "Systemy operacyjne"
+    },
+    {
+      "id": 100,
+      "question": "Materiałem eksploatacyjnym plotera solwentowego jest",
+      "answers": {
+        "A": "głowica tnąca.",
+        "B": "atrament żelowy.",
+        "C": "zestaw metalowych rylców.",
+        "D": "farba na bazie rozpuszczalników."
+      },
+      "correct": "D",
+      "category": "Systemy operacyjne"
+    }
+    
+
+  ]
+}
