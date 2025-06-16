@@ -485,6 +485,158 @@
             visibility: visible;
             opacity: 1;
         }
+
+        .shop-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.shop-items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.shop-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.item-image {
+    flex: 0 0 150px;
+}
+
+.item-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.item-meta i {
+    margin-right: 0.25rem;
+    color: var(--accent-color);
+}
+
+.item-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.item-price {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.shop-bundle {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.bundle-details {
+    margin-top: 1rem;
+}
+
+.bundle-details ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.bundle-details li {
+    margin-bottom: 0.5rem;
+}
+
+.bundle-price {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-color);
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-size: 1.25rem;
+}
+
+.price-new {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin: 0.5rem 0;
+}
+
+.discount {
+    font-size: 1rem;
+    color: var(--success-color);
+    background-color: rgba(76, 201, 240, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.bundle-notice {
+    color: var(--success-color);
+    font-weight: 500;
+}
+
+.bundle-warning {
+    color: var(--warning-color);
+    margin: 1rem 0;
+    font-size: 0.875rem;
+}
+
+.bundle-warning i {
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .shop-item {
+        flex-direction: column;
+    }
+    
+    .item-image {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    
+    .item-price {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
     </style>
 </head>
 <body>
@@ -508,6 +660,10 @@
                 <a href="#" class="nav-link" id="faq-btn">
                     <i class="fas fa-question-circle"></i>
                     <span>FAQ</span>
+                </a>
+                <a href="#" class="nav-link" id="shop-btn">
+                    <i class="fas fa-store"></i>
+                    <span>Sklep</span>
                 </a>
                 <a href="mailto:kontakt@kacpiq.pl" class="nav-link" id="contact-btn">
                     <i class="fas fa-envelope"></i>
@@ -723,6 +879,145 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="shopModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-store"></i> Sklep - Podręczniki INF.02</h2>
+            <button class="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="shop-container">
+                <div class="shop-items">
+                    <!-- Podręcznik 1 -->
+                    <div class="shop-item">
+                        <div class="item-image">
+                            <img src="urz.jpg" alt="Urządzenia techniki komputerowej">
+                        </div>
+                        <div class="item-details">
+                            <h3>Urządzenia techniki komputerowej. Kwalifikacja INF.02. Część 1</h3>
+                            <div class="item-meta">
+                                <span><i class="fas fa-user-edit"></i> Tomasz Klekot, Tomasz Marciniuk</span>
+                                <span><i class="fas fa-book-open"></i> 384 strony</span>
+                                <span><i class="fas fa-calendar-alt"></i> Wydanie: 2022</span>
+                            </div>
+                            <div class="item-description">
+                                <p>Wada podręcznika: posiada widoczne ślady użytkowania widoczne na zdjęciach.</p>
+                                <p><strong>ISBN:</strong> 978*****03695</p>
+                                <p><strong>Wydawnictwo:</strong> WSIP Wydawnictwa Szkolne i Pedagogiczne</p>
+                            </div>
+                            <div class="item-price">
+                                <span class="price">50 zł</span>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?produkt=1" class="btn btn-primary">Kup teraz</a>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?zestaw=1" class="btn btn-secondary">Kup w zestawie</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Podręcznik 2 -->
+                    <div class="shop-item">
+                        <div class="item-image">
+                            <img src="https://via.placeholder.com/150x200" alt="Systemy operacyjne">
+                        </div>
+                        <div class="item-details">
+                            <h3>Systemy operacyjne. Kwalifikacja INF.02. Podręcznik. Część 2</h3>
+                            <div class="item-meta">
+                                <span><i class="fas fa-user-edit"></i> Sylwia Osetek, Krzysztof Pytel</span>
+                                <span><i class="fas fa-book-open"></i> 352 strony</span>
+                                <span><i class="fas fa-calendar-alt"></i> Wydanie: 2022</span>
+                            </div>
+                            <div class="item-description">
+                                <p><strong>ISBN:</strong> 978*****03701</p>
+                                <p><strong>Wydawnictwo:</strong> WSIP Wydawnictwa Szkolne i Pedagogiczne</p>
+                            </div>
+                            <div class="item-price">
+                                <span class="price">50 zł</span>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?produkt=2" class="btn btn-primary">Kup teraz</a>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?zestaw=1" class="btn btn-secondary">Kup w zestawie</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Podręcznik 3 -->
+                    <div class="shop-item">
+                        <div class="item-image">
+                            <img src="https://via.placeholder.com/150x200" alt="Sieci komputerowe">
+                        </div>
+                        <div class="item-details">
+                            <h3>Sieci komputerowe. Kwalifikacja INF.02. Podręcznik. Część 3</h3>
+                            <div class="item-meta">
+                                <span><i class="fas fa-user-edit"></i> Krzysztof Pytel, Sylwia Osetek</span>
+                                <span><i class="fas fa-book-open"></i> 360 stron</span>
+                                <span><i class="fas fa-calendar-alt"></i> Wydanie: 2022</span>
+                            </div>
+                            <div class="item-description">
+                                <p><strong>ISBN:</strong> 978*****03718</p>
+                                <p><strong>Wydawnictwo:</strong> WSIP Wydawnictwa Szkolne i Pedagogiczne</p>
+                            </div>
+                            <div class="item-price">
+                                <span class="price">50 zł</span>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?produkt=3" class="btn btn-primary">Kup teraz</a>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?zestaw=1" class="btn btn-secondary">Kup w zestawie</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Podręcznik 4 -->
+                    <div class="shop-item">
+                        <div class="item-image">
+                            <img src="https://via.placeholder.com/150x200" alt="Administrowanie sieciowymi systemami operacyjnymi">
+                        </div>
+                        <div class="item-details">
+                            <h3>Administrowanie sieciowymi systemami operacyjnymi. INF.02. Podręcznik. Część 4</h3>
+                            <div class="item-meta">
+                                <span><i class="fas fa-user-edit"></i> Sylwia Osetek, Krzysztof Pytel</span>
+                                <span><i class="fas fa-book-open"></i> 360 stron</span>
+                                <span><i class="fas fa-calendar-alt"></i> Wydanie: 2022</span>
+                            </div>
+                            <div class="item-description">
+                                <p><strong>ISBN:</strong> 978*****03725</p>
+                                <p><strong>Wydawnictwo:</strong> WSIP Wydawnictwa Szkolne i Pedagogiczne</p>
+                            </div>
+                            <div class="item-price">
+                                <span class="price">50 zł</span>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?produkt=4" class="btn btn-primary">Kup teraz</a>
+                                <a href="https://www.kacpiq.pl/sklep/zamowienie?zestaw=1" class="btn btn-secondary">Kup w zestawie</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Zestaw -->
+                <div class="shop-bundle">
+                    <h3><i class="fas fa-box-open"></i> Zestaw 4 podręczników INF.02</h3>
+                    <div class="bundle-details">
+                        <p>Podręczniki w zestawie:</p>
+                        <ul>
+                            <li>Urządzenia techniki komputerowej. Część 1</li>
+                            <li>Systemy operacyjne. Część 2</li>
+                            <li>Sieci komputerowe. Część 3</li>
+                            <li>Administrowanie sieciowymi systemami operacyjnymi. Część 4</li>
+                        </ul>
+                        <div class="bundle-price">
+                            <div class="price-old">190 zł</div>
+                            <div class="price-new">171 zł <span class="discount">(10% taniej!)</span></div>
+                            <p class="bundle-notice">Kupując zestaw zaoszczędzisz 10%!</p>
+                            <p class="bundle-warning"><i class="fas fa-exclamation-triangle"></i> Przed zakupem zestawu proszę pytać o dostępność wszystkich podręczników!</p>
+                            <a href="https://www.kacpiq.pl/sklep/zamowienie?zestaw=1" class="btn btn-warning btn-lg">Kup zestaw</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="modal-close" class="btn btn-warning btn-block">
+                        <i class="fas fa-times"></i> Zamknij
+                    </button>
+        </div>
+    </div>
+</div>
 
         <div class="modal" id="donationModal">
             <div class="modal-content">
@@ -1297,6 +1592,11 @@
                 button.addEventListener('click', function() {
                     this.closest('.modal').style.display = 'none';
                 });
+            });
+
+            document.getElementById('shop-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                     document.getElementById('shopModal').style.display = 'flex';
             });
 
 
