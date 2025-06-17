@@ -294,8 +294,9 @@
                 </div>
 
 		    <div class="countdown-container">
-                    <div class="countdown-label" >Do egzaminu praktycznego (Dzień 4 - Sesja 1) pozostało:</div>
-                    <div class="countdown-timer" id="countdown-timer" style="margin-bottom: 0rem;"></div>
+                    <div class="countdown-label" >Egzamin praktyczny:</div>
+		    <div id="countdown-timer1" class="countdown-timer1"><p style="margin-bottom: 0rem;"><strong>Egzamin zakończony!</strong></p></div>
+                   <!-- <div class="countdown-timer" id="countdown-timer" style="margin-bottom: 0rem;"></div> -->
                 </div>
 		    
             </div>
@@ -597,25 +598,25 @@
 	</script>
     <script>
         // Initialize countdown
-        var countDownDate = new Date("Jun 16, 2025 08:00:00").getTime();
+    //    var countDownDate = new Date("Jun 16, 2025 08:00:00").getTime();
         
-        var x = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
+     //   var x = setInterval(function() {
+     //       var now = new Date().getTime();
+     //       var distance = countDownDate - now;
             
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+       //     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+         //   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+           // var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+           // var seconds = Math.floor((distance % (1000 * 60)) / 1000);
             
-            document.getElementById("countdown-timer").innerHTML = 
-                `${days}d ${hours}g ${minutes}m ${seconds}s`;
+           // document.getElementById("countdown-timer").innerHTML = 
+           //     `${days}d ${hours}g ${minutes}m ${seconds}s`;
             
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty. POWODZENIA!</strong></p>";
-            }
-        }, 1000);
+          //  if (distance < 0) {
+            //    clearInterval(x);
+              //  document.getElementById("countdown-timer").innerHTML = "<p><strong>Egzamin rozpoczęty. POWODZENIA!</strong></p>";
+          //  }
+     //   }, 1000);
         
         // Technical break check
         function checkTechnicalBreak() {
