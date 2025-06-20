@@ -4,10 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="egzamin/css/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <title>Lista egzaminów INF.02</title>
   <style>
+    :root {
+    --primary-color: #4361ee;
+    --primary-hover: #3a56d4;
+    --secondary-color: #3f37c9;
+    --accent-color: #4895ef;
+    --danger-color: #f72585;
+    --success-color: #4cc9f0;
+    --warning-color: #f8961e;
+    --info-color: #577590;
+    
+    --text-primary: #f8f9fa;
+    --text-secondary: #e9ecef;
+    --text-muted: #adb5bd;
+    
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2a2a2a;
+    --bg-card: #2d2d2d;
+    
+    --border-color: #444;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Space Grotesk', sans-serif;
+    
+    --transition: all 0.3s ease;
+}
     body {
-        font-family: 'Roboto', sans-serif;
+      font-family: var(--font-primary);
       display: flex;
       padding: 20px;
       justify-content: flex-start;
@@ -136,6 +169,345 @@
    }
 }
 
+/* Layout */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.navbar-brand i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    background-color: var(--bg-tertiary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-icon {
+    font-size: 0.75rem;
+    transition: var(--transition);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 0.5rem 0;
+    min-width: 280px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown:hover .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-tertiary);
+    text-decoration: none;
+}
+
+.dropdown-item-title {
+    font-weight: 500;
+    display: block;
+}
+
+.dropdown-item small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: block;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 0.5rem 0;
+}
+
+/* User Menu */
+.user-menu {
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-avatar:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 280px;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.user-menu:hover .user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.avatar-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.user-email {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.text-danger {
+    color: var(--danger-color);
+}
+
+.text-danger:hover {
+    color: #e5177a;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-top: 0.25rem;
+}
+
+.badge-success {
+    background-color: rgba(76, 201, 240, 0.1);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.badge-warning {
+    background-color: rgba(248, 150, 30, 0.1);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
+}
+
+.badge-danger {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+/* Break Banner */
+.break-banner {
+    background-color: var(--warning-color);
+    color: white;
+    padding: 0.75rem 2rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 2s infinite;
+}
+
+.break-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 1400px;
+    width: 100%;
+    justify-content: center;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Main Content */
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 7rem 2rem 3rem;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
     .overlay {
       position: fixed;
       top: 0;
@@ -148,6 +520,147 @@
   </style>
 </head>
 <body>
+
+  <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-laptop-code"></i>
+                <span>kacpiq.pl</span>
+            </div>
+            
+            <div class="navbar-links">
+                <a href="https://www.kacpiq.pl/egzamin/lista-egzaminow" target="_blank" class="nav-link">
+                    <i class="fas fa-list"></i>
+                    <span>Lista egzaminów</span>
+                </a>
+                
+                <div class="dropdown">
+                    <button class="nav-link dropdown-toggle">
+                        <i class="fas fa-download"></i>
+                        <span>Pobierz</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" id="download-windows">
+                            <i class="fab fa-windows"></i>
+                            <div>
+                                <span class="dropdown-item-title">Windows</span>
+                                <small>Wersja: N/A | Windows 7/10/11 (64bit)</small>
+                                <div class="badge badge-warning">Planowane wydanie: 30.08.2025</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" id="download-linux">
+                            <i class="fab fa-linux"></i>
+                            <div>
+                                <span class="dropdown-item-title">Linux</span>
+                                <small>Wersja: N/A | Ubuntu/Debian/Fedora</small>
+                                <div class="badge badge-danger">Niedostępne</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" id="download-macos">
+                            <i class="fab fa-apple"></i>
+                            <div>
+                                <span class="dropdown-item-title">macOS</span>
+                                <small>Wersja: N/A | macOS 10.11+</small>
+                                <div class="badge badge-danger">Niedostępne</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" id="download-exam">
+                            <i class="fas fa-file-pdf"></i>
+                            <div>
+                                <span class="dropdown-item-title">Arkusz PDF</span>
+                                <small id="plik">Nie wylosowano egzaminu</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="#" class="nav-link" id="open-ranking-modal" title="Dostęp do danych tylko dla uczniów ZS1">
+                    <i class="fas fa-trophy"></i>
+                    <span>Ranking</span>
+                </a>
+                
+                <a href="#" class="nav-link" id="open-pay-modal">
+                    <i class="fas fa-video"></i>
+                    <span>Kursy</span>
+                </a>
+            </div>
+            
+            <div class="navbar-actions">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+                
+                <div class="user-menu" id="user-menu">
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-dropdown" id="user-dropdown" style="display: none;">
+                        <!-- Logged in state -->
+                        <div class="user-info" id="user-logged" style="display: block;">
+                            <div class="user-header">
+                                <div class="avatar-circle" id="avatar-circle"><img src="https://lh3.googleusercontent.com/a/ACg8ocK66n8l9vTi6qyztt1TVPA773aKwzYPxIFTR5WGZW6LZ5Yq5A=s96-c" alt="Avatar"></div>
+                                <div>
+                                    <div id="user-name" class="user-name">kacpiq pl</div>
+                                    <div id="user-email" class="user-email">kacpiq.pl.dev@gmail.com</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="https://www.kacpiq.pl/profil" class="dropdown-item">
+                                <i class="fas fa-id-card"></i> Profil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Ustawienia
+                            </a>
+                            <a href="https://www.kacpiq.pl/subskrypcje" class="dropdown-item">
+                                <i class="fas fa-crown"></i> Subskrypcja
+                                <span class="badge badge-success">TRIAL</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-history"></i> Dziennik zmian
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user-plus"></i> Zaproś użytkownika
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-question-circle"></i> Pomoc
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-users"></i> Community
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logout-btn" class="dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Wyloguj się
+                            </a>
+                        </div>
+                        
+                        <!-- Not logged in state -->
+                        <div class="user-info" id="user-not-logged" style="display: none;">
+                            <a href="#" id="login-btn" class="dropdown-item">
+                                <i class="fas fa-sign-in-alt"></i> Zaloguj się
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user-plus"></i> Zarejestruj się
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Break Banner -->
+        <div id="przerwa-komunikat" class="break-banner" style="display:flex;">
+            <div class="break-content">
+                <i class="fas fa-tools"></i>
+                <span>Uprzejmie informujemy, iż z dniem 23 czerwca 2025 r. nastąpi <strong>tymczasowe wyłączenie tej strony</strong>.</span>
+            </div>
+        </div>
+    </nav>
   <div class="overlay" id="overlay"></div>
   <div class="spinner" id="spinner"></div>
 
