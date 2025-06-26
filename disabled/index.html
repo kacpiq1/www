@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kacpiq.pl - Przeprowadzamy modernizację</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --text: #e6e6e6;
+            --highlight: #00b4d8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--highlight), #00e1ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .highlight {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+        
+        .contact {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .contact a {
+            color: var(--highlight);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .contact a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">kacpiq.pl</div>
+        <div class="status">TYMCZASOWO NIEDOSTĘPNE</div>
+        <h1>Przeprowadzamy niezbędne aktualizacje</h1>
+        <p>Nasza strona jest obecnie w trakcie <span class="highlight">modernizacji systemów zabezpieczeń</span> i infrastruktury technicznej, aby zapewnić Ci jeszcze lepsze doświadczenia.</p>
+        <p>Pracujemy nad wprowadzeniem nowych funkcjonalności i ulepszeń, które znacząco podniosą jakość świadczonych usług.</p>
+        <p>Przepraszamy za utrudnienia i prosimy o cierpliwość. Wracamy już wkrótce!</p>
+        
+        <div class="contact">
+            W pilnych sprawach skontaktuj się z nami: <a href="mailto:kontakt@kacpiq.pl">kontakt@kacpiq.pl</a>
+        </div>
+    </div>
+</body>
+</html>
