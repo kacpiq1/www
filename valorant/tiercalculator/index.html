@@ -3,143 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT XP Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <title>XP Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Tungsten+Bold&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Myriad Pro Condensed';
-            src: url('https://fonts.cdnfonts.com/s/9045/MyriadPro-Cond.otf') format('opentype');
+        :root {
+            --valorant-red: #ff4655;
+            --valorant-dark: #111111;
+            --valorant-light: #ece8e1;
+            --valorant-accent: #0f1923;
+            --valorant-highlight: #bd3944;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Outfit', Arial, sans-serif; /* Fallback to system fonts */
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--valorant-dark);
+            color: var(--valorant-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 70, 85, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 70, 85, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
         }
         
         .container {
+            width: 100%;
             max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
+            margin: 20px;
+            padding: 30px;
+            background: rgba(15, 25, 35, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--valorant-red);
+            box-shadow: 0 0 10px var(--valorant-red);
+        }
+        
+        .container:hover {
+            transform: perspective(1000px) rotateX(0deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
         }
         
         h1 {
+            font-family: 'Tungsten Bold', sans-serif;
+            font-size: 3rem;
             text-align: center;
+            margin-bottom: 20px;
+            color: var(--valorant-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--valorant-red), transparent);
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
         }
         
         label {
-            font-size: 18px;
-            margin-bottom: 5px;
-            color: #333;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--valorant-red);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
         }
         
         input[type="number"] {
-            width: calc(100% - 22px); /* Subtract padding and border width */
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            background: rgba(17, 17, 17, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
+            color: var(--valorant-light);
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
         }
         
         input[type="number"]:focus {
             outline: none;
-            border-color: #007BFF;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            border-color: var(--valorant-red);
+            box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
+            background: rgba(17, 17, 17, 0.9);
         }
         
         small {
-            font-size: 14px;
-            color: #6c757d;
+            font-size: 0.8rem;
+            color: rgba(236, 232, 225, 0.6);
             margin-top: 5px;
             display: block;
         }
         
         button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007BFF;
-            color: #fff;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-highlight));
+            color: white;
             border: none;
             border-radius: 5px;
+            font-family: 'Tungsten Bold', sans-serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 70, 85, 0.3);
         }
         
         button:hover {
-            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 70, 85, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
         }
         
         .result {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(17, 17, 17, 0.6);
             border-radius: 5px;
+            border-left: 3px solid var(--valorant-red);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .progress-container {
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--valorant-light);
         }
         
         .progress-bar {
-            position: relative;
-            margin-top: 20px;
-            width: 100%;
-            height: 30px;
-            background-color: #ddd;
-            border-radius: 10px;
+            height: 10px;
+            background: rgba(17, 17, 17, 0.8);
+            border-radius: 5px;
             overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .progress-bar-fill {
             height: 100%;
-            background-color: #007BFF;
+            background: linear-gradient(90deg, var(--valorant-red), #ff6b7a);
             width: 0;
-            transition: width 0.3s ease-in-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: bold;
+            border-radius: 5px;
+            position: relative;
+            transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+            box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
         }
         
-        .percentage {
+        .progress-bar-fill::after {
+            content: '';
             position: absolute;
-            width: 100%;
-            text-align: center;
-            line-height: 30px;
-            color: #fff;
-            font-weight: bold;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--valorant-red);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>VALORANT XP Calculator</h1>
-        <label for="current-tier">Current Tier</label>
-        <input type="number" id="current-tier" placeholder="Enter your current tier">
+        <div class="particles" id="particles"></div>
+        <h1>XP Calculator</h1>
         
-        <label for="current-xp">Current XP</label>
-        <input type="number" id="current-xp" placeholder="Enter your current XP">
+        <div class="input-group">
+            <label for="current-tier">Current Tier</label>
+            <input type="number" id="current-tier" placeholder="1-50" min="1" max="50">
+        </div>
         
-        <label for="target-tier">Target Tier*</label>
-        <input type="number" id="target-tier" placeholder="Enter your target tier">
-        <small id="tier-info"></small>
+        <div class="input-group">
+            <label for="current-xp">Current XP</label>
+            <input type="number" id="current-xp" placeholder="0">
+        </div>
         
-        <button onclick="calculateXP()">Calculate XP Needed</button>
+        <div class="input-group">
+            <label for="target-tier">Target Tier</label>
+            <input type="number" id="target-tier" placeholder="1-50" min="1" max="50">
+            <small id="tier-info"></small>
+        </div>
+        
+        <button id="calculate-btn">Calculate</button>
         
         <div id="result" class="result"></div>
         
-        <div class="progress-bar">
-            <div id="progress-bar-fill" class="progress-bar-fill">
-                <span id="progress-percentage" class="percentage"></span>
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Progress</span>
+                <span id="progress-percentage">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
             </div>
         </div>
     </div>
@@ -154,18 +330,52 @@
         ];
 
         let currentPercentage = 0;
+        
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 1;
+                const posX = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.bottom = `-${size}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
 
         document.getElementById('current-tier').addEventListener('input', updateProgressBar);
         document.getElementById('current-xp').addEventListener('input', updateProgressBar);
+        document.getElementById('calculate-btn').addEventListener('click', calculateXP);
 
         function updateProgressBar() {
             const currentTier = parseInt(document.getElementById('current-tier').value);
             let currentXP = parseInt(document.getElementById('current-xp').value);
 
+            // Validate inputs
+            if (isNaN(currentTier)) return;
+            if (isNaN(currentXP)) currentXP = 0;
+
             // Limit current XP to maximum XP for the current tier
-            if (!isNaN(currentTier) && currentTier >= 1 && currentTier <= 50) {
-                currentXP = Math.min(currentXP, tierXP[currentTier - 1]);
-                document.getElementById('current-xp').value = currentXP; // Update input value if necessary
+            if (currentTier >= 1 && currentTier <= 50) {
+                const maxXP = tierXP[currentTier - 1];
+                currentXP = Math.min(currentXP, maxXP);
+                document.getElementById('current-xp').value = currentXP;
             }
 
             let currentTotalXP = 0;
@@ -179,27 +389,36 @@
             currentTotalXP += currentXP;
 
             // Calculate percentage completion
-            const totalXPNeeded = tierXP.reduce((acc, val) => acc + val, 0); // Sum of all XP needed for all tiers
+            const totalXPNeeded = tierXP.reduce((acc, val) => acc + val, 0);
             const newPercentage = (currentTotalXP / totalXPNeeded) * 100;
 
+            // Update progress bar
             const progressBarFill = document.getElementById('progress-bar-fill');
             progressBarFill.style.width = `${newPercentage}%`;
+            
+            // Animate percentage text
             animatePercentage(currentPercentage, newPercentage);
             currentPercentage = newPercentage;
         }
 
         function animatePercentage(start, end) {
             const progressPercentageElem = document.getElementById('progress-percentage');
-            const increment = (end - start) / 100; // Increment percentage in 1% steps
-            let current = start;
-            const interval = setInterval(() => {
-                current += increment;
-                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-                    current = end;
-                    clearInterval(interval);
+            const duration = 1000; // Animation duration in ms
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const value = start + (end - start) * progress;
+                
+                progressPercentageElem.innerText = `${value.toFixed(2)}%`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
                 }
-                progressPercentageElem.innerText = `${current.toFixed(2)}%`;
-            }, 10); // Update every 10ms for a smooth animation
+            }
+            
+            requestAnimationFrame(update);
         }
 
         function calculateXP() {
@@ -207,11 +426,33 @@
             const currentXP = parseInt(document.getElementById('current-xp').value);
             const targetTier = parseInt(document.getElementById('target-tier').value);
             
-            if (isNaN(currentTier) || isNaN(currentXP) || isNaN(targetTier) || currentTier < 1 || currentTier > 50 || targetTier < 1 || targetTier > 50 || currentTier >= targetTier) {
-                document.getElementById('result').innerText = 'Please enter valid tier values (1-50) and ensure the target tier is higher than the current tier.';
+            // Validate inputs
+            if (isNaN(currentTier)) {
+                showResult('Please enter your current tier (1-50)');
                 return;
             }
             
+            if (isNaN(currentXP)) {
+                showResult('Please enter your current XP');
+                return;
+            }
+            
+            if (isNaN(targetTier)) {
+                showResult('Please enter your target tier (1-50)');
+                return;
+            }
+            
+            if (currentTier < 1 || currentTier > 50 || targetTier < 1 || targetTier > 50) {
+                showResult('Tiers must be between 1 and 50');
+                return;
+            }
+            
+            if (currentTier >= targetTier) {
+                showResult('Target tier must be higher than current tier');
+                return;
+            }
+            
+            // Calculate XP needed
             let totalXPNeeded = 0;
             for (let i = currentTier; i < targetTier; i++) {
                 totalXPNeeded += tierXP[i - 1];
@@ -219,7 +460,22 @@
             
             const xpNeeded = totalXPNeeded - currentXP;
             
-            document.getElementById('result').innerText = `You need ${xpNeeded} XP to reach tier ${targetTier} from tier ${currentTier}.`;
+            // Show result with animation
+            showResult(`You need <span style="color: var(--valorant-red); font-weight: bold;">${xpNeeded.toLocaleString()}</span> XP to reach tier ${targetTier} from tier ${currentTier}.`);
+        }
+        
+        function showResult(message) {
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = message;
+            resultElement.classList.add('show');
+            
+            // Remove the show class after a delay if needed for re-animation
+            setTimeout(() => {
+                resultElement.classList.remove('show');
+                setTimeout(() => {
+                    resultElement.classList.add('show');
+                }, 50);
+            }, 10);
         }
     </script>
 </body>
