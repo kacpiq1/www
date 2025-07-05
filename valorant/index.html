@@ -1,27 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projekty VALORANT</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tungsten+Book&display=swap">
+    <title>VALORANT PROJECTS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tungsten+Bold:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Reset i podstawowe style */
+        :root {
+            --valorant-red: #ff4655;
+            --valorant-dark: #0f1923;
+            --valorant-accent: #ece8e1;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--valorant-accent);
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
+            background-color: var(--valorant-dark);
         }
 
-        /* Tło wideo - widoczne od razu */
+        /* Video background - widoczne od razu */
         #video-background {
             position: fixed;
             top: 0;
@@ -29,68 +37,88 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: -2;
+        }
+
+        /* Overlay dla lepszej czytelności */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 25, 35, 0.6);
             z-index: -1;
         }
 
-        /* Kontener główny - początkowo ukryty */
+        /* Główna zawartość - początkowo ukryta */
         .main-content {
             opacity: 0;
-            animation: content-fade-in 0.8s ease-out 2s forwards;
+            animation: content-appear 1s cubic-bezier(0.215, 0.610, 0.355, 1) 2s forwards;
         }
 
-        @keyframes content-fade-in {
+        @keyframes content-appear {
             to { opacity: 1; }
         }
 
         /* Nagłówek */
-        h1 {
+        .header {
             text-align: center;
-            font-size: 3.5em;
-            margin: 40px 0;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            font-weight: 900;
-            text-shadow: 0 0 15px rgba(157, 78, 221, 0.7);
-            transform: translateY(-50px);
-            opacity: 0;
-            animation: 
-                title-drop-in 1s cubic-bezier(0.23, 1, 0.32, 1) 2.2s forwards,
-                title-glow 3s infinite alternate 3s;
+            padding: 40px 20px 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes title-drop-in {
-            to {
+        h1 {
+            font-family: 'Tungsten Bold', sans-serif;
+            font-size: 5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: transparent;
+            background: linear-gradient(90deg, var(--valorant-accent), var(--valorant-red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+            transform: translateY(-100px);
+            opacity: 0;
+            animation: 
+                title-drop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards,
+                text-glow 2s infinite alternate 3s;
+        }
+
+        @keyframes title-drop {
+            to { 
                 transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        @keyframes title-glow {
-            from {
-                text-shadow: 0 0 10px #9d4edd, 0 0 20px #7f00ff;
-            }
+        @keyframes text-glow {
             to {
-                text-shadow: 0 0 20px #b300ff, 0 0 40px #9d4edd;
+                text-shadow: 0 0 30px rgba(255, 70, 85, 0.6);
             }
         }
 
-        /* Kontenery przycisków */
-        .buttons-container {
-            max-width: 800px;
+        /* Kontener przycisków */
+        .projects-container {
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
+            display: grid;
+            gap: 25px;
         }
 
-        .project-container {
-            margin-bottom: 30px;
+        /* Karty projektów */
+        .project-card {
+            position: relative;
             transform: translateX(-100px);
             opacity: 0;
             animation: card-slide-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        .project-container:nth-child(1) { animation-delay: 2.4s; }
-        .project-container:nth-child(2) { animation-delay: 2.6s; }
-        .project-container:nth-child(3) { animation-delay: 2.8s; }
+        .project-card:nth-child(1) { animation-delay: 2.4s; }
+        .project-card:nth-child(2) { animation-delay: 2.6s; }
+        .project-card:nth-child(3) { animation-delay: 2.8s; }
 
         @keyframes card-slide-in {
             to {
@@ -99,66 +127,64 @@
             }
         }
 
-        /* Przyciski projektów */
-        .project-button {
+        .project-link {
             display: block;
             text-decoration: none;
-            background: linear-gradient(135deg, rgba(90, 0, 204, 0.9), rgba(157, 78, 221, 0.9));
-            padding: 25px;
-            border-radius: 12px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            background: rgba(236, 232, 225, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 30px;
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 30px rgba(157, 78, 221, 0.3);
+            overflow: hidden;
+            position: relative;
             transform: scale(0.95);
-            animation: button-scale-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            animation: card-scale-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
 
-        @keyframes button-scale-in {
+        @keyframes card-scale-in {
             to { transform: scale(1); }
         }
 
-        .project-button:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 8px 40px rgba(157, 78, 221, 0.5);
+        .project-link:hover {
+            transform: scale(1.02) !important;
+            background: rgba(236, 232, 225, 0.15);
+            box-shadow: 0 10px 30px rgba(255, 70, 85, 0.2);
+            border-color: rgba(255, 70, 85, 0.3);
         }
 
         .project-title {
-            font-size: 1.8em;
-            color: #ffffff;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-family: 'Tungsten Bold', sans-serif;
+            font-size: 2.5rem;
+            color: var(--valorant-accent);
             margin-bottom: 10px;
+            letter-spacing: 1.5px;
             position: relative;
+            display: inline-block;
         }
 
-        .project-description {
-            font-size: 1em;
-            color: #e2e2e2;
-            line-height: 1.5;
-            position: relative;
-        }
-
-        /* Efekty VALORANT */
-        .valorant-overlay {
-            position: fixed;
-            top: 0;
+        .project-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
             left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--valorant-red);
+            transition: width 0.4s ease;
+        }
+
+        .project-link:hover .project-title::after {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 70, 85, 0.1), rgba(80, 80, 255, 0.1));
-            z-index: -1;
-            opacity: 0;
-            animation: overlay-fade-in 1.5s ease-out 2s forwards;
         }
 
-        @keyframes overlay-fade-in {
-            to { opacity: 0.4; }
+        .project-desc {
+            font-size: 1rem;
+            color: rgba(236, 232, 225, 0.8);
+            line-height: 1.6;
         }
 
+        /* Efekty specjalne */
         .valorant-pulse {
             position: fixed;
             top: 50%;
@@ -166,26 +192,24 @@
             transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle, rgba(255, 70, 85, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 70, 85, 0.2) 0%, transparent 70%);
             z-index: -1;
-            animation: pulse-effect 2.5s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
             opacity: 0;
         }
 
-        @keyframes pulse-effect {
+        @keyframes pulse {
             0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
         }
 
-        /* Efekty iskier */
         .spark {
-            position: fixed;
+            position: absolute;
             width: 3px;
             height: 3px;
-            background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 8px 2px #ff4655;
-            z-index: 10;
+            background: #fff;
+            box-shadow: 0 0 10px 2px var(--valorant-red);
             animation: spark-fly 1s ease-out forwards;
             opacity: 0;
         }
@@ -204,53 +228,56 @@
         /* Responsywność */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5em;
-                margin: 30px 0;
+                font-size: 3.5rem;
             }
             
-            .project-button {
-                padding: 20px;
+            .projects-container {
+                grid-template-columns: 1fr;
             }
             
             .project-title {
-                font-size: 1.5em;
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Tło wideo - widoczne od razu -->
-    <video id="video-background" autoplay muted playsinline loop>
+    <!-- Video background - widoczne od razu -->
+    <video id="video-background" autoplay muted playsinline>
         <source src="valorant/background.mp4" type="video/mp4">
     </video>
     
-    <!-- Efekty wizualne -->
-    <div class="valorant-overlay"></div>
+    <!-- Overlay dla lepszej czytelności -->
+    <div class="overlay"></div>
+    
+    <!-- Efekt specjalny -->
     <div class="valorant-pulse"></div>
     
     <!-- Główna zawartość - pojawia się po 2 sekundach -->
     <div class="main-content">
-        <h1>Projekty VALORANT</h1>
+        <header class="header">
+            <h1>VALORANT PROJECTS</h1>
+        </header>
         
-        <div class="buttons-container">
-            <div class="project-container">
-                <a href="https://www.kacpiq.pl/valorant/tiercalculator" class="project-button">
-                    <div class="project-title">Kalkulator XP / Tierów</div>
-                    <div class="project-description">Sprawdź ile potrzebujesz XP, żeby zdobyć dany tier przepustki bojowej</div>
+        <div class="projects-container">
+            <div class="project-card">
+                <a href="https://www.kacpiq.pl/valorant/tiercalculator" class="project-link">
+                    <h2 class="project-title">XP Calculator</h2>
+                    <p class="project-desc">Calculate how much XP you need to reach your desired battle pass tier</p>
                 </a>
             </div>
             
-            <div class="project-container">
-                <a href="https://www.kacpiq.pl/valorant/nightmarket" class="project-button">
-                    <div class="project-title">Night Market</div>
-                    <div class="project-description">Sprawdź, jakie masz szczęście w Night Markecie</div>
+            <div class="project-card">
+                <a href="https://www.kacpiq.pl/valorant/nightmarket" class="project-link">
+                    <h2 class="project-title">Night Market</h2>
+                    <p class="project-desc">Check your luck in the Night Market</p>
                 </a>
             </div>
             
-            <div class="project-container">
-                <a href="https://www.kacpiq.pl/valorant/skins" class="project-button">
-                    <div class="project-title">Lista skinów</div>
-                    <div class="project-description">Sprawdź aktualną listę skinów w VALORANT</div>
+            <div class="project-card">
+                <a href="https://www.kacpiq.pl/valorant/skins" class="project-link">
+                    <h2 class="project-title">Skins Collection</h2>
+                    <p class="project-desc">Browse all available VALORANT weapon skins</p>
                 </a>
             </div>
         </div>
@@ -260,14 +287,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('video-background');
             
-            // Spróbuj uruchomić wideo
-            video.play().catch(error => {
-                console.log("Automatyczne odtwarzanie wideo zablokowane:", error);
-            });
+            // Ustawienia wideo - zatrzymanie na ostatniej klatce
+            video.addEventListener('ended', function() {
+                video.pause();
+                // Przewijamy do końca minus 1ms aby uniknąć zapętlenia
+                video.currentTime = video.duration - 0.001;
+            }, false);
+            
+            // Wymuszamy odtworzenie wideo
+            video.play().catch(e => console.log("Autoplay blocked:", e));
             
             // Efekt iskier po 2 sekundach
             setTimeout(() => {
-                createSparks(15);
+                createSparks(20);
             }, 2000);
             
             // Funkcja tworząca iskry
@@ -281,24 +313,24 @@
                         const startX = Math.random() * window.innerWidth;
                         const startY = Math.random() * window.innerHeight;
                         
-                        // Losowy kierunek ruchu
+                        // Losowy kierunek i siła
                         const angle = Math.random() * Math.PI * 2;
-                        const distance = 50 + Math.random() * 100;
-                        const endX = Math.cos(angle) * distance;
-                        const endY = Math.sin(angle) * distance;
+                        const force = 50 + Math.random() * 150;
+                        const endX = Math.cos(angle) * force;
+                        const endY = Math.sin(angle) * force;
                         
                         spark.style.setProperty('--spark-x', `${endX}px`);
                         spark.style.setProperty('--spark-y', `${endY}px`);
                         spark.style.left = `${startX}px`;
                         spark.style.top = `${startY}px`;
                         
-                        // Losowy kolor iskry
-                        const hue = 330 + Math.random() * 60;
-                        spark.style.boxShadow = `0 0 8px 2px hsl(${hue}, 100%, 50%)`;
+                        // Losowy kolor w odcieniach VALORANT
+                        const hue = 350 + Math.random() * 20;
+                        spark.style.boxShadow = `0 0 10px 2px hsl(${hue}, 100%, 60%)`;
                         
                         document.body.appendChild(spark);
                         
-                        // Usuń iskrę po animacji
+                        // Usuwanie po animacji
                         setTimeout(() => {
                             spark.remove();
                         }, 1000);
