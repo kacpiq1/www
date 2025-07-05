@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projekty VALORANT</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tungsten+Book&display=swap">
-    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        /* Reset i podstawowe style */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
             color: #ffffff;
             position: relative;
             overflow-x: hidden;
-            opacity: 0;
-            animation: fade-in 0.5s ease-in 2s forwards;
+            min-height: 100vh;
         }
 
-        @keyframes fade-in {
-            to { opacity: 1; }
-        }
-
+        /* Tło wideo - widoczne od razu */
         #video-background {
             position: fixed;
             top: 0;
@@ -32,112 +32,97 @@
             z-index: -1;
         }
 
-        .fallback-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0e0e0e;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            z-index: -2;
+        /* Kontener główny - początkowo ukryty */
+        .main-content {
+            opacity: 0;
+            animation: content-fade-in 0.8s ease-out 2s forwards;
         }
 
+        @keyframes content-fade-in {
+            to { opacity: 1; }
+        }
+
+        /* Nagłówek */
         h1 {
             text-align: center;
-            font-size: 3em;
-            color: #fff;
-            margin-top: 40px;
+            font-size: 3.5em;
+            margin: 40px 0;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            animation: glow 2s infinite alternate, 
-                       slide-from-top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards;
-            transform: translateY(-100px);
+            letter-spacing: 5px;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(157, 78, 221, 0.7);
+            transform: translateY(-50px);
             opacity: 0;
-            z-index: 1;
+            animation: 
+                title-drop-in 1s cubic-bezier(0.23, 1, 0.32, 1) 2.2s forwards,
+                title-glow 3s infinite alternate 3s;
         }
 
-        @keyframes slide-from-top {
+        @keyframes title-drop-in {
             to {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        @keyframes glow {
+        @keyframes title-glow {
             from {
-                text-shadow: 0 0 10px #9d4edd, 0 0 20px #7f00ff, 0 0 30px #5a00cc;
+                text-shadow: 0 0 10px #9d4edd, 0 0 20px #7f00ff;
             }
             to {
-                text-shadow: 0 0 20px #b300ff, 0 0 40px #9d4edd, 0 0 60px #6100b3;
+                text-shadow: 0 0 20px #b300ff, 0 0 40px #9d4edd;
             }
         }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
+        /* Kontenery przycisków */
+        .buttons-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .project-container {
+            margin-bottom: 30px;
+            transform: translateX(-100px);
             opacity: 0;
-            transform: translateY(30px);
-            animation: fade-slide-up 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: card-slide-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes fade-slide-up {
+        .project-container:nth-child(1) { animation-delay: 2.4s; }
+        .project-container:nth-child(2) { animation-delay: 2.6s; }
+        .project-container:nth-child(3) { animation-delay: 2.8s; }
+
+        @keyframes card-slide-in {
             to {
+                transform: translateX(0);
                 opacity: 1;
-                transform: translateY(0);
             }
         }
 
-        .container:nth-child(2) { animation-delay: 2.4s; }
-        .container:nth-child(3) { animation-delay: 2.6s; }
-        .container:nth-child(4) { animation-delay: 2.8s; }
-
+        /* Przyciski projektów */
         .project-button {
             display: block;
             text-decoration: none;
-            background: linear-gradient(135deg, rgba(90, 0, 204, 0.8), rgba(157, 78, 221, 0.8));
+            background: linear-gradient(135deg, rgba(90, 0, 204, 0.9), rgba(157, 78, 221, 0.9));
             padding: 25px;
-            border-radius: 15px;
-            width: 320px;
+            border-radius: 12px;
+            width: 100%;
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
-            box-shadow: 0px 4px 20px rgba(157, 78, 221, 0.3);
-            z-index: 1;
-            transform: scale(0.8);
-            animation: scale-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 30px rgba(157, 78, 221, 0.3);
+            transform: scale(0.95);
+            animation: button-scale-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
 
-        @keyframes scale-in {
+        @keyframes button-scale-in {
             to { transform: scale(1); }
-        }
-             
-        .project-button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(93, 32, 162, 0.6), transparent);
-            transform: rotate(45deg);
-            transition: opacity 0.5s, transform 0.5s;
-            opacity: 0;
-            z-index: 0;
-        }
-
-        .project-button:hover::before {
-            opacity: 1;
-            transform: rotate(0deg);
         }
 
         .project-button:hover {
-            transform: scale(1.1) !important;
-            box-shadow: 0px 8px 40px rgba(157, 78, 221, 0.5);
+            transform: scale(1.05) !important;
+            box-shadow: 0 8px 40px rgba(157, 78, 221, 0.5);
         }
 
         .project-title {
@@ -146,64 +131,32 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
-            z-index: 1;
+            margin-bottom: 10px;
             position: relative;
         }
 
         .project-description {
             font-size: 1em;
-            color: #cccccc;
-            margin-top: 10px;
-            z-index: 1;
+            color: #e2e2e2;
+            line-height: 1.5;
             position: relative;
         }
 
-        .project-button:hover .project-title {
-            animation: neon-flicker 1s infinite alternate;
-        }
-
-        @keyframes neon-flicker {
-            0% {
-                text-shadow: 0 0 5px #9d4edd, 0 0 10px #7f00ff, 0 0 20px #b300ff;
-            }
-            100% {
-                text-shadow: 0 0 10px #9d4edd, 0 0 20px #5a00cc, 0 0 30px #6100b3;
-            }
-        }
-
-        .project-button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-            border: 2px solid rgba(93, 32, 162, 0.6);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .project-button:hover::after {
-            opacity: 1;
-            border: 2px solid rgba(157, 78, 221, 1);
-        }
-
-        /* VALORANT-style animation elements */
+        /* Efekty VALORANT */
         .valorant-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255, 70, 85, 0.2), rgba(80, 80, 255, 0.2));
+            background: linear-gradient(135deg, rgba(255, 70, 85, 0.1), rgba(80, 80, 255, 0.1));
             z-index: -1;
             opacity: 0;
-            animation: overlay-fade 1s ease-in 1.5s forwards;
+            animation: overlay-fade-in 1.5s ease-out 2s forwards;
         }
 
-        @keyframes overlay-fade {
-            to { opacity: 0.3; }
+        @keyframes overlay-fade-in {
+            to { opacity: 0.4; }
         }
 
         .valorant-pulse {
@@ -213,98 +166,144 @@
             transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle, rgba(255, 70, 85, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 70, 85, 0.15) 0%, transparent 70%);
             z-index: -1;
-            animation: pulse 3s ease-out 1s forwards;
+            animation: pulse-effect 2.5s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
+            opacity: 0;
         }
 
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+        @keyframes pulse-effect {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
         }
 
+        /* Efekty iskier */
+        .spark {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px 2px #ff4655;
+            z-index: 10;
+            animation: spark-fly 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes spark-fly {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--spark-x), var(--spark-y));
+                opacity: 0;
+            }
+        }
+
+        /* Responsywność */
         @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+                margin: 30px 0;
+            }
+            
             .project-button {
-                width: 90%;
+                padding: 20px;
+            }
+            
+            .project-title {
+                font-size: 1.5em;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Video background -->
-    <video id="video-background" autoplay muted>
+    <!-- Tło wideo - widoczne od razu -->
+    <video id="video-background" autoplay muted playsinline loop>
         <source src="valorant/background.mp4" type="video/mp4">
     </video>
     
-    <!-- VALORANT-style animation elements -->
-    <div class="valorant-pulse"></div>
+    <!-- Efekty wizualne -->
     <div class="valorant-overlay"></div>
+    <div class="valorant-pulse"></div>
     
-    <!-- Fallback background -->
-    <div class="fallback-background"></div>
-
-    <h1>Projekty VALORANT</h1>
-
-    <div class="container">
-        <a href="https://www.kacpiq.pl/valorant/tiercalculator" class="project-button">
-            <div>
-                <div class="project-title">Kalkulator XP / Tierów</div>
-                <div class="project-description">Sprawdź ile potrzebujesz XP, żeby zdobyć dany tier przepustki bojowej.</div>
+    <!-- Główna zawartość - pojawia się po 2 sekundach -->
+    <div class="main-content">
+        <h1>Projekty VALORANT</h1>
+        
+        <div class="buttons-container">
+            <div class="project-container">
+                <a href="https://www.kacpiq.pl/valorant/tiercalculator" class="project-button">
+                    <div class="project-title">Kalkulator XP / Tierów</div>
+                    <div class="project-description">Sprawdź ile potrzebujesz XP, żeby zdobyć dany tier przepustki bojowej</div>
+                </a>
             </div>
-        </a>
-    </div>
-
-    <div class="container">
-        <a href="https://www.kacpiq.pl/valorant/nightmarket" class="project-button">
-            <div>
-                <div class="project-title">Night Market</div>
-                <div class="project-description">Sprawdź, jakie masz szczęście w Night Markecie</div>
+            
+            <div class="project-container">
+                <a href="https://www.kacpiq.pl/valorant/nightmarket" class="project-button">
+                    <div class="project-title">Night Market</div>
+                    <div class="project-description">Sprawdź, jakie masz szczęście w Night Markecie</div>
+                </a>
             </div>
-        </a>
-    </div>
-
-    <div class="container">
-        <a href="https://www.kacpiq.pl/valorant/skins" class="project-button">
-            <div>
-                <div class="project-title">Lista skinów</div>
-                <div class="project-description">Sprawdź aktualną listę skinów w VALORANT.</div>
+            
+            <div class="project-container">
+                <a href="https://www.kacpiq.pl/valorant/skins" class="project-button">
+                    <div class="project-title">Lista skinów</div>
+                    <div class="project-description">Sprawdź aktualną listę skinów w VALORANT</div>
+                </a>
             </div>
-        </a>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('video-background');
             
-            // Ustaw wideo na zapętlone, ale zatrzymaj na ostatniej klatce
-            video.addEventListener('ended', function() {
-                video.pause();
-                video.currentTime = video.duration - 0.1;
-            }, false);
-            
             // Spróbuj uruchomić wideo
             video.play().catch(error => {
                 console.log("Automatyczne odtwarzanie wideo zablokowane:", error);
-                document.querySelector('.fallback-background').style.zIndex = '-1';
             });
-
-            // Dodatkowy efekt VALORANT - losowe iskry
+            
+            // Efekt iskier po 2 sekundach
             setTimeout(() => {
-                for(let i = 0; i < 8; i++) {
-                    createSpark();
-                }
+                createSparks(15);
             }, 2000);
-
-            function createSpark() {
-                const spark = document.createElement('div');
-                spark.className = 'valorant-spark';
-                spark.style.left = `${Math.random() * 100}%`;
-                spark.style.top = `${Math.random() * 100}%`;
-                document.body.appendChild(spark);
-                
-                setTimeout(() => {
-                    spark.remove();
-                }, 1000);
+            
+            // Funkcja tworząca iskry
+            function createSparks(count) {
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const spark = document.createElement('div');
+                        spark.className = 'spark';
+                        
+                        // Losowa pozycja startowa
+                        const startX = Math.random() * window.innerWidth;
+                        const startY = Math.random() * window.innerHeight;
+                        
+                        // Losowy kierunek ruchu
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 50 + Math.random() * 100;
+                        const endX = Math.cos(angle) * distance;
+                        const endY = Math.sin(angle) * distance;
+                        
+                        spark.style.setProperty('--spark-x', `${endX}px`);
+                        spark.style.setProperty('--spark-y', `${endY}px`);
+                        spark.style.left = `${startX}px`;
+                        spark.style.top = `${startY}px`;
+                        
+                        // Losowy kolor iskry
+                        const hue = 330 + Math.random() * 60;
+                        spark.style.boxShadow = `0 0 8px 2px hsl(${hue}, 100%, 50%)`;
+                        
+                        document.body.appendChild(spark);
+                        
+                        // Usuń iskrę po animacji
+                        setTimeout(() => {
+                            spark.remove();
+                        }, 1000);
+                    }, i * 50);
+                }
             }
         });
     </script>
