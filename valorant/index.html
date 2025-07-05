@@ -9,9 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Tungsten+Bold:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --valorant-red: #ff4655;
+            --valorant-violet: #9d4edd;
             --valorant-dark: #0f1923;
-            --valorant-accent: #ece8e1;
+            --valorant-light: #ece8e1;
         }
 
         * {
@@ -22,11 +22,10 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            color: var(--valorant-accent);
+            color: var(--valorant-light);
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            background-color: var(--valorant-dark);
         }
 
         /* Video background - widoczne od razu */
@@ -37,17 +36,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -2;
-        }
-
-        /* Overlay dla lepszej czytelności */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 25, 35, 0.6);
             z-index: -1;
         }
 
@@ -64,9 +52,7 @@
         /* Nagłówek */
         .header {
             text-align: center;
-            padding: 40px 20px 0;
-            position: relative;
-            overflow: hidden;
+            padding: 60px 20px 40px;
         }
 
         h1 {
@@ -74,16 +60,13 @@
             font-size: 5rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: transparent;
-            background: linear-gradient(90deg, var(--valorant-accent), var(--valorant-red));
-            -webkit-background-clip: text;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+            color: var(--valorant-light);
+            text-shadow: 0 0 15px var(--valorant-violet);
             transform: translateY(-100px);
             opacity: 0;
             animation: 
                 title-drop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards,
-                text-glow 2s infinite alternate 3s;
+                text-pulse 3s infinite alternate 3s;
         }
 
         @keyframes title-drop {
@@ -93,9 +76,9 @@
             }
         }
 
-        @keyframes text-glow {
+        @keyframes text-pulse {
             to {
-                text-shadow: 0 0 30px rgba(255, 70, 85, 0.6);
+                text-shadow: 0 0 25px var(--valorant-violet);
             }
         }
 
@@ -103,7 +86,7 @@
         .projects-container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 20px 40px;
             display: grid;
             gap: 25px;
         }
@@ -130,9 +113,8 @@
         .project-link {
             display: block;
             text-decoration: none;
-            background: rgba(236, 232, 225, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 25, 35, 0.7);
+            border: 2px solid rgba(157, 78, 221, 0.3);
             border-radius: 8px;
             padding: 30px;
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -148,15 +130,14 @@
 
         .project-link:hover {
             transform: scale(1.02) !important;
-            background: rgba(236, 232, 225, 0.15);
-            box-shadow: 0 10px 30px rgba(255, 70, 85, 0.2);
-            border-color: rgba(255, 70, 85, 0.3);
+            border-color: var(--valorant-violet);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
         }
 
         .project-title {
             font-family: 'Tungsten Bold', sans-serif;
             font-size: 2.5rem;
-            color: var(--valorant-accent);
+            color: var(--valorant-light);
             margin-bottom: 10px;
             letter-spacing: 1.5px;
             position: relative;
@@ -170,7 +151,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--valorant-red);
+            background: var(--valorant-violet);
             transition: width 0.4s ease;
         }
 
@@ -185,14 +166,14 @@
         }
 
         /* Efekty specjalne */
-        .valorant-pulse {
+        .violet-pulse {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle, rgba(255, 70, 85, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(157, 78, 221, 0.2) 0%, transparent 70%);
             z-index: -1;
             animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
             opacity: 0;
@@ -209,7 +190,7 @@
             height: 3px;
             border-radius: 50%;
             background: #fff;
-            box-shadow: 0 0 10px 2px var(--valorant-red);
+            box-shadow: 0 0 10px 2px var(--valorant-violet);
             animation: spark-fly 1s ease-out forwards;
             opacity: 0;
         }
@@ -231,12 +212,12 @@
                 font-size: 3.5rem;
             }
             
-            .projects-container {
-                grid-template-columns: 1fr;
-            }
-            
             .project-title {
                 font-size: 2rem;
+            }
+            
+            .project-link {
+                padding: 20px;
             }
         }
     </style>
@@ -247,11 +228,8 @@
         <source src="valorant/background.mp4" type="video/mp4">
     </video>
     
-    <!-- Overlay dla lepszej czytelności -->
-    <div class="overlay"></div>
-    
-    <!-- Efekt specjalny -->
-    <div class="valorant-pulse"></div>
+    <!-- Efekt fioletowej fali -->
+    <div class="violet-pulse"></div>
     
     <!-- Główna zawartość - pojawia się po 2 sekundach -->
     <div class="main-content">
@@ -299,7 +277,7 @@
             
             // Efekt iskier po 2 sekundach
             setTimeout(() => {
-                createSparks(20);
+                createSparks(15);
             }, 2000);
             
             // Funkcja tworząca iskry
@@ -323,10 +301,6 @@
                         spark.style.setProperty('--spark-y', `${endY}px`);
                         spark.style.left = `${startX}px`;
                         spark.style.top = `${startY}px`;
-                        
-                        // Losowy kolor w odcieniach VALORANT
-                        const hue = 350 + Math.random() * 20;
-                        spark.style.boxShadow = `0 0 10px 2px hsl(${hue}, 100%, 60%)`;
                         
                         document.body.appendChild(spark);
                         
