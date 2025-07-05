@@ -14,6 +14,12 @@
             color: #ffffff;
             position: relative;
             overflow-x: hidden;
+            opacity: 0;
+            animation: fade-in 0.5s ease-in 2s forwards;
+        }
+
+        @keyframes fade-in {
+            to { opacity: 1; }
         }
 
         #video-background {
@@ -46,8 +52,18 @@
             margin-top: 40px;
             text-transform: uppercase;
             letter-spacing: 4px;
-            animation: glow 2s infinite alternate;
+            animation: glow 2s infinite alternate, 
+                       slide-from-top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.2s forwards;
+            transform: translateY(-100px);
+            opacity: 0;
             z-index: 1;
+        }
+
+        @keyframes slide-from-top {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes glow {
@@ -63,7 +79,21 @@
             display: flex;
             justify-content: center;
             margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fade-slide-up 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
+
+        @keyframes fade-slide-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container:nth-child(2) { animation-delay: 2.4s; }
+        .container:nth-child(3) { animation-delay: 2.6s; }
+        .container:nth-child(4) { animation-delay: 2.8s; }
 
         .project-button {
             display: block;
@@ -78,6 +108,12 @@
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
             box-shadow: 0px 4px 20px rgba(157, 78, 221, 0.3);
             z-index: 1;
+            transform: scale(0.8);
+            animation: scale-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes scale-in {
+            to { transform: scale(1); }
         }
              
         .project-button::before {
@@ -100,7 +136,7 @@
         }
 
         .project-button:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) !important;
             box-shadow: 0px 8px 40px rgba(157, 78, 221, 0.5);
         }
 
@@ -153,20 +189,38 @@
             border: 2px solid rgba(157, 78, 221, 1);
         }
 
-        .container {
-            animation: slide-in 1s ease forwards;
+        /* VALORANT-style animation elements */
+        .valorant-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 70, 85, 0.2), rgba(80, 80, 255, 0.2));
+            z-index: -1;
             opacity: 0;
+            animation: overlay-fade 1s ease-in 1.5s forwards;
         }
 
-        @keyframes slide-in {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes overlay-fade {
+            to { opacity: 0.3; }
+        }
+
+        .valorant-pulse {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(255, 70, 85, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 3s ease-out 1s forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
         }
 
         @media (max-width: 768px) {
@@ -177,12 +231,16 @@
     </style>
 </head>
 <body>
-
+    <!-- Video background -->
     <video id="video-background" autoplay muted>
         <source src="valorant/background.mp4" type="video/mp4">
-
     </video>
-
+    
+    <!-- VALORANT-style animation elements -->
+    <div class="valorant-pulse"></div>
+    <div class="valorant-overlay"></div>
+    
+    <!-- Fallback background -->
     <div class="fallback-background"></div>
 
     <h1>Projekty VALORANT</h1>
@@ -218,19 +276,36 @@
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('video-background');
             
-
+            // Ustaw wideo na zapętlone, ale zatrzymaj na ostatniej klatce
             video.addEventListener('ended', function() {
                 video.pause();
-
                 video.currentTime = video.duration - 0.1;
             }, false);
             
-
+            // Spróbuj uruchomić wideo
             video.play().catch(error => {
                 console.log("Automatyczne odtwarzanie wideo zablokowane:", error);
-
                 document.querySelector('.fallback-background').style.zIndex = '-1';
             });
+
+            // Dodatkowy efekt VALORANT - losowe iskry
+            setTimeout(() => {
+                for(let i = 0; i < 8; i++) {
+                    createSpark();
+                }
+            }, 2000);
+
+            function createSpark() {
+                const spark = document.createElement('div');
+                spark.className = 'valorant-spark';
+                spark.style.left = `${Math.random() * 100}%`;
+                spark.style.top = `${Math.random() * 100}%`;
+                document.body.appendChild(spark);
+                
+                setTimeout(() => {
+                    spark.remove();
+                }, 1000);
+            }
         });
     </script>
 </body>
