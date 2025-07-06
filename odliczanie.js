@@ -51,4 +51,4 @@ function updateCountdown(targetDate, elementId) {
   }
   
 updateCountdown(new Date(2024, 11, 15, 17, 0, 0), 'countdownOP');
-  updateCountdown(new Date(2024, 11, 29, 17, 30, 0), 'updatecountdown');
+  updateCountdown(new Date(2026, 2, 18, 0, 0, 0), 'updatecountdown');
