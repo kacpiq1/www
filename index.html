@@ -664,7 +664,53 @@
     </div>
 </section>
 
-	<!-- Modal -->
+	<div class="modal-overlay active" id="maintenanceModal">
+    <div class="official-notification">
+        <button class="modal-close" id="closeMaintenanceModal">×</button>
+        <div class="official-header">
+            <div class="official-icon">!</div>
+            <h3 class="official-title">WAŻNA INFORMACJA</h3>
+        </div>
+        <div class="official-content">
+            <p>Informujemy, że w związku z gruntowną przebudową strony kacpiq.pl, serwis będzie tymczasowo niedostępny w następujących terminach:</p>
+            
+            <div class="official-dates">
+                <strong>Od:</strong> 1 sierpnia 2024, godz. 15:00<br>
+                <strong>Do:</strong> 14 sierpnia 2024, godz. 23:59
+            </div>
+            
+            <p>Przepraszamy za utrudnienia i prosimy o cierpliwość. Nowa wersja strony będzie szybsza, bardziej funkcjonalna i atrakcyjna wizualnie.</p>
+            
+            <div class="official-contact">
+                <p>W pilnych sprawach prosimy o kontakt:</p>
+                <a href="mailto:kontakt@kacpiq.pl" class="official-email">kontakt@kacpiq.pl</a>
+            </div>
+            
+            <ul class="official-list">
+                <li>Wszystkie dane użytkowników pozostaną bezpieczne</li>
+                <li>Po zakończeniu prac otrzymasz powiadomienie</li>
+                <li>Nowa wersja będzie kompatybilna z urządzeniami mobilnymi</li>
+            </ul>
+        </div>
+        <div class="official-footer">
+            Dziękujemy za zrozumienie • Zespół kacpiq.pl
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('closeMaintenanceModal').addEventListener('click', function() {
+        document.getElementById('maintenanceModal').classList.remove('active');
+        // Zapisz w localStorage, że użytkownik widział już powiadomienie
+        localStorage.setItem('maintenanceModalSeen', 'true');
+    });
+
+    // Sprawdź czy użytkownik już widział powiadomienie
+    if(!localStorage.getItem('maintenanceModalSeen')) {
+        document.getElementById('maintenanceModal').classList.add('active');
+    }
+</script>
+	<!-- Modal 
     <div class="modal-overlay active" id="notificationModal">
         <div class="official-notification">
             <button class="modal-close" id="closeModal">&times;</button>
@@ -734,7 +780,7 @@
                 }
             });
         });
-    </script>
+    </script>-->
 
 <section class="contact" id="kontakt">
 	<div class="blur-overlay-123xyz">
