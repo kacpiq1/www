@@ -3,126 +3,634 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kacpiq.pl - Przeprowadzamy modernizację</title>
+    <title>kacpiq.pl - Trwa przebudowa | Nowa odsłona już wkrótce!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --accent: #0f3460;
-            --text: #e6e6e6;
-            --highlight: #00b4d8;
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --danger-color: #f72585;
+            --success-color: #4cc9f0;
+            --text-primary: #212529;
+            --text-secondary: #343a40;
+            --text-muted: #6c757d;
+            --bg-card: #ffffff;
+            --border-color: #dee2e6;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--success-color));
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--text);
-            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(67, 97, 238, 0.1) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 70%, rgba(72, 149, 239, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Główne kontenery */
+        .maintenance-hero {
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
+            padding: 5rem 2rem;
             text-align: center;
-            padding: 40px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--highlight), #00e1ff);
+
+        /* Animowana ikona */
+        .maintenance-icon {
+            font-size: 10rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            position: relative;
+            animation: float 3s ease-in-out infinite, pulse 2s infinite;
+        }
+
+        .maintenance-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 10px;
+            background: rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: shadowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes shadowPulse {
+            0%, 100% { width: 60px; opacity: 0.3; }
+            50% { width: 80px; opacity: 0.2; }
+        }
+
+        /* Nagłówek */
+        .maintenance-title {
+            font-size: 4.5rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-        
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            font-weight: 800;
-            letter-spacing: -2px;
-        }
-        
-        .status {
+            position: relative;
             display: inline-block;
-            padding: 8px 16px;
-            background-color: var(--accent);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
+        }
+
+        .maintenance-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* Tekst */
+        .maintenance-text {
+            font-size: 2rem;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Countdown */
+        .countdown-container {
+            margin: 3rem 0;
+            perspective: 1000px;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--box-shadow);
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-10px) rotateX(10deg);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.2);
+        }
+
+        .countdown-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .countdown-number::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: rgba(67, 97, 238, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: 600;
         }
-        
-        p {
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            opacity: 0.9;
+
+        /* Progress bar */
+        .progress-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 4rem auto;
+            background: rgba(233, 236, 239, 0.8);
+            border-radius: 10px;
+            height: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
-        .highlight {
-            color: var(--highlight);
-            font-weight: 600;
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            width: 35%;
+            position: relative;
+            overflow: hidden;
+            transition: width 1s ease;
         }
-        
-        .contact {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                          rgba(255,255,255,0) 0%, 
+                          rgba(255,255,255,0.8) 50%, 
+                          rgba(255,255,255,0) 100%);
+            animation: progressShine 2s infinite;
         }
-        
-        .contact a {
-            color: var(--highlight);
-            text-decoration: none;
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Kontakt */
+        .contact-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--box-shadow);
+            max-width: 600px;
+            margin: 3rem auto 0;
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
-        
-        .contact a:hover {
-            text-decoration: underline;
+
+        .contact-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .contact-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .contact-text {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 1.8rem;
+            border-radius: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-accent);
+            z-index: -1;
+            transition: width 0.5s ease;
+        }
+
+        .contact-btn:hover::before {
+            width: 100%;
+        }
+
+        /* Social media */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: var(--primary-color);
+            font-size: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            color: white;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            z-index: -1;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .social-link:hover::before {
+            transform: scale(1);
+        }
+
+        /* Footer */
+        .maintenance-footer {
+            margin-top: 5rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+        }
+
+        /* Dekoracje */
+        .decoration {
+            position: absolute;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .decoration-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 10rem;
+            color: rgba(67, 97, 238, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decoration-2 {
+            bottom: 15%;
+            right: 5%;
+            font-size: 8rem;
+            color: rgba(72, 149, 239, 0.1);
+            animation: float 5s ease-in-out infinite reverse;
+        }
+
+        .decoration-3 {
+            top: 30%;
+            right: 15%;
+            font-size: 6rem;
+            color: rgba(76, 201, 240, 0.1);
+            animation: float 4s ease-in-out infinite 1s;
+        }
+
+        /* Animacje */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsywność */
+        @media (max-width: 768px) {
+            .maintenance-title {
+                font-size: 3.5rem;
             }
             
-            h1 {
+            .maintenance-text {
                 font-size: 1.8rem;
             }
             
-            .logo {
-                font-size: 2.2rem;
+            .countdown-item {
+                padding: 2rem;
+                min-width: 100px;
+            }
+            
+            .countdown-number {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maintenance-title {
+                font-size: 2.8rem;
+            }
+            
+            .maintenance-text {
+                font-size: 1.6rem;
+            }
+            
+            .countdown {
+                gap: 1rem;
+            }
+            
+            .countdown-item {
+                padding: 1.5rem;
+                min-width: 80px;
+            }
+            
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+            
+            .contact-box {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">kacpiq.pl</div>
-        <div class="status">TYMCZASOWO NIEDOSTĘPNE</div>
-        <h1>Przeprowadzamy niezbędne aktualizacje</h1>
-        <p>Nasza strona jest obecnie w trakcie <span class="highlight">modernizacji systemów zabezpieczeń</span> i infrastruktury technicznej, aby zapewnić Ci jeszcze lepsze doświadczenia.</p>
-        <p>Pracujemy nad wprowadzeniem nowych funkcjonalności i ulepszeń, które znacząco podniosą jakość świadczonych usług.</p>
-        <p>Przepraszamy za utrudnienia i prosimy o cierpliwość. Wracamy już wkrótce!</p>
+    <div class="maintenance-hero">
+        <!-- Dekoracje tła -->
+        <div class="decoration decoration-1">
+            <i class="fas fa-cog fa-spin"></i>
+        </div>
+        <div class="decoration decoration-2">
+            <i class="fas fa-hammer"></i>
+        </div>
+        <div class="decoration decoration-3">
+            <i class="fas fa-tools"></i>
+        </div>
+
+        <!-- Główna zawartość -->
+        <div class="maintenance-icon">
+            <i class="fas fa-hard-hat"></i>
+        </div>
         
-        <div class="contact">
-            W pilnych sprawach skontaktuj się z nami: <a href="mailto:kontakt@kacpiq.pl">kontakt@kacpiq.pl</a>
+        <h1 class="maintenance-title">Trwa przebudowa strony</h1>
+        
+        <p class="maintenance-text">
+            Pracujemy nad nową, lepszą wersją strony kacpiq.pl. Przepraszamy za utrudnienia i prosimy o cierpliwość.
+        </p>
+        
+        <div class="countdown-container">
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">13</div>
+                    <div class="countdown-label">dni</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">23</div>
+                    <div class="countdown-label">godziny</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">59</div>
+                    <div class="countdown-label">minuty</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">59</div>
+                    <div class="countdown-label">sekundy</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-text">
+                <span>Rozpoczęcie: 01.08.2025</span>
+                <span id="progressPercent">35%</span>
+                <span>Zakończenie: 14.08.2025</span>
+            </div>
+        </div>
+        
+        <div class="contact-box">
+            <h3 class="contact-title">Pilny kontakt</h3>
+            <p class="contact-text">Jeśli potrzebujesz pilnie się z nami skontaktować, napisz na adres:</p>
+            <div style="text-align: center;">
+                <a href="mailto:kontakt@kacpiq.pl" class="contact-btn">
+                    <i class="fas fa-envelope" style="margin-right: 8px;"></i> kontakt@kacpiq.pl
+                </a>
+            </div>
+        </div>
+        
+        <div class="social-links">
+            <a href="https://github.com/kacpiq1" style="text-decoration: none;" class="social-link" title="Github"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/kacpiq.pl/?utm_source=ig_web_button_share_sheet" style="text-decoration: none;" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+        
+        <div class="maintenance-footer">
+            &copy; 2025 kacpiq.pl | Wszelkie prawa zastrzeżone
         </div>
     </div>
+
+    <script>
+        // Aktualizacja countdown i progress bar
+        function updateCountdown() {
+            const endDate = new Date('2025-08-14T23:59:00').getTime();
+            const startDate = new Date('2025-08-01T15:00:00').getTime();
+            const now = new Date().getTime();
+            
+            // Obliczanie postępu prac (0-100%)
+            let progress = 0;
+            let totalDuration = endDate - startDate;
+            let elapsed = now - startDate;
+            
+            // Jeśli jeszcze nie rozpoczęto
+            if (now < startDate) {
+                progress = 0;
+            } 
+            // Jeśli już po terminie
+            else if (now > endDate) {
+                progress = 100;
+            } 
+            // W trakcie
+            else {
+                progress = (elapsed / totalDuration) * 100;
+                // Płynna aktualizacja co sekundę
+                progress += (100 / totalDuration * 1000) * 0.2; // Dodajemy część następnej sekundy dla płynności
+            }
+            
+            // Ograniczenie wartości progress (0-100)
+            progress = Math.min(Math.max(progress, 0), 100);
+            
+            // Aktualizacja paska postępu
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.style.transition = 'width 0.5s ease-out';
+            
+            // Aktualizacja procentów (z animacją przy zmianach)
+            const percentElement = document.getElementById('progressPercent');
+            const currentPercent = parseInt(percentElement.textContent);
+            const newPercent = Math.round(progress);
+            
+            if (newPercent !== currentPercent) {
+                percentElement.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    percentElement.style.transform = 'scale(1)';
+                }, 300);
+                percentElement.textContent = `${newPercent}%`;
+            }
+            
+            // Countdown
+            const distance = endDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = `
+                    <div style="font-size: 2rem; color: var(--success-color); padding: 2rem; background: white; border-radius: 1.5rem; box-shadow: var(--box-shadow);">
+                        <i class="fas fa-check-circle" style="margin-right: 10px;"></i> Strona powinna być już dostępna!
+                    </div>
+                `;
+                progressBar.style.width = '100%';
+                percentElement.textContent = '100%';
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Inicjalizacja
+        updateCountdown();
+        setInterval(updateCountdown, 1000); // Aktualizuj co sekundę
+        
+        // Efekt "pulsowania" dla paska postępu
+        setInterval(() => {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.boxShadow = '0 0 10px rgba(67, 97, 238, 0.5)';
+            setTimeout(() => {
+                progressBar.style.boxShadow = 'none';
+            }, 500);
+        }, 2000);
+</script>
 </body>
 </html>
