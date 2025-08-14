@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kacpiq.pl - Niedostępne</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --danger-color: #f72585;
+            --success-color: #4cc9f0;
+            --text-primary: #212529;
+            --text-secondary: #343a40;
+            --text-muted: #6c757d;
+            --bg-card: #ffffff;
+            --border-color: #dee2e6;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--success-color));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(67, 97, 238, 0.1) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 70%, rgba(72, 149, 239, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .maintenance-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            position: relative;
+            animation: float 3s ease-in-out infinite, pulse 2s infinite;
+        }
+
+        .maintenance-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 6px;
+            background: rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: shadowPulse 3s ease-in-out infinite;
+        }
+
+        .maintenance-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .maintenance-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .maintenance-text {
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .login-container {
+            margin: 1.5rem 0;
+            perspective: 1000px;
+        }
+
+        .btn {
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 0.6rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            min-width: 220px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: var(--text-muted);
+        }
+
+        .btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        .btn .btn-text {
+            display: inline;
+        }
+
+        .btn .google-logo {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        .btn.loading .btn-text,
+        .btn.loading .google-logo {
+            display: none;
+        }
+
+        .user-info {
+            display: none;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--box-shadow);
+            max-width: 350px;
+            margin: 1.5rem auto 0;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .user-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .user-info.show {
+            display: block;
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-color);
+            opacity: 0;
+            z-index: 9999;
+        }
+
+        .decoration {
+            position: absolute;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .decoration-1 {
+            top: 15%;
+            left: 10%;
+            font-size: 6rem;
+            color: rgba(67, 97, 238, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decoration-2 {
+            bottom: 20%;
+            right: 10%;
+            font-size: 5rem;
+            color: rgba(72, 149, 239, 0.1);
+            animation: float 5s ease-in-out infinite reverse;
+        }
+
+        .decoration-3 {
+            top: 35%;
+            right: 20%;
+            font-size: 4rem;
+            color: rgba(76, 201, 240, 0.1);
+            animation: float 4s ease-in-out infinite 1s;
+        }
+
+        .google-logo {
+            margin-left: 8px; 
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shadowPulse {
+            0%, 100% { width: 40px; opacity: 0.3; }
+            50% { width: 50px; opacity: 0.2; }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration decoration-1">
+        <i class="fas fa-cog"></i>
+    </div>
+    <div class="decoration decoration-2">
+        <i class="fas fa-tools"></i>
+    </div>
+    <div class="decoration decoration-3">
+        <i class="fas fa-server"></i>
+    </div>
+
+    <div class="main-container">
+        <div class="maintenance-icon">
+            <i class="fas fa-cloud"></i>
+        </div>
+        
+        <h1 class="maintenance-title">Strona tymczasowo niedostępna</h1>
+        
+        <p class="maintenance-text">
+            Z powodu święta <span class="highlight">Najświętszej Maryi Panny (15.08.2025)</span>, strona jest chwilowo wyłączona.
+        </p>
+        
+        <p class="maintenance-text">
+            Aktualizacja zostanie wydana w <span class="highlight">sobotę (16.08.2025)</span>. <strong>Wówczas możesz się już teraz zalogować się do nowego systemu.</strong>
+        </p>
+        
+        <div class="login-container">
+            <button id="googleLogin" class="btn">
+                <div class="spinner"></div>
+                <span class="btn-text">Zaloguj się przez Googleㅤ</span>
+                <img class="google-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+            </button>
+            
+            <div id="userInfo" class="user-info">
+                <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+                <div class="user-name" id="userName"></div>
+                <div class="user-email" id="userEmail"></div>
+                <div class="success-message">Pomyślnie zarejestrowano do najnowszego systemu kacpiq.pl!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKEfWh7TjKOUlRV0euRlDTKUBYvqpVLso",
+            authDomain: "kacpiq-pl-43517.firebaseapp.com",
+            projectId: "kacpiq-pl-43517",
+            storageBucket: "kacpiq-pl-43517.appspot.com",
+            messagingSenderId: "177654542790",
+            appId: "1:177654542790:web:53156926a8f59f4e3bc2c7",
+            measurementId: "G-4SKM4BBVP6"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        
+        // Elements
+        const googleLoginBtn = document.getElementById('googleLogin');
+        const btnSpinner = googleLoginBtn.querySelector('.spinner');
+        const btnText = googleLoginBtn.querySelector('.btn-text');
+        const googleLogo = googleLoginBtn.querySelector('.google-logo');
+        const userInfo = document.getElementById('userInfo');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        
+        // Set initial loading state
+        setButtonLoading(true, "Sprawdzanie statusu...");
+        
+        // Check auth state on load
+        checkAuthState();
+        
+        // Google Login
+        googleLoginBtn.addEventListener('click', signInWithGoogle);
+        
+        function checkAuthState() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    // User is signed in
+                    showUserInfo(user);
+                    googleLoginBtn.style.display = 'none';
+                } else {
+                    // No user is signed in
+                    setButtonLoading(false, "Zaloguj się przez Googleㅤ");
+                }
+            });
+        }
+        
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            setButtonLoading(true, "Logowanie...");
+            
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    // Success
+                    const user = result.user;
+                    showUserInfo(user);
+                    createConfetti();
+                    googleLoginBtn.style.display = 'none';
+                })
+                .catch((error) => {
+                    // Error
+                    console.error("Błąd logowania:", error);
+                    setButtonLoading(false, "Zaloguj się przez Googleㅤ");
+                    showErrorAnimation();
+                    
+                    if (error.code === 'auth/popup-closed-by-user') {
+                        console.log("Użytkownik zamknął okno logowania");
+                    }
+                });
+        }
+        
+        function setButtonLoading(isLoading, text = "") {
+            if (isLoading) {
+                googleLoginBtn.disabled = true;
+                btnSpinner.style.display = 'block';
+                btnText.style.display = 'block';
+                googleLogo.style.display = 'none';
+                if (text) btnText.textContent = text;
+            } else {
+                googleLoginBtn.disabled = false;
+                btnSpinner.style.display = 'none';
+                btnText.style.display = 'inline';
+                googleLogo.style.display = 'inline-block';
+                if (text) btnText.textContent = text;
+            }
+        }
+        
+        function showErrorAnimation() {
+            googleLoginBtn.style.transform = 'translateX(0)';
+            googleLoginBtn.style.backgroundColor = '#ff7675';
+            
+            // Shake animation
+            let start = null;
+            const duration = 500;
+            const shake = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const shakeX = Math.sin(progress / 50) * 10;
+                
+                googleLoginBtn.style.transform = `translateX(${shakeX}px)`;
+                
+                if (progress < duration) {
+                    requestAnimationFrame(shake);
+                } else {
+                    googleLoginBtn.style.transform = 'translateX(0)';
+                    googleLoginBtn.style.backgroundColor = '';
+                    googleLoginBtn.style.background = 'var(--gradient-primary)';
+                }
+            };
+            
+            requestAnimationFrame(shake);
+        }
+        
+        function showUserInfo(user) {
+            userAvatar.src = user.photoURL;
+            userName.textContent = user.displayName;
+            userEmail.textContent = user.email;
+            userInfo.classList.add('show');
+        }
+        
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.width = `${Math.random() * 8 + 4}px`;
+                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                confetti.style.opacity = '1';
+                confetti.style.position = 'fixed';
+                confetti.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
+                
+                document.body.appendChild(confetti);
+                
+                const keyframes = `
+                    @keyframes fall {
+                        0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+                        100% { transform: translateY(100vh) rotate(${Math.random() * 360}deg); opacity: 0; }
+                    }
+                `;
+                
+                const style = document.createElement('style');
+                style.innerHTML = keyframes;
+                document.head.appendChild(style);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                    style.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
