@@ -24,6 +24,10 @@
             --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            --meta-color: #0668E1;
+            --facebook-color: #ffffff;
+            --instagram-color: #E4405F;
+            --github-color: #333333;
         }
 
         * {
@@ -364,6 +368,86 @@
             margin-top: 0.5rem;
         }
 
+        .social-links {
+            display: flex;
+            flex-direction: initial;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.6rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1), transparent);
+            z-index: 1;
+        }
+
+        .social-btn-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .social-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .social-name {
+            font-size: 0.9rem;
+        }
+
+        .verified-badge {
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+        }
+
+        .social-meta {
+            background: var(--meta-color);
+        }
+
+        .social-facebook {
+            background: var(--facebook-color);
+        }
+
+        .social-instagram {
+            background: var(--instagram-color);
+        }
+
+        .social-github {
+            background: var(--github-color);
+        }
+
         .confetti {
             position: absolute;
             width: 8px;
@@ -485,6 +569,14 @@
                 padding: 0.7rem 1.5rem;
                 font-size: 0.9rem;
             }
+            
+            .social-btn {
+                padding: 0.7rem 1rem;
+            }
+            
+            .social-name {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -576,6 +668,33 @@
                 <div class="user-email" id="userEmail"></div>
                 <div class="success-message">Pomyślnie zarejestrowano do najnowszego systemu kacpiq.pl!</div>
             </div>
+        </div>
+
+        <!-- Social Media Links -->
+        <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=100076822801140" target="_blank" class="social-btn social-facebook">
+                <div class="social-btn-content">
+                    <i class="fab fa-facebook-f social-icon" style="color: #1877F2;"></i>
+                    <span class="social-name" style="color: black;">Kacper B.</span>
+                    <img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=778731283935334&version=1760038331" alt="Zweryfikowany" class="verified-badge">
+                </div>
+            </a>
+            
+            <a href="https://www.instagram.com/kacpi_b1" target="_blank" class="social-btn social-instagram">
+                <div class="social-btn-content">
+                    <i class="fab fa-instagram social-icon"></i>
+                    <span class="social-name">@kacpi_b1</span>
+                    <img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=778731283935334&version=1760038331" alt="Zweryfikowany" class="verified-badge">
+                </div>
+            </a>
+            
+            <a href="https://github.com/kacpiq1" target="_blank" class="social-btn social-github">
+                <div class="social-btn-content">
+                    <i class="fab fa-github social-icon"></i>
+                    <span class="social-name">kacpiq</span>
+                </div>
+            </a>
+            
         </div>
     </div>
 
