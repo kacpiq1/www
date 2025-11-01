@@ -37,9 +37,9 @@
             background-color: #f8f9fa;
             color: var(--text-primary);
             line-height: 1.6;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         body::before {
@@ -60,10 +60,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             padding: 2rem;
             text-align: center;
             position: relative;
+            width: 100%;
+            overflow: hidden;
         }
 
         .maintenance-icon {
@@ -124,9 +126,122 @@
             font-weight: 600;
         }
 
+        .glitch-banner {
+            background: linear-gradient(135deg, #ff4d8d, #6c5ce7);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.6rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+            max-width: 400px;
+            width: 100%;
+            animation: pulse 2s infinite;
+        }
+
+        .glitch-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(108, 92, 231, 0.4);
+        }
+
+        .glitch-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .glitch-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .glitch-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .glitch-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: slideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .glitch-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            z-index: 10;
+        }
+
+        .glitch-modal-close:hover {
+            color: var(--primary-color);
+        }
+
+        .glitch-modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #6c5ce7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glitch-modal-text {
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .glitch-modal-date {
+            font-weight: 600;
+            color: #ff4d8d;
+        }
+
+        .domain-example {
+            display: inline-block;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+            margin: 2px 0;
+        }
+
         .login-container {
             margin: 1.5rem 0;
             perspective: 1000px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .btn {
@@ -146,7 +261,7 @@
             overflow: hidden;
             z-index: 1;
             box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-            min-width: 220px;
+            width: 100%;
         }
 
         .btn:hover:not(:disabled) {
@@ -178,7 +293,7 @@
         .btn .google-logo {
             width: 18px;
             height: 18px;
-            margin-right: 8px;
+            margin-left: 8px;
             display: inline-block;
         }
 
@@ -202,6 +317,7 @@
             position: relative;
             overflow: hidden;
             animation: slideUp 0.5s ease-out;
+            width: 100%;
         }
 
         .user-info::before {
@@ -266,30 +382,26 @@
 
         .decoration-1 {
             top: 15%;
-            left: 10%;
-            font-size: 6rem;
+            left: 5%;
+            font-size: 4rem;
             color: rgba(67, 97, 238, 0.1);
             animation: float 6s ease-in-out infinite;
         }
 
         .decoration-2 {
             bottom: 20%;
-            right: 10%;
-            font-size: 5rem;
+            right: 5%;
+            font-size: 3.5rem;
             color: rgba(72, 149, 239, 0.1);
             animation: float 5s ease-in-out infinite reverse;
         }
 
         .decoration-3 {
             top: 35%;
-            right: 20%;
-            font-size: 4rem;
+            right: 15%;
+            font-size: 3rem;
             color: rgba(76, 201, 240, 0.1);
             animation: float 4s ease-in-out infinite 1s;
-        }
-
-        .google-logo {
-            margin-left: 8px; 
         }
 
         @keyframes float {
@@ -315,6 +427,65 @@
             0%, 100% { width: 40px; opacity: 0.3; }
             50% { width: 50px; opacity: 0.2; }
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .maintenance-icon {
+                font-size: 4rem;
+            }
+            
+            .maintenance-title {
+                font-size: 1.8rem;
+            }
+            
+            .maintenance-text {
+                font-size: 1rem;
+            }
+            
+            .glitch-modal-content {
+                padding: 1.5rem;
+            }
+            
+            .glitch-modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .decoration-1, .decoration-2, .decoration-3 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maintenance-icon {
+                font-size: 3rem;
+            }
+            
+            .maintenance-title {
+                font-size: 1.5rem;
+            }
+            
+            .glitch-banner {
+                padding: 0.7rem 1rem;
+            }
+            
+            .glitch-text {
+                font-size: 0.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -328,6 +499,50 @@
         <i class="fas fa-server"></i>
     </div>
 
+    <div class="glitch-modal" id="glitchModal">
+        <div class="glitch-modal-content">
+            <button class="glitch-modal-close" id="glitchModalClose">&times;</button>
+            <h2 class="glitch-modal-title">
+                <img src="https://upload.wikimedia.org/wikipedia/en/1/13/Glitch_%28company%29_logo.svg" alt="Glitch Logo" class="glitch-logo">
+                Glitch zakończył hosting projektów
+            </h2>
+
+            <p class="glitch-modal-text">
+                <span class="glitch-modal-date">21 maja 2025 r.</span> zespół platformy <strong>Glitch</strong> ogłosił decyzję o zakończeniu hostingu wszystkich projektów i zamknięciu profili użytkowników.
+            </p>
+
+            <p class="glitch-modal-text">
+                <span class="glitch-modal-date">8 lipca 2025 r.</span> hosting został oficjalnie <strong>wyłączony</strong>, co oznacza, że projekty i strony działające pod domenami <code class="domain-example">*.glitch.me</code> przestały być dostępne bezpośrednio z serwerów Glitch.
+            </p>
+
+            <p class="glitch-modal-text">
+                Panel użytkownika (dashboard) pozostał dostępny do końca 2025 roku, aby umożliwić pobranie kodu źródłowego projektów oraz ustawienie przekierowań dla starych subdomen.
+            </p>
+
+            <p class="glitch-modal-text">
+                Decyzja Glitch była podyktowana <strong>rosnącymi kosztami utrzymania infrastruktury</strong> oraz <strong>trudnościami w dalszym rozwijaniu platformy</strong> w dotychczasowej formie.
+            </p>
+
+            <p class="glitch-modal-text">
+                Wszystkie <strong>moje projekty</strong>, które wcześniej działały na Glitch, zostały przeniesione i są teraz dostępne na mojej stronie pod adresem:
+                <br>
+                👉 <a href="https://kacpiq.pl/glitch" target="_blank" style="color:#6c5ce7; font-weight:600;">https://kacpiq.pl/glitch</a>
+            </p>
+
+            <p class="glitch-modal-text">
+                Dodatkowo, jeśli ktoś do końca <span class="glitch-modal-date">2026 roku</span> spróbuje wejść na dawny adres projektu w domenie <code class="domain-example">*.glitch.me</code> (np. <code class="domain-example">tryhard.glitch.me</code>), nastąpi automatyczne <strong>przekierowanie</strong> na nową lokalizację projektu na stronie <strong>kacpiq.pl/glitch</strong>.
+            </p>
+
+            <p class="glitch-modal-text">
+                Dzięki temu wszystkie starsze linki do moich projektów z Glitch będą nadal działały — ale będą prowadzić już do nowej wersji hostowanej na kacpiq.pl.
+            </p>
+
+            <p class="glitch-modal-text" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">
+                Źródło informacji: <a href="https://blog.glitch.com" target="_blank" style="color:inherit;">blog.glitch.com</a> · Aktualizacja komunikatu: listopad 2025
+            </p>
+        </div>
+    </div>
+
     <div class="main-container">
         <div class="maintenance-icon">
             <i class="fas fa-cloud"></i>
@@ -336,12 +551,17 @@
         <h1 class="maintenance-title">Strona tymczasowo niedostępna</h1>
         
         <p class="maintenance-text">
-            Przepraszamy,<span> spróbuj ponownie pózniej</span>, strona jest chwilowo wyłączona.
+            Przepraszamy, strona jest chwilowo wyłączona. Pracujemy nad ulepszeniem i przeniesieniem projektów z platformy Glitch.
         </p>
         
         <p class="maintenance-text">
-            Strona zostanie przywrócona ostatecznie w <span class="highlight">piątek (12.09.2025 o godz. 20:00)</span>. <strong>Wówczas możesz się już teraz zalogować się do nowego systemu.</strong>
+            Strona zostanie przywrócona ostatecznie w <span class="highlight">piątek (01.01.2026 o godz. 20:00)</span>. <strong>Wówczas możesz się już teraz zalogować się do nowego systemu.</strong>
         </p>
+        
+        <div class="glitch-banner" id="glitchBanner">
+            <img src="https://upload.wikimedia.org/wikipedia/en/1/13/Glitch_%28company%29_logo.svg" alt="Glitch Logo" class="glitch-logo">
+            <span class="glitch-text">Glitch zakończył hosting - kliknij tutaj</span>
+        </div>
         
         <div class="login-container">
             <button id="googleLogin" class="btn">
@@ -382,6 +602,27 @@
         const userAvatar = document.getElementById('userAvatar');
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
+        const glitchBanner = document.getElementById('glitchBanner');
+        const glitchModal = document.getElementById('glitchModal');
+        const glitchModalClose = document.getElementById('glitchModalClose');
+        
+        // Glitch banner functionality
+        glitchBanner.addEventListener('click', () => {
+            glitchModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        glitchModalClose.addEventListener('click', () => {
+            glitchModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        glitchModal.addEventListener('click', (e) => {
+            if (e.target === glitchModal) {
+                glitchModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
         
         // Set initial loading state
         setButtonLoading(true, "Sprawdzanie statusu...");
