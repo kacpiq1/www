@@ -195,11 +195,18 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+        }
+
+        .file-item:hover {
+            background-color: #f8f9fa;
         }
 
         .file-item i {
-            color: var(--primary-color);
             width: 16px;
+            text-align: center;
         }
 
         .folder {
@@ -209,6 +216,110 @@
 
         .file {
             color: var(--text-secondary);
+        }
+
+        .expanded {
+            background-color: #f1f3f4;
+        }
+
+        .file-content {
+            margin-top: 2rem;
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .file-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .file-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .close-file {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .close-file:hover {
+            background: #f8f9fa;
+            color: var(--text-primary);
+        }
+
+        .code-content {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 1px solid #e9ecef;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .file-action-btn {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .file-action-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
         }
 
         .github-link {
@@ -246,6 +357,10 @@
             .file-structure {
                 padding: 1rem;
             }
+            
+            .file-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -271,17 +386,37 @@
         <div id="errorContainer" class="error-message" style="display: none;"></div>
 
         <div class="file-structure">
-            <h2><i class="fas fa-folder-tree"></i> Struktura plików na GitHub</h2>
+            <h2><i class="fas fa-folder-tree"></i> Interaktywna struktura plików</h2>
+            
+            <div class="breadcrumb" id="breadcrumb">
+                <div class="breadcrumb-item active" data-path="">glitch</div>
+            </div>
+            
             <div id="fileTree" class="file-tree">
                 <div class="file-item">
-                    <i class="fas fa-folder"></i>
-                    <span class="folder">glitch/</span>
-                </div>
-                <div class="file-item" style="margin-left: 20px;">
                     <i class="fas fa-spinner fa-spin"></i>
                     <span>Ładowanie struktury...</span>
                 </div>
             </div>
+
+            <div id="fileContent" class="file-content" style="display: none;">
+                <div class="file-header">
+                    <div class="file-title" id="fileName">nazwa_pliku</div>
+                    <button class="close-file" id="closeFile">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="code-content" id="codeContent"></div>
+                <div class="file-actions">
+                    <button class="file-action-btn" id="copyCode">
+                        <i class="fas fa-copy"></i> Kopiuj kod
+                    </button>
+                    <button class="file-action-btn" id="rawFile" style="display: none;">
+                        <i class="fas fa-external-link-alt"></i> Otwórz raw
+                    </button>
+                </div>
+            </div>
+
             <a href="https://github.com/kacpiq1/www/tree/main/glitch" target="_blank" class="github-link">
                 <i class="fab fa-github"></i>
                 Zobacz pełną strukturę na GitHub
@@ -299,13 +434,23 @@
         const projectsContainer = document.getElementById('projectsContainer');
         const errorContainer = document.getElementById('errorContainer');
         const fileTreeElement = document.getElementById('fileTree');
+        const fileContentElement = document.getElementById('fileContent');
+        const breadcrumbElement = document.getElementById('breadcrumb');
+        const fileNameElement = document.getElementById('fileName');
+        const codeContentElement = document.getElementById('codeContent');
+        const closeFileButton = document.getElementById('closeFile');
+        const copyCodeButton = document.getElementById('copyCode');
+        const rawFileButton = document.getElementById('rawFile');
 
+        let currentPath = '';
+        let fileHistory = [];
+        let currentFileUrl = '';
         const glitchProjects = [
             {
                 name: "Tryhard",
-                description: "Gra przeglądarkowa z elementami rywalizacji",
-                icon: "fas fa-gamepad",
-                url: "https://kacpiq.pl/glitch/tryhardpl",
+                description: "Discordowy bot - zakończono wsparcie",
+                icon: "fas fa-robot",
+                url: "https://kacpiq.pl/glitch/tryhard",
                 githubPath: "tryhard"
             }
         ];
@@ -330,16 +475,18 @@
             loadingElement.style.display = 'none';
         }
 
-        async function fetchFileStructure() {
+        async function fetchFileStructure(path = '') {
             try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GLITCH_FOLDER}?ref=${GITHUB_BRANCH}`);
+                const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GLITCH_FOLDER}${path ? '/' + path : ''}?ref=${GITHUB_BRANCH}`;
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error('Nie udało się pobrać struktury plików');
                 }
 
                 const files = await response.json();
-                renderFileTree(files);
+                renderFileTree(files, path);
+                updateBreadcrumb(path);
                 
             } catch (error) {
                 console.error('Błąd podczas pobierania struktury:', error);
@@ -351,23 +498,129 @@
                 `;
             }
         }
-      
-        function renderFileTree(files, level = 0) {
+
+        function renderFileTree(files, currentPath) {
             let html = '';
             
-            files.forEach(item => {
-                const padding = level * 20;
+
+            const sortedFiles = files.sort((a, b) => {
+                if (a.type === b.type) {
+                    return a.name.localeCompare(b.name);
+                }
+                return a.type === 'dir' ? -1 : 1;
+            });
+
+            sortedFiles.forEach(item => {
                 const isFolder = item.type === 'dir';
+                const icon = isFolder ? 'fa-folder' : getFileIcon(item.name);
+                const itemClass = isFolder ? 'folder' : 'file';
                 
                 html += `
-                    <div class="file-item" style="margin-left: ${padding}px;">
-                        <i class="fas ${isFolder ? 'fa-folder' : 'fa-file'} ${isFolder ? 'folder' : 'file'}"></i>
-                        <span class="${isFolder ? 'folder' : 'file'}">${item.name}${isFolder ? '/' : ''}</span>
+                    <div class="file-item" data-type="${item.type}" data-name="${item.name}" data-path="${currentPath}" data-url="${item.download_url || ''}">
+                        <i class="fas ${icon} ${itemClass}"></i>
+                        <span class="${itemClass}">${item.name}${isFolder ? '/' : ''}</span>
                     </div>
                 `;
             });
 
             fileTreeElement.innerHTML = html;
+
+            fileTreeElement.querySelectorAll('.file-item').forEach(item => {
+                item.addEventListener('click', handleFileItemClick);
+            });
+        }
+
+        function handleFileItemClick(event) {
+            const item = event.currentTarget;
+            const type = item.dataset.type;
+            const name = item.dataset.name;
+            const path = item.dataset.path;
+            const fullPath = path ? `${path}/${name}` : name;
+
+            if (type === 'dir') {
+                currentPath = fullPath;
+                fetchFileStructure(fullPath);
+                fileHistory.push(fullPath);
+            } else {
+                openFile(name, item.dataset.url);
+            }
+        }
+
+        async function openFile(filename, fileUrl) {
+            try {
+                fileNameElement.textContent = filename;
+                codeContentElement.textContent = 'Ładowanie zawartości...';
+                fileContentElement.style.display = 'block';
+                currentFileUrl = fileUrl;
+
+                if (fileUrl) {
+                    rawFileButton.style.display = 'block';
+                    rawFileButton.onclick = () => window.open(fileUrl, '_blank');
+                } else {
+                    rawFileButton.style.display = 'none';
+                }
+
+                const response = await fetch(fileUrl);
+                if (!response.ok) {
+                    throw new Error('Nie udało się pobrać zawartości pliku');
+                }
+
+                const content = await response.text();
+                codeContentElement.textContent = content;
+
+                fileContentElement.scrollTop = 0;
+
+            } catch (error) {
+                console.error('Błąd podczas ładowania pliku:', error);
+                codeContentElement.textContent = `Błąd: ${error.message}`;
+            }
+        }
+
+        function updateBreadcrumb(path) {
+            const parts = path.split('/').filter(part => part !== '');
+            let breadcrumbHTML = '<div class="breadcrumb-item active" data-path="">glitch</div>';
+            
+            let currentPath = '';
+            parts.forEach((part, index) => {
+                currentPath += (currentPath ? '/' : '') + part;
+                const isLast = index === parts.length - 1;
+                
+                breadcrumbHTML += `
+                    <div class="breadcrumb-separator">/</div>
+                    <div class="breadcrumb-item ${isLast ? 'active' : ''}" data-path="${currentPath}">
+                        ${part}
+                    </div>
+                `;
+            });
+
+            breadcrumbElement.innerHTML = breadcrumbHTML;
+
+            breadcrumbElement.querySelectorAll('.breadcrumb-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const path = item.dataset.path;
+                    currentPath = path;
+                    fetchFileStructure(path);
+                });
+            });
+        }
+
+        function getFileIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            const iconMap = {
+                'html': 'fa-file-code',
+                'css': 'fa-file-code',
+                'js': 'fa-file-code',
+                'json': 'fa-file-code',
+                'md': 'fa-file-alt',
+                'txt': 'fa-file-alt',
+                'pdf': 'fa-file-pdf',
+                'jpg': 'fa-file-image',
+                'jpeg': 'fa-file-image',
+                'png': 'fa-file-image',
+                'gif': 'fa-file-image',
+                'svg': 'fa-file-image'
+            };
+            return iconMap[extension] || 'fa-file';
         }
 
         function showError(message) {
@@ -402,6 +655,23 @@
                 showError(error.message);
             }
         }
+
+        closeFileButton.addEventListener('click', () => {
+            fileContentElement.style.display = 'none';
+        });
+
+        copyCodeButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(codeContentElement.textContent);
+                const originalText = copyCodeButton.innerHTML;
+                copyCodeButton.innerHTML = '<i class="fas fa-check"></i> Skopiowano!';
+                setTimeout(() => {
+                    copyCodeButton.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Błąd kopiowania: ', err);
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', init);
 
