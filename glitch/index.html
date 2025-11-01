@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekty z Glitch - kacpiq.pl</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --success-color: #4cc9f0;
+            --text-primary: #212529;
+            --text-secondary: #343a40;
+            --text-muted: #6c757d;
+            --bg-card: #ffffff;
+            --border-color: #dee2e6;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .project-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .project-description {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 6px;
+        }
+
+        .project-link:hover {
+            background: rgba(67, 97, 238, 0.2);
+            transform: translateX(5px);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .file-structure {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .file-structure h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .file-tree {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-item i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .folder {
+            color: #e67e22;
+            font-weight: 600;
+        }
+
+        .file {
+            color: var(--text-secondary);
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .github-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-structure {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="https://kacpiq.pl" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Powrót do strony głównej
+        </a>
+
+        <div class="header">
+            <h1><i class="fas fa-cloud"></i> Projekty z Glitch</h1>
+            <p>Wszystkie moje projekty przeniesione z platformy Glitch</p>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Ładowanie projektów z GitHub...</p>
+        </div>
+
+        <div id="projectsContainer" class="projects-grid" style="display: none;"></div>
+
+        <div id="errorContainer" class="error-message" style="display: none;"></div>
+
+        <div class="file-structure">
+            <h2><i class="fas fa-folder-tree"></i> Struktura plików na GitHub</h2>
+            <div id="fileTree" class="file-tree">
+                <div class="file-item">
+                    <i class="fas fa-folder"></i>
+                    <span class="folder">glitch/</span>
+                </div>
+                <div class="file-item" style="margin-left: 20px;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Ładowanie struktury...</span>
+                </div>
+            </div>
+            <a href="https://github.com/kacpiq1/www/tree/main/glitch" target="_blank" class="github-link">
+                <i class="fab fa-github"></i>
+                Zobacz pełną strukturę na GitHub
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const GITHUB_USERNAME = 'kacpiq1';
+        const GITHUB_REPO = 'www';
+        const GITHUB_BRANCH = 'main';
+        const GLITCH_FOLDER = 'glitch';
+
+        const loadingElement = document.getElementById('loading');
+        const projectsContainer = document.getElementById('projectsContainer');
+        const errorContainer = document.getElementById('errorContainer');
+        const fileTreeElement = document.getElementById('fileTree');
+
+        const glitchProjects = [
+            {
+                name: "Tryhard",
+                description: "Gra przeglądarkowa z elementami rywalizacji",
+                icon: "fas fa-gamepad",
+                url: "https://kacpiq.pl/glitch/tryhardpl",
+                githubPath: "tryhard"
+            }
+        ];
+
+        function displayProjects() {
+            const projectsHTML = glitchProjects.map(project => `
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="${project.icon}"></i>
+                    </div>
+                    <h3 class="project-name">${project.name}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <a href="${project.url}" class="project-link" target="_blank">
+                        Otwórz projekt
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            `).join('');
+
+            projectsContainer.innerHTML = projectsHTML;
+            projectsContainer.style.display = 'grid';
+            loadingElement.style.display = 'none';
+        }
+
+        async function fetchFileStructure() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GLITCH_FOLDER}?ref=${GITHUB_BRANCH}`);
+                
+                if (!response.ok) {
+                    throw new Error('Nie udało się pobrać struktury plików');
+                }
+
+                const files = await response.json();
+                renderFileTree(files);
+                
+            } catch (error) {
+                console.error('Błąd podczas pobierania struktury:', error);
+                fileTreeElement.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Nie udało się załadować struktury plików: ${error.message}
+                    </div>
+                `;
+            }
+        }
+      
+        function renderFileTree(files, level = 0) {
+            let html = '';
+            
+            files.forEach(item => {
+                const padding = level * 20;
+                const isFolder = item.type === 'dir';
+                
+                html += `
+                    <div class="file-item" style="margin-left: ${padding}px;">
+                        <i class="fas ${isFolder ? 'fa-folder' : 'fa-file'} ${isFolder ? 'folder' : 'file'}"></i>
+                        <span class="${isFolder ? 'folder' : 'file'}">${item.name}${isFolder ? '/' : ''}</span>
+                    </div>
+                `;
+            });
+
+            fileTreeElement.innerHTML = html;
+        }
+
+        function showError(message) {
+            loadingElement.style.display = 'none';
+            errorContainer.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Błąd:</strong> ${message}
+                <br><br>
+                <button onclick="location.reload()" style="
+                    background: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-family: inherit;
+                ">
+                    <i class="fas fa-redo"></i> Spróbuj ponownie
+                </button>
+            `;
+            errorContainer.style.display = 'block';
+        }
+
+        async function init() {
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                displayProjects();
+                
+                await fetchFileStructure();
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            showError('Wystąpił nieoczekiwany błąd. Proszę odświeżyć stronę.');
+        });
+    </script>
+</body>
+</html>
