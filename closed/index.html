@@ -3,31 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kacpiq.pl - Niedostępne</title>
+    <title>kacpiq.pl - Liquid Glass</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <link rel="stylesheet" href="closed/style.css">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --primary-hover: #3a56d4;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
-            --danger-color: #f72585;
-            --success-color: #4cc9f0;
-            --text-primary: #212529;
-            --text-secondary: #343a40;
-            --text-muted: #6c757d;
-            --bg-card: #ffffff;
-            --border-color: #dee2e6;
-            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--success-color));
-            --meta-color: #0668E1;
-            --facebook-color: #ffffff;
-            --instagram-color: #E4405F;
-            --github-color: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --glass-blur: blur(12px);
+            --primary-color: rgba(255, 77, 141, 0.8);
+            --primary-hover: rgba(214, 66, 120, 0.8);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
         }
 
         * {
@@ -38,14 +30,25 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            background: transparent;
         }
 
+        /* Gradient Canvas Background */
+        .gradient-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* Liquid Glass Overlay */
         body::before {
             content: '';
             position: fixed;
@@ -53,12 +56,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(67, 97, 238, 0.1) 0%, transparent 50%), 
-                        radial-gradient(circle at 80% 70%, rgba(72, 149, 239, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 70%, rgba(88, 86, 214, 0.15) 0%, transparent 50%);
             z-index: -1;
             pointer-events: none;
         }
 
+        /* Main Container with Liquid Glass Effect */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -70,6 +74,20 @@
             position: relative;
             width: 100%;
             overflow: hidden;
+        }
+
+        /* Glass Morphism Elements */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-shadow);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 500px;
         }
 
         .maintenance-icon {
@@ -88,7 +106,7 @@
             transform: translateX(-50%);
             width: 40px;
             height: 6px;
-            background: rgba(67, 97, 238, 0.2);
+            background: rgba(0, 122, 255, 0.3);
             border-radius: 50%;
             filter: blur(3px);
             animation: shadowPulse 3s ease-in-out infinite;
@@ -97,7 +115,7 @@
         .maintenance-title {
             font-size: 2.2rem;
             margin-bottom: 1rem;
-            background: var(--gradient-primary);
+            background: rgba(255, 77, 141, 0.8);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -113,7 +131,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 3px;
-            background: var(--gradient-primary);
+            background: rgba(255, 77, 141, 0.8);
             border-radius: 2px;
         }
 
@@ -130,11 +148,12 @@
             font-weight: 600;
         }
 
+        /* Glitch Banner with Glass Effect */
         .glitch-banner {
-            background: linear-gradient(135deg, #ff4d8d, #6c5ce7);
+            background: linear-gradient(135deg, rgba(255, 77, 141, 0.8), rgba(108, 92, 231, 0.8));
             color: white;
             padding: 0.8rem 1.5rem;
-            border-radius: 0.6rem;
+            border-radius: 15px;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -146,6 +165,9 @@
             max-width: 400px;
             width: 100%;
             animation: pulse 2s infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .glitch-banner:hover {
@@ -163,6 +185,7 @@
             font-weight: 500;
         }
 
+        /* Glass Modal */
         .glitch-modal {
             display: none;
             position: fixed;
@@ -170,7 +193,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -180,9 +203,12 @@
         }
 
         .glitch-modal-content {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 2rem;
-            border-radius: 1rem;
+            border-radius: 20px;
             max-width: 600px;
             width: 100%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -212,7 +238,7 @@
         .glitch-modal-title {
             font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: #6c5ce7;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -222,6 +248,7 @@
             text-align: left;
             line-height: 1.6;
             margin-bottom: 1rem;
+            color: var(--text-secondary);
         }
 
         .glitch-modal-date {
@@ -231,16 +258,17 @@
 
         .domain-example {
             display: inline-block;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
             padding: 2px 6px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
-            color: #495057;
+            color: var(--text-secondary);
             margin: 2px 0;
         }
 
+        /* Login Container with Glass Effect */
         .login-container {
             margin: 1.5rem 0;
             perspective: 1000px;
@@ -253,10 +281,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #007AFF, #5E5CE6);
             color: white;
             padding: 0.8rem 1.8rem;
-            border-radius: 0.6rem;
+            border-radius: 15px;
             font-size: 1rem;
             border: none;
             cursor: pointer;
@@ -264,13 +292,14 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 6px 18px rgba(0, 122, 255, 0.4);
         }
 
         .btn:disabled {
@@ -310,12 +339,16 @@
             display: none;
         }
 
+        /* User Info with Glass Effect */
         .user-info {
             display: none;
-            background: var(--bg-card);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: var(--box-shadow);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
             max-width: 350px;
             margin: 1.5rem auto 0;
             position: relative;
@@ -331,7 +364,8 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, rgba(255, 77, 141, 0.8), #5E5CE6);
+            border-radius: 20px 20px 0 0;
         }
 
         .user-info.show {
@@ -345,7 +379,7 @@
             object-fit: cover;
             margin-bottom: 1rem;
             border: 2px solid var(--primary-color);
-            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 122, 255, 0.2);
         }
 
         .user-name {
@@ -362,7 +396,7 @@
         }
 
         .success-message {
-            color: var(--success-color);
+            color: #4cc9f0;
             font-weight: 600;
             font-size: 0.9rem;
             margin-top: 0.5rem;
@@ -373,8 +407,9 @@
             flex-direction: initial;
             gap: 0.8rem;
             margin-top: 1.5rem;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
+            justify-content: center;
         }
 
         .social-btn {
@@ -382,7 +417,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.8rem 1.2rem;
-            border-radius: 0.6rem;
+            border-radius: 15px;
             color: white;
             text-decoration: none;
             font-weight: 500;
@@ -390,6 +425,9 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .social-btn:hover {
@@ -433,59 +471,29 @@
         }
 
         .social-meta {
-            background: var(--meta-color);
+            background: rgba(6, 104, 225, 0.8);
         }
 
         .social-facebook {
-            background: var(--facebook-color);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .social-instagram {
-            background: var(--instagram-color);
+            background: rgba(228, 64, 95, 0.8);
         }
 
         .social-github {
-            background: var(--github-color);
+            background: rgba(51, 51, 51, 0.8);
         }
 
+        /* Animations */
         .confetti {
             position: absolute;
             width: 8px;
             height: 8px;
-            background-color: var(--accent-color);
+            background-color: #4895ef;
             opacity: 0;
             z-index: 9999;
-        }
-
-        .decoration {
-            position: absolute;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.4;
-        }
-
-        .decoration-1 {
-            top: 15%;
-            left: 5%;
-            font-size: 4rem;
-            color: rgba(67, 97, 238, 0.1);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .decoration-2 {
-            bottom: 20%;
-            right: 5%;
-            font-size: 3.5rem;
-            color: rgba(72, 149, 239, 0.1);
-            animation: float 5s ease-in-out infinite reverse;
-        }
-
-        .decoration-3 {
-            top: 35%;
-            right: 15%;
-            font-size: 3rem;
-            color: rgba(76, 201, 240, 0.1);
-            animation: float 4s ease-in-out infinite 1s;
         }
 
         @keyframes float {
@@ -542,19 +550,15 @@
             .glitch-modal-title {
                 font-size: 1.3rem;
             }
-            
-            .decoration-1, .decoration-2, .decoration-3 {
-                display: none;
-            }
 
-.social-links {
-            display: flex;
-            flex-direction: inherit;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            max-width: 200px;
-            width: 100%;
-        }
+            .social-links {
+                display: flex;
+                flex-direction: inherit;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+                max-width: 200px;
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -590,16 +594,10 @@
     </style>
 </head>
 <body>
-    <div class="decoration decoration-1">
-        <i class="fas fa-cog"></i>
-    </div>
-    <div class="decoration decoration-2">
-        <i class="fas fa-tools"></i>
-    </div>
-    <div class="decoration decoration-3">
-        <i class="fas fa-server"></i>
-    </div>
+    <!-- Gradient Canvas Background -->
+    <div class="gradient-canvas"></div>
 
+    <!-- Glitch Modal -->
     <div class="glitch-modal" id="glitchModal">
         <div class="glitch-modal-content">
             <button class="glitch-modal-close" id="glitchModalClose">&times;</button>
@@ -644,20 +642,23 @@
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main-container">
-        <div class="maintenance-icon">
-            <i class="fas fa-cloud"></i>
+        <div class="glass-card">
+            <div class="maintenance-icon">
+                <i class="fas fa-cloud"></i>
+            </div>
+            
+            <h1 class="maintenance-title">Strona tymczasowo niedostępna</h1>
+            
+            <p class="maintenance-text">
+                Przepraszamy, strona jest chwilowo wyłączona. Pracujemy nad ulepszeniem i przeniesieniem projektów z platformy Glitch.
+            </p>
+            
+            <p class="maintenance-text">
+                Strona zostanie przywrócona ostatecznie w <span class="highlight">piątek (01.01.2026 o godz. 20:00)</span>. <strong>Wówczas możesz się już teraz zalogować się do nowego systemu.</strong>
+            </p>
         </div>
-        
-        <h1 class="maintenance-title">Strona tymczasowo niedostępna</h1>
-        
-        <p class="maintenance-text">
-            Przepraszamy, strona jest chwilowo wyłączona. Pracujemy nad ulepszeniem i przeniesieniem projektów z platformy Glitch.
-        </p>
-        
-        <p class="maintenance-text">
-            Strona zostanie przywrócona ostatecznie w <span class="highlight">piątek (01.01.2026 o godz. 20:00)</span>. <strong>Wówczas możesz się już teraz zalogować się do nowego systemu.</strong>
-        </p>
         
         <div class="glitch-banner" id="glitchBanner">
             <img src="https://upload.wikimedia.org/wikipedia/en/1/13/Glitch_%28company%29_logo.svg" alt="Glitch Logo" class="glitch-logo">
@@ -703,11 +704,204 @@
                     <span class="social-name">kacpiq</span>
                 </div>
             </a>
-            
         </div>
     </div>
 
+    <script type="module" src="closed/shaders.js"></script>
+    <script type="module" src="closed/script.js"></script>
+    <!-- JavaScript -->
+    <script type="module">
+        // Import Three.js and shaders
+        import * as THREE from "https://cdn.jsdelivr.net/npm/three/build/three.module.js";
+        import { vertexShader, fluidShader, displayShader } from "./shaders.js";
+
+        // Fluid gradient configuration
+        const config = {
+          brushSize: 25.0,
+          brushStrength: 0.5,
+          distortionAmount: 2.5,
+          fluidDecay: 0.98,
+          trailLength: 0.8,
+          stopDecay: 0.85,
+          color1: "#b8fff7",
+          color2: "#6e3466",
+          color3: "#0133ff",
+          color4: "#66d1fe",
+          colorIntensity: 1.0,
+          softness: 1.0,
+        };
+
+        function hexToRgb(hex) {
+          const r = parseInt(hex.slice(1, 3), 16) / 255;
+          const g = parseInt(hex.slice(3, 5), 16) / 255;
+          const b = parseInt(hex.slice(5, 7), 16) / 255;
+          return [r, g, b];
+        }
+
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        const gradientCanvas = document.querySelector(".gradient-canvas");
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        gradientCanvas.appendChild(renderer.domElement);
+
+        const fluidTarget1 = new THREE.WebGLRenderTarget(
+          window.innerWidth,
+          window.innerHeight,
+          {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+          }
+        );
+
+        const fluidTarget2 = new THREE.WebGLRenderTarget(
+          window.innerWidth,
+          window.innerHeight,
+          {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+          }
+        );
+
+        let currentFluidTarget = fluidTarget1;
+        let previousFluidTarget = fluidTarget2;
+        let frameCount = 0;
+
+        const fluidMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            iTime: { value: 0 },
+            iResolution: {
+              value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+            },
+            iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
+            iFrame: { value: 0 },
+            iPreviousFrame: { value: null },
+            uBrushSize: { value: config.brushSize },
+            uBrushStrength: { value: config.brushStrength },
+            uFluidDecay: { value: config.fluidDecay },
+            uTrailLength: { value: config.trailLength },
+            uStopDecay: { value: config.stopDecay },
+          },
+          vertexShader: vertexShader,
+          fragmentShader: fluidShader,
+        });
+
+        const displayMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            iTime: { value: 0 },
+            iResolution: {
+              value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+            },
+            iFluid: { value: null },
+            uDistortionAmount: { value: config.distortionAmount },
+            uColor1: { value: new THREE.Vector3(...hexToRgb(config.color1)) },
+            uColor2: { value: new THREE.Vector3(...hexToRgb(config.color2)) },
+            uColor3: { value: new THREE.Vector3(...hexToRgb(config.color3)) },
+            uColor4: { value: new THREE.Vector3(...hexToRgb(config.color4)) },
+            uColorIntensity: { value: config.colorIntensity },
+            uSoftness: { value: config.softness},
+         },
+         vertexShader: vertexShader,
+         fragmentShader: displayShader,
+        });
+
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const fluidPlane = new THREE.Mesh(geometry, fluidMaterial);
+        const displayPlane = new THREE.Mesh(geometry, displayMaterial);
+
+        let mouseX = 0,
+          mouseY = 0;
+
+        let prevMouseX = 0,
+          prevMouseY = 0;
+
+        let lastMoveTime = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          const rect = gradientCanvas.getBoundingClientRect();
+          prevMouseX = mouseX;
+          prevMouseY = mouseY;
+          mouseX = e.clientX - rect.left;
+          mouseY = rect.height - (e.clientY - rect.top);
+          lastMoveTime = performance.now();
+          fluidMaterial.uniforms.iMouse.value.set(
+            mouseX,
+            mouseY,
+            prevMouseX,
+            prevMouseY
+          );
+        });
+
+        document.addEventListener("mouseleave", () => {
+          fluidMaterial.uniforms.iMouse.value.set(0, 0, 0, 0);
+        });
+
+        function animate() {
+          requestAnimationFrame(animate);
+
+          const time = performance.now() * 0.001;
+          fluidMaterial.uniforms.iTime.value = time;
+          displayMaterial.uniforms.iTime.value = time;
+          fluidMaterial.uniforms.iFrame.value = frameCount;
+
+        if (performance.now() - lastMoveTime > 100) {
+          fluidMaterial.uniforms.iMouse.value.set(0, 0, 0, 0);
+        }
+
+        fluidMaterial.uniforms.uBrushSize.value = config.brushSize;
+        fluidMaterial.uniforms.uBrushStrength.value = config.brushStrength;
+        fluidMaterial.uniforms.uFluidDecay.value = config.fluidDecay;
+        fluidMaterial.uniforms.uTrailLength.value = config.trailLength;
+        fluidMaterial.uniforms.uStopDecay.value = config.stopDecay;
+
+        displayMaterial.uniforms.uDistortionAmount.value = config.distortionAmount;
+        displayMaterial.uniforms.uColorIntensity.value = config.colorIntensity;
+        displayMaterial.uniforms.uSoftness.value = config.softness;
+        displayMaterial.uniforms.uColor1.value.set(...hexToRgb(config.color1));
+
+        displayMaterial.uniforms.uColor2.value.set(...hexToRgb(config.color2));
+        displayMaterial.uniforms.uColor3.value.set(...hexToRgb(config.color3));
+        displayMaterial.uniforms.uColor4.value.set(...hexToRgb(config.color4));
+
+        fluidMaterial.uniforms.iPreviousFrame.value = previousFluidTarget.texture;
+
+        renderer.setRenderTarget(currentFluidTarget);
+        renderer.render(fluidPlane, camera);
+
+        displayMaterial.uniforms.iFluid.value = currentFluidTarget.texture;
+
+        renderer.setRenderTarget(null);
+        renderer.render(displayPlane, camera);
+
+        const temp = currentFluidTarget;
+        currentFluidTarget = previousFluidTarget;
+        previousFluidTarget = temp;
+
+        frameCount++;
+        }
+
+        window.addEventListener("resize", () => {
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+
+          renderer.setSize(width, height);
+          fluidMaterial.uniforms.iResolution.value.set(width, height);
+          displayMaterial.uniforms.iResolution.value.set(width, height);
+
+          fluidTarget1.setSize(width, height);
+          fluidTarget2.setSize(width, height);
+          frameCount = 0;
+        });
+
+        animate();
+    </script>
+
     <script>
+        // Firebase and UI functionality
         // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBKEfWh7TjKOUlRV0euRlDTKUBYvqpVLso",
@@ -833,7 +1027,7 @@
                 } else {
                     googleLoginBtn.style.transform = 'translateX(0)';
                     googleLoginBtn.style.backgroundColor = '';
-                    googleLoginBtn.style.background = 'var(--gradient-primary)';
+                    googleLoginBtn.style.background = 'linear-gradient(135deg, #007AFF, #5E5CE6)';
                 }
             };
             
