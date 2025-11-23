@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polityka Prywatności - Aplikacja TankujTeraz</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #DA2128; /* Kolor marki */
+            --text-main: #1f1f1f;
+            --text-secondary: #5f6368;
+            --bg-body: #f8f9fa;
+            --bg-doc: #ffffff;
+            --border-color: #dadce0;
+            --link-color: #1a73e8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrapper {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .document-card {
+            background: var(--bg-doc);
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background-color: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc li {
+            margin-bottom: 8px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* Content Typography */
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 48px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3c4043;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #3c4043;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            color: #3c4043;
+        }
+
+        li {
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Disclaimer Box */
+        .disclaimer-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 15px;
+        }
+
+        /* Contact Box */
+        .contact-section {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .document-card {
+                padding: 30px 20px;
+            }
+            h1 { font-size: 28px; }
+            h2 { font-size: 20px; }
+            .wrapper { margin: 20px auto; padding: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="document-card">
+            <header>
+                <h1>Polityka Prywatności</h1>
+                <div class="meta-info">
+                    Aplikacja: <strong>TankujTeraz</strong> &bull; Wersja dokumentu: 1.0 &bull; Data: 23.11.2025
+                </div>
+            </header>
+
+            <div class="disclaimer-box">
+                <strong>Ważna informacja:</strong> Aplikacja "TankujTeraz" jest oprogramowaniem niezależnym i nieoficjalnym. Nie jest powiązana, autoryzowana, sponsorowana ani zatwierdzona przez PKN ORLEN S.A. Wszelkie znaki towarowe użyte w aplikacji służą wyłącznie celom informacyjnym.
+            </div>
+
+            <nav class="toc">
+                <h3>Spis Treści</h3>
+                <ul>
+                    <li><a href="#wprowadzenie">1. Wprowadzenie i Postanowienia Ogólne</a></li>
+                    <li><a href="#dane-uzytkownika">2. Jakie dane zbieramy? (Brak danych osobowych)</a></li>
+                    <li><a href="#dane-techniczne">3. Dane techniczne i Diagnostyka</a></li>
+                    <li><a href="#uprawnienia">4. Uprawnienia systemowe Android</a></li>
+                    <li><a href="#local-storage">5. Pamięć lokalna i Ustawienia</a></li>
+                    <li><a href="#uslugi-zewnetrzne">6. Usługi podmiotów trzecich</a></li>
+                    <li><a href="#bezpieczenstwo">7. Bezpieczeństwo Danych</a></li>
+                    <li><a href="#kontakt">8. Kontakt z Deweloperem</a></li>
+                </ul>
+            </nav>
+
+            <section id="wprowadzenie">
+                <h2>1. Wprowadzenie i Postanowienia Ogólne</h2>
+                <p>
+                    Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony informacji w aplikacji mobilnej <strong>TankujTeraz</strong> (dalej "Aplikacja"), dostępnej w sklepie Google Play. Administratorem i deweloperem aplikacji jest <strong>KacpiQ</strong>.
+                </p>
+                <p>
+                    Naszym priorytetem jest przejrzystość. Aplikacja została stworzona w modelu "Privacy-First" (Prywatność przede wszystkim), co oznacza, że jej funkcjonalność nie wymaga identyfikacji użytkownika. Korzystając z Aplikacji, akceptujesz zasady opisane w niniejszym dokumencie.
+                </p>
+            </section>
+
+            <section id="dane-uzytkownika">
+                <h2>2. Jakie dane zbieramy?</h2>
+                <p>
+                    Z przyjemnością informujemy, że aplikacja <strong>TankujTeraz nie zbiera, nie przetwarza, ani nie udostępnia żadnych danych osobowych</strong> użytkowników.
+                </p>
+                <ul>
+                    <li><strong>Brak rejestracji:</strong> Korzystanie z Aplikacji nie wymaga zakładania konta.</li>
+                    <li><strong>Brak logowania:</strong> Nie prosimy o podawanie adresu e-mail, numeru telefonu ani imienia.</li>
+                    <li><strong>Brak śledzenia lokalizacji:</strong> Aplikacja nie pobiera współrzędnych GPS Twojego urządzenia w tle ani podczas korzystania.</li>
+                </ul>
+            </section>
+
+            <section id="dane-techniczne">
+                <h2>3. Dane techniczne i Diagnostyka</h2>
+                <p>
+                    Podczas korzystania z Aplikacji, systemy automatycznie mogą rejestrować pewne anonimowe informacje techniczne, które są niezbędne do zapewnienia stabilności działania oprogramowania. Są to tzw. logi serwera lub dane analityczne Google Play.
+                </p>
+                <h3>Co może wchodzić w skład tych danych?</h3>
+                <ul>
+                    <li>Typ urządzenia mobilnego (np. Samsung S21, Google Pixel).</li>
+                    <li>Wersja systemu operacyjnego Android.</li>
+                    <li>Informacje o awariach aplikacji (Crash Logs) – jeśli aplikacja ulegnie awarii, Google Play może przesłać anonimowy raport zawierający fragment kodu, w którym wystąpił błąd.</li>
+                </ul>
+                <p>
+                    Dane te nie pozwalają na identyfikację konkretnej osoby fizycznej i służą wyłącznie celom statystycznym oraz naprawczym.
+                </p>
+            </section>
+
+            <section id="uprawnienia">
+                <h2>4. Uprawnienia systemowe Android</h2>
+                <p>
+                    Aby Aplikacja mogła działać poprawnie, prosi system Android o przyznanie następujących uprawnień. Poniżej wyjaśniamy, do czego są one używane:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Pełny dostęp do sieci (android.permission.INTERNET):</strong><br>
+                        Aplikacja łączy się z zewnętrznym API (serwerem danych), aby pobrać aktualne ceny paliw, wykresy historyczne oraz prognozy rynkowe. Bez tego uprawnienia Aplikacja nie mogłaby aktualizować danych.
+                    </li>
+                    <li>
+                        <strong>Wyświetlanie połączeń sieciowych (android.permission.ACCESS_NETWORK_STATE):</strong><br>
+                        Pozwala Aplikacji sprawdzić, czy masz połączenie z internetem (Wi-Fi lub dane mobilne). Jeśli wykryjemy brak sieci, Aplikacja poinformuje o tym komunikatem, zamiast próbować pobierać dane w nieskończoność.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="local-storage">
+                <h2>5. Pamięć lokalna i Ustawienia</h2>
+                <p>
+                    Aplikacja nie używa tradycyjnych plików "Cookies" w rozumieniu przeglądarkowym, ale wykorzystuje pamięć wewnętrzną urządzenia (Local Storage / SharedPreferences) do zapisywania Twoich ustawień.
+                </p>
+                <p>
+                    <strong>Co zapisujemy na Twoim telefonie?</strong>
+                </p>
+                <ul>
+                    <li>Wybrane preferencje kalkulatora (np. ostatnio wpisane średnie spalanie pojazdu).</li>
+                    <li>Statusy aktywowanych wirtualnych kuponów w aplikacji.</li>
+                    <li>Ostatnio pobrane ceny paliw (tzw. Cache) – dzięki temu po ponownym uruchomieniu aplikacji zobaczysz ceny natychmiast, nawet bez dostępu do sieci.</li>
+                </ul>
+                <p>
+                    Dane te są przechowywane <strong>wyłącznie lokalnie na Twoim urządzeniu</strong>. Nie są one wysyłane na nasze serwery ani udostępniane nikomu innemu. Odinstalowanie aplikacji spowoduje ich trwałe usunięcie.
+                </p>
+            </section>
+
+            <section id="uslugi-zewnetrzne">
+                <h2>6. Usługi podmiotów trzecich</h2>
+                <p>
+                    Aplikacja korzysta z usług zewnętrznych dostawców, którzy mogą zbierać informacje identyfikujące Twoje urządzenie w celach technicznych:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Google Play Services:</strong> Biblioteki systemowe Google niezbędne do działania aplikacji na Androidzie.
+                        <br><a href="https://policies.google.com/privacy" target="_blank">Polityka prywatności Google</a>
+                    </li>
+                    <li>
+                        <strong>API Dostawcy Danych:</strong> Aplikacja wysyła zapytania HTTP do serwerów obsługujących dane o cenach paliw. Serwery te mogą widzieć Twój adres IP w standardowych logach dostępowych, co jest standardem działania sieci Internet.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="bezpieczenstwo">
+                <h2>7. Bezpieczeństwo Danych</h2>
+                <p>
+                    Dokładamy wszelkich starań, aby zapewnić bezpieczeństwo komunikacji. Wszystkie połączenia między Aplikacją a serwerami danych są szyfrowane przy użyciu protokołu <strong>SSL/HTTPS</strong>. Chroni to przed przechwyceniem danych przez osoby niepowołane w sieciach publicznych (np. otwarte Wi-Fi).
+                </p>
+            </section>
+
+            <div class="contact-section" id="kontakt">
+                <h3>8. Kontakt</h3>
+                <p>
+                    Jeśli masz jakiekolwiek pytania dotyczące niniejszej Polityki Prywatności, działania aplikacji lub chcesz zgłosić błąd, skontaktuj się z nami:
+                </p>
+                <p style="font-size: 18px; font-weight: bold; color: var(--primary-color);">
+                    kontakt@kacpiq.pl
+                </p>
+                <p style="font-size: 13px; color: #666;">
+                    KacpiQ Development<br>
+                    Polska
+                </p>
+            </div>
+
+        </div>
+
+        <footer>
+            &copy; 2025 KacpiQ. Wszelkie prawa zastrzeżone.<br>
+            <a href="#">Regulamin</a> &bull; <a href="#">Polityka Prywatności</a>
+        </footer>
+    </div>
+
+</body>
+</html>
