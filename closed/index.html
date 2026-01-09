@@ -3,1581 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kacpiq.pl - Otwieramy wkrótce!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <link rel="stylesheet" href="closed/style.css">
+    <title>KACPIQ.PL - Wygaśnięcie domeny</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --glass-blur: blur(12px);
-            --primary-color: rgba(255, 77, 141, 0.8);
-            --primary-hover: rgba(214, 66, 120, 0.8);
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --success-color: #00ff88;
-            --warning-color: #ffcc00;
-            --danger-color: #ff4d4d;
+            --primary-red: #ff0033;
+            --bg-dark: #050505;
         }
 
-        * {
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-            background: transparent;
-        }
-
-        /* Gradient Canvas Background */
-        .gradient-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
-        }
-
-        /* Liquid Glass Overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 50%), 
-                        radial-gradient(circle at 80% 70%, rgba(88, 86, 214, 0.15) 0%, transparent 50%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Countdown Container */
-        .countdown-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            z-index: 10;
-        }
-
-        /* Countdown Widget with Glass Effect */
-        .countdown-widget {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 25px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            position: relative;
+            background-color: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            color: white;
             overflow: hidden;
-            margin-bottom: 2rem;
-            animation: slideUp 1s ease-out;
-        }
-
-        .countdown-widget::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #ff4d8d, #6c5ce7, #00cec9, #ff4d8d);
-            background-size: 300% 100%;
-            animation: gradientFlow 3s linear infinite;
-            border-radius: 25px 25px 0 0;
-        }
-
-        .countdown-header {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 2rem;
         }
 
-        .countdown-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            animation: pulseIcon 2s infinite;
-        }
-
-        .countdown-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ff4d8d, #6c5ce7, #00cec9);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            background-size: 200% 100%;
-            animation: gradientFlow 5s linear infinite;
-        }
-
-        .countdown-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .target-date {
-            display: inline-block;
-            background: rgba(255, 77, 141, 0.2);
-            border: 1px solid rgba(255, 77, 141, 0.3);
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
-            margin-top: 0.5rem;
-            font-weight: 600;
-            color: #ff4d8d;
-        }
-
-        /* Countdown Timer */
-        .countdown-timer {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .time-unit {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 1.5rem;
-            min-width: 130px;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            animation: float 4s ease-in-out infinite;
-            animation-delay: calc(var(--delay) * 0.2s);
-        }
-
-        .time-unit:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 77, 141, 0.4);
-        }
-
-        .time-unit::before {
-            content: '';
+        /* Sekwencja początkowa - Eleganckie tło */
+        .intro-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .time-unit:hover::before {
-            transform: translateX(100%);
-        }
-
-        .time-value {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ff4d8d, #6c5ce7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(255, 77, 141, 0.3);
-        }
-
-        .time-label {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .verified-badge {
-            width: 16px;
-            height: 16px;
-            margin-left: 5px;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            margin: 2rem 0;
-        }
-
-        .progress-info {
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-bar {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff4d8d, #6c5ce7);
-            border-radius: 10px;
-            width: 0%;
-            position: relative;
-            animation: progressGrow 2s ease-out, shimmer 3s infinite;
-            box-shadow: 0 0 15px rgba(255, 77, 141, 0.4);
-            transition: width 1s ease-out;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shimmerMove 2s infinite;
-        }
-
-        /* Countdown Complete */
-        .countdown-complete {
-            display: none;
-            animation: celebrate 1s ease-out;
-        }
-
-        .complete-icon {
-            font-size: 5rem;
-            color: var(--success-color);
-            margin-bottom: 1.5rem;
-            animation: bounce 1s infinite;
-        }
-
-        .complete-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--success-color);
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-        }
-
-        .complete-message {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .auto-refresh-notice {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            padding: 1rem;
-            margin: 1.5rem 0;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Additional Features */
-        .features-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
             justify-content: center;
-            margin-top: 2rem;
+            align-items: center;
+            z-index: 10;
+            animation: fadeOut 0.8s ease-in forwards;
+            animation-delay: 2.5s;
         }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 1.5rem;
-            min-width: 200px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border-color: rgba(108, 92, 231, 0.4);
-        }
-
-        .feature-icon {
+        .intro-logo {
             font-size: 2rem;
-            color: #6c5ce7;
-            margin-bottom: 1rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            opacity: 0;
+            animation: fadeInOut 2s ease-in-out forwards;
         }
 
-        .feature-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
+        /* Główna plansza */
+        .main-content {
+            text-align: center;
+            z-index: 5;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: 3.2s;
+            padding: 20px;
         }
 
-        .feature-description {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 0.8rem 2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .primary-btn {
-            background: linear-gradient(90deg, #ff4d8d, #6c5ce7);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 141, 0.3);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 77, 141, 0.4);
-        }
-
-        .secondary-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-primary);
-        }
-
-        .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        /* Glitch Modal */
-        .glitch-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .glitch-modal-content {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 2rem;
-            border-radius: 20px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: slideUp 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .glitch-modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: color 0.2s;
-            z-index: 10;
-        }
-
-        .glitch-modal-close:hover {
-            color: var(--primary-color);
-        }
-
-        .glitch-modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .domain-example {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin: 2px 0;
-        }
-
-        /* Login Container */
-        .login-container {
-            margin: 2rem 0;
-            perspective: 1000px;
-            width: 100%;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .btn {
-            font-family: 'Poppins', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #007AFF, #5E5CE6);
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 15px;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 122, 255, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            background: var(--text-muted);
-        }
-
-        .btn .spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-
-        .btn .btn-text {
-            display: inline;
-        }
-
-        .btn .google-logo {
-            width: 18px;
-            height: 18px;
-            margin-left: 8px;
-        }
-
-        .btn.loading .spinner {
-            display: block;
-        }
-
-        .btn.loading .btn-text,
-        .btn.loading .google-logo {
-            display: none;
-        }
-
-        /* User Info */
-        .user-info {
-            display: none;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: var(--glass-shadow);
-            max-width: 350px;
-            margin: 1.5rem auto 0;
-            position: relative;
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out;
-            width: 100%;
-        }
-
-        .user-info.show {
-            display: block;
-        }
-
-        .user-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border: 2px solid var(--primary-color);
-            box-shadow: 0 3px 10px rgba(0, 122, 255, 0.2);
-        }
-
-        .user-name {
+        .domain-name {
             font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            color: var(--primary-color);
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
         }
 
-        .user-email {
+        .alert-text {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: -10px;
+        }
+
+        .days-count {
+            font-size: clamp(5rem, 15vw, 10rem);
+            font-weight: 900;
+            color: var(--primary-red);
+            line-height: 1;
+            margin: 10px 0;
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        .info-grid {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
             font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+            color: #ccc;
         }
 
-        .success-message {
-            color: #4cc9f0;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Social Links */
-        .social-links {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 2rem;
-            width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.8rem 1.2rem;
-            border-radius: 15px;
+        .info-item b {
             color: white;
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .footer-cta {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+        }
+
+        .ovh-link {
+            color: var(--primary-red);
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.3s;
         }
 
-        .social-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        .ovh-link:hover {
+            text-shadow: 0 0 10px var(--primary-red);
         }
 
-        .social-btn-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 2;
-            position: relative;
+        /* Animacje */
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.9); }
+            30% { opacity: 1; transform: scale(1); }
+            70% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.1); }
         }
 
-        .social-meta {
-            background: rgba(6, 104, 225, 0.8);
-        }
-
-        .social-facebook {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .social-instagram {
-            background: rgba(228, 64, 95, 0.8);
-        }
-
-        .social-github {
-            background: rgba(51, 51, 51, 0.8);
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        @keyframes pulseIcon {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes progressGrow {
-            from { width: 0; }
-            to { width: var(--progress); }
-        }
-
-        @keyframes shimmer {
-            0% { box-shadow: 0 0 10px rgba(255, 77, 141, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 77, 141, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(255, 77, 141, 0.5); }
-        }
-
-        @keyframes shimmerMove {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes celebrate {
-            0% { transform: scale(0.5); opacity: 0; }
-            70% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes tick {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes firework {
-            0% { transform: translateY(0) scale(0); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1); opacity: 0; }
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .countdown-container {
-                padding: 1rem;
-            }
-            
-            .countdown-widget {
-                padding: 1.5rem;
-            }
-            
-            .countdown-title {
-                font-size: 1.8rem;
-            }
-            
-            .countdown-subtitle {
-                font-size: 1rem;
-            }
-            
-            .time-unit {
-                min-width: 100px;
-                padding: 1rem;
-            }
-            
-            .time-value {
-                font-size: 2.5rem;
-            }
-            
-            .features-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .feature-card {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .action-btn {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .countdown-timer {
-                gap: 0.8rem;
-            }
-            
-            .time-unit {
-                min-width: 80px;
-                padding: 0.8rem;
-            }
-            
-            .time-value {
-                font-size: 2rem;
-            }
-            
-            .complete-title {
-                font-size: 1.8rem;
-            }
-            
-            .social-links {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .social-btn {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.03); filter: brightness(1.2); }
+            100% { transform: scale(1); filter: brightness(1); }
         }
     </style>
 </head>
 <body>
-    <!-- Gradient Canvas Background -->
-    <div class="gradient-canvas"></div>
 
-    <!-- Glitch Modal -->
-    <div class="glitch-modal" id="glitchModal">
-        <div class="glitch-modal-content">
-            <button class="glitch-modal-close" id="glitchModalClose">&times;</button>
-            <h2 class="glitch-modal-title">
-                <img src="https://upload.wikimedia.org/wikipedia/en/1/13/Glitch_%28company%29_logo.svg" alt="Glitch Logo" class="glitch-logo">
-                Glitch zakończył hosting projektów
-            </h2>
-            <p class="glitch-modal-text">
-                <span class="glitch-modal-date">21 maja 2025 r.</span> zespół platformy <strong>Glitch</strong> ogłosił decyzję o zakończeniu hostingu wszystkich projektów i zamknięciu profili użytkowników.
-            </p>
-            <p class="glitch-modal-text">
-                <span class="glitch-modal-date">8 lipca 2025 r.</span> hosting został oficjalnie <strong>wyłączony</strong>, co oznacza, że projekty i strony działające pod domenami <code class="domain-example">*.glitch.me</code> przestały być dostępne bezpośrednio z serwerów Glitch.
-            </p>
-            <p class="glitch-modal-text">
-                Wszystkie <strong>moje projekty</strong>, które wcześniej działały na Glitch, zostały przeniesione i są teraz dostępne na mojej stronie pod adresem:
-                <br>
-                👉 <a href="https://kacpiq.pl/glitch" target="_blank" style="color:#6c5ce7; font-weight:600;">https://kacpiq.pl/glitch</a>
-            </p>
+    <div class="intro-layer">
+        <div class="intro-logo">KACPIQ.PL</div>
+    </div>
+
+    <div class="main-content">
+        <div class="domain-name">kacpiq.pl</div>
+        <div class="alert-text">Do końca okresu rozliczeniowego zostało</div>
+        <div class="days-count">4 DNI</div> <div class="info-grid">
+            <div class="info-item">
+                <b>Rejestrator</b>
+                OVH SAS (Francja)
+            </div>
+            <div class="info-item">
+                <b>Ostatnia modyfikacja</b>
+                2026-01-10 00:47:31
+            </div>
+        </div>
+
+        <div class="footer-cta">
+            ODNÓW DOMENĘ NA<br>
+            <a href="https://www.ovhcloud.com" class="ovh-link">WWW.OVHCLOUD.COM</a>
         </div>
     </div>
 
-    <!-- Main Countdown Content -->
-    <div class="countdown-container">
-        <div class="countdown-widget">
-            <div class="countdown-header">
-                <i class="fas fa-rocket countdown-icon"></i>
-                <h1 class="countdown-title">Otwieramy wkrótce!</h1>
-                <p class="countdown-subtitle">
-                    Strona kacpiq.pl jest w trakcie finalnych przygotowań. Otwarcie nastąpi:
-                </p>
-                <div class="target-date">06.01.2026 o godz. 20:00</div>
-            </div>
-
-            <div class="countdown-timer" id="countdownTimer">
-                <!-- Filled by JavaScript -->
-            </div>
-
-            <div class="progress-container">
-                <div class="progress-info">
-                    <span>Czas do otwarcia:</span>
-                    <span id="timeRemaining">--:--:--</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-
-            <div class="countdown-complete" id="countdownComplete">
-                <i class="fas fa-party-horn complete-icon"></i>
-                <h2 class="complete-title">Czas start! 🎉</h2>
-                <p class="complete-message">
-                    Strona kacpiq.pl została oficjalnie otwarta! Przenosimy Cię na nową wersję...
-                </p>
-                <div class="auto-refresh-notice">
-                    <i class="fas fa-sync-alt"></i> Strona odświeży się automatycznie za <span id="refreshCountdown">10</span> sekund
-                </div>
-                <button class="action-btn primary-btn" id="goNowBtn">
-                    <i class="fas fa-external-link-alt"></i> Przejdź teraz
-                </button>
-            </div>
-        </div>
-
-        <!-- Additional Features -->
-        <div class="features-container">
-            <div class="feature-card">
-                <i class="fas fa-bolt feature-icon"></i>
-                <h3 class="feature-title">Szybsze ładowanie</h3>
-                <p class="feature-description">Nowa, zoptymalizowana infrastruktura</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-palette feature-icon"></i>
-                <h3 class="feature-title">Nowy design</h3>
-                <p class="feature-description">Odświeżony interfejs użytkownika</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-shield-alt feature-icon"></i>
-                <h3 class="feature-title">Bezpieczeństwo</h3>
-                <p class="feature-description">Zaawansowane zabezpieczenia danych</p>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="action-btn primary-btn" id="notifyBtn">
-                <i class="fas fa-bell"></i> Powiadom mnie
-            </button>
-            <button class="action-btn secondary-btn" id="glitchBanner">
-                <i class="fas fa-info-circle"></i> Informacje o Glitch
-            </button>
-            <button class="action-btn secondary-btn" id="shareBtn">
-                <i class="fas fa-share"></i> Udostępnij
-            </button>
-        </div>
-
-        <!-- Login Container -->
-        <div class="login-container">
-            <button id="googleLogin" class="btn">
-                <div class="spinner"></div>
-                <span class="btn-text">Zaloguj się przez Google</span>
-                <img class="google-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
-            </button>
-            
-            <div id="userInfo" class="user-info">
-                <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
-                <div class="user-name" id="userName"></div>
-                <div class="user-email" id="userEmail"></div>
-                <div class="success-message">Pomyślnie zarejestrowano do najnowszego systemu!</div>
-            </div>
-        </div>
-
-        <!-- Social Media Links -->
-        <div class="social-links">
-            <a href="https://www.facebook.com/profile.php?id=100076822801140" target="_blank" class="social-btn social-facebook">
-                <div class="social-btn-content">
-                    <i class="fab fa-facebook-f social-icon" style="color: #1877F2;"></i>
-                    <span class="social-name" style="color: black;">Kacper B.</span>
-                    <img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=778731283935334&version=1760038331" alt="Zweryfikowany" class="verified-badge">
-                </div>
-            </a>
-            
-            <a href="https://www.instagram.com/kacpi_b1" target="_blank" class="social-btn social-instagram">
-                <div class="social-btn-content">
-                    <i class="fab fa-instagram social-icon"></i>
-                    <span class="social-name">@kacpi_b1</span>
-                    <img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=778731283935334&version=1760038331" alt="Zweryfikowany" class="verified-badge">
-                </div>
-            </a>
-            
-            <a href="https://github.com/kacpiq1" target="_blank" class="social-btn social-github">
-                <div class="social-btn-content">
-                    <i class="fab fa-github social-icon"></i>
-                    <span class="social-name">kacpiq</span>
-                </div>
-            </a>
-        </div>
-    </div>
-    <script type="module" src="closed/shaders.js"></script>
-    <script type="module" src="closed/script.js"></script>
-
-    <!-- Background Shaders Script -->
-    <script type="module">
-        // Import Three.js and shaders
-        import * as THREE from "https://cdn.jsdelivr.net/npm/three/build/three.module.js";
-        // Assuming shaders.js is available at the same path
-        // For this example, I'll use placeholder shaders
-        const vertexShader = `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = vec4(position, 1.0);
-            }
-        `;
-
-        const fluidShader = `
-            varying vec2 vUv;
-            uniform float iTime;
-            uniform vec2 iResolution;
-            uniform vec4 iMouse;
-            uniform sampler2D iPreviousFrame;
-            
-            void main() {
-                vec2 uv = vUv;
-                vec4 prev = texture2D(iPreviousFrame, uv);
-                
-                // Simple fluid simulation
-                vec2 motion = vec2(sin(iTime + uv.x * 5.0), cos(iTime + uv.y * 3.0)) * 0.01;
-                vec4 color = texture2D(iPreviousFrame, uv + motion);
-                
-                // Mouse interaction
-                if (iMouse.z > 0.0) {
-                    vec2 mouse = iMouse.xy / iResolution;
-                    vec2 mousePrev = iMouse.zw / iResolution;
-                    vec2 mouseDelta = mouse - mousePrev;
-                    
-                    float dist = distance(uv, mouse);
-                    if (dist < 0.1) {
-                        color.rg += mouseDelta * 2.0;
-                    }
-                }
-                
-                // Decay
-                color *= 0.98;
-                
-                gl_FragColor = color;
-            }
-        `;
-
-        const displayShader = `
-            varying vec2 vUv;
-            uniform float iTime;
-            uniform vec2 iResolution;
-            uniform sampler2D iFluid;
-            
-            void main() {
-                vec2 uv = vUv;
-                vec4 fluid = texture2D(iFluid, uv);
-                
-                // Create gradient colors
-                vec3 color1 = vec3(0.72, 1.0, 0.97); // #b8fff7
-                vec3 color2 = vec3(0.43, 0.20, 0.40); // #6e3466
-                vec3 color3 = vec3(0.0, 0.20, 1.0); // #0133ff
-                vec3 color4 = vec3(0.4, 0.82, 1.0); // #66d1fe
-                
-                // Animate gradient
-                float t = iTime * 0.2;
-                vec3 gradient = mix(
-                    mix(color1, color2, sin(uv.x + t) * 0.5 + 0.5),
-                    mix(color3, color4, cos(uv.y + t) * 0.5 + 0.5),
-                    uv.x * 0.5 + 0.25
-                );
-                
-                // Add fluid distortion
-                vec2 distortion = fluid.rg * 0.05;
-                vec3 finalColor = gradient * (0.8 + fluid.b * 0.3);
-                
-                gl_FragColor = vec4(finalColor, 1.0);
-            }
-        `;
-
-        // Fluid gradient configuration
-        const config = {
-          brushSize: 25.0,
-          brushStrength: 0.5,
-          distortionAmount: 2.5,
-          fluidDecay: 0.98,
-          trailLength: 0.8,
-          stopDecay: 0.85,
-          color1: "#b8fff7",
-          color2: "#6e3466",
-          color3: "#0133ff",
-          color4: "#66d1fe",
-          colorIntensity: 1.0,
-          softness: 1.0,
-        };
-
-        function hexToRgb(hex) {
-          const r = parseInt(hex.slice(1, 3), 16) / 255;
-          const g = parseInt(hex.slice(3, 5), 16) / 255;
-          const b = parseInt(hex.slice(5, 7), 16) / 255;
-          return [r, g, b];
-        }
-
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-
-        const gradientCanvas = document.querySelector(".gradient-canvas");
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        gradientCanvas.appendChild(renderer.domElement);
-
-        const fluidTarget1 = new THREE.WebGLRenderTarget(
-          window.innerWidth,
-          window.innerHeight,
-          {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            format: THREE.RGBAFormat,
-            type: THREE.FloatType,
-          }
-        );
-
-        const fluidTarget2 = new THREE.WebGLRenderTarget(
-          window.innerWidth,
-          window.innerHeight,
-          {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            format: THREE.RGBAFormat,
-            type: THREE.FloatType,
-          }
-        );
-
-        let currentFluidTarget = fluidTarget1;
-        let previousFluidTarget = fluidTarget2;
-        let frameCount = 0;
-
-        const fluidMaterial = new THREE.ShaderMaterial({
-          uniforms: {
-            iTime: { value: 0 },
-            iResolution: {
-              value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-            },
-            iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
-            iFrame: { value: 0 },
-            iPreviousFrame: { value: null },
-            uBrushSize: { value: config.brushSize },
-            uBrushStrength: { value: config.brushStrength },
-            uFluidDecay: { value: config.fluidDecay },
-            uTrailLength: { value: config.trailLength },
-            uStopDecay: { value: config.stopDecay },
-          },
-          vertexShader: vertexShader,
-          fragmentShader: fluidShader,
-        });
-
-        const displayMaterial = new THREE.ShaderMaterial({
-          uniforms: {
-            iTime: { value: 0 },
-            iResolution: {
-              value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-            },
-            iFluid: { value: null },
-            uDistortionAmount: { value: config.distortionAmount },
-            uColor1: { value: new THREE.Vector3(...hexToRgb(config.color1)) },
-            uColor2: { value: new THREE.Vector3(...hexToRgb(config.color2)) },
-            uColor3: { value: new THREE.Vector3(...hexToRgb(config.color3)) },
-            uColor4: { value: new THREE.Vector3(...hexToRgb(config.color4)) },
-            uColorIntensity: { value: config.colorIntensity },
-            uSoftness: { value: config.softness },
-          },
-          vertexShader: vertexShader,
-          fragmentShader: displayShader,
-        });
-
-        const geometry = new THREE.PlaneGeometry(2, 2);
-        const fluidPlane = new THREE.Mesh(geometry, fluidMaterial);
-        const displayPlane = new THREE.Mesh(geometry, displayMaterial);
-
-        let mouseX = 0, mouseY = 0;
-        let prevMouseX = 0, prevMouseY = 0;
-        let lastMoveTime = 0;
-
-        document.addEventListener("mousemove", (e) => {
-          const rect = gradientCanvas.getBoundingClientRect();
-          prevMouseX = mouseX;
-          prevMouseY = mouseY;
-          mouseX = e.clientX - rect.left;
-          mouseY = rect.height - (e.clientY - rect.top);
-          lastMoveTime = performance.now();
-          fluidMaterial.uniforms.iMouse.value.set(
-            mouseX,
-            mouseY,
-            prevMouseX,
-            prevMouseY
-          );
-        });
-
-        function animate() {
-          requestAnimationFrame(animate);
-
-          const time = performance.now() * 0.001;
-          fluidMaterial.uniforms.iTime.value = time;
-          displayMaterial.uniforms.iTime.value = time;
-          fluidMaterial.uniforms.iFrame.value = frameCount;
-
-          if (performance.now() - lastMoveTime > 100) {
-            fluidMaterial.uniforms.iMouse.value.set(0, 0, 0, 0);
-          }
-
-          fluidMaterial.uniforms.iPreviousFrame.value = previousFluidTarget.texture;
-          renderer.setRenderTarget(currentFluidTarget);
-          renderer.render(fluidPlane, camera);
-
-          displayMaterial.uniforms.iFluid.value = currentFluidTarget.texture;
-          renderer.setRenderTarget(null);
-          renderer.render(displayPlane, camera);
-
-          const temp = currentFluidTarget;
-          currentFluidTarget = previousFluidTarget;
-          previousFluidTarget = temp;
-
-          frameCount++;
-        }
-
-        window.addEventListener("resize", () => {
-          const width = window.innerWidth;
-          const height = window.innerHeight;
-
-          renderer.setSize(width, height);
-          fluidMaterial.uniforms.iResolution.value.set(width, height);
-          displayMaterial.uniforms.iResolution.value.set(width, height);
-
-          fluidTarget1.setSize(width, height);
-          fluidTarget2.setSize(width, height);
-          frameCount = 0;
-        });
-
-        animate();
-    </script>
-
-    <!-- Main Application Script -->
-    <script>
-        // Firebase and Countdown functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Firebase
-            const firebaseConfig = {
-                apiKey: "AIzaSyBKEfWh7TjKOUlRV0euRlDTKUBYvqpVLso",
-                authDomain: "kacpiq-pl-43517.firebaseapp.com",
-                projectId: "kacpiq-pl-43517",
-                storageBucket: "kacpiq-pl-43517.appspot.com",
-                messagingSenderId: "177654542790",
-                appId: "1:177654542790:web:53156926a8f59f4e3bc2c7",
-                measurementId: "G-4SKM4BBVP6"
-            };
-            
-            // Check if Firebase is already initialized
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            
-            // Target date: 06.01.2026 20:00
-            const TARGET_DATE = new Date('2026-01-06T20:00:00');
-            
-            // Elements
-            const countdownTimer = document.getElementById('countdownTimer');
-            const timeRemaining = document.getElementById('timeRemaining');
-            const progressFill = document.getElementById('progressFill');
-            const countdownComplete = document.getElementById('countdownComplete');
-            const refreshCountdown = document.getElementById('refreshCountdown');
-            const goNowBtn = document.getElementById('goNowBtn');
-            const notifyBtn = document.getElementById('notifyBtn');
-            const shareBtn = document.getElementById('shareBtn');
-            const glitchBanner = document.getElementById('glitchBanner');
-            const glitchModal = document.getElementById('glitchModal');
-            const glitchModalClose = document.getElementById('glitchModalClose');
-            const googleLoginBtn = document.getElementById('googleLogin');
-            const userInfo = document.getElementById('userInfo');
-            const userAvatar = document.getElementById('userAvatar');
-            const userName = document.getElementById('userName');
-            const userEmail = document.getElementById('userEmail');
-            
-            // Time units for countdown
-            const timeUnits = [
-                { label: 'Dni', value: 0 },
-                { label: 'Godzin', value: 0 },
-                { label: 'Minut', value: 0 },
-                { label: 'Sekund', value: 0 }
-            ];
-            
-            // Initialize countdown timer display
-            function initializeCountdownDisplay() {
-                countdownTimer.innerHTML = '';
-                timeUnits.forEach((unit, index) => {
-                    const timeUnit = document.createElement('div');
-                    timeUnit.className = 'time-unit';
-                    timeUnit.style.setProperty('--delay', index);
-                    
-                    const timeValue = document.createElement('div');
-                    timeValue.className = 'time-value';
-                    timeValue.id = `time${unit.label}`;
-                    timeValue.textContent = '00';
-                    
-                    const timeLabel = document.createElement('div');
-                    timeLabel.className = 'time-label';
-                    timeLabel.textContent = unit.label;
-                    
-                    timeUnit.appendChild(timeValue);
-                    timeUnit.appendChild(timeLabel);
-                    countdownTimer.appendChild(timeUnit);
-                });
-            }
-            
-            // Update countdown
-            function updateCountdown() {
-                const now = new Date();
-                const timeDiff = TARGET_DATE - now;
-                
-                // If countdown is complete
-                if (timeDiff <= 0) {
-                    showCountdownComplete();
-                    return;
-                }
-                
-                // Calculate time units
-                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-                
-                // Update display
-                document.getElementById('timeDni').textContent = days.toString().padStart(2, '0');
-                document.getElementById('timeGodzin').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('timeMinut').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('timeSekund').textContent = seconds.toString().padStart(2, '0');
-                
-                // Update time remaining text
-                timeRemaining.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-                
-                // Update progress bar
-                const totalDuration = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-                const elapsed = totalDuration - timeDiff;
-                const progressPercent = Math.min(100, (elapsed / totalDuration) * 100);
-                progressFill.style.width = `${progressPercent}%`;
-                
-                // Add animation to seconds
-                if (seconds % 2 === 0) {
-                    const secondsElement = document.getElementById('timeSekund');
-                    secondsElement.style.animation = 'none';
-                    setTimeout(() => {
-                        secondsElement.style.animation = 'tick 0.5s ease';
-                    }, 10);
-                }
-            }
-            
-            // Show countdown complete
-            function showCountdownComplete() {
-                countdownTimer.style.display = 'none';
-                document.querySelector('.progress-container').style.display = 'none';
-                countdownComplete.style.display = 'block';
-                
-                // Create celebration effect
-                createFireworks();
-                
-                // Start auto-refresh countdown
-                let refreshTime = 10;
-                const refreshInterval = setInterval(() => {
-                    refreshCountdown.textContent = refreshTime;
-                    refreshTime--;
-                    
-                    if (refreshTime < 0) {
-                        clearInterval(refreshInterval);
-                        window.location.href = 'https://kacpiq.pl';
-                    }
-                }, 1000);
-                
-                // Update title
-                document.title = 'kacpiq.pl - Otwarte! 🎉';
-            }
-            
-            // Create fireworks effect
-            function createFireworks() {
-                for (let i = 0; i < 50; i++) {
-                    setTimeout(() => {
-                        createFirework();
-                    }, i * 100);
-                }
-            }
-            
-            // Create single firework
-            function createFirework() {
-                const firework = document.createElement('div');
-                firework.className = 'confetti';
-                firework.style.left = `${Math.random() * 100}%`;
-                firework.style.top = '100%';
-                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                firework.style.width = `${Math.random() * 6 + 4}px`;
-                firework.style.height = firework.style.width;
-                firework.style.borderRadius = '50%';
-                firework.style.opacity = '1';
-                
-                document.body.appendChild(firework);
-                
-                const animation = firework.animate([
-                    { transform: 'translateY(0) scale(0)', opacity: 1 },
-                    { transform: `translateY(-${Math.random() * 300 + 200}px) scale(1)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * 1000 + 1000,
-                    easing: 'cubic-bezier(0.2, 0.8, 0.4, 1)'
-                });
-                
-                animation.onfinish = () => firework.remove();
-            }
-            
-            // Glitch modal functionality
-            glitchBanner.addEventListener('click', () => {
-                glitchModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
-            
-            glitchModalClose.addEventListener('click', () => {
-                glitchModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            glitchModal.addEventListener('click', (e) => {
-                if (e.target === glitchModal) {
-                    glitchModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            // Notification button
-            notifyBtn.addEventListener('click', () => {
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    scheduleNotification();
-                } else if ('Notification' in window && Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            scheduleNotification();
-                        }
-                    });
-                }
-                
-                // Visual feedback
-                notifyBtn.innerHTML = '<i class="fas fa-check"></i> Ustawiono powiadomienie';
-                notifyBtn.style.background = 'linear-gradient(90deg, #00cec9, #00b894)';
-                setTimeout(() => {
-                    notifyBtn.innerHTML = '<i class="fas fa-bell"></i> Powiadom mnie';
-                    notifyBtn.style.background = '';
-                }, 2000);
-            });
-            
-            // Share button
-            shareBtn.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'kacpiq.pl - Otwieramy wkrótce!',
-                        text: 'Odliczaj razem z nami do otwarcia nowej strony kacpiq.pl!',
-                        url: window.location.href
-                    });
-                } else {
-                    // Fallback for browsers that don't support Web Share API
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                        shareBtn.innerHTML = '<i class="fas fa-check"></i> Skopiowano link';
-                        setTimeout(() => {
-                            shareBtn.innerHTML = '<i class="fas fa-share"></i> Udostępnij';
-                        }, 2000);
-                    });
-                }
-            });
-            
-            // Go now button
-            goNowBtn.addEventListener('click', () => {
-                window.location.href = 'https://kacpiq.pl';
-            });
-            
-            // Schedule notification
-            function scheduleNotification() {
-                const now = new Date();
-                const timeDiff = TARGET_DATE - now;
-                
-                if (timeDiff > 0) {
-                    setTimeout(() => {
-                        new Notification('kacpiq.pl jest już otwarte! 🎉', {
-                            body: 'Kliknij, aby przejść na nową stronę',
-                            icon: 'https://kacpiq.pl/favicon.ico'
-                        });
-                    }, timeDiff);
-                }
-            }
-            
-            // Google Login functionality
-            function setButtonLoading(isLoading, text = "") {
-                if (isLoading) {
-                    googleLoginBtn.disabled = true;
-                    googleLoginBtn.classList.add('loading');
-                    if (text) {
-                        googleLoginBtn.querySelector('.btn-text').textContent = text;
-                    }
-                } else {
-                    googleLoginBtn.disabled = false;
-                    googleLoginBtn.classList.remove('loading');
-                    if (text) {
-                        googleLoginBtn.querySelector('.btn-text').textContent = text;
-                    }
-                }
-            }
-            
-            googleLoginBtn.addEventListener('click', signInWithGoogle);
-            
-            function signInWithGoogle() {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.addScope('profile');
-                provider.addScope('email');
-                
-                setButtonLoading(true, "Logowanie...");
-                
-                firebase.auth().signInWithPopup(provider)
-                    .then((result) => {
-                        const user = result.user;
-                        showUserInfo(user);
-                        createConfetti();
-                        setButtonLoading(false, "Zalogowano");
-                        
-                        // Hide login button after successful login
-                        setTimeout(() => {
-                            googleLoginBtn.style.display = 'none';
-                        }, 1000);
-                    })
-                    .catch((error) => {
-                        console.error("Błąd logowania:", error);
-                        setButtonLoading(false, "Zaloguj się przez Google");
-                        
-                        // Show error animation
-                        showErrorAnimation();
-                    });
-            }
-            
-            function showErrorAnimation() {
-                googleLoginBtn.style.transform = 'translateX(0)';
-                googleLoginBtn.style.animation = 'none';
-                
-                setTimeout(() => {
-                    googleLoginBtn.style.animation = 'shake 0.5s';
-                }, 10);
-                
-                setTimeout(() => {
-                    googleLoginBtn.style.animation = '';
-                }, 500);
-                
-                // Add shake animation
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes shake {
-                        0%, 100% { transform: translateX(0); }
-                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                        20%, 40%, 60%, 80% { transform: translateX(5px); }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                setTimeout(() => {
-                    style.remove();
-                }, 500);
-            }
-            
-            function showUserInfo(user) {
-                userAvatar.src = user.photoURL;
-                userName.textContent = user.displayName;
-                userEmail.textContent = user.email;
-                userInfo.classList.add('show');
-            }
-            
-            function createConfetti() {
-                for (let i = 0; i < 100; i++) {
-                    setTimeout(() => {
-                        const confetti = document.createElement('div');
-                        confetti.className = 'confetti';
-                        confetti.style.left = `${Math.random() * 100}%`;
-                        confetti.style.top = `${Math.random() * 100}%`;
-                        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                        confetti.style.width = `${Math.random() * 8 + 4}px`;
-                        confetti.style.height = confetti.style.width;
-                        confetti.style.borderRadius = '50%';
-                        confetti.style.opacity = '1';
-                        
-                        document.body.appendChild(confetti);
-                        
-                        const animation = confetti.animate([
-                            { transform: 'translateY(-100px) rotate(0deg)', opacity: 1 },
-                            { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                        ], {
-                            duration: Math.random() * 2000 + 1000,
-                            easing: 'cubic-bezier(0.2, 0.8, 0.4, 1)'
-                        });
-                        
-                        animation.onfinish = () => confetti.remove();
-                    }, i * 20);
-                }
-            }
-            
-            // Check if user is already logged in
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    showUserInfo(user);
-                    googleLoginBtn.style.display = 'none';
-                } else {
-                    setButtonLoading(false, "Zaloguj się przez Google");
-                }
-            });
-            
-            // Initialize everything
-            initializeCountdownDisplay();
-            updateCountdown();
-            
-            // Update countdown every second
-            setInterval(updateCountdown, 1000);
-            
-            // Add initial animation to countdown elements
-            setTimeout(() => {
-                document.querySelectorAll('.time-unit').forEach((unit, index) => {
-                    setTimeout(() => {
-                        unit.style.opacity = '1';
-                        unit.style.transform = 'translateY(0)';
-                    }, index * 200);
-                });
-            }, 500);
-        });
-    </script>
 </body>
 </html>
