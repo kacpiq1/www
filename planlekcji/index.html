@@ -3,457 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan lekcji</title>
+    <title>Plan lekcji ZS1 Bochnia - Projekt zakończony</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Paleta kolorów 1 */
-        .palette-1 {
-            --background-color: #181c1f;
-            --text-color: #ffffff;
-            --status-background: #374955;
-            --border-color: #76d1fd;
-            --lesson-background: #212a31;
-            --lesson-hover-background: #374955;
+        /* Modern CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Paleta kolorów 2 */
-        .palette-2 {
-            --background-color: #f0f0f0;
-            --text-color: #333333;
-            --status-background: #e0e0e0;
-            --border-color: #ff5722;
-            --lesson-background: #ffffff;
-            --lesson-hover-background: #e0e0e0;
+        /* Zmienne CSS dla motywów kolorystycznych */
+        :root {
+            /* Paleta główna - ciemna (domyślna) */
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
         }
 
-        /* Paleta kolorów 3 */
-        .palette-3 {
-            --background-color: #282c34;
-            --text-color: #ffffff;
-            --status-background: #3e444f;
-            --border-color: #61dafb;
-            --lesson-background: #21252b;
-            --lesson-hover-background: #3e444f;
+        .light-theme {
+            --primary-bg: #f1f5f9;
+            --secondary-bg: #ffffff;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
-        /* Paleta kolorów 4 */
-        .palette-4 {
-            --background-color: #2d2d2d;
-            --text-color: #eaeaea;
-            --status-background: #4d4d4d;
-            --border-color: #f39c12;
-            --lesson-background: #3d3d3d;
-            --lesson-hover-background: #4d4d4d;
-        }
-
-        /* Paleta kolorów 5 */
-        .palette-5 {
-            --background-color: #cce7ff;
-            --text-color: #003366;
-            --status-background: #99ccff;
-            --border-color: #0066cc;
-            --lesson-background: #e6f7ff;
-            --lesson-hover-background: #99ccff;
-        }
-
-        /* Ciemne palety kolorów 6 */
-        .palette-6 {
-            --background-color: #1c1c1c;
-            --text-color: #c8c8c8;
-            --status-background: #2d2d2d;
-            --border-color: #5bc0de;
-            --lesson-background: #2e2e2e;
-            --lesson-hover-background: #3e3e3e;
-        }
-
-        /* Ciemne palety kolorów 7 */
-        .palette-7 {
-            --background-color: #641e3b;
-            --text-color: #f8d7da;
-            --status-background: #5b3c43;
-            --border-color: #dc3545;
-            --lesson-background: #451825;
-            --lesson-hover-background: #5b3c43;
-        }
-
-        /* Ciemne palety kolorów 8 */
-        .palette-8 {
-            --background-color: #343a40;
-            --text-color: #ffffff;
-            --status-background: #6c757d;
-            --border-color: #007bff;
-            --lesson-background: #212529;
-            --lesson-hover-background: #495057;
-        }
-
-        /* Ciemne palety kolorów 9 */
-        .palette-9 {
-            --background-color: #856404;
-            --text-color: #fff3cd;
-            --status-background: #ffecb5;
-            --border-color: #ffc107;
-            --lesson-background: #d39e00;
-            --lesson-hover-background: #ffecb5;
-        }
-
-        /* Ciemne palety kolorów 10 */
-        .palette-10 {
-            --background-color: #f0e68c;
-            --text-color: #4f4f4f;
-            --status-background: #f8e6a4;
-            --border-color: #c2c200;
-            --lesson-background: #ffffff;
-            --lesson-hover-background: #f8e6a4;
-        }
-
-        /* Zastosowanie zmiennych CSS */
+        /* Globalne style */
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease; /* Dodana animacja */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: var(--transition);
         }
 
-        h2 {
-            color: black; /* Kolor nagłówka h2 zawsze czarny */
+        /* Sekcja zakończenia projektu */
+        .discontinued-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
         }
 
-        #current-status {
-            background-color: var(--status-background);
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 18px;
-            border-left: 5px solid var(--border-color);
-            transition: background-color 0.3s ease; /* Dodana animacja */
+        .discontinued-icon {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
         }
 
-        #lessons-container {
-            margin: 20px 0;
-    padding-bottom: 100px; 
+        .discontinued-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--accent-color), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
         }
 
-        .lesson {
-            background-color: var(--lesson-background);
-            margin-bottom: 10px;
-            padding: 10px;
+        .discontinued-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .original-link-card {
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            max-width: 500px;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .original-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            transition: background-color 0.3s, border-color 0.3s; /* Dodana animacja */
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .lesson:hover {
-            background-color: var(--lesson-hover-background);
+        .original-link {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
         }
 
-        .lesson-number {
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 15px;
+        .original-link:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
         }
 
-        .lesson-info {
-            flex-grow: 1;
+        .original-link i {
+            margin-right: 0.5rem;
         }
 
-        .lesson-subject {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--border-color);
+        /* Informacje dodatkowe */
+        .info-section {
+            max-width: 600px;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
         }
 
-        .lesson-details {
-            font-size: 14px;
-            color: var(--text-color);
+        .info-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
         }
 
-        #calendar-input {
-            margin-top: 20px;
-            padding: 5px;
-            border: 1px solid var(--border-color);
-            background-color: var(--lesson-background);
-            color: var(--text-color);
+        .info-list {
+            list-style: none;
+            text-align: left;
         }
 
-        /* Kontener nawigacyjny na dole strony */
-#navigation-container {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%); /* Wyśrodkowanie */
-    width: 100%;
-    max-width: 600px; /* Maksymalna szerokość, aby wyglądało dobrze na większych ekranach */
-    background-color: var(--status-background);
-    display: flex;
-    justify-content: space-between; /* Równa odległość między elementami */
-    align-items: center;
-    padding: 15px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    border-radius: 15px 15px 0 0; /* Zaokrąglenie górnych rogów */
-}
+        .info-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
 
-/* Okrągłe przyciski strzałek */
-.circle-button {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 10px;
-    background-color: var(--border-color);
-    color: var(--background-color);
-    border: none;
-    margin: 0 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s;
-}
+        .info-list li:before {
+            content: "•";
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -0.2rem;
+        }
 
-/* Strzałki hover z kontrastowym kolorem */
-.circle-button:hover {
-    background-color: #ffa500; /* Kontrastowy kolor na hover */
-    color: white; /* Zmiana koloru tekstu */
-}
-
-/* Pole wyboru daty */
-#calendar-input {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid var(--border-color);
-    background-color: var(--lesson-background);
-    color: var(--text-color);
-    border-radius: 5px;
-    text-align: center;
-    width: auto;
-}
-
-/* Zmniejszenie szerokości pola daty na mobilnych urządzeniach */
-@media (max-width: 600px) {
-    #calendar-input {
-        width: 150px;
-    }
-}
-
-
-        /* Styl dla przycisku wyboru koloru */
-        #color-picker-button {
+        /* Kontrolki tematu */
+        .theme-toggle {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: #007bff; /* Kolor przycisku */
-            color: #fff;
-            border: none;
-            font-size: 24px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s, transform 0.3s; /* Dodana animacja */
-        }
-
-        #color-picker-button:hover {
-            background-color: #0056b3; /* Tło przycisku po najechaniu */
-            transform: scale(1.1); /* Powiększenie po najechaniu */
-        }
-
-        /* Okno wyboru kolorów */
-        #color-picker-modal {
-            display: none; /* Domyślnie ukryte */
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        /* Kontener dla palet kolorów */
-        #palette-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        /* Styl dla podglądu palet */
-        #palette-preview {
             display: flex;
-            margin-top: 10px;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            transition: var(--transition);
         }
 
-        /* Palety w podglądzie */
-        .color-sample {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            border: 2px solid transparent; /* Domyślny obramowanie */
-            border-radius: 5px;
-            transition: border-color 0.3s, transform 0.3s; /* Dodana animacja */
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            background: var(--accent-color);
+            color: white;
         }
 
-        /* Efekt podświetlenia */
-        .color-sample:hover {
-            border-color: #000; /* Kolor obramowania po najechaniu */
-            transform: scale(1.1); /* Powiększenie po najechaniu */
+        /* Animacje */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        /* Podgląd kolorów */
-        .palette-1.color-sample {
-            background-color: #374955;
-        }
-        .palette-2.color-sample {
-            background-color: #f0f0f0;
-        }
-        .palette-3.color-sample {
-            background-color: #282c34;
-        }
-        .palette-4.color-sample {
-            background-color: #2d2d2d;
-        }
-        .palette-5.color-sample {
-            background-color: #cce7ff;
-        }
-        .palette-6.color-sample {
-            background-color: #1c1c1c;
-        }
-        .palette-7.color-sample {
-            background-color: #641e3b;
-        }
-        .palette-8.color-sample {
-            background-color: #343a40;
-        }
-        .palette-9.color-sample {
-            background-color: #856404;
-        }
-        .palette-10.color-sample {
-            background-color: #f0e68c;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Przycisk zamykający */
-        #close-modal {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            font-size: 20px;
-            color: #000;
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
         }
 
-#no-lessons {
-    display: none; /* Domyślnie ukryty */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: var(--text-color);
-}
+        /* Responsywność */
+        @media (max-width: 768px) {
+            .discontinued-title {
+                font-size: 2rem;
+            }
+            
+            .discontinued-icon {
+                font-size: 4rem;
+            }
+            
+            .original-link-card {
+                padding: 1.5rem;
+            }
+            
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+        }
 
-#no-lessons i {
-    font-size: 64px; /* Wielkość ikony */
-    color: var(--text-color); /* Kolor ikony taki sam jak tekstu */
-}
-
-#no-lessons p {
-    font-size: 24px; /* Powiększony tekst */
-    margin-top: 10px;
-}
-
-#holiday-message {
-    background-color: var(--status-background); /* Użycie zmiennej dla tła */
-    color: var(--text-color); /* Użycie zmiennej dla koloru tekstu */
-    padding: 15px;
-    margin: 20px 0;
-    border-radius: 8px;
-    text-align: center; /* Wyśrodkowanie tekstu */
-    font-size: 18px; /* Ustawienie rozmiaru czcionki */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lekki cień dla efektu */
-}
+        @media (max-width: 480px) {
+            .discontinued-title {
+                font-size: 1.7rem;
+            }
+            
+            .discontinued-subtitle {
+                font-size: 1rem;
+            }
+            
+            .original-link {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="dark-theme">
+    <!-- Przycisk zmiany motywu -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
 
-    <!-- Przycisk wyboru koloru -->
-    <button id="color-picker-button">🎨</button>
-
-    <!-- Okno wyboru kolorów -->
-    <div id="color-picker-modal">
-        <div id="palette-container">
-            <button id="close-modal">✖</button>
-            <h2>Wybierz paletę kolorów:</h2>
-            <div id="palette-preview">
-                <div class="palette-1 color-sample" data-value="palette-1"></div>
-                <div class="palette-2 color-sample" data-value="palette-2"></div>
-                <div class="palette-3 color-sample" data-value="palette-3"></div>
-                <div class="palette-4 color-sample" data-value="palette-4"></div>
-                <div class="palette-5 color-sample" data-value="palette-5"></div>
-                <div class="palette-6 color-sample" data-value="palette-6"></div>
-                <div class="palette-7 color-sample" data-value="palette-7"></div>
-                <div class="palette-8 color-sample" data-value="palette-8"></div>
-                <div class="palette-9 color-sample" data-value="palette-9"></div>
-                <div class="palette-10 color-sample" data-value="palette-10"></div>
-            </div>
+    <!-- Główna sekcja informacyjna -->
+    <section class="discontinued-section fade-in">
+        <div class="discontinued-icon">
+            <i class="fas fa-calendar-times"></i>
         </div>
-    </div>
+        
+        <h1 class="discontinued-title">
+            Projekt Planu Lekcji Zakończony
+        </h1>
+        
+        <p class="discontinued-subtitle">
+            Niestety, dalszy rozwój aplikacji planu lekcji nie jest możliwy ze względu na brak dostępu do danych źródłowych. 
+            Poniżej znajdziesz bezpośredni link do oryginalnego planu lekcji.
+        </p>
+        
+        <div class="original-link-card">
+            <h2 class="card-title">
+                <i class="fas fa-external-link-alt"></i>
+                Oryginalny plan lekcji ZS1 Bochnia
+            </h2>
+            <a href="http://naucz.zs1.bochnia.pl/plan/planlekcji.html" class="original-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                Przejdź do planu lekcji
+            </a>
+            <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i> Strona może używać ramek (frames) - jeśli nic nie widać, użyj linku nawigacyjnego.
+            </p>
+        </div>
+        
+        <div class="info-section">
+            <h3 class="info-title">Dlaczego projekt został zakończony?</h3>
+            <ul class="info-list">
+                <li>Brak dostępu do aktualnych danych planu lekcji</li>
+                <li>Ograniczenia techniczne związane z pobieraniem danych z zewnętrznego serwera</li>
+                <li>Oryginalna strona szkoły używa ramek, które utrudniają integrację</li>
+                <li>Wymagane byłoby tworzenie systemu aktualizacji danych ręcznie</li>
+            </ul>
+        </div>
+    </section>
 
-    <!-- Element do wyświetlania statusu bieżącej lekcji -->
-    <div id="current-status"></div>
-
-    <!-- Element do wyświetlania bieżącej daty -->
-    <div id="current-date"></div>
-
-<!-- Element do wyświetlania informacji o dniach wolnych -->
-<div id="holiday-message" style="text-align: center; font-size: 20px; color: var(--border-color); margin: 20px 0;"></div>
-
-    <!-- Kontener na lekcje na dany dzień -->
-    <div id="lessons-container"></div>
-
-    <!-- Elementy nawigacyjne (kalendarz + strzałki) przeniesione na dół strony -->
-<div id="navigation-container">
-    <button id="prev-day" class="circle-button">&#9664</button>
-    <input type="date" id="calendar-input">
-    <button id="next-day" class="circle-button">&#9654</button>
-</div>
-
-    <script src="planlekcji/script.js"></script>
     <script>
-        // Ustawienia domyślnej palety kolorów z localStorage
-        const defaultPalette = localStorage.getItem('colorPalette') || 'palette-1';
-        document.body.classList.add(defaultPalette);
-
-        // Wyświetlenie okna wyboru kolorów
-        document.getElementById('color-picker-button').addEventListener('click', function() {
-            document.getElementById('color-picker-modal').style.display = 'flex';
-        });
-
-        // Zamknięcie okna wyboru kolorów
-        document.getElementById('close-modal').addEventListener('click', function() {
-            document.getElementById('color-picker-modal').style.display = 'none';
-        });
-
-        // Wybór palety na kliknięcie
-        document.querySelectorAll('.color-sample').forEach(function(sample) {
-            sample.addEventListener('click', function() {
-                // Usuń wszystkie palety
-                document.body.classList.remove('palette-1', 'palette-2', 'palette-3', 'palette-4', 'palette-5', 
-                                                'palette-6', 'palette-7', 'palette-8', 'palette-9', 'palette-10');
-                
-                // Dodaj wybraną paletę
-                const selectedPalette = this.getAttribute('data-value');
-                document.body.classList.add(selectedPalette);
-
-                // Zapisz wybraną paletę w localStorage
-                localStorage.setItem('colorPalette', selectedPalette);
+        // Inicjalizacja po załadowaniu strony
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obsługa przełączania motywu
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            // Sprawdź zapisany motyw w localStorage
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Obsługa kliknięcia przełącznika motywu
+            themeToggle.addEventListener('click', function() {
+                if (body.classList.contains('dark-theme')) {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+            
+            // Dodanie animacji dla elementów
+            const cards = document.querySelectorAll('.original-link-card, .info-section');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Informacja o otwieraniu linku zewnętrznego
+            const externalLink = document.querySelector('.original-link');
+            externalLink.addEventListener('click', function(e) {
+                if (!confirm('Otwierasz stronę zewnętrzną. Czy chcesz kontynuować?')) {
+                    e.preventDefault();
+                }
             });
         });
     </script>
