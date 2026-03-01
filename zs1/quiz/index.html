@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary-color: #1a2a5c;
@@ -232,7 +235,7 @@
     <div class="container">
         
         <div id="stats-display" class="stats-badge">
-            Dziś rozwiązano quiz: <span id="daily-counter">0</span> razy! 🔥
+            Rozwiązano quiz: <span id="daily-counter">0</span> razy! 🔥
         </div>
 
         <div id="intro-section" class="intro">
@@ -243,7 +246,7 @@
 
         <div id="quiz-container">
             <div id="question-progress" class="question-progress">Pytanie 1 z 6</div>
-            <div id="question" class="question-title">Ładowanie pytania...</div>
+            <div id="question" class="question-title"></div>
             <div id="options" class="options"></div>
             <button id="next-btn" class="action-btn" onclick="nextQuestion()">Następne pytanie ➔</button>
         </div>
@@ -267,7 +270,30 @@
     </footer>
 
     <script>
-        //baza pytan
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKEfWh7TjKOUlRV0euRlDTKUBYvqpVLso",
+            authDomain: "kacpiq-pl-43517.firebaseapp.com",
+            databaseURL: "https://kacpiq-pl-43517-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kacpiq-pl-43517",
+            storageBucket: "kacpiq-pl-43517.firebasestorage.app",
+            messagingSenderId: "177654542790",
+            appId: "1:177654542790:web:53156926a8f59f4e3bc2c7",
+            measurementId: "G-4SKM4BBVP6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const counterRef = database.ref('globalStats/completedQuizzes');
+
+        counterRef.on('value', (snapshot) => {
+            const currentCount = snapshot.val() || 0;
+            document.getElementById("daily-counter").textContent = currentCount;
+        });
+
+        function incrementGlobalCounter() {
+            counterRef.set(firebase.database.ServerValue.increment(1));
+        }
+
         const originalQuestions = [
             {
                 question: "Co zrobisz, gdy komputer nagle przestanie reagować?",
@@ -331,7 +357,6 @@
         const progressEl = document.getElementById("question-progress");
         const optionsEl = document.getElementById("options");
         const nextBtn = document.getElementById("next-btn");
-        const dailyCounterEl = document.getElementById("daily-counter");
 
         function shuffleArray(array) {
             let currentIndex = array.length, randomIndex;
@@ -343,26 +368,9 @@
             return array;
         }
 
-        function updateDailyCounter(increment = false) {
-            const dzisiaj = new Date().toLocaleDateString();
-            let stats = JSON.parse(localStorage.getItem('zs1QuizStats')) || { data: dzisiaj, count: 0 };
-
-            if (stats.data !== dzisiaj) {
-                stats = { data: dzisiaj, count: 0 };
-            }
-
-            if (increment) {
-                stats.count++;
-                localStorage.setItem('zs1QuizStats', JSON.stringify(stats));
-            }
-
-            dailyCounterEl.textContent = stats.count;
-        }
-
         function startQuiz() {
             activeQuestions = JSON.parse(JSON.stringify(originalQuestions));
             shuffleArray(activeQuestions);
-
             activeQuestions.forEach(q => shuffleArray(q.options));
 
             currentQuestionIndex = 0;
@@ -419,7 +427,7 @@
             quizContainer.style.display = "none";
             resultContainer.style.display = "block";
 
-            updateDailyCounter(true);
+            incrementGlobalCounter();
 
             const maxScore = activeQuestions.length * 5;
             const percentage = (score / maxScore) * 100;
@@ -450,9 +458,6 @@
             introSection.style.display = "block";
             document.getElementById("progress-fill").style.width = "0%";
         }
-
-        updateDailyCounter(false);
     </script>
-
 </body>
 </html>
