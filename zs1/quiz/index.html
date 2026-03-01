@@ -68,12 +68,36 @@
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             text-align: center;
+            position: relative;
         }
+
+        .stats-badge {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .stats-badge span { color: var(--accent-color); font-weight: 700; }
 
         .intro { margin-bottom: 30px; font-size: 1.15em; line-height: 1.6; font-weight: 400; }
 
-        #quiz-container { display: block; }
+        #quiz-container { display: none; }
         
+        .question-progress {
+            font-size: 0.9em;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
         .question-title {
             font-size: 1.4em;
             font-weight: 600;
@@ -114,7 +138,7 @@
             transform: translateY(0);
         }
 
-        #next-btn, #restart-btn {
+        .action-btn {
             background-color: var(--accent-color);
             color: white;
             border: none;
@@ -126,17 +150,18 @@
             cursor: pointer;
             margin-top: 30px;
             transition: all 0.3s;
-            display: none;
             text-transform: uppercase;
             letter-spacing: 1px;
             box-shadow: 0 4px 10px rgba(209, 18, 28, 0.3);
         }
 
-        #next-btn:hover, #restart-btn:hover {
+        .action-btn:hover {
             background-color: #a00d14;
             box-shadow: 0 6px 15px rgba(209, 18, 28, 0.4);
             transform: translateY(-2px);
         }
+
+        #next-btn { display: none; }
 
         #result-container {
             display: none;
@@ -156,7 +181,7 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .score-badge span { color: #facc15; }
+        .score-badge span { color: #facc15; } 
 
         .result-text { font-size: 1.15em; line-height: 1.7; margin-bottom: 25px; }
         
@@ -205,15 +230,22 @@
     </header>
 
     <div class="container">
+        
+        <div id="stats-display" class="stats-badge">
+            Dziś rozwiązano quiz: <span id="daily-counter">0</span> razy! 🔥
+        </div>
+
         <div id="intro-section" class="intro">
             Witaj w naszej sali! Zastanawiasz się, czy profil <strong>Technik Informatyk</strong> jest dla Ciebie? 
-            Rozwiąż krótki quiz i sprawdź swój informatyczny potencjał!
+            Rozwiąż krótki quiz i sprawdź swój informatyczny potencjał!<br>
+            <button class="action-btn" onclick="startQuiz()">Rozpocznij Quiz!</button>
         </div>
 
         <div id="quiz-container">
+            <div id="question-progress" class="question-progress">Pytanie 1 z 6</div>
             <div id="question" class="question-title">Ładowanie pytania...</div>
             <div id="options" class="options"></div>
-            <button id="next-btn" onclick="nextQuestion()">Następne pytanie ➔</button>
+            <button id="next-btn" class="action-btn" onclick="nextQuestion()">Następne pytanie ➔</button>
         </div>
 
         <div id="result-container">
@@ -226,7 +258,7 @@
             </div>
             <p id="result-text" class="result-text"></p>
             <p><strong>Pamiętaj:</strong> Niezależnie od wyniku, w ZS1 nauczymy Cię wszystkiego od podstaw – od składania komputerów, przez tworzenie sieci, aż po programowanie stron i aplikacji!</p>
-            <button id="restart-btn" onclick="restartQuiz()" style="display: inline-block;">Rozwiąż jeszcze raz</button>
+            <button class="action-btn" onclick="resetToHome()">Powrót do startu</button>
         </div>
     </div>
 
@@ -235,9 +267,10 @@
     </footer>
 
     <script>
-        const questions = [
+        //baza pytan
+        const originalQuestions = [
             {
-                question: "1. Co zrobisz, gdy komputer nagle przestanie reagować?",
+                question: "Co zrobisz, gdy komputer nagle przestanie reagować?",
                 options: [
                     { text: "Panikuję i wołam o pomoc.", points: 1 },
                     { text: "Próbuję 'magicznego' wyłącz i włącz (Restart).", points: 3 },
@@ -245,7 +278,7 @@
                 ]
             },
             {
-                question: "2. Do czego według Ciebie służy 'płyta główna'?",
+                question: "Do czego według Ciebie służy 'płyta główna'?",
                 options: [
                     { text: "Do tego, żeby komputer ładnie wyglądał w środku.", points: 1 },
                     { text: "To taki 'mózg' komputera, który myśli.", points: 3 },
@@ -253,7 +286,7 @@
                 ]
             },
             {
-                question: "3. Znajomy prosi Cię o napisanie prostej strony internetowej. Co przychodzi Ci na myśl?",
+                question: "Znajomy prosi Cię o napisanie prostej strony internetowej. Co przychodzi Ci na myśl?",
                 options: [
                     { text: "Że muszę włączyć Worda.", points: 1 },
                     { text: "Magiczne słowo: HTML.", points: 5 },
@@ -261,7 +294,7 @@
                 ]
             },
             {
-                question: "4. Kiedy słyszysz słowo 'algorytm', myślisz o...",
+                question: "Kiedy słyszysz słowo 'algorytm', myślisz o...",
                 options: [
                     { text: "Nudnej lekcji matematyki.", points: 1 },
                     { text: "Przepisie krok po kroku na rozwiązanie jakiegoś problemu.", points: 5 },
@@ -269,7 +302,7 @@
                 ]
             },
             {
-                question: "5. Jakie jest Twoje podejście do łamigłówek i problemów logicznych?",
+                question: "Jakie jest Twoje podejście do łamigłówek i problemów logicznych?",
                 options: [
                     { text: "Szybko się denerwuję i poddaję.", points: 1 },
                     { text: "Próbuję chwilę, ale potem szukam odpowiedzi w necie.", points: 3 },
@@ -277,7 +310,7 @@
                 ]
             },
             {
-                question: "6. Co najbardziej kręci Cię w technologii?",
+                question: "Co najbardziej kręci Cię w technologii?",
                 options: [
                     { text: "Tylko granie w gry.", points: 2 },
                     { text: "Zastanawiam się, jak gry i programy są zrobione.", points: 5 },
@@ -286,26 +319,73 @@
             }
         ];
 
+        let activeQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
         let selectedOptionPoints = 0;
 
-        const questionEl = document.getElementById("question");
-        const optionsEl = document.getElementById("options");
-        const nextBtn = document.getElementById("next-btn");
+        const introSection = document.getElementById("intro-section");
         const quizContainer = document.getElementById("quiz-container");
         const resultContainer = document.getElementById("result-container");
-        const introSection = document.getElementById("intro-section");
+        const questionEl = document.getElementById("question");
+        const progressEl = document.getElementById("question-progress");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next-btn");
+        const dailyCounterEl = document.getElementById("daily-counter");
+
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function updateDailyCounter(increment = false) {
+            const dzisiaj = new Date().toLocaleDateString();
+            let stats = JSON.parse(localStorage.getItem('zs1QuizStats')) || { data: dzisiaj, count: 0 };
+
+            if (stats.data !== dzisiaj) {
+                stats = { data: dzisiaj, count: 0 };
+            }
+
+            if (increment) {
+                stats.count++;
+                localStorage.setItem('zs1QuizStats', JSON.stringify(stats));
+            }
+
+            dailyCounterEl.textContent = stats.count;
+        }
+
+        function startQuiz() {
+            activeQuestions = JSON.parse(JSON.stringify(originalQuestions));
+            shuffleArray(activeQuestions);
+
+            activeQuestions.forEach(q => shuffleArray(q.options));
+
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            introSection.style.display = "none";
+            resultContainer.style.display = "none";
+            quizContainer.style.display = "block";
+            
+            loadQuestion();
+        }
 
         function loadQuestion() {
             optionsEl.innerHTML = "";
             nextBtn.style.display = "none";
             selectedOptionPoints = 0;
 
-            const currentQuestion = questions[currentQuestionIndex];
+            const currentQuestion = activeQuestions[currentQuestionIndex];
+            
+            progressEl.textContent = `Pytanie ${currentQuestionIndex + 1} z ${activeQuestions.length}`;
             questionEl.textContent = currentQuestion.question;
 
-            currentQuestion.options.forEach((option, index) => {
+            currentQuestion.options.forEach((option) => {
                 const button = document.createElement("button");
                 button.textContent = option.text;
                 button.classList.add("option-btn");
@@ -328,7 +408,7 @@
             score += selectedOptionPoints;
             currentQuestionIndex++;
 
-            if (currentQuestionIndex < questions.length) {
+            if (currentQuestionIndex < activeQuestions.length) {
                 loadQuestion();
             } else {
                 showResult();
@@ -337,10 +417,11 @@
 
         function showResult() {
             quizContainer.style.display = "none";
-            introSection.style.display = "none";
             resultContainer.style.display = "block";
 
-            const maxScore = questions.length * 5;
+            updateDailyCounter(true);
+
+            const maxScore = activeQuestions.length * 5;
             const percentage = (score / maxScore) * 100;
             
             document.getElementById("score-badge").innerHTML = `Twój wynik: <span>${score}</span> / ${maxScore} pkt`;
@@ -354,7 +435,7 @@
 
             if (score >= 24) {
                 titleEl.textContent = "Urodzony Informatyk! 🚀";
-                textEl.innerHTML = "Masz świetne zadatki na specjalistę IT! Logiczne myślenie i rozwiązywanie problemów to Twoja mocna strona. Na profilu <strong>Technik Informatyk</strong> poczujesz się jak ryba w wodzie!";
+                textEl.innerHTML = "Masz świetne zadatki na specjalistę IT! Logiczne myślenie i rozwiązywanie problemów to Twoja mocna strona. W klasie <strong>Technik Informatyk</strong> poczujesz się jak ryba w wodzie!";
             } else if (score >= 14) {
                 titleEl.textContent = "Masz duży potencjał! 💻";
                 textEl.innerHTML = "Technologia Cię ciekawi i znasz już podstawy, ale jest jeszcze wiele do odkrycia. U nas oszlifujesz swoje umiejętności. Założymy się, że programowanie i sieci szybko staną się Twoją pasją!";
@@ -364,17 +445,13 @@
             }
         }
 
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
+        function resetToHome() {
             resultContainer.style.display = "none";
             introSection.style.display = "block";
-            quizContainer.style.display = "block";
             document.getElementById("progress-fill").style.width = "0%";
-            loadQuestion();
         }
 
-        loadQuestion();
+        updateDailyCounter(false);
     </script>
 
 </body>
