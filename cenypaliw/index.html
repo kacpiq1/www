@@ -29,6 +29,37 @@
         </div>
 
         <h1 class="animate">Aktualne Ceny Paliw</h1>
+
+        <!-- Trend Analysis Widget -->
+<div id="trend-widget" onclick="openForecastDetails()" class="trend-widget-card">
+    <div class="trend-header">
+        <div>
+            <p class="trend-subtitle">Analiza Wszystkich Paliw</p>
+            <h3 id="home-trend-title" class="trend-title">
+                Analiza... <i class='bx bx-loader-alt bx-spin'></i>
+            </h3>
+        </div>
+        <div id="home-trend-badge" class="bg-red-100">
+            ---
+        </div>
+    </div>
+    
+    <div class="trend-bar-container">
+        <div id="home-trend-bar" class="bg-red-500">
+        </div>
+    </div>
+    
+    <div class="trend-footer">
+        <div class="trend-prediction">
+            <span class="trend-prediction-label">Przewidywana zmiana (7 dni):</span>
+            <span id="forecast-grosze-value">---</span>
+        </div>
+        <div class="trend-action">
+            <span>Kliknij, aby zobaczyć szczegóły</span>
+            <i class='bx bx-chevron-right'></i>
+        </div>
+    </div>
+</div>
         
         <div class="fuel-grid" id="fuelGrid">
             <!-- Fuel cards will be inserted here by JavaScript -->
@@ -199,6 +230,52 @@
         </div>
     </div>
 
+<div id="view-forecast" class="view-section hidden animate-slide-up">
+    <div class="report-header">
+    <h2 class="report-title">Raport Rynkowy</h2>
+    <button onclick="closeForecastDetails()" class="report-close-btn">
+        <i class='bx bx-x'></i>
+    </button>
+</div>
+    
+    <div class="report-content">
+        <div id="forecast-hero-bg" class="report-hero trend-up">
+            <div class="animate-shine"></div>
+            <div class="report-hero-inner">
+                <p class="report-hero-subtitle">Prognoza 7-Dniowa</p>
+                <h3 id="forecast-main-title" class="report-hero-title text-orlenRed">Trend Wzrostowy</h3>
+                <p id="forecast-main-desc" class="report-hero-desc">Analiza cen hurtowych dla wszystkich paliw wskazuje na trend wzrostowy. Obserwujemy presję cenową. W ciągu 7 dni ceny mogą wzrosnąć o --- gr.</p>
+                
+                <div class="report-hero-prediction">
+                    <span class="prediction-label">Przewidywana zmiana (7 dni):</span>
+                    <span id="forecast-grosze-detailed-value" class="prediction-value">---</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="report-section-title">
+            <i class='bx bx-receipt text-orlenRed'></i>
+            Szczegóły dla paliw
+        </h4>
+        <div id="forecast-details-grid" class="report-details-grid">
+            </div>
+
+        <h4 class="report-section-title mt-section">
+            <i class='bx bx-bot text-orlenRed'></i>
+            Rekomendacja AI
+        </h4>
+        <div id="forecast-recommendation" class="report-info-card"></div>
+
+        <h4 class="report-section-title mt-section">
+            <i class='bx bx-news text-orlenRed'></i>
+            Aktualności Rynku
+        </h4>
+        <div class="report-info-card">
+            <p id="market-news" class="market-news-text">Ładowanie aktualności...</p>
+        </div>
+    </div>
+</div>
+
 
     <div class="modal" id="priceHistoryModal">
         <div class="modal-content">
@@ -218,7 +295,7 @@
     <div class="notification" id="notification"></div>
 
     <footer class="animate">
-        © 2025 kacpiq.pl - Wszelkie prawa zastrzeżone
+        © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
     </footer>
 
     <script src="cenypaliw/fuelscript.js"></script>
