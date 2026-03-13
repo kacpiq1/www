@@ -318,7 +318,7 @@
     <script>
         const targetDate = new Date("March 14, 2026 09:00:00").getTime();
 
-        setInterval(function() {
+        const countdownInterval = setInterval(function() {
             const now = new Date().getTime();
             const distance = targetDate - now;
 
@@ -333,7 +333,11 @@
                 document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
                 document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
             } else {
-                document.getElementById("layer-timer").innerHTML = "<div class='target-date' style='color:#00ff00'>SYSTEM ONLINE</div>";
+                clearInterval(countdownInterval); 
+                
+                document.getElementById("layer-timer").innerHTML = "<div class='target-date' style='color:#00ff00'>PRZEKIEROWANIE...</div>";
+                
+                window.location.replace("https://kacpiq.pl/zs1/quiz");
             }
         }, 1000);
 
@@ -352,5 +356,7 @@
             showingTimer = !showingTimer;
         }, 5000);
     </script>
+
+    
 </body>
 </html>
