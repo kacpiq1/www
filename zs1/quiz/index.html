@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dni Otwarte ZS1 Bochnia - Technik Informatyk</title>
+    <title>Dni Otwarte ZS1 Bochnia - Technik Informatyk (Podsumowanie)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,177 +67,49 @@
             width: 90%;
             background: white;
             margin: 40px auto;
-            padding: 40px;
+            padding: 50px 40px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             text-align: center;
             position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .summary-title {
+            color: var(--primary-color);
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .stats-badge {
             background-color: #f1f5f9;
             color: var(--primary-color);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid #cbd5e1;
-        }
-
-        .stats-badge span { color: var(--accent-color); font-weight: 700; }
-
-        .intro { margin-bottom: 30px; font-size: 1.15em; line-height: 1.6; font-weight: 400; }
-
-        #quiz-container { display: none; }
-        
-        .question-progress {
-            font-size: 0.9em;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .question-title {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option-btn {
-            background-color: #f1f5f9;
-            border: 2px solid transparent;
-            padding: 16px 20px;
-            font-size: 1.05em;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            color: var(--text-color);
-        }
-
-        .option-btn:hover {
-            background-color: #e2e8f0;
-            transform: translateY(-2px);
-        }
-
-        .option-btn.selected {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            font-weight: 600;
-            transform: translateY(0);
-        }
-
-        .action-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 14px 35px;
-            font-size: 1.1em;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(209, 18, 28, 0.3);
-        }
-
-        .action-btn:hover {
-            background-color: #a00d14;
-            box-shadow: 0 6px 15px rgba(209, 18, 28, 0.4);
-            transform: translateY(-2px);
-        }
-
-        #next-btn { display: none; }
-
-        #result-container {
-            display: none;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .result-title { font-size: 2em; font-weight: 700; color: var(--primary-color); margin-bottom: 15px; }
-        
-        .score-badge {
-            display: inline-block;
-            background-color: #1e293b;
-            color: #fff;
-            padding: 8px 24px;
-            border-radius: 20px;
+            padding: 15px 25px;
+            border-radius: 30px;
             font-size: 1.2em;
             font-weight: 600;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .score-badge span { color: #facc15; } 
-
-        .result-text { font-size: 1.15em; line-height: 1.7; margin-bottom: 25px; }
-        
-        .progress-bar {
-            width: 100%;
-            height: 24px;
-            background-color: #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background-color: var(--accent-color);
-            width: 0%;
-            transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            display: inline-block;
+            margin-bottom: 30px;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .floating-qr {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            text-align: center;
-            width: 140px;
-            z-index: 1000;
-            border: 2px solid var(--primary-color);
-            animation: fadeIn 1s ease-out;
-            transition: transform 0.3s;
+        .stats-badge span { color: var(--accent-color); font-weight: 700; font-size: 1.3em;}
+
+        .intro { 
+            font-size: 1.15em; 
+            line-height: 1.8; 
+            font-weight: 400; 
+            color: #475569;
         }
 
-        .floating-qr:hover {
-            transform: translateY(-5px);
-        }
-
-        .floating-qr img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .floating-qr p {
-            margin: 0;
-            font-size: 0.85em;
-            color: var(--text-color);
+        .highlight-text {
+            color: var(--primary-color);
             font-weight: 600;
-            line-height: 1.3;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: block;
         }
 
         @media (max-width: 768px) {
@@ -258,32 +130,12 @@
             .container {
                 width: 92%;
                 margin: 20px auto;
-                padding: 25px 15px;
+                padding: 30px 20px;
             }
 
+            .summary-title { font-size: 1.6em; }
+            .stats-badge { font-size: 1.05em; padding: 12px 20px; }
             .intro { font-size: 1em; }
-
-            .question-title { font-size: 1.2em; margin-bottom: 20px; }
-            
-            .option-btn {
-                padding: 14px 15px;
-                font-size: 0.95em;
-            }
-
-            .action-btn {
-                width: 100%;
-                padding: 15px 20px;
-                font-size: 1em;
-                margin-top: 20px;
-            }
-
-            .result-title { font-size: 1.6em; }
-            .score-badge { font-size: 1.05em; padding: 8px 18px; }
-            .result-text { font-size: 1em; }
-
-            .floating-qr {
-                display: none;
-            }
         }
 
         @keyframes fadeIn {
@@ -295,8 +147,9 @@
             margin-top: auto;
             padding: 20px;
             color: #64748b;
-            font-size: 0.9em;
+            font-size: 0.95em;
             text-align: center;
+            font-weight: 600;
         }
 
     </style>
@@ -315,44 +168,24 @@
 
     <div class="container">
         
+        <div class="summary-title">To już koniec! 🎓</div>
+
         <div id="stats-display" class="stats-badge">
-            Rozwiązano quiz: <span id="daily-counter">0</span> razy! 🔥
+            Rozwiązaliście nasz quiz aż: <span id="daily-counter">...</span> razy! 🔥
         </div>
 
-        <div id="intro-section" class="intro">
-            Witaj w naszej sali! Zastanawiasz się, czy profil <strong>Technik Informatyk</strong> jest dla Ciebie? 
-            Rozwiąż krótki quiz i sprawdź swój informatyczny potencjał!<br>
-            <button class="action-btn" onclick="startQuiz()">Rozpocznij Quiz!</button>
+        <div class="intro">
+            Dziękujemy wszystkim za odwiedzenie naszej sali podczas Dni Otwartych profilu <strong>Technik Informatyk</strong> w ZS1!<br><br>
+            Mamy nadzieję, że bawiliście się świetnie, dowiedzieliście się ciekawych rzeczy i odkryliście w sobie żyłkę do IT. Cieszymy się, że byliście z nami! 💻<br><br>
+            <span class="highlight-text">Do zobaczenia w przyszłym roku z jeszcze lepszym quizem i nowymi wyzwaniami! 👋</span>
+            <br>
+            A z wieloma z Was – mamy nadzieję – widzimy się już we wrześniu na korytarzach naszej szkoły!
         </div>
-
-        <div id="quiz-container">
-            <div id="question-progress" class="question-progress">Pytanie 1 z 6</div>
-            <div id="question" class="question-title"></div>
-            <div id="options" class="options"></div>
-            <button id="next-btn" class="action-btn" onclick="nextQuestion()">Następne pytanie ➔</button>
-        </div>
-
-        <div id="result-container">
-            <h2 id="result-title" class="result-title">Twój wynik!</h2>
-            
-            <div id="score-badge" class="score-badge"></div>
-
-            <div class="progress-bar">
-                <div id="progress-fill" class="progress-fill"></div>
-            </div>
-            <p id="result-text" class="result-text"></p>
-            <p><strong>Pamiętaj:</strong> Niezależnie od wyniku, w ZS1 nauczymy Cię wszystkiego od podstaw – od składania komputerów, przez tworzenie sieci, aż po programowanie stron i aplikacji!</p>
-            <button class="action-btn" onclick="resetToHome()">Powrót do startu</button>
-        </div>
-    </div>
-
-    <div class="floating-qr">
-        <img src="qr-code.png" alt="QR Code ZS1">
-        <p>Zeskanuj i rozwiąż na swoim telefonie!</p>
+        
     </div>
 
     <footer>
-        Porozmawiaj z naszymi uczniami i nauczycielami w sali! Czekamy na Ciebie we wrześniu!
+        Czekamy na Ciebie we wrześniu! Zespół ZS1 Bochnia 🚀
     </footer>
 
     <script>
@@ -375,175 +208,6 @@
             const currentCount = snapshot.val() || 0;
             document.getElementById("daily-counter").textContent = currentCount;
         });
-
-        function incrementGlobalCounter() {
-            counterRef.set(firebase.database.ServerValue.increment(1));
-        }
-
-        const originalQuestions = [
-            {
-                question: "Co zrobisz, gdy komputer nagle przestanie reagować?",
-                options: [
-                    { text: "Panikuję i wołam o pomoc.", points: 1 },
-                    { text: "Próbuję 'magicznego' wyłącz i włącz (Restart).", points: 3 },
-                    { text: "Sprawdzam kable, wywołuję Menedżer Zadań lub szukam kodu błędu.", points: 5 }
-                ]
-            },
-            {
-                question: "Do czego według Ciebie służy 'płyta główna'?",
-                options: [
-                    { text: "Do tego, żeby komputer ładnie wyglądał w środku.", points: 1 },
-                    { text: "To taki 'mózg' komputera, który myśli.", points: 3 },
-                    { text: "To fundament, który łączy wszystkie podzespoły ze sobą.", points: 5 }
-                ]
-            },
-            {
-                question: "Znajomy prosi Cię o napisanie prostej strony internetowej. Co przychodzi Ci na myśl?",
-                options: [
-                    { text: "Że muszę włączyć Worda.", points: 1 },
-                    { text: "Magiczne słowo: HTML.", points: 5 },
-                    { text: "Chyba trzeba pobrać jakiś dziwny program.", points: 3 }
-                ]
-            },
-            {
-                question: "Kiedy słyszysz słowo 'algorytm', myślisz o...",
-                options: [
-                    { text: "Nudnej lekcji matematyki.", points: 1 },
-                    { text: "Przepisie krok po kroku na rozwiązanie jakiegoś problemu.", points: 5 },
-                    { text: "Tym czymś, co podrzuca mi filmiki na TikToku.", points: 3 }
-                ]
-            },
-            {
-                question: "Jakie jest Twoje podejście do łamigłówek i problemów logicznych?",
-                options: [
-                    { text: "Szybko się denerwuję i poddaję.", points: 1 },
-                    { text: "Próbuję chwilę, ale potem szukam odpowiedzi w necie.", points: 3 },
-                    { text: "Siedzę tak długo, aż w końcu to rozgryzę! To super satysfakcja.", points: 5 }
-                ]
-            },
-            {
-                question: "Co najbardziej kręci Cię w technologii?",
-                options: [
-                    { text: "Tylko granie w gry.", points: 2 },
-                    { text: "Zastanawiam się, jak gry i programy są zrobione.", points: 5 },
-                    { text: "Lubię, gdy sprzęt po prostu działa.", points: 3 }
-                ]
-            }
-        ];
-
-        let activeQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let selectedOptionPoints = 0;
-
-        const introSection = document.getElementById("intro-section");
-        const quizContainer = document.getElementById("quiz-container");
-        const resultContainer = document.getElementById("result-container");
-        const questionEl = document.getElementById("question");
-        const progressEl = document.getElementById("question-progress");
-        const optionsEl = document.getElementById("options");
-        const nextBtn = document.getElementById("next-btn");
-
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        }
-
-        function startQuiz() {
-            activeQuestions = JSON.parse(JSON.stringify(originalQuestions));
-            shuffleArray(activeQuestions);
-            activeQuestions.forEach(q => shuffleArray(q.options));
-
-            currentQuestionIndex = 0;
-            score = 0;
-            
-            introSection.style.display = "none";
-            resultContainer.style.display = "none";
-            quizContainer.style.display = "block";
-            
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            optionsEl.innerHTML = "";
-            nextBtn.style.display = "none";
-            selectedOptionPoints = 0;
-
-            const currentQuestion = activeQuestions[currentQuestionIndex];
-            
-            progressEl.textContent = `Pytanie ${currentQuestionIndex + 1} z ${activeQuestions.length}`;
-            questionEl.textContent = currentQuestion.question;
-
-            currentQuestion.options.forEach((option) => {
-                const button = document.createElement("button");
-                button.textContent = option.text;
-                button.classList.add("option-btn");
-                button.onclick = () => selectOption(button, option.points);
-                optionsEl.appendChild(button);
-            });
-        }
-
-        function selectOption(selectedButton, points) {
-            const buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach(btn => btn.classList.remove("selected"));
-
-            selectedButton.classList.add("selected");
-            selectedOptionPoints = points;
-            
-            nextBtn.style.display = "inline-block";
-        }
-
-        function nextQuestion() {
-            score += selectedOptionPoints;
-            currentQuestionIndex++;
-
-            if (currentQuestionIndex < activeQuestions.length) {
-                loadQuestion();
-            } else {
-                showResult();
-            }
-        }
-
-        function showResult() {
-            quizContainer.style.display = "none";
-            resultContainer.style.display = "block";
-
-            incrementGlobalCounter();
-
-            const maxScore = activeQuestions.length * 5;
-            const percentage = (score / maxScore) * 100;
-            
-            document.getElementById("score-badge").innerHTML = `Twój wynik: <span>${score}</span> / ${maxScore} pkt`;
-            
-            setTimeout(() => {
-                document.getElementById("progress-fill").style.width = percentage + "%";
-            }, 100);
-
-            const titleEl = document.getElementById("result-title");
-            const textEl = document.getElementById("result-text");
-
-            if (score >= 24) {
-                titleEl.textContent = "Urodzony Informatyk! 🚀";
-                textEl.innerHTML = "Masz świetne zadatki na specjalistę IT! Logiczne myślenie i rozwiązywanie problemów to Twoja mocna strona. W klasie <strong>Technik Informatyk</strong> poczujesz się jak ryba w wodzie!";
-            } else if (score >= 14) {
-                titleEl.textContent = "Masz duży potencjał! 💻";
-                textEl.innerHTML = "Technologia Cię ciekawi i znasz już podstawy, ale jest jeszcze wiele do odkrycia. U nas oszlifujesz swoje umiejętności. Założymy się, że programowanie i sieci szybko staną się Twoją pasją!";
-            } else {
-                titleEl.textContent = "Czysta karta gotowa na zapis! 📖";
-                textEl.innerHTML = "Może jeszcze nie jesteś hakerem, ale... nic straconego! Profil Technik Informatyk jest po to, żeby <strong>nauczyć Cię wszystkiego od zera</strong>. Jeśli tylko masz chęci, zrobimy z Ciebie profesjonalistę!";
-            }
-        }
-
-        function resetToHome() {
-            resultContainer.style.display = "none";
-            introSection.style.display = "block";
-            document.getElementById("progress-fill").style.width = "0%";
-        }
     </script>
 </body>
 </html>
