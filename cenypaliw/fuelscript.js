@@ -16,6 +16,8 @@ const STATE = {
     forecastData: null
 };
 
+const MY_PROXY = "https://proxy.kacpiq.workers.dev/";
+
 // Initialize particles.js
 particlesJS("particles-js", {
     particles: {
@@ -42,37 +44,30 @@ async function fetchLastData() {
     const year = yesterday.getFullYear();
 
     const productIds = {
-        'Pb95': 41,
-        'Pb98': 42,
-        'ONEkodiesel': 43,
-        'ONArctic2': 44
+        'Pb95': 41, 'Pb98': 42, 'ONEkodiesel': 43, 'ONArctic2': 44
     };
 
     const taxes = {
-        'Pb95': 1.26,
-        'Pb98': 1.32,
-        'ONEkodiesel': 1.26,
-        'ONArctic2': 1.26,
-        'LPG': 1.26
+        'Pb95': 1.26, 'Pb98': 1.32, 'ONEkodiesel': 1.26, 'ONArctic2': 1.26, 'LPG': 1.26
     };
 
     lastWeekPrices = {};
 
     // Pobierz ceny hurtowe
     await Promise.all(Object.entries(productIds).map(async ([productName, productId]) => {
-        const url = `https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
+        // ZMIANA: Używamy MY_PROXY zamiast corsproxy.io
+        const url = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
 
         try {
             const res = await fetch(url);
             const data = await res.json();
-            if (data && data.length > 1) {
-                const rawValue = data[1].value;
+            // ZMIANA: data.at(-2) lub data.at(-1) - bierzemy ostatnie dostępne dane, a nie sztywne [1]
+            if (data && data.length > 0) {
+                const latestData = data.length > 1 ? data[data.length - 2] : data[0]; 
+                const rawValue = latestData.value;
                 const netto = rawValue / 1000;
                 const brutto = (netto * taxes[productName]).toFixed(2);
                 lastWeekPrices[productName] = parseFloat(brutto);
-                console.log(`${productName}: ${brutto}`);
-            } else {
-                console.warn(`Brak danych dla ${productName}`);
             }
         } catch (err) {
             console.error(`Błąd dla ${productName}:`, err);
@@ -81,23 +76,17 @@ async function fetchLastData() {
 
     // Pobierz LPG
     try {
-        const res = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
+        const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
         const dates = await res.json();
-        if (dates.length >= 2) {
-            const targetDate = dates[1];
-            const lpgRes = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/autogasprices/ByDate?date=${targetDate}`);
+        if (dates.length >= 1) {
+            const targetDate = dates.length > 1 ? dates[1] : dates[0];
+            const lpgRes = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/ByDate?date=${targetDate}`);
             const lpgData = await lpgRes.json();
 
-            const malopolska = lpgData.find(entry =>
-                entry.locationName.toLowerCase() === "małopolskie"
-            );
-
+            const malopolska = lpgData.find(entry => entry.locationName.toLowerCase() === "małopolskie");
             if (malopolska && malopolska.value) {
                 const brutto = parseFloat((malopolska.value * taxes['LPG']).toFixed(2));
                 lastWeekPrices['LPG'] = brutto;
-                console.log(`LPG (małopolskie): ${brutto}`);
-            } else {
-                console.warn("Brak LPG dla Małopolskiego");
             }
         }
     } catch (err) {
@@ -483,7 +472,7 @@ function fetchHistoryData() {
     let taxRate = 0.26;
     if (productId === '42') taxRate = 0.32;
     
-    const historyUrl = `https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
+    const historyUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
     
     fetch(historyUrl)
         .then(response => response.json())
@@ -702,7 +691,7 @@ async function analyzeMultiFuelTrends() {
 
         for (let fuel of fuelsToCheck) {
             try {
-                const res = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
+                const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
                 const data = await res.json();
                 
                 if (data && data.length > 10) {
