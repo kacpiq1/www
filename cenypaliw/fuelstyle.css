@@ -1333,3 +1333,17 @@ body.dark-theme #view-forecast .report-close-btn {
 body.dark-theme #view-forecast .report-close-btn:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
 }
+
+.cpn-badge {
+    background: linear-gradient(135deg, #FFD700, #F59E0B);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 8px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+    vertical-align: middle;
+    letter-spacing: 1px;
+}

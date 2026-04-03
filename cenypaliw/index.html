@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="fuelstyle.css">
+    <link rel="stylesheet" href="cenypaliw/fuelstyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,13 +22,14 @@
         <h2 style="color: var(--text); margin-top: 1rem;">Ładowanie danych...</h2>
     </div>
 
-    <div class="container animate-up" id="container" style="display: none;">
-        <div class="alert alert-info animate">
-            <i class='bx bx-info-circle'></i>
-            <span>Witaj w nowej odświeżonej wersji naszej strony.</span>
-        </div>
+    <!--<div class="container animate-up" id="container" style="display: none;">
+        <div class="alert alert-warning animate">
+            <i class='bx bx-alert-triangle'></i>
+            <span>Występują problemy z wczytywaniem historii cen paliw oraz trendu. Pracujemy nad tym.</span>
+        </div>-->
 
         <h1 class="animate">Aktualne Ceny Paliw</h1>
+
 
         <!-- Trend Analysis Widget -->
 <div id="trend-widget" onclick="openForecastDetails()" class="trend-widget-card">
@@ -85,7 +86,7 @@
         </div>
 
         <div class="update-info animate">
-            Prognoza na okres 21.04-27.04.2025
+            Prognoza na okres 6.04-12.04.2026
         </div>
     </div>
 
@@ -240,7 +241,6 @@
     
     <div class="report-content">
         <div id="forecast-hero-bg" class="report-hero trend-up">
-            <div class="animate-shine"></div>
             <div class="report-hero-inner">
                 <p class="report-hero-subtitle">Prognoza 7-Dniowa</p>
                 <h3 id="forecast-main-title" class="report-hero-title text-orlenRed">Trend Wzrostowy</h3>
@@ -298,7 +298,7 @@
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
     </footer>
 
-    <script src="fuelscript.js"></script>
+    <script src="cenypaliw/fuelscript.js"></script>
 
 </body>
 </html>

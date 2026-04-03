@@ -1,6 +1,42 @@
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+    @keyframes pulseAlert {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(218, 33, 40, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0); }
+    }
+    .jutro-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(45deg, #DA2128, #ff4b52);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(218, 33, 40, 0.4);
+        animation: pulseAlert 2s infinite;
+        margin-top: 5px;
+    }
+    .dzis-badge {
+        color: #4CAF50;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+    }
+`;
+document.head.appendChild(styleSheet);
+
 let originalPrices = {};
 let priceHistoryChart = null;
-let lastWeekPrices = {};
+
+// Globalny magazyn na historyczne dane
+window.dailyNettoPrices = {};
+let rawFuelDataList = [];
+let rawLpgData = null;
 
 // Product icons
 const productIcons = {
@@ -11,10 +47,30 @@ const productIcons = {
     'ONArctic2': 'https://www.kacpiq.pl/img/vervadiesel.png'
 };
 
-// Stan aplikacji
 const STATE = {
-    forecastData: null
+    forecastData: null,
+    currentDisplayDate: null
 };
+
+const MY_PROXY = "https://proxy.kacpiq.workers.dev/";
+
+// RĘCZNE NADPISANIE CEN DLA 31.03.2026 (Nie zmieniane)
+const OVERRIDE_PRICES = {
+    '2026-03-31': {
+        'Pb95': 6.16,
+        'ONEkodiesel': 7.54,
+        'Pb98': 6.76,
+        'ONArctic2': 7.60 
+    }
+};
+
+// POMOCNICZA FUNKCJA: OBSUNIĘCIE DATY O +1 DZIEŃ
+function shiftDate(dateStr) {
+    if (!dateStr) return dateStr;
+    let d = new Date(dateStr);
+    d.setDate(d.getDate() + 1); // Dodajemy jeden dzień
+    return d.toISOString().split('T')[0];
+}
 
 // Initialize particles.js
 particlesJS("particles-js", {
@@ -36,107 +92,135 @@ particlesJS("particles-js", {
     }
 });
 
+// === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
+function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
+    if (productName === 'LPG') return wholesalePriceNetto * 1.26; 
+
+    let isCpnActive = true; 
+
+    if (dateStr && dateStr < '2026-03-31') {
+        isCpnActive = false;
+    }
+
+    if (isCpnActive) {
+        return (wholesalePriceNetto + 0.30) * 1.08;
+    } else {
+        let taxRate = 0.26;
+        if (productName === 'Pb98') taxRate = 0.32;
+        return wholesalePriceNetto * (1 + taxRate);
+    }
+}
+// =============================================
+
+// === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
 async function fetchLastData() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const year = yesterday.getFullYear();
+    const year = new Date().getFullYear();
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
 
     const productIds = {
-        'Pb95': 41,
-        'Pb98': 42,
-        'ONEkodiesel': 43,
-        'ONArctic2': 44
+        'Pb95': 41, 'Pb98': 42, 'ONEkodiesel': 43, 'ONArctic2': 44
     };
 
-    const taxes = {
-        'Pb95': 1.26,
-        'Pb98': 1.32,
-        'ONEkodiesel': 1.26,
-        'ONArctic2': 1.26,
-        'LPG': 1.26
-    };
+    window.dailyNettoPrices = {};
 
-    lastWeekPrices = {};
-
-    // Pobierz ceny hurtowe
     await Promise.all(Object.entries(productIds).map(async ([productName, productId]) => {
-        const url = `https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
-
+        const url = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
         try {
             const res = await fetch(url);
-            const data = await res.json();
-            if (data && data.length > 1) {
-                const rawValue = data[1].value;
-                const netto = rawValue / 1000;
-                const brutto = (netto * taxes[productName]).toFixed(2);
-                lastWeekPrices[productName] = parseFloat(brutto);
-                console.log(`${productName}: ${brutto}`);
-            } else {
-                console.warn(`Brak danych dla ${productName}`);
+            if (!res.ok) return;
+            const text = await res.text();
+            if (!text || text.trim() === "") return;
+            
+            const data = JSON.parse(text);
+            if (data && data.length > 0) {
+                let todayNetto = 0;
+                let yesterdayNetto = 0;
+                
+                data.sort((a,b) => a.effectiveDate.localeCompare(b.effectiveDate));
+                
+                for (let item of data) {
+                    const shiftedDate = shiftDate(item.effectiveDate.split('T')[0]);
+                    let netto = item.value / 1000;
+                    
+                    if (shiftedDate <= todayStr) todayNetto = netto;
+                    if (shiftedDate <= yesterdayStr) yesterdayNetto = netto;
+                }
+                window.dailyNettoPrices[productName] = { todayNetto, yesterdayNetto };
             }
         } catch (err) {
-            console.error(`Błąd dla ${productName}:`, err);
+            console.error(`Błąd dla ${productName}:`, err.message);
         }
     }));
 
-    // Pobierz LPG
     try {
-        const res = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
-        const dates = await res.json();
-        if (dates.length >= 2) {
-            const targetDate = dates[1];
-            const lpgRes = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/autogasprices/ByDate?date=${targetDate}`);
-            const lpgData = await lpgRes.json();
-
-            const malopolska = lpgData.find(entry =>
-                entry.locationName.toLowerCase() === "małopolskie"
-            );
-
-            if (malopolska && malopolska.value) {
-                const brutto = parseFloat((malopolska.value * taxes['LPG']).toFixed(2));
-                lastWeekPrices['LPG'] = brutto;
-                console.log(`LPG (małopolskie): ${brutto}`);
-            } else {
-                console.warn("Brak LPG dla Małopolskiego");
+        const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
+        if (res.ok) {
+            const textResponse = await res.text();
+            if (textResponse && textResponse.trim() !== "") {
+                const dates = JSON.parse(textResponse);
+                if (dates && dates.length >= 1) {
+                    let lpgDataArr = [];
+                    for (let i = 0; i < Math.min(5, dates.length); i++) {
+                        try {
+                            const lpgRes = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/ByDate?date=${dates[i].split('T')[0]}`);
+                            if (!lpgRes.ok) continue;
+                            const lpgText = await lpgRes.text();
+                            if (!lpgText || lpgText.trim() === "") continue;
+                            
+                            const lpgData = JSON.parse(lpgText);
+                            const malopolska = lpgData.find(entry => entry.locationName.toLowerCase() === "małopolskie");
+                            if (malopolska) {
+                                lpgDataArr.push({
+                                    shiftedDate: shiftDate(dates[i].split('T')[0]),
+                                    value: malopolska.value
+                                });
+                            }
+                        } catch (errLoop) {}
+                    }
+                    
+                    lpgDataArr.sort((a,b) => a.shiftedDate.localeCompare(b.shiftedDate));
+                    let lpgTodayNetto = 0;
+                    let lpgYesterdayNetto = 0;
+                    
+                    for (let item of lpgDataArr) {
+                        if (item.shiftedDate <= todayStr) lpgTodayNetto = item.value;
+                        if (item.shiftedDate <= yesterdayStr) lpgYesterdayNetto = item.value;
+                    }
+                    window.dailyNettoPrices['LPG'] = { todayNetto: lpgTodayNetto, yesterdayNetto: lpgYesterdayNetto };
+                }
             }
         }
     } catch (err) {
-        console.error("Błąd pobierania LPG:", err);
+        console.warn("Brak dostępu do historii LPG z Orlenu, polegamy na bieżącym proxy.");
+    }
+    
+    if (!window.dailyNettoPrices['LPG']) {
+        window.dailyNettoPrices['LPG'] = { todayNetto: 0, yesterdayNetto: 0 };
     }
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    // Initialize theme
     loadThemeFromLocalStorage();
-
-    // Show info modal if not acknowledged
     if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
         setTimeout(showInfoModal, 1500);
     }
-
-    // Check if mobile device
     if (isMobileDevice()) {
         showNotification("Strona może nie wyświetlać się optymalnie na urządzeniach mobilnych");
     }
 
-    // Poczekaj na ceny
     await fetchLastData();
-
-    // Teraz bezpiecznie odpal resztę
     fetchData();
     initializeYearSelector();
     
-    // Analiza trendów
     setTimeout(() => {
         analyzeMultiFuelTrends();
     }, 2000);
 });
 
-// Initialize year selector for history
 function initializeYearSelector() {
     const yearSelect = document.getElementById('year');
     const currentYear = new Date().getFullYear();
-    
     for (let year = currentYear; year >= 2004; year--) {
         const option = document.createElement('option');
         option.value = year;
@@ -145,11 +229,8 @@ function initializeYearSelector() {
     }
 }
 
-// Fetch fuel data
 function fetchData() {
     showLoading();
-    
-    // Fetch fuel prices
     fetch('https://cenypaliw.kacpiq.workers.dev/')
         .then(response => response.json())
         .then(data => {
@@ -163,82 +244,183 @@ function fetchData() {
         });
 }
 
-// Process fuel data
 function processFuelData(data) {
-    const publishFrom = data[0]?.publishFrom?.replace('T00:00:00', '') || 'brak danych';
-    document.getElementById('updateInfo').textContent = `Ostatnia aktualizacja: ${publishFrom}`;
+    let latestDate = 'brak danych';
+    let isTomorrowAvailable = false;
     
-    const filteredData = data.filter(item => 
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
+    
+    if (data && data.length > 0 && data[0].publishFrom) {
+        latestDate = shiftDate(data[0].publishFrom.replace('T00:00:00', '').split('T')[0]);
+        if (latestDate >= tomorrowStr) {
+            isTomorrowAvailable = true;
+        }
+    }
+    
+    STATE.currentDisplayDate = latestDate;
+    const updateInfoEl = document.getElementById('updateInfo');
+    
+    if (isTomorrowAvailable) {
+        updateInfoEl.innerHTML = `
+            <div class="jutro-badge">
+                <i class='bx bx-time-five'></i> UWAGA: OPUBIKOWANO CENY NA JUTRO (${latestDate})
+            </div>`;
+    } else {
+        updateInfoEl.innerHTML = `
+            <span class="dzis-badge">
+                <i class='bx bx-check-circle'></i> Ceny obowiązujące dzisiaj (${todayStr})
+            </span>`;
+    }
+    
+    rawFuelDataList = data.filter(item => 
         item.productName === 'Pb95' || 
         item.productName === 'ONEkodiesel' ||
         item.productName === 'Pb98' || 
         item.productName === 'ONArctic2'
-    ).map(item => {
-        let taxRate = 0.26;
-        if (item.productName === 'Pb98') taxRate = 0.32;
-        
-        const currentPrice = (item.value / 1000) * (1 + taxRate);
-        const priceChange = calculatePriceChange(item.productName, currentPrice);
-        
-        return {
-            productName: item.productName,
-            valueWithTax: currentPrice.toFixed(2),
-            valueWithoutTax: (item.value / 1000).toFixed(2),
-            priceChange: priceChange
-        };
-    });
+    );
     
-    renderFuelCards(filteredData);
+    renderAllFuels();
     processForecastData();
 }
 
-// Calculate price change compared to last week
-function calculatePriceChange(productName, currentPrice) {
-    if (!lastWeekPrices[productName]) return 0;
-    
-    const change = ((currentPrice - lastWeekPrices[productName]) / lastWeekPrices[productName]) * 100;
-    return parseFloat(change.toFixed(1));
-}
-
-// Fetch LPG data
 function fetchLPGData() {
     fetch('https://cenypaliw-lpg.kacpiq.workers.dev/')
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            if (!response.ok) throw new Error("HTTP error " + response.status);
+            return response.text();
+        })
+        .then(text => {
+            if (!text || text.trim() === "") throw new Error("Pusta odpowiedź API LPG");
+            const data = JSON.parse(text);
             if (Array.isArray(data)) {
                 const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
                 if (małopolskieData) {
-                    console.log(małopolskieData.value)
-                    const currentPrice = małopolskieData.value * 1.26;
-                    const priceChange = calculatePriceChange('LPG', currentPrice);
-                    
-                    const lpgData = {
-                        productName: 'LPG',
-                        valueWithTax: currentPrice.toFixed(2),
-                        valueWithoutTax: małopolskieData.value.toFixed(2),
-                        priceChange: priceChange
-                    };
-                    
-                    // Add LPG to fuel cards
-                    const fuelGrid = document.getElementById('fuelGrid');
-                    fuelGrid.appendChild(createFuelCard(lpgData));
+                    rawLpgData = małopolskieData;
+                    renderAllFuels();
                 }
             }
             hideLoading();
         })
         .catch(error => {
-            console.error('Error fetching LPG data:', error);
+            console.warn('Aktualnie dane LPG są niedostępne:', error.message);
             hideLoading();
         });
 }
 
-// Create fuel card element
+function renderAllFuels() {
+    const fuelGrid = document.getElementById('fuelGrid');
+    fuelGrid.innerHTML = '';
+    
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
+    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
+    
+    let isTomorrowAvailable = STATE.currentDisplayDate >= tomorrowStr;
+    const fuels = ['Pb95', 'ONEkodiesel', 'Pb98', 'ONArctic2', 'LPG'];
+    
+    fuels.forEach(productName => {
+        let pricesObj = window.dailyNettoPrices[productName];
+        if (!pricesObj) return;
+        
+        let todayNetto = pricesObj.todayNetto; // Prawdziwy hurt
+        let yesterdayNetto = pricesObj.yesterdayNetto; // Prawdziwy hurt
+        
+        if (productName === 'LPG' && rawLpgData) {
+            if (todayNetto === 0) todayNetto = rawLpgData.value;
+            if (yesterdayNetto === 0) yesterdayNetto = rawLpgData.value;
+        }
+        
+        if (todayNetto === 0) return; 
+        
+        // Zawsze używamy hurtu z Efecta Diesel dla ceny rynkowej Vervy (od 01.04.2026)
+        let efectaTodayNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].todayNetto : todayNetto;
+        let efectaYesterdayNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].yesterdayNetto : yesterdayNetto;
+
+        let todayPrice = 0;
+        if (todayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
+            todayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
+        } else if (productName === 'ONArctic2' && todayStr >= '2026-04-01' && efectaTodayNetto > 0) {
+            todayPrice = calculateRetailPrice('ONEkodiesel', efectaTodayNetto, todayStr);
+        } else {
+            todayPrice = calculateRetailPrice(productName, todayNetto, todayStr);
+        }
+        
+        let yesterdayPrice = 0;
+        if (yesterdayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
+            yesterdayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
+        } else if (productName === 'ONArctic2' && yesterdayStr >= '2026-04-01' && efectaYesterdayNetto > 0) {
+            yesterdayPrice = calculateRetailPrice('ONEkodiesel', efectaYesterdayNetto, yesterdayStr);
+        } else {
+            yesterdayPrice = calculateRetailPrice(productName, yesterdayNetto, yesterdayStr);
+        }
+        
+        const priceChange = yesterdayPrice > 0 ? ((todayPrice - yesterdayPrice) / yesterdayPrice) * 100 : 0;
+        
+        let tomorrowBadgeHtml = '';
+        if (isTomorrowAvailable) {
+            let tomorrowNetto = 0;
+            let tomorrowEfectaNetto = 0;
+
+            if (productName === 'LPG' && rawLpgData) {
+                tomorrowNetto = rawLpgData.value;
+            } else {
+                const rawFuel = rawFuelDataList.find(f => f.productName === productName);
+                if (rawFuel) tomorrowNetto = rawFuel.value / 1000; // Prawdziwy hurt jutro
+
+                const rawEfecta = rawFuelDataList.find(f => f.productName === 'ONEkodiesel');
+                if (rawEfecta) tomorrowEfectaNetto = rawEfecta.value / 1000;
+            }
+            
+            if (tomorrowNetto > 0) {
+                let tomorrowPrice = 0;
+                if (tomorrowStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
+                    tomorrowPrice = OVERRIDE_PRICES['2026-03-31'][productName];
+                } else if (productName === 'ONArctic2' && tomorrowStr >= '2026-04-01' && tomorrowEfectaNetto > 0) {
+                    tomorrowPrice = calculateRetailPrice('ONEkodiesel', tomorrowEfectaNetto, tomorrowStr);
+                } else {
+                    tomorrowPrice = calculateRetailPrice(productName, tomorrowNetto, tomorrowStr);
+                }
+                
+                let diffGrosze = (tomorrowPrice - todayPrice) * 100;
+                let diffFormatted = diffGrosze > 0 ? `+${diffGrosze.toFixed(0)}gr` : `${diffGrosze.toFixed(0)}gr`;
+                
+                let badgeColor = diffGrosze > 0 ? '#DA2128' : (diffGrosze < 0 ? '#4CAF50' : '#8D99AE');
+                let badgeIcon = diffGrosze > 0 ? 'bx-trending-up' : (diffGrosze < 0 ? 'bx-trending-down' : 'bx-minus');
+                
+                if (Math.abs(diffGrosze) >= 1) {
+                    tomorrowBadgeHtml = `
+                        <div style="margin-top: 12px; background: ${badgeColor}15; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: ${badgeColor}; display: inline-flex; align-items: center; gap: 4px; border: 1px solid ${badgeColor}33;">
+                            <i class='bx ${badgeIcon}'></i> Jutro: ${tomorrowPrice.toFixed(2)} PLN (${diffFormatted})
+                        </div>
+                    `;
+                } else {
+                     tomorrowBadgeHtml = `
+                        <div style="margin-top: 12px; background: rgba(0,0,0,0.03); padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: #8D99AE; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(0,0,0,0.05);">
+                            <i class='bx bx-check'></i> Jutro cena bez zmian
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        const fuelData = {
+            productName,
+            todayPrice,
+            todayNetto, // To zostaje w interfejsie jako PRAWDZIWY hurt dla Vervy
+            priceChange,
+            tomorrowBadgeHtml
+        };
+        
+        fuelGrid.appendChild(createFuelCard(fuelData));
+    });
+}
+
 function createFuelCard(fuelData) {
     const card = document.createElement('div');
     card.className = 'fuel-card animate-up';
     card.id = `fuel-card-${fuelData.productName}`;
     
-    // Determine price change style
     let priceChangeClass = 'price-neutral';
     let priceChangeIcon = 'bx-minus';
     
@@ -249,68 +431,67 @@ function createFuelCard(fuelData) {
         priceChangeClass = 'price-down';
         priceChangeIcon = 'bx-down-arrow-alt';
     }
+
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    let cpnTagHtml = '';
+    if (fuelData.productName !== 'LPG' && todayStr >= '2026-03-31') {
+        cpnTagHtml = '<span class="cpn-badge">CPN</span>';
+    }
     
     card.innerHTML = `
         <div class="fuel-header">
             <img src="${productIcons[fuelData.productName]}" alt="${fuelData.productName}" class="fuel-icon">
-            <div class="fuel-name">${getFuelDisplayName(fuelData.productName)}</div>
+            <div class="fuel-name">${getFuelDisplayName(fuelData.productName)} ${cpnTagHtml}</div>
         </div>
         <div class="fuel-price">
-            ${fuelData.valueWithTax} PLN
+            ${fuelData.todayPrice.toFixed(2)} PLN
             <span class="price-change ${priceChangeClass}">
-                <i class='bx ${priceChangeIcon}'></i> ${Math.abs(fuelData.priceChange)}%
+                <i class='bx ${priceChangeIcon}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
             </span>
         </div>
-        <div class="fuel-price-wholesale">Cena hurtowa: ${fuelData.valueWithoutTax} PLN</div>
+        <div class="fuel-price-wholesale">Hurt netto: ${fuelData.todayNetto.toFixed(2)} PLN</div>
+        ${fuelData.tomorrowBadgeHtml}
     `;
     
-    // Store original price
-    originalPrices[fuelData.productName] = fuelData.valueWithTax;
-    
+    originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
     return card;
 }
 
-// Render fuel cards
-function renderFuelCards(fuelData) {
-    const fuelGrid = document.getElementById('fuelGrid');
-    fuelGrid.innerHTML = '';
-    
-    fuelData.forEach(data => {
-        fuelGrid.appendChild(createFuelCard(data));
-    });
-}
-
-// Process forecast data
 function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 5.76, maxPrice: 5.89 },
-        { productName: 'Pb98', minPrice: 6.52, maxPrice: 6.67 },
-        { productName: 'ONEkodiesel', minPrice: 5.85, maxPrice: 5.99 },
+        { productName: 'Pb95', minPrice: 6.18, maxPrice: 6.27 },
+        { productName: 'Pb98', minPrice: 6.79, maxPrice: 6.89 },
+        { productName: 'ONEkodiesel', minPrice: 7.85, maxPrice: 7.99 },
         { productName: 'ONArctic2', minPrice: 6.05, maxPrice: 6.25 },
-        { productName: 'LPG', minPrice: 3.02, maxPrice: 3.09 }
+        { productName: 'LPG', minPrice: 3.84, maxPrice: 3.99 }
     ];
     
     const forecastGrid = document.getElementById('forecastGrid');
     forecastGrid.innerHTML = '';
     
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    
     forecastData.forEach(data => {
         const card = document.createElement('div');
         card.className = 'fuel-card animate-up';
         
+        let cpnTagHtml = '';
+        if (data.productName !== 'LPG' && todayStr >= '2026-03-31') {
+            cpnTagHtml = '<span class="cpn-badge">CPN</span>';
+        }
+
         card.innerHTML = `
             <div class="fuel-header">
                 <img src="${productIcons[data.productName]}" alt="${data.productName}" class="fuel-icon">
-                <div class="fuel-name">${getFuelDisplayName(data.productName)}</div>
+                <div class="fuel-name">${getFuelDisplayName(data.productName)} ${cpnTagHtml}</div>
             </div>
             <div class="fuel-price">${data.minPrice.toFixed(2)} - ${data.maxPrice.toFixed(2)} PLN</div>
             <div class="fuel-price-wholesale">Prognozowany zakres cen</div>
         `;
-        
         forecastGrid.appendChild(card);
     });
 }
 
-// Get fuel display name
 function getFuelDisplayName(productName) {
     const names = {
         'Pb95': 'EFECTA 95',
@@ -322,30 +503,22 @@ function getFuelDisplayName(productName) {
     return names[productName] || productName;
 }
 
-// Show coupon modal
 function showCouponModal() {
     document.getElementById('couponModal').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('couponModal').classList.add('show');
-    }, 10);
+    setTimeout(() => { document.getElementById('couponModal').classList.add('show'); }, 10);
 }
 
-// Close coupon modal
 function closeCouponModal() {
     document.getElementById('couponModal').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('couponModal').style.display = 'none';
-    }, 300);
+    setTimeout(() => { document.getElementById('couponModal').style.display = 'none'; }, 300);
 }
 
-// Apply coupon
 function applyCoupon() {
     const couponValue = parseFloat(document.getElementById('couponSelect').value);
     const messageElement = document.getElementById('couponMessage');
     const expiryElement = document.getElementById('couponExpiry');
     
     if (couponValue === 0) {
-        // Remove coupon
         Object.keys(originalPrices).forEach(productName => {
             const card = document.getElementById(`fuel-card-${productName}`);
             if (card && !card.querySelector('.fuel-name').textContent.includes('LPG')) {
@@ -356,47 +529,34 @@ function applyCoupon() {
                 }
             }
         });
-        
         messageElement.innerHTML = '<i class="bx bx-check-circle"></i> Kupon został usunięty. Ceny przywrócone.';
         expiryElement.style.display = 'none';
     } else {
-        // Apply coupon
         Object.keys(originalPrices).forEach(productName => {
             const card = document.getElementById(`fuel-card-${productName}`);
             if (card && !card.querySelector('.fuel-name').textContent.includes('LPG')) {
                 const priceElement = card.querySelector('.fuel-price');
                 if (priceElement) {
-                    // Remove any existing coupon badge
                     priceElement.innerHTML = priceElement.innerHTML.replace(/<span class="coupon-badge">.*?<\/span>/, '');
-                    
-                    // Apply new price
                     const originalPrice = parseFloat(originalPrices[productName]);
                     const newPrice = (originalPrice + couponValue).toFixed(2);
-                    
-                    // Update price with animation
                     priceElement.innerHTML = priceElement.innerHTML.replace(
                         `${originalPrice.toFixed(2)} PLN`, 
                         `${newPrice} PLN<span class="coupon-badge">-${Math.abs(couponValue * 100)} gr</span>`
                     );
-                    
-                    // Add flash effect
                     priceElement.classList.add('price-flash');
-                    setTimeout(() => {
-                        priceElement.classList.remove('price-flash');
-                    }, 2000);
+                    setTimeout(() => { priceElement.classList.remove('price-flash'); }, 2000);
                 }
             }
         });
-        
         messageElement.innerHTML = `<i class="bx bx-check-circle"></i> Kupon zastosowany! Obniżka <strong>${Math.abs(couponValue * 100)} gr/l</strong>`;
         expiryElement.style.display = 'flex';
         startCouponCountdown();
     }
 }
 
-// Start coupon countdown
 function startCouponCountdown() {
-    const couponExpiryDate = new Date('2025-04-31T23:59:59');
+    const couponExpiryDate = new Date('2026-04-30T23:59:59');
     const now = new Date();
     const timeLeft = couponExpiryDate - now;
     
@@ -411,7 +571,6 @@ function startCouponCountdown() {
     function updateCountdown() {
         const now = new Date();
         const timeLeft = couponExpiryDate - now;
-        
         if (timeLeft <= 0) {
             document.getElementById('couponMessage').innerHTML = '<i class="bx bx-error-circle"></i> Kupon wygasł';
             return;
@@ -432,17 +591,13 @@ function startCouponCountdown() {
 function showInfoModal() {
     if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
         document.getElementById('infoModal').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('infoModal').classList.add('show');
-        }, 10);
+        setTimeout(() => { document.getElementById('infoModal').classList.add('show'); }, 10);
     }
 }
 
 function closeInfoModal() {
     document.getElementById('infoModal').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('infoModal').style.display = 'none';
-    }, 300);
+    setTimeout(() => { document.getElementById('infoModal').style.display = 'none'; }, 300);
 }
 
 function closeInfoModalAndAcknowledge() {
@@ -450,7 +605,6 @@ function closeInfoModalAndAcknowledge() {
     closeInfoModal();
 }
 
-// Toggle history modal
 function toggleHistory() {
     document.getElementById('historyModal').style.display = 'block';
     setTimeout(() => {
@@ -459,15 +613,12 @@ function toggleHistory() {
     }, 10);
 }
 
-// Close history modal
 function closeHistoryModal() {
     document.getElementById('historyModal').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('historyModal').style.display = 'none';
-    }, 300);
+    setTimeout(() => { document.getElementById('historyModal').style.display = 'none'; }, 300);
 }
 
-// Fetch history data
+// === POBIERANIE DANYCH HISTORII ===
 function fetchHistoryData() {
     const loadingElement = document.getElementById('loadingHistory');
     const tableBody = document.getElementById('historyTableBody');
@@ -478,18 +629,55 @@ function fetchHistoryData() {
     const fuelType = document.getElementById('fuelType').value;
     const selectedYear = document.getElementById('year').value;
     const productId = fuelType.split('-')[0];
+    
+    let productNameKey = '';
+    if (productId === '41') productNameKey = 'Pb95';
+    else if (productId === '42') productNameKey = 'Pb98';
+    else if (productId === '43') productNameKey = 'ONEkodiesel';
+    else if (productId === '44') productNameKey = 'ONArctic2';
+    
     const viewOption = document.querySelector('input[name="dataView"]:checked').value;
-    
-    let taxRate = 0.26;
-    if (productId === '42') taxRate = 0.32;
-    
-    const historyUrl = `https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
+    const historyUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
     
     fetch(historyUrl)
         .then(response => response.json())
-        .then(data => {
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="2">Brak danych dla wybranego okresu</td></tr>';
+        .then(async data => {
+            
+            // POBIERAMY RÓWNOLEGLE HISTORIĘ EFECTA DIESEL, JEŚLI WYSZUKUJEMY VERVĘ
+            let efectaMap = {};
+            if (productId === '44') {
+                try {
+                    const efectaUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=43&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
+                    const resEfecta = await fetch(efectaUrl);
+                    const dataEfecta = await resEfecta.json();
+                    dataEfecta.forEach(e => {
+                        efectaMap[e.effectiveDate] = e.value;
+                    });
+                } catch(e) {
+                    console.error("Błąd pobierania bazy Efecty dla Vervy w historii");
+                }
+            }
+
+            const transformedData = data.map(item => {
+                const shiftedDateStr = shiftDate(item.effectiveDate.split('T')[0]);
+                let efectaValue = null;
+                
+                // Zapisujemy przypisaną cenę Efecty do tego samego dnia
+                if (productId === '44' && efectaMap[item.effectiveDate]) {
+                    efectaValue = efectaMap[item.effectiveDate];
+                }
+
+                return {
+                    value: item.value,
+                    efectaValue: efectaValue,
+                    shiftedDate: shiftedDateStr,
+                    dateObj: new Date(shiftedDateStr)
+                };
+            });
+
+            if (transformedData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan=\"2\" style=\"text-align:center; padding:2rem; opacity:0.6;\">Brak danych giełdowych dla tego roku.</td></tr>';
+                loadingElement.style.display = 'none';
                 return;
             }
             
@@ -497,29 +685,47 @@ function fetchHistoryData() {
             let maxPrice = -Infinity;
             const processedData = [];
             
-            // Process data based on view option
             if (viewOption === 'daily') {
-                data.forEach(item => {
-                    const date = item.effectiveDate.replace('T00:00:00', '');
-                    const price = (item.value / 1000) * (1 + taxRate);
+                transformedData.forEach(item => {
+                    let price = 0;
+                    if (item.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
+                        price = OVERRIDE_PRICES['2026-03-31'][productNameKey];
+                    } else {
+                        // Jeśli sprawdzamy Vervę (od 01.04.2026), cenę detaliczną liczymy tak jakby to była Efecta
+                        if (productNameKey === 'ONArctic2' && item.shiftedDate >= '2026-04-01' && item.efectaValue) {
+                            price = calculateRetailPrice('ONEkodiesel', item.efectaValue / 1000, item.shiftedDate);
+                        } else {
+                            price = calculateRetailPrice(productNameKey, item.value / 1000, item.shiftedDate); 
+                        }
+                    }
                     
                     if (price < minPrice) minPrice = price;
                     if (price > maxPrice) maxPrice = price;
                     
-                    processedData.push({ date, price });
+                    processedData.push({ date: item.shiftedDate, price });
                 });
             } else {
-                // Monthly view
                 const monthlyData = {};
-                
-                data.forEach(item => {
-                    const month = item.effectiveDate.slice(0, 7);
+                transformedData.forEach(item => {
+                    const month = item.shiftedDate.slice(0, 7);
                     if (!monthlyData[month]) monthlyData[month] = [];
-                    monthlyData[month].push(item.value);
+                    monthlyData[month].push(item);
                 });
                 
-                for (const [month, values] of Object.entries(monthlyData)) {
-                    const avgPrice = (values.reduce((sum, val) => sum + val, 0) / values.length / 1000) * (1 + taxRate);
+                for (const [month, items] of Object.entries(monthlyData)) {
+                    let monthSum = 0;
+                    items.forEach(it => {
+                        if (it.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
+                            monthSum += OVERRIDE_PRICES['2026-03-31'][productNameKey];
+                        } else {
+                            if (productNameKey === 'ONArctic2' && it.shiftedDate >= '2026-04-01' && it.efectaValue) {
+                                monthSum += calculateRetailPrice('ONEkodiesel', it.efectaValue / 1000, it.shiftedDate);
+                            } else {
+                                monthSum += calculateRetailPrice(productNameKey, it.value / 1000, it.shiftedDate);
+                            }
+                        }
+                    });
+                    const avgPrice = monthSum / items.length;
                     
                     if (avgPrice < minPrice) minPrice = avgPrice;
                     if (avgPrice > maxPrice) maxPrice = avgPrice;
@@ -528,14 +734,35 @@ function fetchHistoryData() {
                 }
             }
             
-            // Render table rows
             processedData.forEach(item => {
                 const row = document.createElement('tr');
                 const priceClass = item.price === minPrice ? 'min-price' : item.price === maxPrice ? 'max-price' : '';
                 
+                let showCpnTag = false;
+                if (productNameKey !== 'LPG') {
+                    if (item.date.length > 7 && item.date >= '2026-03-31') {
+                        showCpnTag = true;
+                    } else if (item.date.length === 7 && item.date >= '2026-04') {
+                        showCpnTag = true;
+                    }
+                }
+                const cpnTagHtml = showCpnTag ? ' <span class="cpn-badge">CPN</span>' : '';
+
+                let dateHtml = item.date;
+                if (item.date.length > 7 && item.date >= '2026-03-31') {
+                    const rowDateObj = new Date(item.date);
+                    if (rowDateObj.getDay() === 6) {
+                        if (item.date === '2026-04-04') {
+                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Okres: 04.04.2026 - 07.04.2026)</span>';
+                        } else {
+                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Następna zmiana we wtorek)</span>';
+                        }
+                    }
+                }
+
                 row.innerHTML = `
-                    <td>${item.date}</td>
-                    <td class="${priceClass}">${item.price.toFixed(2)}</td>
+                    <td>${dateHtml}</td>
+                    <td class="${priceClass}">${item.price.toFixed(2)} PLN ${cpnTagHtml}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -544,12 +771,11 @@ function fetchHistoryData() {
         })
         .catch(error => {
             console.error('Error fetching history data:', error);
-            tableBody.innerHTML = '<tr><td colspan="2">Wystąpił błąd podczas pobierania danych</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan=\"2\">Wystąpił błąd podczas pobierania danych z giełdy</td></tr>';
             loadingElement.style.display = 'none';
         });
 }
 
-// Show price history chart
 function showPriceHistoryChart() {
     if (priceHistoryChart) {
         priceHistoryChart.destroy();
@@ -561,14 +787,15 @@ function showPriceHistoryChart() {
     
     tableRows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        if (cells.length === 2) {
-            dates.push(cells[0].textContent);
+        if (cells.length === 2 && !cells[0].textContent.includes('Brak danych')) {
+            const rawDate = cells[0].innerHTML.split('<br>')[0];
+            dates.push(rawDate);
             prices.push(parseFloat(cells[1].textContent));
         }
     });
     
     if (dates.length === 0) {
-        showNotification("Brak danych do wyświetlenia wykresu");
+        showNotification("Brak danych do wyświetlenia wykresu.");
         return;
     }
     
@@ -578,7 +805,7 @@ function showPriceHistoryChart() {
         data: {
             labels: dates,
             datasets: [{
-                label: 'Cena paliwa (PLN)',
+                label: 'Cena rynkowa (PLN)',
                 data: prices,
                 borderColor: 'rgba(227, 6, 19, 1)',
                 backgroundColor: 'rgba(227, 6, 19, 0.1)',
@@ -591,52 +818,37 @@ function showPriceHistoryChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'top',
-                },
+                legend: { position: 'top' },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
-                            return `Cena: ${context.parsed.y.toFixed(2)} PLN`;
-                        }
+                        label: function(context) { return `Cena: ${context.parsed.y.toFixed(2)} PLN`; }
                     }
                 }
             },
             scales: {
                 y: {
                     beginAtZero: false,
-                    ticks: {
-                        callback: function(value) {
-                            return value.toFixed(2) + ' PLN';
-                        }
-                    }
+                    ticks: { callback: function(value) { return value.toFixed(2) + ' PLN'; } }
                 }
             }
         }
     });
     
     document.getElementById('priceHistoryModal').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('priceHistoryModal').classList.add('show');
-    }, 10);
+    setTimeout(() => { document.getElementById('priceHistoryModal').classList.add('show'); }, 10);
 }
 
-// Close price history modal
 function closePriceHistoryModal() {
     document.getElementById('priceHistoryModal').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('priceHistoryModal').style.display = 'none';
-    }, 300);
+    setTimeout(() => { document.getElementById('priceHistoryModal').style.display = 'none'; }, 300);
 }
 
-// Toggle theme
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark-theme' : 'light-theme');
 }
 
-// Load theme from local storage
 function loadThemeFromLocalStorage() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark-theme') {
@@ -644,36 +856,28 @@ function loadThemeFromLocalStorage() {
     }
 }
 
-// Show loading
 function showLoading() {
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('container').style.display = 'none';
 }
 
-// Hide loading
 function hideLoading() {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('container').style.display = 'block';
 }
 
-// Show notification
 function showNotification(message) {
     const notification = document.getElementById('notification');
     notification.style.display = 'flex';
     notification.innerHTML = `<i class='bx bx-check'></i> ${message}`;
     notification.classList.add('show');
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+    setTimeout(() => { notification.classList.remove('show'); }, 3000);
 }
 
-// Check if mobile device
 function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-// Display error message
 function displayError(message) {
     const container = document.getElementById('container');
     container.innerHTML = `
@@ -685,7 +889,6 @@ function displayError(message) {
     container.style.display = 'block';
 }
 
-// ==================== ANALIZA TRENDÓW ====================
 async function analyzeMultiFuelTrends() {
     const year = new Date().getFullYear();
     const fuelsToCheck = [
@@ -702,22 +905,19 @@ async function analyzeMultiFuelTrends() {
 
         for (let fuel of fuelsToCheck) {
             try {
-                const res = await fetch(`https://corsproxy.io/?https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
+                const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
                 const data = await res.json();
                 
                 if (data && data.length > 10) {
                     data.sort((a, b) => new Date(a.effectiveDate) - new Date(b.effectiveDate));
-                    
                     const last30 = data.slice(-30);
                     
                     if (last30.length >= 14) {
                         const last7 = last30.slice(-7);
                         const avg7 = last7.reduce((sum, item) => sum + item.value, 0) / last7.length;
-                        
                         const prev7 = last30.slice(-14, -7);
                         const avgPrev7 = prev7.reduce((sum, item) => sum + item.value, 0) / prev7.length;
                         
-                        // Rzeczywista różnica w groszach
                         const diffGrosze = ((avg7 - avgPrev7) / 1000 * 100);
                         const diffValue = diffGrosze;
                         
@@ -730,34 +930,18 @@ async function analyzeMultiFuelTrends() {
                         let bgClass = "trend-stable";
 
                         if (diffValue > 3) { 
-                            status = "Wzrost"; 
-                            color = "text-red-600"; 
-                            icon = "bx-trending-up";
-                            bgClass = "trend-up";
+                            status = "Wzrost"; color = "text-red-600"; icon = "bx-trending-up"; bgClass = "trend-up";
                         } else if (diffValue < -3) { 
-                            status = "Spadek"; 
-                            color = "text-green-600"; 
-                            icon = "bx-trending-down";
-                            bgClass = "trend-down";
+                            status = "Spadek"; color = "text-green-600"; icon = "bx-trending-down"; bgClass = "trend-down";
                         }
 
-                        trendDetails.push({ 
-                            name: fuel.displayName, 
-                            status, 
-                            color, 
-                            icon, 
-                            bgClass, 
-                            diff: diffValue 
-                        });
+                        trendDetails.push({ name: fuel.displayName, status, color, icon, bgClass, diff: diffValue });
                     }
                 }
             } catch (e) {
-                console.error(`Błąd dla ${fuel.name}:`, e);
-                // Symulowane dane tylko w przypadku błędu API
                 const simDiff = (Math.random() * 30 - 15);
                 allChanges.push(simDiff);
                 globalChangeSum += simDiff;
-                
                 trendDetails.push({ 
                     name: fuel.displayName, 
                     status: simDiff > 3 ? "Wzrost" : (simDiff < -3 ? "Spadek" : "Stabilnie"),
@@ -769,40 +953,25 @@ async function analyzeMultiFuelTrends() {
             }
         }
 
-        // Średnia zmiana
         const avgChange = allChanges.length > 0 ? globalChangeSum / allChanges.length : 0;
-        
-        // Prognoza na 7 dni
         let forecastGrosze = 0;
         let trendType = 'stable';
         
         if (avgChange > 2) {
-            forecastGrosze = avgChange * 1.25;
-            trendType = 'up';
+            forecastGrosze = avgChange * 1.25; trendType = 'up';
         } else if (avgChange < -2) {
-            forecastGrosze = avgChange * 1;
-            trendType = 'down';
+            forecastGrosze = avgChange * 1; trendType = 'down';
         } else {
-            forecastGrosze = avgChange;
-            trendType = 'stable';
+            forecastGrosze = avgChange; trendType = 'stable';
         }
 
         const forecastText = forecastGrosze > 0 ? `+${forecastGrosze.toFixed(0)} gr` : forecastGrosze < 0 ? `${forecastGrosze.toFixed(0)} gr` : '0 gr';
         
-        STATE.forecastData = {
-            date: new Date().toISOString(),
-            forecast: forecastText,
-            value: forecastGrosze,
-            type: trendType,
-            details: trendDetails
-        };
-        
+        STATE.forecastData = { date: new Date().toISOString(), forecast: forecastText, value: forecastGrosze, type: trendType, details: trendDetails };
         updateForecastUI(avgChange, trendDetails, forecastText, trendType);
 
     } catch (e) {
-        console.error("Trend Analysis Error:", e);
         document.getElementById('home-trend-title').innerHTML = "Błąd analizy <i class='bx bx-error-circle text-red-500'></i>";
-        
         if (STATE.forecastData) {
             updateForecastUI(0, STATE.forecastData.details || [], STATE.forecastData.forecast, STATE.forecastData.type);
         } else {
@@ -842,7 +1011,6 @@ function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
     }
 
     widgetTitle.innerHTML = `${mainStatusText} <i class='bx ${trendType === 'up' ? 'bx-trending-up' : (trendType === 'down' ? 'bx-trending-down' : 'bx-minus')} ${mainColorClass}'></i>`;
-    
     groszeSpan.innerText = forecastGrosze;
     groszeDetailed.innerText = forecastGrosze;
 
@@ -851,7 +1019,6 @@ function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
     const mainDesc = document.getElementById('forecast-main-desc');
 
     mainTitle.innerText = mainStatusText;
-    // Przestajemy nadpisywać klasy Tailwindem! Używamy tylko naszej pancernej klasy CSS:
     mainTitle.className = "report-hero-title";
 
     let desc = `Analiza cen hurtowych dla wszystkich paliw wskazuje na ${mainStatusText.toLowerCase()}. `;
@@ -867,26 +1034,19 @@ function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
     }
     mainDesc.innerText = desc;
 
-    // === 1. TWORZENIE LISTY PALIW ===
     const grid = document.getElementById('forecast-details-grid');
     grid.innerHTML = '';
-    
     if (details.length > 0) {
         details.forEach(d => {
             const item = document.createElement('div');
-            // Czysty, minimalny HTML. Całą magię robi teraz CSS.
             item.className = `report-detail-item`; 
-            item.innerHTML = `
-                <span>${d.name}</span>
-                <span>${d.diff > 0 ? '+' : ''}${d.diff.toFixed(1)} gr</span>
-            `;
+            item.innerHTML = `<span>${d.name}</span><span>${d.diff > 0 ? '+' : ''}${d.diff.toFixed(1)} gr</span>`;
             grid.appendChild(item);
         });
     } else {
         grid.innerHTML = '<p style="text-align: center; opacity: 0.5;">Brak danych szczegółowych</p>';
     }
 
-    // === 2. REKOMENDACJA AI ===
     const recContainer = document.getElementById('forecast-recommendation');
     if (trendType === 'up') {
         recContainer.innerHTML = `
@@ -894,27 +1054,23 @@ function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
             <div>
                 <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Zatankuj dzisiaj</p>
                 <p style="font-size: 0.9rem; opacity: 0.8;">Przewidywane podwyżki o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>
-        `;
+            </div>`;
     } else if (trendType === 'down') {
         recContainer.innerHTML = `
             <div style="font-size: 2rem; color: #4CAF50;"><i class='bx bx-time-five'></i></div>
             <div>
                 <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Wstrzymaj się</p>
                 <p style="font-size: 0.9rem; opacity: 0.8;">Ceny mogą spaść o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>
-        `;
+            </div>`;
     } else {
         recContainer.innerHTML = `
             <div style="font-size: 2rem; color: #2196F3;"><i class='bx bx-check'></i></div>
             <div>
                 <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Możesz tankować</p>
                 <p style="font-size: 0.9rem; opacity: 0.8;">Brak znaczących zmian w najbliższym czasie.</p>
-            </div>
-        `;
+            </div>`;
     }
 
-    // Aktualności rynkowe
     const newsContainer = document.getElementById('market-news');
     if (trendType === 'up') {
         newsContainer.innerHTML = `📈 Notowania ropy naftowej rosną. Analitycy przewidują dalsze wzrosty cen paliw w najbliższych tygodniach.`;
