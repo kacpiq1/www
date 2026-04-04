@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-color: #DA2128; /* Kolor marki */
+            --primary-color: #DA2128;
             --text-main: #1f1f1f;
             --text-secondary: #5f6368;
             --bg-body: #f2f4f6;
@@ -48,7 +48,6 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
 
-        /* Header */
         header {
             margin-bottom: 40px;
             border-bottom: 1px solid var(--border-color);
@@ -74,7 +73,6 @@
             margin-top: 10px;
         }
 
-        /* Table of Contents */
         .toc {
             background-color: #fdfdfd;
             border: 1px solid var(--border-color);
@@ -114,7 +112,6 @@
             color: var(--primary-color);
         }
 
-        /* Content Typography */
         h2 {
             font-size: 24px;
             font-weight: 800;
@@ -165,7 +162,6 @@
             text-decoration: underline;
         }
 
-        /* Disclaimer Box */
         .disclaimer-box {
             background-color: #fffbeb;
             border-left: 4px solid #f59e0b;
@@ -185,7 +181,6 @@
             font-size: 14px;
         }
 
-        /* Contact Box */
         .contact-section {
             background-color: #f8f9fa;
             padding: 30px;
@@ -203,7 +198,6 @@
             font-weight: 500;
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 600px) {
             .document-card {
                 padding: 30px 20px;
@@ -222,12 +216,12 @@
             <header>
                 <h1>Polityka Prywatności</h1>
                 <div class="meta-info">
-                    Aplikacja: TankujTeraz &bull; Wersja: 1.1 &bull; Data: 23.11.2025 &bull; Aktualizacja: <strong>22.03.2026</strong>
+                    Aplikacja: TankujTeraz &bull; Wersja: 1.1 &bull; Aktualizacja: <strong>05.04.2026</strong>
                 </div>
             </header>
 
             <div class="disclaimer-box">
-                <strong>Ważna informacja:</strong> Aplikacja "TankujTeraz" jest oprogramowaniem niezależnym i nieoficjalnym. Nie jest powiązana, autoryzowana, sponsorowana ani zatwierdzona przez PKN ORLEN S.A. Wszelkie znaki towarowe użyte w aplikacji służą wyłącznie celom informacyjnym.
+                <strong>Ważna informacja:</strong> Aplikacja "TankujTeraz" jest oprogramowaniem niezależnym. Prezentowane ceny i analizy opierają się na ogólnodostępnych danych rynkowych i nie stanowią oferty handlowej. Nie jesteśmy powiązani z żadnym konkretnym koncernem paliwowym.
             </div>
 
             <nav class="toc">
@@ -237,7 +231,7 @@
                     <li><a href="#dane-uzytkownika">2. Jakie dane zbieramy i w jakim celu?</a></li>
                     <li><a href="#dane-techniczne">3. Dane techniczne i Diagnostyka</a></li>
                     <li><a href="#uprawnienia">4. Uprawnienia systemowe Android</a></li>
-                    <li><a href="#local-storage">5. Pamięć lokalna, Ustawienia i Usuwanie danych</a></li>
+                    <li><a href="#local-storage">5. Pamięć lokalna i Usuwanie danych</a></li>
                     <li><a href="#uslugi-zewnetrzne">6. Usługi podmiotów trzecich</a></li>
                     <li><a href="#bezpieczenstwo">7. Bezpieczeństwo Danych</a></li>
                     <li><a href="#kontakt">8. Kontakt z Deweloperem</a></li>
@@ -267,74 +261,75 @@
                 <h3>B. Lokalizacja (Dane GPS)</h3>
                 <ul>
                     <li><strong>Cel:</strong> Aplikacja może poprosić o dostęp do lokalizacji urządzenia wyłącznie w celu wskazania najbliższej stacji paliw. Podanie lokalizacji jest opcjonalne.</li>
-                    <li><strong>Przetwarzanie tymczasowe (efemeryczne):</strong> Dane o Twojej dokładnej lub przybliżonej lokalizacji są przetwarzane na bieżąco, tylko w momencie kliknięcia przycisku wyszukiwania stacji. Są one przesyłane do zewnętrznego API mapowego w celu obliczenia odległości, a następnie natychmiast usuwane z pamięci. <strong>Nie śledzimy Twojego przemieszczania się i nie zapisujemy historii Twojej lokalizacji na naszych serwerach.</strong></li>
+                    <li><strong>Przetwarzanie tymczasowe:</strong> Dane o Twojej lokalizacji są przetwarzane na bieżąco tylko w momencie kliknięcia przycisku wyszukiwania stacji. Są one przesyłane do zewnętrznego API mapowego, a następnie usuwane z pamięci. <strong>Nie śledzimy Twojego przemieszczania się.</strong></li>
+                </ul>
+
+                <h3>C. Skany Paragonów (Przetwarzanie obrazu / OCR)</h3>
+                <ul>
+                    <li><strong>Cel:</strong> Aplikacja oferuje innowacyjną funkcję skanowania paragonów za pomocą aparatu, aby ułatwić automatyczne uzupełnianie dziennika tankowań.</li>
+                    <li><strong>Przetwarzanie w 100% lokalne:</strong> Rozpoznawanie tekstu na paragonie (OCR) odbywa się <strong>wyłącznie na Twoim urządzeniu</strong>, bez użycia chmury. Zdjęcia paragonów ani wyodrębnione z nich dane nigdy nie są wysyłane na nasze serwery. Zdjęcie jest usuwane z pamięci tymczasowej urządzenia natychmiast po odczytaniu z niego kwot.</li>
                 </ul>
             </section>
 
             <section id="dane-techniczne">
                 <h2>3. Dane techniczne i Diagnostyka</h2>
                 <p>
-                    Podczas korzystania z Aplikacji, systemy automatycznie mogą rejestrować pewne anonimowe informacje techniczne, które są niezbędne do zapewnienia stabilności działania oprogramowania. Są to dane analityczne Google Play.
+                    Podczas korzystania z Aplikacji, systemy automatycznie mogą rejestrować anonimowe informacje techniczne niezbędne do zapewnienia stabilności (np. analityka Google Play):
                 </p>
                 <ul>
                     <li>Typ urządzenia mobilnego i wersja systemu operacyjnego Android.</li>
-                    <li>Informacje o awariach aplikacji (Crash Logs) – służące wyłącznie do naprawy błędów technicznych w kolejnych aktualizacjach.</li>
+                    <li>Informacje o awariach aplikacji (Crash Logs) – służące do naprawy błędów technicznych.</li>
                 </ul>
-                <p>Dane te nie pozwalają na identyfikację konkretnej osoby fizycznej.</p>
             </section>
 
             <section id="uprawnienia">
                 <h2>4. Uprawnienia systemowe Android</h2>
-                <p>Aby Aplikacja mogła działać poprawnie i dostarczać obiecane funkcje, może prosić system Android o następujące uprawnienia:</p>
+                <p>Aby Aplikacja mogła dostarczać obiecane funkcje, może prosić system Android o następujące uprawnienia:</p>
                 <ul>
-                    <li><strong>Dokładna i Przybliżona Lokalizacja (ACCESS_FINE_LOCATION / ACCESS_COARSE_LOCATION):</strong> Opcjonalne. Używane wyłącznie na żądanie użytkownika w celu wyliczenia odległości do najbliższej stacji.</li>
-                    <li><strong>Pełny dostęp do sieci (INTERNET):</strong> Niezbędne. Pozwala na pobieranie aktualnych cen paliw z API, prognoz rynkowych oraz danych mapowych.</li>
-                    <li><strong>Stan sieci (ACCESS_NETWORK_STATE):</strong> Niezbędne. Pozwala na optymalizację działania aplikacji, gdy urządzenie traci dostęp do internetu (tryb Offline).</li>
+                    <li><strong>Aparat (CAMERA):</strong> Opcjonalne. Niezbędne wyłącznie do działania funkcji skanera paragonów. Zgodnie z naszą polityką, obraz z kamery przetwarza dane tekstowe lokalnie i nie opuszcza Twojego telefonu.</li>
+                    <li><strong>Lokalizacja (ACCESS_FINE_LOCATION):</strong> Opcjonalne. Używane na żądanie w celu wyliczenia odległości do stacji.</li>
+                    <li><strong>Dostęp do sieci (INTERNET / ACCESS_NETWORK_STATE):</strong> Niezbędne. Pozwala na pobieranie publicznych danych rynkowych, cen paliw oraz korzystanie z map.</li>
                 </ul>
             </section>
 
             <section id="local-storage">
-                <h2>5. Pamięć lokalna, Ustawienia i Usuwanie danych</h2>
+                <h2>5. Pamięć lokalna i Usuwanie danych</h2>
                 <p>
-                    Aplikacja wykorzystuje pamięć wewnętrzną Twojego urządzenia (Local Storage) do zapisywania postępów i preferencji. Zapisujemy tam m.in.:
+                    Aplikacja wykorzystuje pamięć wewnętrzną Twojego urządzenia (Local Storage) do zapisywania postępów i preferencji, w tym: Twojego imienia, dziennika tankowań, dodanych pojazdów i historii kuponów.
                 </p>
-                <ul>
-                    <li>Twoje imię (jeśli zostało podane), wybrane preferencje językowe oraz motyw (jasny/ciemny).</li>
-                    <li>Dziennik tankowań, historię aktywowanych kuponów i średnie spalanie w kalkulatorze.</li>
-                    <li>Zbuforowane (ostatnio pobrane) ceny paliw dla trybu Offline.</li>
-                </ul>
                 <div class="highlight-box">
                     <strong>Jak usunąć swoje dane?</strong><br>
-                    Wszystkie zebrane przez aplikację informacje (imię, historia, dziennik) znajdują się fizycznie na Twoim urządzeniu. Aby całkowicie usunąć swoje dane, wystarczy odinstalować aplikację <strong>TankujTeraz</strong> lub wyczyścić jej dane w Ustawieniach systemu Android (Ustawienia > Aplikacje > TankujTeraz > Pamięć > Wyczyść dane).
+                    Wszystkie dane generowane w aplikacji zapisywane są fizycznie tylko na Twoim urządzeniu. Możesz je wyczyścić w dowolnej chwili bezpośrednio w aplikacji (opcja w Ustawieniach) lub odinstalowując całkowicie aplikację <strong>TankujTeraz</strong> ze swojego smartfona.
                 </div>
             </section>
 
             <section id="uslugi-zewnetrzne">
                 <h2>6. Usługi podmiotów trzecich</h2>
-                <p>Aplikacja integruje usługi zewnętrznych dostawców, którzy ułatwiają dostarczanie treści:</p>
+                <p>Aplikacja integruje usługi zewnętrznych dostawców, którzy ułatwiają działanie infrastruktury technicznej:</p>
                 <ul>
                     <li><strong>Google Play Services:</strong> Biblioteki systemowe na systemie Android (<a href="https://policies.google.com/privacy" target="_blank">Polityka prywatności Google</a>).</li>
-                    <li><strong>OpenStreetMap / Overpass API:</strong> Zewnętrzna, otwarta usługa wykorzystywana do wyszukiwania stacji paliw na podstawie przekazanych tymczasowo współrzędnych. Wyszukiwanie odbywa się zgodnie z zasadami dostawcy API mapy.</li>
+                    <li><strong>Cloudflare:</strong> Bezpieczna infrastruktura brzegowa (Workers) wykorzystywana do szybkiego przesyłania rynkowych danych historycznych do aplikacji, bez gromadzenia logów użytkowników.</li>
+                    <li><strong>OpenStreetMap / Overpass API:</strong> Zewnętrzna usługa wykorzystywana do wyszukiwania stacji paliw na mapie.</li>
                 </ul>
             </section>
 
             <section id="bezpieczenstwo">
                 <h2>7. Bezpieczeństwo Danych</h2>
                 <p>
-                    Dokładamy wszelkich starań, aby zapewnić bezpieczeństwo komunikacji. Wszystkie połączenia pomiędzy Aplikacją a zewnętrznymi serwerami (w tym wysyłanie zapytań o stacje paliw i pobieranie cenników) są szyfrowane przy użyciu nowoczesnego protokołu <strong>SSL/HTTPS</strong>. Chroni to Twoje żądania przed przechwyceniem w publicznych sieciach Wi-Fi.
+                    Dokładamy wszelkich starań, aby zapewnić bezpieczeństwo komunikacji. Wszystkie połączenia pomiędzy Aplikacją a zewnętrznymi API są szyfrowane przy użyciu protokołu <strong>SSL/HTTPS</strong>.
                 </p>
             </section>
 
             <div class="contact-section" id="kontakt">
                 <h3>8. Kontakt z Deweloperem</h3>
                 <p>
-                    Jeśli masz jakiekolwiek pytania dotyczące niniejszej Polityki Prywatności, działania Aplikacji, lub zarządzania danymi, skontaktuj się z nami bezpośrednio:
+                    Jeśli masz jakiekolwiek pytania dotyczące niniejszej Polityki Prywatności, działania Aplikacji lub zarządzania danymi, skontaktuj się z nami bezpośrednio:
                 </p>
                 <p style="font-size: 18px; font-weight: 800; color: var(--primary-color); margin: 15px 0;">
                     kontakt@kacpiq.pl
                 </p>
                 <p style="font-size: 13px; color: #6b7280; font-weight: 500;">
-                    KacpiQ Development<br>
+                    KQ Studio<br>
                     Polska
                 </p>
             </div>
