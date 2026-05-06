@@ -93,22 +93,38 @@ particlesJS("particles-js", {
 });
 
 // === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
+window.isNettoMode = false; // Zmienna globalna dla trybu podatku
+
 function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
-    if (productName === 'LPG') return wholesalePriceNetto * 1.26; 
-
-    let isCpnActive = true; 
-
-    if (dateStr && dateStr < '2026-03-31') {
-        isCpnActive = false;
-    }
-
-    if (isCpnActive) {
-        return (wholesalePriceNetto + 0.30) * 1.08;
+    let finalPrice = 0;
+    
+    if (productName === 'LPG') {
+        finalPrice = wholesalePriceNetto * 1.26; 
     } else {
-        let taxRate = 0.26;
-        if (productName === 'Pb98') taxRate = 0.32;
-        return wholesalePriceNetto * (1 + taxRate);
+        let isCpnActive = true; 
+        if (dateStr && dateStr < '2026-03-31') isCpnActive = false;
+
+        if (isCpnActive) {
+            finalPrice = (wholesalePriceNetto + 0.30) * 1.08;
+        } else {
+            let taxRate = productName === 'Pb98' ? 0.32 : 0.26;
+            finalPrice = wholesalePriceNetto * (1 + taxRate);
+        }
     }
+
+    // Jeśli włączono tryb Netto, zdejmujemy narzucony wcześniej podatek
+    if (window.isNettoMode) {
+        if (productName === 'LPG') return finalPrice / 1.26;
+        let isCpnActive = dateStr && dateStr < '2026-03-31' ? false : true;
+        if (isCpnActive) {
+            return finalPrice / 1.08;
+        } else {
+            let taxRate = productName === 'Pb98' ? 0.32 : 0.26;
+            return finalPrice / (1 + taxRate);
+        }
+    }
+    
+    return finalPrice;
 }
 // =============================================
 
@@ -459,11 +475,11 @@ function createFuelCard(fuelData) {
 
 function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 6.18, maxPrice: 6.27 },
-        { productName: 'Pb98', minPrice: 6.79, maxPrice: 6.89 },
-        { productName: 'ONEkodiesel', minPrice: 7.85, maxPrice: 7.99 },
-        { productName: 'ONArctic2', minPrice: 6.05, maxPrice: 6.25 },
-        { productName: 'LPG', minPrice: 3.84, maxPrice: 3.99 }
+        { productName: 'Pb95', minPrice: 6.44, maxPrice: 6.59 },
+        { productName: 'Pb98', minPrice: 6.92, maxPrice: 7.09 },
+        { productName: 'ONEkodiesel', minPrice: 7.29, maxPrice: 7.45 },
+        { productName: 'ONArctic2', minPrice: 7.33, maxPrice: 7.49 },
+        { productName: 'LPG', minPrice: 3.64, maxPrice: 3.79 }
     ];
     
     const forecastGrid = document.getElementById('forecastGrid');
@@ -513,79 +529,125 @@ function closeCouponModal() {
     setTimeout(() => { document.getElementById('couponModal').style.display = 'none'; }, 300);
 }
 
-function applyCoupon() {
-    const couponValue = parseFloat(document.getElementById('couponSelect').value);
+// Globalna zmienna dla interwału, aby uniknąć wielu liczników jednocześnie
+let countdownInterval = null;
+
+function selectCoupon(value, element) {
+    // 1. Wizualna aktualizacja kart
+    document.querySelectorAll('.coupon-card').forEach(card => card.classList.remove('active'));
+    element.classList.add('active');
+
+    // 2. Uruchomienie głównej logiki przeliczania cen
+    // Przekazujemy wartość bezpośrednio z klikniętej karty
+    applyCouponLogic(value);
+}
+
+function applyCouponLogic(couponValue) {
     const messageElement = document.getElementById('couponMessage');
-    const expiryElement = document.getElementById('couponExpiry');
+    const expirySection = document.querySelector('.expiry-section');
     
+    if (!originalPrices) return;
+
     if (couponValue === 0) {
+        // --- POWRÓT DO CEN STANDARDOWYCH ---
         Object.keys(originalPrices).forEach(productName => {
             const card = document.getElementById(`fuel-card-${productName}`);
-            if (card && !card.querySelector('.fuel-name').textContent.includes('LPG')) {
-                const priceElement = card.querySelector('.fuel-price');
-                if (priceElement) {
-                    priceElement.innerHTML = priceElement.innerHTML.replace(/<span class="coupon-badge">.*?<\/span>/, '');
-                    priceElement.innerHTML = priceElement.innerHTML.replace(`${originalPrices[productName]} PLN`, `${originalPrices[productName]} PLN`);
-                }
-            }
+            if (card) {
+    const priceElement = card.querySelector('.fuel-price');
+    // Szukamy istniejącego badge'a zmiany (ten z procentami), żeby go nie stracić
+    const trendBadge = priceElement.querySelector('.price-change');
+    const fuelName = card.querySelector('.fuel-name').textContent;
+
+    if (!fuelName.includes('LPG')) {
+        const basePrice = parseFloat(originalPrices[productName]);
+        let finalContent = "";
+
+        if (couponValue === 0) {
+            // Przywracanie: Cena + stary badge trendu
+            finalContent = `${basePrice.toFixed(2)} PLN `;
+        } else {
+            // Rabat: Nowa Cena + Badge Kuponu + stary badge trendu
+            const newPrice = (basePrice + couponValue).toFixed(2);
+            finalContent = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span> `;
+        }
+
+        // Jeśli badge trendu istniał, doklejamy go z powrotem na końcu
+        if (trendBadge) {
+            finalContent += trendBadge.outerHTML;
+        }
+
+        priceElement.innerHTML = finalContent;
+        
+        if (couponValue !== 0) {
+            priceElement.classList.add('price-flash');
+            setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
+        }
+    }
+}
         });
-        messageElement.innerHTML = '<i class="bx bx-check-circle"></i> Kupon został usunięty. Ceny przywrócone.';
-        expiryElement.style.display = 'none';
+
+        messageElement.innerHTML = '<i class="bx bx-info-circle"></i> Kupon usunięty. Ceny standardowe.';
+        if (expirySection) expirySection.style.display = 'none';
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+
     } else {
+        // --- NAKŁADANIE ZNIŻKI ---
         Object.keys(originalPrices).forEach(productName => {
             const card = document.getElementById(`fuel-card-${productName}`);
-            if (card && !card.querySelector('.fuel-name').textContent.includes('LPG')) {
+            if (card) {
                 const priceElement = card.querySelector('.fuel-price');
-                if (priceElement) {
-                    priceElement.innerHTML = priceElement.innerHTML.replace(/<span class="coupon-badge">.*?<\/span>/, '');
-                    const originalPrice = parseFloat(originalPrices[productName]);
-                    const newPrice = (originalPrice + couponValue).toFixed(2);
-                    priceElement.innerHTML = priceElement.innerHTML.replace(
-                        `${originalPrice.toFixed(2)} PLN`, 
-                        `${newPrice} PLN<span class="coupon-badge">-${Math.abs(couponValue * 100)} gr</span>`
-                    );
+                const fuelName = card.querySelector('.fuel-name').textContent;
+
+                if (!fuelName.includes('LPG')) {
+                    const basePrice = parseFloat(originalPrices[productName]);
+                    const newPrice = (basePrice + couponValue).toFixed(2);
+                    
+                    priceElement.innerHTML = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span>`;
+                    
                     priceElement.classList.add('price-flash');
-                    setTimeout(() => { priceElement.classList.remove('price-flash'); }, 2000);
+                    setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
                 }
             }
         });
-        messageElement.innerHTML = `<i class="bx bx-check-circle"></i> Kupon zastosowany! Obniżka <strong>${Math.abs(couponValue * 100)} gr/l</strong>`;
-        expiryElement.style.display = 'flex';
+        
+        messageElement.innerHTML = `<i class="bx bx-check-circle"></i> Zniżka aktywna: <strong>${Math.abs(couponValue * 100).toFixed(0)} gr/l</strong>`;
+        if (expirySection) expirySection.style.display = 'block';
         startCouponCountdown();
     }
 }
 
 function startCouponCountdown() {
-    const couponExpiryDate = new Date('2026-04-30T23:59:59');
-    const now = new Date();
-    const timeLeft = couponExpiryDate - now;
+    const couponExpiryDate = new Date('2026-05-10T23:59:59');
     
-    if (timeLeft <= 0) {
-        document.getElementById('couponMessage').innerHTML = '<i class="bx bx-error-circle"></i> Kupon wygasł';
-        return;
-    }
-    
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    // Czyścimy poprzedni interwał, jeśli istniał
+    if (countdownInterval) clearInterval(countdownInterval);
     
     function updateCountdown() {
         const now = new Date();
         const timeLeft = couponExpiryDate - now;
+        
         if (timeLeft <= 0) {
             document.getElementById('couponMessage').innerHTML = '<i class="bx bx-error-circle"></i> Kupon wygasł';
+            const expirySection = document.querySelector('.expiry-section');
+            if(expirySection) expirySection.style.display = 'none';
+            clearInterval(countdownInterval);
             return;
         }
         
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        const d = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
         
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        // Aktualizacja DOM z zabezpieczeniem przed błędami (padStart dla ładnego wyglądu 01, 02 itd.)
+        if(document.getElementById('days')) document.getElementById('days').textContent = d.toString().padStart(2, '0');
+        if(document.getElementById('hours')) document.getElementById('hours').textContent = h.toString().padStart(2, '0');
+        if(document.getElementById('minutes')) document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
+        if(document.getElementById('seconds')) document.getElementById('seconds').textContent = s.toString().padStart(2, '0');
     }
+    
+    updateCountdown(); // Uruchomienie od razu
+    countdownInterval = setInterval(updateCountdown, 1000);
 }
 
 function showInfoModal() {
@@ -776,65 +838,138 @@ function fetchHistoryData() {
         });
 }
 
+
 function showPriceHistoryChart() {
+    
     if (priceHistoryChart) {
         priceHistoryChart.destroy();
     }
     
+    
     const tableRows = document.querySelectorAll('#historyTableBody tr');
-    const dates = [];
-    const prices = [];
+    let dates = [];
+    let prices = [];
     
     tableRows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length === 2 && !cells[0].textContent.includes('Brak danych')) {
-            const rawDate = cells[0].innerHTML.split('<br>')[0];
+            // Pobieramy czystą datę
+            const rawDate = cells[0].innerHTML.split('<br>')[0].trim();
             dates.push(rawDate);
-            prices.push(parseFloat(cells[1].textContent));
+            // Wyciągamy samą liczbę z tekstu "6.47 PLN"
+            const priceText = cells[1].textContent.replace('PLN', '').trim();
+            prices.push(parseFloat(priceText));
         }
     });
+    
+    // Tabela zazwyczaj ma najnowsze u góry, na wykresie chcemy chronologicznie (najstarsze po lewej)
+    dates.reverse();
+    prices.reverse();
     
     if (dates.length === 0) {
         showNotification("Brak danych do wyświetlenia wykresu.");
         return;
     }
     
-    const ctx = document.getElementById('priceHistoryChart').getContext('2d');
+    const canvas = document.getElementById('priceHistoryChart');
+    const ctx = canvas.getContext('2d');
+    
+    // Tworzenie pięknego gradientu pod linią wykresu (Orlen Red -> Przezroczysty)
+    let gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientFill.addColorStop(0, 'rgba(227, 6, 19, 0.5)'); // Góra (ciemniejsza)
+    gradientFill.addColorStop(1, 'rgba(227, 6, 19, 0.0)'); // Dół (zanika)
+    
+    // Wykrywanie motywu do stylizacji wykresu
+    const isDark = document.body.classList.contains('dark-theme');
+    const textColor = isDark ? '#b0b8c4' : '#8D99AE';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+    const tooltipBg = isDark ? '#1E1E1E' : '#FFFFFF';
+    const tooltipText = isDark ? '#FFFFFF' : '#1E1E1E';
+    // --- OBLICZANIE STATYSTYK ---
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+
+    // Aktualizacja HTML
+    document.getElementById('statMin').textContent = minPrice.toFixed(2) + ' PLN';
+    document.getElementById('statMax').textContent = maxPrice.toFixed(2) + ' PLN';
+    document.getElementById('statAvg').textContent = avgPrice.toFixed(2) + ' PLN';
+    // ----------------------------
+    
     priceHistoryChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: dates,
             datasets: [{
-                label: 'Cena rynkowa (PLN)',
+                label: 'Cena',
                 data: prices,
-                borderColor: 'rgba(227, 6, 19, 1)',
-                backgroundColor: 'rgba(227, 6, 19, 0.1)',
-                borderWidth: 2,
-                tension: 0.1,
+                borderColor: '#E30613', // Główny kolor Orlen
+                backgroundColor: gradientFill,
+                borderWidth: 3,
+                pointBackgroundColor: tooltipBg,
+                pointBorderColor: '#E30613',
+                pointBorderWidth: 2,
+                pointRadius: 0, // Ukryte kropki w stanie spoczynku (jak w Apple Stocks)
+                pointHoverRadius: 6, // Pojawiają się dopiero przy najechaniu
+                pointHitRadius: 15, // Większy obszar łapania myszki
+                tension: 0.4, // Zmienia ostre kąty w gładkie, eleganckie fale
                 fill: true
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false, // Tooltip pokazuje się od razu po najechaniu na oś, bez celowania w kropkę
+            },
             plugins: {
-                legend: { position: 'top' },
+                legend: { 
+                    display: false // Wyłączamy nudną legendę
+                },
                 tooltip: {
+                    backgroundColor: tooltipBg,
+                    titleColor: tooltipText,
+                    bodyColor: '#E30613',
+                    borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                    borderWidth: 1,
+                    padding: 12,
+                    boxPadding: 4,
+                    displayColors: false, // Ukrywa ten mały kwadracik w tooltipie
+                    titleFont: { family: 'Poppins', size: 13, weight: 'normal' },
+                    bodyFont: { family: 'Outfit', size: 16, weight: '900' },
                     callbacks: {
-                        label: function(context) { return `Cena: ${context.parsed.y.toFixed(2)} PLN`; }
+                        label: function(context) { return `${context.parsed.y.toFixed(2)} PLN`; }
                     }
                 }
             },
             scales: {
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: {
+                        color: textColor,
+                        font: { family: 'Poppins', size: 11 },
+                        maxTicksLimit: 6 // Żeby daty nie nachodziły na siebie
+                    }
+                },
                 y: {
-                    beginAtZero: false,
-                    ticks: { callback: function(value) { return value.toFixed(2) + ' PLN'; } }
+                    border: { display: false, dash: [5, 5] }, // Przerywane linie pomocnicze w tle
+                    grid: { color: gridColor, drawBorder: false },
+                    ticks: {
+                        color: textColor,
+                        font: { family: 'Outfit', size: 13, weight: '600' },
+                        padding: 10,
+                        callback: function(value) { return value.toFixed(2) + ' zł'; }
+                    },
+                    // Dynamiczne skalowanie, żeby wykres nie był płaski
+                    suggestedMin: Math.min(...prices) * 0.98,
+                    suggestedMax: Math.max(...prices) * 1.02
                 }
             }
         }
     });
     
-    document.getElementById('priceHistoryModal').style.display = 'block';
+    document.getElementById('priceHistoryModal').style.display = 'flex';
     setTimeout(() => { document.getElementById('priceHistoryModal').classList.add('show'); }, 10);
 }
 
@@ -1090,3 +1225,108 @@ function closeForecastDetails() {
     document.getElementById('view-forecast').classList.add('hidden');
     document.body.style.overflow = 'auto';
 }
+
+// === STREFA KIEROWCY (NETTO/BRUTTO, KALKULATORY) ===
+
+function toggleTax() {
+    window.isNettoMode = !window.isNettoMode;
+    const btn = document.getElementById('taxToggleBtn');
+    
+    if (window.isNettoMode) {
+        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Brutto";
+        btn.classList.replace('btn-secondary', 'btn-primary');
+        showNotification("Widok cen hurtowych Netto (bez VAT/Akcyzy)");
+    } else {
+        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Netto";
+        btn.classList.replace('btn-primary', 'btn-secondary');
+        showNotification("Przywrócono ceny detaliczne Brutto");
+    }
+    
+    // Przeliczenie kart na nowo
+    renderAllFuels();
+}
+
+function runAllCalculations() {
+    if (Object.keys(originalPrices).length === 0) return;
+
+    // Pobranie stałych z kart paliw (lub awaryjnie średnich rynkowych)
+    const pb95Price = parseFloat(originalPrices['Pb95']) || 6.50;
+    const lpgPrice = parseFloat(originalPrices['LPG']) || 2.99;
+    
+    // 1. KOSZT PODRÓŻY I PUNKTY VITAY
+    const dist = parseFloat(document.getElementById('calcDistance').value) || 0;
+    const cons = parseFloat(document.getElementById('calcConsumption').value) || 0;
+    const fuel = document.getElementById('calcFuelType').value;
+    const fuelPrice = parseFloat(originalPrices[fuel]) || 6.50;
+    
+    const liters = (dist / 100) * cons;
+    const travelCost = liters * fuelPrice;
+    
+    const pointsPerLiter = (fuel === 'Pb98' || fuel === 'ONArctic2') ? 8 : 4;
+    const vitayPoints = Math.floor(liters * pointsPerLiter);
+    const coffees = Math.floor(vitayPoints / 1200);
+    const vitayRewardStr = coffees > 0 
+        ? `☕ Wystarczy na ${coffees} darmową kawę Vitay!` 
+        : `Brakuje ${1200 - vitayPoints} pkt do darmowej kawy.`;
+
+    document.getElementById('travelResult').innerHTML = `
+        Wymagane paliwo: <strong>${liters.toFixed(1)} l</strong><br>
+        Koszt podróży: <strong>${travelCost.toFixed(2)} PLN</strong><br>
+        Zdobyte punkty: <span class="vitay-points">${vitayPoints} pkt</span><br>
+        <span style="font-size: 0.8rem; color: var(--text-light);">${vitayRewardStr}</span>
+    `;
+
+    // 2. PORÓWNYWARKA SPALINA VS EV
+    const evCons = parseFloat(document.getElementById('evConsumption').value) || 0;
+    const evRate = parseFloat(document.getElementById('evChargeType').value) || 0;
+    
+    const evCost100km = evCons * evRate;
+    const iceCost100km = cons * fuelPrice;
+    const diff = iceCost100km - evCost100km;
+
+    let diffText = diff > 0 
+        ? `<strong style="color: var(--success)">${diff.toFixed(2)} PLN taniej w EV</strong>` 
+        : `<strong style="color: var(--error)">${Math.abs(diff).toFixed(2)} PLN taniej w spalinie</strong>`;
+
+    document.getElementById('evResult').innerHTML = `
+        Koszt EV na 100km: <strong>${evCost100km.toFixed(2)} PLN</strong><br>
+        Porównanie (na 100km): ${diffText}
+    `;
+
+    // 3. REALNE OSZCZĘDNOŚCI Z KUPONU
+    const sLiters = parseFloat(document.getElementById('savingsLiters').value) || 0;
+    const sCoupon = parseFloat(document.getElementById('savingsCoupon').value) || 0;
+    const totalSavings = sLiters * sCoupon;
+    
+    document.getElementById('savingsResult').innerHTML = `
+        Zostaje w portfelu: <strong style="color: var(--success)">${totalSavings.toFixed(2)} PLN</strong>
+    `;
+
+    // 4. OPŁACALNOŚĆ LPG
+    const yearlyKm = parseFloat(document.getElementById('lpgYearly').value) || 0;
+    const lpgSetupCost = parseFloat(document.getElementById('lpgCost').value) || 0;
+    
+    const yearlyPbCost = (yearlyKm / 100) * cons * pb95Price;
+    const lpgCons = cons * 1.15; // Samochód na gaz pali ok. 15% więcej
+    const yearlyLpgCost = (yearlyKm / 100) * lpgCons * lpgPrice;
+    const yearlySavingsLPG = yearlyPbCost - yearlyLpgCost;
+    
+    let monthsToReturn = 0;
+    if (yearlySavingsLPG > 0) {
+        monthsToReturn = (lpgSetupCost / (yearlySavingsLPG / 12)).toFixed(1);
+    }
+
+    document.getElementById('lpgResult').innerHTML = `
+        Zwrot z inwestycji po: <strong>${monthsToReturn > 0 ? monthsToReturn + ' miesiącach' : 'Brak zwrotu'}</strong><br>
+        Roczne oszczędności netto: <strong style="color: var(--success)">${yearlySavingsLPG > 0 ? yearlySavingsLPG.toFixed(2) + ' PLN' : '0.00 PLN'}</strong>
+    `;
+}
+
+// Podpięcie automatycznego obliczenia po załadowaniu danych z API
+const originalProcessFuelDataCalc = window.processFuelData;
+window.processFuelData = function(data) {
+    originalProcessFuelDataCalc(data);
+    setTimeout(runAllCalculations, 1500); // Uruchamia kalkulator jak już zaciągnie API
+};
+
+
