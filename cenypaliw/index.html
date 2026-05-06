@@ -77,6 +77,38 @@
             <button class="btn btn-secondary" onclick="toggleHistory()">
                 <i class='bx bx-history'></i> Historia cen
             </button>
+            <button class="btn btn-accent" onclick="document.getElementById('calcModal').style.display='block'; setTimeout(()=>document.getElementById('calcModal').classList.add('show'),10)">
+                <i class='bx bx-calculator'></i> Narzędzia
+            </button>
+            <button class="btn btn-secondary" id="taxToggleBtn" onclick="toggleTax()">
+                <i class='bx bx-transfer'></i> Pokaż Netto
+            </button>
+            
+        </div>
+
+        <h1 class="animate" style="margin-top: 2rem;">Strefa EV - Orlen Charge</h1>
+        <div class="fuel-grid" id="evGrid">
+            <div class="fuel-card animate-up">
+                <div class="fuel-header">
+                    <i class='bx bx-plug fuel-icon' style="font-size: 2.5rem; color: #4CAF50;"></i>
+                    <div class="fuel-name">Złącze AC (≤ 22 kW)</div>
+                </div>
+                <div class="fuel-price">1.95 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+            </div>
+            <div class="fuel-card animate-up">
+                <div class="fuel-header">
+                    <i class='bx bxs-zap fuel-icon' style="font-size: 2.5rem; color: #E30613;"></i>
+                    <div class="fuel-name">Złącze DC (50 - 150 kW)</div>
+                </div>
+                <div class="fuel-price">2.69 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+            </div>
+            <div class="fuel-card animate-up">
+                <div class="fuel-header">
+                    <i class='bx bx-bolt-circle fuel-icon' style="font-size: 2.5rem; color: #2196F3;"></i>
+                    <div class="fuel-name">Ultraszybkie HPC (≥ 150 kW)</div>
+                </div>
+                <div class="fuel-price">3.19 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+            </div>
         </div>
 
         <h1 class="animate">Prognozowane Ceny Paliw</h1>
@@ -86,7 +118,7 @@
         </div>
 
         <div class="update-info animate">
-            Prognoza na okres 6.04-12.04.2026
+            Prognoza na okres 4.05-10.05.2026
         </div>
     </div>
 
@@ -121,49 +153,267 @@
         </div>
     </div>
 
+    <!-- Kalkulatory Modal -->
+     <div class="modal show" id="calcModal" style="display: block;">
+
+        <div class="modal-content" style="max-width: 900px;">
+
+            <span class="close" onclick="this.closest('.modal').classList.remove('show'); setTimeout(()=&gt;this.closest('.modal').style.display='none', 300)">×</span>
+
+            <h2>Narzędzia i Kalkulatory Kierowcy</h2>
+
+            
+
+            <div class="calc-grid">
+
+                <!-- Koszt Podróży & VITAY -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-trip text-orlenRed"></i> Koszt Podróży &amp; VITAY</h3>
+
+                    <div class="form-group">
+
+                        <label>Dystans do pokonania (km):</label>
+
+                        <input type="number" id="calcDistance" value="100" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Średnie spalanie (l/100km):</label>
+
+                        <input type="number" id="calcConsumption" value="7.5" step="0.1" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Wybierz paliwo:</label>
+
+                        <select id="calcFuelType" onchange="runAllCalculations()">
+
+                            <option value="Pb95">EFECTA 95</option>
+
+                            <option value="Pb98">VERVA 98</option>
+
+                            <option value="ONEkodiesel">EFECTA DIESEL</option>
+
+                            <option value="ONArctic2">VERVA DIESEL</option>
+
+                            <option value="LPG">LPG</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="travelResult">
+
+        Wymagane paliwo: <strong>48.5 l</strong><br>
+
+        Koszt podróży: <strong>314.76 PLN</strong><br>
+
+        Zdobyte punkty: <span class="vitay-points">194 pkt</span><br>
+
+        <span style="font-size: 0.8rem; color: var(--text-light);">Brakuje 1006 pkt do darmowej kawy.</span>
+
+    </div>
+
+                </div>
+
+
+                <!-- Porównywarka EV vs Spalina -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-car text-orlenRed"></i> Spalina vs EV (na 100km)</h3>
+
+                    <div class="form-group">
+
+                        <label>Zużycie prądu w elektryku (kWh/100km):</label>
+
+                        <input type="number" id="evConsumption" value="18" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Gdzie ładujesz?</label>
+
+                        <select id="evChargeType" onchange="runAllCalculations()">
+
+                            <option value="1.95">Charge AC (1.95 zł/kWh)</option>
+
+                            <option value="2.69">Charge DC (2.69 zł/kWh)</option>
+
+                            <option value="3.19">Charge HPC (3.19 zł/kWh)</option>
+
+                            <option value="1.15">W domu - taryfa G11 (~1.15 zł/kWh)</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="evResult">
+
+        Koszt EV na 100km: <strong>17.25 PLN</strong><br>
+
+        Porównanie (na 100km): <strong style="color: var(--success)">45.70 PLN taniej w EV</strong>
+
+    </div>
+
+                </div>
+
+
+                <!-- Realne oszczędności z Kuponu -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bxs-discount text-orlenRed"></i> Realne Oszczędności</h3>
+
+                    <div class="form-group">
+
+                        <label>Ile litrów tankujesz?</label>
+
+                        <input type="number" id="savingsLiters" value="50" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Wybierz zniżkę:</label>
+
+                        <select id="savingsCoupon" onchange="runAllCalculations()">
+
+                            <option value="0.20">Weekendowa Promocja (-20 gr/l)</option>
+
+                            <option value="0.35">W. Promocja + zakupy min. 5zł (-35 gr/l)</option>
+
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="savingsResult">
+
+        Zostaje w portfelu: <strong style="color: var(--success)">9.64 PLN</strong>
+
+    </div>
+
+                </div>
+
+
+                <!-- Opłacalność LPG -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-gas-pump text-orlenRed"></i> Zwrot Instalacji LPG</h3>
+
+                    <div class="form-group">
+
+                        <label>Roczny przebieg (km):</label>
+
+                        <input type="number" id="lpgYearly" value="15000" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Koszt instalacji (PLN):</label>
+
+                        <input type="number" id="lpgCost" value="3500" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="result-box" id="lpgResult">
+
+        Zwrot z inwestycji po: <strong>18.6 miesiącach</strong><br>
+
+        Roczne oszczędności netto: <strong style="color: var(--success)">2252.34 PLN</strong>
+
+    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> 
+
     <!-- Coupon Modal -->
     <div class="modal" id="couponModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCouponModal()">&times;</span>
-            <h2>Wybierz Kupon Rabatowy</h2>
-            
-            <div class="form-group">
-                <label for="couponSelect">Dostępne kupony:</label>
-                <select id="couponSelect" onchange="applyCoupon()">
-                    <option value="0">Brak kuponu</option>
-                    <option value="-0.35">-35 gr/l (Standardowy)</option>
-                    <option value="-0.45">-45 gr/l (Karta Dużej Rodziny)</option>
-                </select>
+    <div class="modal-content coupon-modal-content">
+        <span class="close" onclick="closeCouponModal()">&times;</span>
+        <h2>Wybierz Kupon Rabatowy</h2>
+        
+        <div class="coupon-cards-container">
+            <!-- Karta: Brak kuponu -->
+            <div class="coupon-card" onclick="selectCoupon(0, this)">
+                <div class="coupon-card-icon"><i class='bx bx-x-circle'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">Brak kuponu</span>
+                    <span class="coupon-desc">Ceny standardowe</span>
+                </div>
             </div>
-            
-            <div class="alert alert-info" id="couponMessage">
-                Wybierz kupon z listy aby zastosować zniżkę
+
+            <!-- Karta: KDR -->
+            <div class="coupon-card" onclick="selectCoupon(-0.20, this)">
+                <div class="coupon-card-badge">TYLKO W WEEKENDY</div>
+                <div class="coupon-card-icon"><i class='bx bxs-group'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">-20 gr/l</span>
+                    <span class="coupon-desc">Wiosenna Promocja - max. 50 litrów</span>
+                </div>
+                <div class="coupon-radio-check"></div>
             </div>
+
+            <!-- Karta: Standardowy -->
+            <div class="coupon-card active" onclick="selectCoupon(-0.35, this)">
+                <div class="coupon-card-badge">TYLKO W WEEKENDY</div>
+                <div class="coupon-card-icon"><i class='bx bxs-discount'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">-35 gr/l</span>
+                    <span class="coupon-desc">Wiosenna Promocja + <strong>zakupy za min. 5zł</strong></span>
+                </div>
+                <div class="coupon-radio-check"></div>
+            </div>
+
             
-            <div class="countdown-timer" id="couponExpiry" style="display: none;">
+        </div>
+
+        <div class="alert alert-info" id="couponMessage">
+            <i class='bx bx-check-circle'></i> Wybrano zniżkę: <strong>35 gr/l</strong>
+        </div>
+
+        <div class="expiry-section">
+            <span class="expiry-title">Kupon wygaśnie za:</span>
+            <div class="countdown-timer" id="couponExpiry">
                 <div class="countdown-item">
                     <div class="countdown-value" id="days">00</div>
                     <div class="countdown-label">Dni</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-value" id="hours">00</div>
-                    <div class="countdown-label">Godziny</div>
+                    <div class="countdown-label">Godz</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-value" id="minutes">00</div>
-                    <div class="countdown-label">Minuty</div>
+                    <div class="countdown-label">Min</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-value" id="seconds">00</div>
-                    <div class="countdown-label">Sekundy</div>
+                    <div class="countdown-label">Sek</div>
                 </div>
             </div>
-            
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
-                <i class='bx bx-info-circle'></i> Rabaty nie dotyczą cen LPG
-            </p>
         </div>
+
+        <p class="coupon-footer-info">
+            <i class='bx bx-info-circle'></i> Rabaty nie łączą się i nie dotyczą LPG.
+        </p>
     </div>
+</div>
 
     <!-- History Modal -->
     <div class="modal" id="historyModal">
@@ -278,12 +528,39 @@
 
 
     <div class="modal" id="priceHistoryModal">
-        <div class="modal-content">
+        <div class="modal-content chart-modal-content">
             <span class="close" onclick="closePriceHistoryModal()">&times;</span>
             <h2>Wykres Cen Paliw</h2>
             
-            <div class="chart-container">
-                <canvas id="priceHistoryChart"></canvas>
+            <div class="premium-chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="priceHistoryChart"></canvas>
+                </div>
+                
+                <!-- NOWE: Sekcja Statystyk -->
+                <div class="chart-stats-grid" id="chartStats">
+                    <div class="chart-stat-card stat-min">
+                        <span class="stat-icon"><i class='bx bx-trending-down'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Cena Minimalna</span>
+                            <span class="stat-value" id="statMin">0.00 PLN</span>
+                        </div>
+                    </div>
+                    <div class="chart-stat-card stat-avg">
+                        <span class="stat-icon"><i class='bx bx-bar-chart-alt-2'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Średnia Cena</span>
+                            <span class="stat-value" id="statAvg">0.00 PLN</span>
+                        </div>
+                    </div>
+                    <div class="chart-stat-card stat-max">
+                        <span class="stat-icon"><i class='bx bx-trending-up'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Cena Maksymalna</span>
+                            <span class="stat-value" id="statMax">0.00 PLN</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
