@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficjalne Testy | TankujTeraz</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10b981', // Szmaragdowy
+                        primaryDark: '#059669',
+                        darkBg: '#0f172a', // Głęboki granat
+                        cardBg: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-300 font-sans antialiased min-h-screen flex flex-col selection:bg-primary selection:text-white">
+
+    <nav class="fixed w-full z-50 bg-darkBg/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-2xl font-bold tracking-tight">
+                <i class='bx bxs-gas-pump text-primary'></i>
+                <span class="text-white">Tankuj<span class="text-primary">Teraz</span></span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#roadmap" class="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block">Plan rozwoju</a>
+                <a href="#faq" class="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block">FAQ</a>
+                <a href="#formularz" class="flex items-center gap-2 text-sm font-semibold bg-primary hover:bg-primaryDark text-white px-4 py-2 rounded-xl transition-all shadow-lg shadow-primary/10">
+                    Dołącz do bety
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-36 pb-20 px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[130px] rounded-full pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/80 text-emerald-400 border border-emerald-500/30 text-sm font-semibold mb-6 shadow-md">
+                <i class='bx bx-check-shield text-xl text-primary'></i>
+                Oficjalne testy przez Google Play Store
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight">
+                Zbudujmy razem<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-400 to-teal-300">
+                    najlepszą apkę dla kierowców
+                </span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Nie bawimy się w ryzykowne pliki z internetu. Testy <strong>TankujTeraz</strong> odbywają się w pełni oficjalnie bezpośrednio przez sklep Google Play. Posiadasz Androida? Zgłoś się już dziś!
+            </p>
+            
+            <div class="max-w-md mx-auto bg-slate-800/50 p-4 rounded-2xl border border-slate-700/60 mb-8 flex justify-between items-center text-sm">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> Pozostało wolnych miejsc:</span>
+                <span id="spotsCounter" class="font-bold text-white bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-md"><i class='bx bx-loader-alt bx-spin'></i> / 100</span>
+            </div>
+
+            <a href="#formularz" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primaryDark text-white font-bold py-4 px-10 rounded-xl transition-all transform hover:scale-105 shadow-xl shadow-primary/20 text-lg">
+                <i class='bx bx-user-plus text-2xl'></i>
+                Zarejestruj się jako Tester
+            </a>
+        </div>
+    </header>
+
+    <section class="py-16 px-6 bg-cardBg border-y border-slate-800">
+        <div class="max-w-6xl mx-auto grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="p-5 rounded-xl bg-darkBg/60 border border-slate-700/50">
+                <div class="text-3xl font-extrabold text-white mb-1">0%</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2">Zagrożenia</div>
+                <p class="text-slate-400 text-xs">Aplikacja jest weryfikowana przez system Google Play Protect.</p>
+            </div>
+            <div class="p-5 rounded-xl bg-darkBg/60 border border-slate-700/50">
+                <div class="text-3xl font-extrabold text-primary mb-1">20</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2">Wymóg Google</div>
+                <p class="text-slate-400 text-xs">Wymagane jest min. 20 testerów przez 14 dni, by wydać aplikację.</p>
+            </div>
+            <div class="p-5 rounded-xl bg-darkBg/60 border border-slate-700/50">
+                <div class="text-3xl font-extrabold text-white mb-1">Android</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2">Wymagany System</div>
+                <p class="text-slate-400 text-xs">Skupiamy się tylko na urządzeniach z logiem zielonego robota.</p>
+            </div>
+            <div class="p-5 rounded-xl bg-darkBg/60 border border-slate-700/50">
+                <div class="text-3xl font-extrabold text-white mb-1">1 Kliknięcie</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2">Instalacja</div>
+                <p class="text-slate-400 text-xs">Instalujesz aplikację ze sklepu Google Play poprzez dedykowany link.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="py-20 px-6 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-white text-center mb-12">Plan wdrożenia TankujTeraz</h2>
+        <div class="relative border-l border-slate-700 ml-4 md:ml-32 space-y-10">
+            <div class="relative pl-8">
+                <span class="absolute -left-3 top-1 bg-slate-800 text-primary border border-primary w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class='bx bx-check'></i></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-primary">Krok 1 (Zakończony)</span>
+                <h4 class="text-xl font-bold text-white mt-1">Stworzenie Rdzenia Aplikacji</h4>
+                <p class="text-slate-400 text-sm mt-1">Moduły cen, wykresów, skanowania paragonów i logowania w chmurze.</p>
+            </div>
+            <div class="relative pl-8">
+                <span class="absolute -left-3 top-1 bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs animate-pulse"><i class='bx bx-loader-alt bx-spin'></i></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Krok 2 (Obecnie)</span>
+                <h4 class="text-xl font-bold text-white mt-1">Zamknięte testy Google Play</h4>
+                <p class="text-slate-400 text-sm mt-1">Zbieranie grupy zaufanych testerów do 14-dniowych testów wymuszanych przez Google.</p>
+            </div>
+            <div class="relative pl-8">
+                <span class="absolute -left-3 top-1 bg-slate-800 text-slate-500 border border-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class='bx bx-time'></i></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Krok 3 (Wkrótce)</span>
+                <h4 class="text-xl font-bold text-white mt-1">Oficjalna Premiera w Sklepie Play</h4>
+                <p class="text-slate-400 text-sm mt-1">Wejście do fazy produkcyjnej i usunięcie danych testerów z bazy tymczasowej.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="formularz" class="py-16 px-6 bg-slate-900/60 relative">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-cardBg p-8 md:p-10 rounded-3xl shadow-2xl border border-slate-700 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
+
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-bold text-white mb-2">Zgłoszenie do zamkniętej bety</h2>
+                    <p class="text-slate-400 text-sm">Aby przypisać Cię do testów, potrzebujemy Twojego adresu e-mail powiązanego ze Sklepem Play.</p>
+                </div>
+                
+                <form id="testerForm" class="space-y-6" onsubmit="handleFormSubmit(event)">
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Imię lub Nick</label>
+                            <input type="text" id="name" required placeholder="np. Jan" class="w-full bg-darkBg border border-slate-600 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">E-mail z konta Google Play <span class="text-primary">*</span></label>
+                            <input type="email" id="email" required placeholder="twoj.mail@gmail.com" class="w-full bg-darkBg border border-slate-600 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Wersja Androida</label>
+                            <select id="androidVersion" required class="w-full bg-darkBg border border-slate-600 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all cursor-pointer">
+                                <option value="" disabled selected>Wybierz wersję...</option>
+                                <option value="Android 16">Android 16 (najnowszy)</option>
+                                <option value="Android 15">Android 15</option>
+                                <option value="Android 14">Android 14</option>
+                                <option value="Android 13">Android 13</option>
+                                <option value="Android 12">Android 12</option>
+                                <option value="Android 11">Android 11 lub starszy</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Jakie paliwo najczęściej tankujesz?</label>
+                            <select id="fuelType" required class="w-full bg-darkBg border border-slate-600 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all cursor-pointer">
+                                <option value="" disabled selected>Wybierz paliwo...</option>
+                                <option value="Nie tankuje">Nie posiadam prawa jazdy</option>
+                                <option value="PB95_98">Benzyna (PB95 / PB98)</option>
+                                <option value="ON">Diesel (ON)</option>
+                                <option value="LPG">Autogaz (LPG)</option>
+                                <option value="Hybryda_EV">Elektryczność / Hybryda</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-800/60 border border-slate-600">
+                        <div class="flex items-center h-6">
+                            <input id="androidCheck" type="checkbox" required class="w-5 h-5 rounded border-slate-500 text-primary bg-darkBg accent-primary cursor-pointer">
+                        </div>
+                        <div class="text-sm">
+                            <label for="androidCheck" class="font-bold text-slate-200 cursor-pointer">Rozumiem, że testy są tylko na systemie Android</label>
+                            <p class="text-slate-400 text-xs mt-1">Zgłoszenia użytkowników z systemem iOS (iPhone) zostaną anulowane z powodu braku technicznej możliwości instalacji.</p>
+                        </div>
+                    </div>
+
+                    <div id="errorMessage" class="hidden bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg text-center mb-4">
+    Wystąpił błąd bazy danych. Spróbuj ponownie.
+</div>
+
+<button type="submit" id="submitBtn" class="w-full bg-primary hover:bg-primaryDark text-white font-bold py-4 px-4 rounded-xl transition-all transform hover:scale-[1.01] shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-lg">
+    Wyślij zgłoszenie do Google Play
+    <i class='bx bx-check-shield'></i>
+</button>
+
+                    <div class="flex items-start gap-2 mt-4 px-2 text-slate-500 text-[11px] leading-tight">
+                        <i class='bx bx-lock-alt text-base text-slate-400 mt-0.5'></i>
+                        <p>
+                            <strong>Bezpieczeństwo danych:</strong> Przesłane dane są przechowywane na bezpiecznych serwerach przez okres <strong>30 dni</strong>. Po upływie tego czasu lub natychmiast po udostępnieniu aplikacji w wersji produkcyjnej, Twoje dane zostaną <strong>automatycznie i bezpowrotnie usunięte</strong> z naszej bazy rejestracyjnej.
+                        </p>
+                    </div>
+
+                </form>
+
+                <div id="successMessage" class="hidden flex flex-col items-center justify-center py-10 text-center animate-fade-in">
+    <div class="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                        <i class='bx bx-badge-check text-5xl text-primary'></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-3">Zapisano pomyślnie!</h3>
+                    <p class="text-slate-400 text-lg max-w-md mx-auto mb-6">Twoje konto zostało dodane do listy oczekujących. Pamiętaj, że wpisane tutaj dane zostaną usunięte w ciągu maksymalnie 30 dni lub przy premierze aplikacji.</p>
+                    <button onclick="location.reload()" class="text-slate-500 hover:text-primary transition-colors text-sm">Wróć do strony głównej</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-20 px-6 max-w-3xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-10 text-center">Najczęściej zadawane pytania</h2>
+        <div class="space-y-4">
+            <div class="bg-cardBg p-5 rounded-xl border border-slate-800">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <i class='bx bx-shield-quarter text-primary text-lg'></i> Czy to jest bezpieczne?
+                </h4>
+                <p class="text-slate-400 text-sm">W 100%. Aplikację pobierasz bezpośrednio ze stabilnych serwerów Google, dokładnie tak samo jak każdą inną aplikację z poziomu Sklepu Play.</p>
+            </div>
+
+            <div class="bg-cardBg p-5 rounded-xl border border-slate-800">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <i class='bx bxl-apple text-slate-500 text-lg'></i> Co z telefonami iPhone (iOS)?
+                </h4>
+                <p class="text-slate-400 text-sm">Z powodów czysto technicznych oraz finansowych (wysoki koszt licencji deweloperskiej Apple), projekt rozwija się <strong>wyłącznie na systemie Android</strong>. Nie planujemy wersji na iOS w dającej się przewidzieć przyszłości.</p>
+            </div>
+            
+            <div class="bg-cardBg p-5 rounded-xl border border-slate-800">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <i class='bx bx-data text-blue-400 text-lg'></i> Co dzieje się z moimi danymi po zapisie?
+                </h4>
+                <p class="text-slate-400 text-sm">Gromadzimy Twój adres e-mail wyłącznie po to, aby umożliwić Ci dostęp do testów w Google Play. Aby chronić Twoją prywatność, wprowadziliśmy mechanizm samousuwania. Twoje dane zostaną <strong>automatycznie usunięte po 30 dniach</strong> od zapisu lub w momencie, w którym aplikacja wejdzie w pełną <strong>wersję produkcyjną</strong>. Nie przekazujemy ich żadnym firmom zewnętrznym.</p>
+            </div>
+
+            <div class="bg-cardBg p-5 rounded-xl border border-slate-800">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <i class='bx bx-time-five text-amber-400 text-lg'></i> Ile trwają testy?
+                </h4>
+                <p class="text-slate-400 text-sm">Zgodnie z regulaminem Google Play, zamknięte testy muszą trwać nieprzerwanie minimum 14 dni przy udziale co najmniej 20 aktywnych testerów.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full p-8 text-center border-t border-slate-800 mt-auto bg-cardBg">
+        <div class="flex justify-center items-center gap-2 text-xl font-bold tracking-tight mb-3">
+            <i class='bx bxs-gas-pump text-primary'></i>
+            <span class="text-white">Tankuj<span class="text-primary">Teraz</span></span>
+        </div>
+        <p class="text-slate-500 text-sm">
+            &copy; 2026 TankujTeraz.
+        </p>
+        <p class="text-slate-600 text-xs mt-1.5">
+            Wyprodukowane przez: <a href="https://kacpiq.pl" target="_blank" class="font-semibold text-slate-400 hover:text-primary transition-colors">kacpiq.pl</a>
+        </p>
+    </footer>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push, set, get, serverTimestamp, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBKEfWh7TjKOUlRV0euRlDTKUBYvqpVLso",
+        authDomain: "kacpiq-pl-43517.firebaseapp.com",
+        databaseURL: "https://kacpiq-pl-43517-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "kacpiq-pl-43517",
+        storageBucket: "kacpiq-pl-43517.firebasestorage.app",
+        messagingSenderId: "177654542790",
+        appId: "1:177654542790:web:53156926a8f59f4e3bc2c7",
+        measurementId: "G-4SKM4BBVP6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const testersRef = ref(db, 'beta_testers');
+    const MAX_SPOTS = 100;
+
+    async function updateCounter() {
+        try {
+            const snapshot = await get(testersRef);
+            let takenSpots = 0;
+            
+            if (snapshot.exists()) {
+                takenSpots = Object.keys(snapshot.val()).length;
+            }
+            
+            const spotsLeft = Math.max(0, MAX_SPOTS - takenSpots);
+            
+            document.getElementById('spotsCounter').innerHTML = `${spotsLeft} / ${MAX_SPOTS}`;
+
+            if (spotsLeft === 0) {
+                const btn = document.getElementById('submitBtn');
+                btn.disabled = true;
+                btn.innerHTML = "Brak wolnych miejsc";
+                btn.classList.add('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                btn.classList.remove('bg-primary', 'hover:bg-primaryDark');
+            }
+        } catch (error) {
+            console.error("Błąd pobierania licznika z Realtime DB:", error);
+            document.getElementById('spotsCounter').innerHTML = `? / ${MAX_SPOTS}`;
+        }
+    }
+
+    updateCounter();
+
+    window.handleFormSubmit = async function(event) {
+        event.preventDefault(); 
+        
+        const btn = document.getElementById('submitBtn');
+        const form = document.getElementById('testerForm');
+        const success = document.getElementById('successMessage');
+        const errorDiv = document.getElementById('errorMessage');
+
+        // Reset błędów
+        errorDiv.classList.add('hidden');
+        errorDiv.innerText = '';
+
+        const userEmail = document.getElementById('email').value.trim().toLowerCase();
+
+
+        btn.innerHTML = `<i class='bx bx-loader-alt bx-spin text-2xl'></i> Sprawdzanie danych...`;
+        btn.disabled = true;
+        btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+        try {
+
+            const emailQuery = query(testersRef, orderByChild('email'), equalTo(userEmail));
+            const emailSnapshot = await get(emailQuery);
+
+            if (emailSnapshot.exists()) {
+
+                throw new Error("Ten adres e-mail znajduje się już na naszej liście testerów!");
+            }
+
+            btn.innerHTML = `<i class='bx bx-loader-alt bx-spin text-2xl'></i> Rejestracja w bazie...`;
+
+            const newTesterRef = push(testersRef);
+            
+            await set(newTesterRef, {
+                name: document.getElementById('name').value,
+                email: userEmail,
+                androidVersion: document.getElementById('androidVersion').value,
+                fuelType: document.getElementById('fuelType').value,
+                timestamp: serverTimestamp(),
+                status: 'oczekujący'
+            });
+
+            updateCounter();
+
+            form.classList.add('hidden');
+            success.classList.remove('hidden');
+
+        } catch (error) {
+            console.error("Błąd operacji:", error);
+            
+            errorDiv.innerText = error.message || "Błąd zapisu: Upewnij się, że masz połączenie z internetem i baza pozwala na zapis.";
+            errorDiv.classList.remove('hidden');
+
+            btn.innerHTML = `Wyślij zgłoszenie do Google Play <i class='bx bx-badge-check text-5xl text-primary'></i>`;
+            btn.disabled = false;
+            btn.classList.remove('opacity-80', 'cursor-not-allowed');
+        }
+    };
+</script>
+</body>
+</html>
