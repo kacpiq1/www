@@ -2281,3 +2281,120 @@ body.dark-theme .calc-section input:focus {
     background: #333;
     border-color: var(--primary);
 }
+
+/* =========================================
+   BETA TESTER BANNER - PREMIUM DESIGN
+   ========================================= */
+.beta-tester-banner {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1e2022, #2b2d42); /* Ciemny, elegancki gradient */
+    border-radius: 20px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    gap: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.beta-tester-banner:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 15px 35px rgba(227, 6, 19, 0.25);
+    border-color: rgba(227, 6, 19, 0.3);
+}
+
+/* Animowany efekt świetlny przechodzący przez baner */
+.beta-tester-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: -100%;
+    width: 50%; 
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(227, 6, 19, 0.2), transparent);
+    animation: shineBanner 3s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shineBanner {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+.beta-icon {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(227, 6, 19, 0.4);
+}
+
+.beta-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.beta-title {
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.5px;
+}
+
+.beta-desc {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.beta-action {
+    color: #ffffff;
+    font-size: 2rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.beta-tester-banner:hover .beta-action {
+    transform: translateX(8px);
+    color: var(--primary);
+}
+
+/* --- Dark Mode --- */
+body.dark-theme .beta-tester-banner {
+    background: linear-gradient(135deg, #1a1a1a, #242424);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+body.dark-theme .beta-title {
+    color: #f8fafc;
+}
+body.dark-theme .beta-desc {
+    color: #94a3b8;
+}
+
+/* --- Responsywność dla telefonów --- */
+@media (max-width: 768px) {
+    .beta-tester-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+    .beta-action {
+        display: none; /* Ukrywamy strzałkę na mobile, żeby zaoszczędzić miejsce */
+    }
+}
