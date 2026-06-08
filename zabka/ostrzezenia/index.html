@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prognoza burz</title>
     <link rel="stylesheet" href="ostrzezenia/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Ostrzeżenia Przed Burzami</h1>
+        <div class="header-container">
+            <h1>Ostrzeżenia Przed Burzami</h1>
+            <p class="subtitle">Aktualne prognozy i mapy zjawisk burzowych IMGW</p>
+        </div>
     </header>
-    <div class="content">
-        <h1>Sezon burzowy się zakończył, zapraszamy ponownie gdy rozpoczniemy nowy sezon burzowy!</h1>
+    
+    <main class="content">
+        <div class="info-banner">
+            Obserwuj aktualne ostrzeżenia burzowe.
+        </div>
+        
         <div id="buttons-container"></div>
         <div id="storm-warnings"></div>
-    </div>
+    </main>
+
     <script src="ostrzezenia/script.js"></script>
 </body>
 </html>
