@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function checkDataAvailability(timestamp, label, date, duration) {
         // TUTAJ WKLEJ ADRES SWOJEGO WORKERA CLOUDFLARE
-        const WORKER_URL = 'https://twoj-worker.twoja-subdomena.workers.dev'; 
+        const WORKER_URL = 'https://imgw-proxy.kacpiq.workers.dev/'; 
         const apiUrl = `${WORKER_URL}/?time=${timestamp}`;
 
         fetch(apiUrl)
