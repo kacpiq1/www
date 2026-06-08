@@ -23,19 +23,29 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function checkDataAvailability(timestamp, label, date, duration) {
-        const apiUrl = `https://corsproxy.io/?https://meteo.imgw.pl/api/v1/forecast/storm?token=p4DXKjsYadfBV21TYrDk&time=${timestamp}`;
+        // TUTAJ WKLEJ ADRES SWOJEGO WORKERA CLOUDFLARE
+        const WORKER_URL = 'https://twoj-worker.twoja-subdomena.workers.dev'; 
+        const apiUrl = `${WORKER_URL}/?time=${timestamp}`;
 
         fetch(apiUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.data.forecast.forecast.images.asPng.asBase64) {
+                // Upewniamy się, że struktura danych z IMGW istnieje, zanim ją wywołamy
+                if (data?.data?.forecast?.forecast?.images?.asPng?.asBase64) {
                     const button = document.createElement('button');
                     let displayDate = `${date.toLocaleDateString('pl-PL')}`;
+                    
                     if (label === 'Noc') {
                         const previousDay = new Date(date);
                         previousDay.setDate(date.getDate() - 1);
                         displayDate = `${previousDay.toLocaleDateString('pl-PL')} / ${date.toLocaleDateString('pl-PL')}`;
                     }
+                    
                     button.textContent = `${label} (${displayDate})`;
                     button.addEventListener('click', () => {
                         // Usuwamy klasę selected z aktualnie zaznaczonego przycisku
@@ -60,17 +70,16 @@ document.addEventListener("DOMContentLoaded", function() {
         const base64Image = data.data.forecast.forecast.images.asPng.asBase64;
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${base64Image}`;
-        
+
         const validFrom = new Date(date);
         validFrom.setUTCHours(label === 'Dzień' ? 8 : 20, 0, 0, 0);
-        
+
         const validTo = new Date(validFrom);
         validTo.setHours(validTo.getHours() + duration);
 
         const info = document.createElement('p');
         info.textContent = `Ważność: od ${validFrom.toLocaleString('pl-PL', { timeZone: 'GMT' })} do ${validTo.toLocaleString('pl-PL', { timeZone: 'GMT' })} 
         | Ważność dla nocy pokazywana powyżej jest niepoprawna. Zapoznaj się z ilustracją!`;
-        
 
         stormWarningsDiv.appendChild(info);
         stormWarningsDiv.appendChild(img);
