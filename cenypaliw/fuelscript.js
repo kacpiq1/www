@@ -92,40 +92,49 @@ particlesJS("particles-js", {
     }
 });
 
+
 // === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
 window.isNettoMode = false; // Zmienna globalna dla trybu podatku
 
 function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
     let finalPrice = 0;
+    let currentTaxRate = 1.0;
     
     if (productName === 'LPG') {
-        finalPrice = wholesalePriceNetto * 1.26; 
+        currentTaxRate = 1.26;
+        finalPrice = wholesalePriceNetto * currentTaxRate; 
     } else {
-        let isCpnActive = true; 
-        if (dateStr && dateStr < '2026-03-31') isCpnActive = false;
-
-        if (isCpnActive) {
-            finalPrice = (wholesalePriceNetto + 0.30) * 1.08;
+        if (dateStr && dateStr >= '2026-07-01') {
+            // Po 1 lipca 2026 - Koniec pakietu CPN, 23% VAT i nowe marże
+            currentTaxRate = 1.23;
+            let margin = 0.23; // Domyślna marża
+            
+            if (productName === 'Pb95') margin = 0.29;
+            else if (productName === 'ONEkodiesel') margin = 0.23;
+            else if (productName === 'Pb98') margin = 0.24; // (Verva 98)
+            else if (productName === 'ONArctic2') margin = 0.23; // (Verva Diesel)
+            
+            finalPrice = (wholesalePriceNetto + margin) * currentTaxRate;
+            
+        } else if (dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01') {
+            // Pakiet CPN (obowiązujący do 30 czerwca)
+            currentTaxRate = 1.08;
+            finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
         } else {
-            let taxRate = productName === 'Pb98' ? 0.32 : 0.26;
-            finalPrice = wholesalePriceNetto * (1 + taxRate);
+            // Stare stawki przed CPN
+            currentTaxRate = productName === 'Pb98' ? 1.32 : 1.26;
+            finalPrice = wholesalePriceNetto * currentTaxRate;
         }
     }
 
-    // Jeśli włączono tryb Netto, zdejmujemy narzucony wcześniej podatek
+    // Jeśli włączono tryb Netto, zdejmujemy aktualny podatek z danego okresu
     if (window.isNettoMode) {
-        if (productName === 'LPG') return finalPrice / 1.26;
-        let isCpnActive = dateStr && dateStr < '2026-03-31' ? false : true;
-        if (isCpnActive) {
-            return finalPrice / 1.08;
-        } else {
-            let taxRate = productName === 'Pb98' ? 0.32 : 0.26;
-            return finalPrice / (1 + taxRate);
-        }
+        return finalPrice / currentTaxRate;
     }
     
     return finalPrice;
 }
+// =============================================
 // =============================================
 
 // === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
@@ -339,8 +348,8 @@ function renderAllFuels() {
         let pricesObj = window.dailyNettoPrices[productName];
         if (!pricesObj) return;
         
-        let todayNetto = pricesObj.todayNetto; // Prawdziwy hurt
-        let yesterdayNetto = pricesObj.yesterdayNetto; // Prawdziwy hurt
+        let todayNetto = pricesObj.todayNetto; 
+        let yesterdayNetto = pricesObj.yesterdayNetto; 
         
         if (productName === 'LPG' && rawLpgData) {
             if (todayNetto === 0) todayNetto = rawLpgData.value;
@@ -349,15 +358,10 @@ function renderAllFuels() {
         
         if (todayNetto === 0) return; 
         
-        // Zawsze używamy hurtu z Efecta Diesel dla ceny rynkowej Vervy (od 01.04.2026)
-        let efectaTodayNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].todayNetto : todayNetto;
-        let efectaYesterdayNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].yesterdayNetto : yesterdayNetto;
-
+        // OBLICZANIE WŁASNEJ CENY Z WŁASNEGO PRODUCT-ID
         let todayPrice = 0;
         if (todayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
             todayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else if (productName === 'ONArctic2' && todayStr >= '2026-04-01' && efectaTodayNetto > 0) {
-            todayPrice = calculateRetailPrice('ONEkodiesel', efectaTodayNetto, todayStr);
         } else {
             todayPrice = calculateRetailPrice(productName, todayNetto, todayStr);
         }
@@ -365,35 +369,37 @@ function renderAllFuels() {
         let yesterdayPrice = 0;
         if (yesterdayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
             yesterdayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else if (productName === 'ONArctic2' && yesterdayStr >= '2026-04-01' && efectaYesterdayNetto > 0) {
-            yesterdayPrice = calculateRetailPrice('ONEkodiesel', efectaYesterdayNetto, yesterdayStr);
         } else {
             yesterdayPrice = calculateRetailPrice(productName, yesterdayNetto, yesterdayStr);
         }
         
         const priceChange = yesterdayPrice > 0 ? ((todayPrice - yesterdayPrice) / yesterdayPrice) * 100 : 0;
         
+        // OBLICZANIE PRAWDOPODOBNEJ CENY DLA VERVA DIESEL (Efecta Dzisiaj + 0.20 zł)
+        let probableVervaPrice = 0;
+        if (productName === 'ONArctic2' && todayStr >= '2026-07-01') {
+            let efectaNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].todayNetto : 0;
+            if (efectaNetto > 0) {
+                let efectaPrice = calculateRetailPrice('ONEkodiesel', efectaNetto, todayStr);
+                probableVervaPrice = efectaPrice + 0.20;
+            }
+        }
+
         let tomorrowBadgeHtml = '';
         if (isTomorrowAvailable) {
             let tomorrowNetto = 0;
-            let tomorrowEfectaNetto = 0;
 
             if (productName === 'LPG' && rawLpgData) {
                 tomorrowNetto = rawLpgData.value;
             } else {
                 const rawFuel = rawFuelDataList.find(f => f.productName === productName);
-                if (rawFuel) tomorrowNetto = rawFuel.value / 1000; // Prawdziwy hurt jutro
-
-                const rawEfecta = rawFuelDataList.find(f => f.productName === 'ONEkodiesel');
-                if (rawEfecta) tomorrowEfectaNetto = rawEfecta.value / 1000;
+                if (rawFuel) tomorrowNetto = rawFuel.value / 1000;
             }
             
             if (tomorrowNetto > 0) {
                 let tomorrowPrice = 0;
                 if (tomorrowStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
                     tomorrowPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-                } else if (productName === 'ONArctic2' && tomorrowStr >= '2026-04-01' && tomorrowEfectaNetto > 0) {
-                    tomorrowPrice = calculateRetailPrice('ONEkodiesel', tomorrowEfectaNetto, tomorrowStr);
                 } else {
                     tomorrowPrice = calculateRetailPrice(productName, tomorrowNetto, tomorrowStr);
                 }
@@ -423,14 +429,16 @@ function renderAllFuels() {
         const fuelData = {
             productName,
             todayPrice,
-            todayNetto, // To zostaje w interfejsie jako PRAWDZIWY hurt dla Vervy
+            todayNetto, 
             priceChange,
-            tomorrowBadgeHtml
+            tomorrowBadgeHtml,
+            probableVervaPrice // <--- Przekazanie obliczonej ceny
         };
         
         fuelGrid.appendChild(createFuelCard(fuelData));
     });
 }
+
 
 function createFuelCard(fuelData) {
     const card = document.createElement('div');
@@ -450,8 +458,17 @@ function createFuelCard(fuelData) {
 
     const todayStr = new Date().toLocaleDateString('sv-SE');
     let cpnTagHtml = '';
-    if (fuelData.productName !== 'LPG' && todayStr >= '2026-03-31') {
+    
+    if (fuelData.productName !== 'LPG' && todayStr >= '2026-03-31' && todayStr < '2026-07-01') {
         cpnTagHtml = '<span class="cpn-badge">CPN</span>';
+    }
+
+    // Dodatkowy boks dla Vervy Diesel z obliczoną prawdopodobną ceną na stacji
+    let vervaNoteHtml = '';
+    if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
+        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; margin-top: 8px; font-weight: 600; background: rgba(227, 6, 19, 0.05); padding: 6px; border-radius: 6px; border: 1px dashed rgba(227, 6, 19, 0.3);">
+            Prawdopodobna cena na stacji: ${fuelData.probableVervaPrice.toFixed(2)} PLN <br><span style="font-size: 0.75rem; font-weight: normal; color: #8D99AE;">(Efecta Diesel + 20 gr)</span>
+        </div>`;
     }
     
     card.innerHTML = `
@@ -466,12 +483,15 @@ function createFuelCard(fuelData) {
             </span>
         </div>
         <div class="fuel-price-wholesale">Hurt netto: ${fuelData.todayNetto.toFixed(2)} PLN</div>
+        ${vervaNoteHtml}
         ${fuelData.tomorrowBadgeHtml}
     `;
     
     originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
     return card;
 }
+
+
 
 function processForecastData() {
     const forecastData = [
@@ -703,35 +723,11 @@ function fetchHistoryData() {
     
     fetch(historyUrl)
         .then(response => response.json())
-        .then(async data => {
-            
-            // POBIERAMY RÓWNOLEGLE HISTORIĘ EFECTA DIESEL, JEŚLI WYSZUKUJEMY VERVĘ
-            let efectaMap = {};
-            if (productId === '44') {
-                try {
-                    const efectaUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=43&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
-                    const resEfecta = await fetch(efectaUrl);
-                    const dataEfecta = await resEfecta.json();
-                    dataEfecta.forEach(e => {
-                        efectaMap[e.effectiveDate] = e.value;
-                    });
-                } catch(e) {
-                    console.error("Błąd pobierania bazy Efecty dla Vervy w historii");
-                }
-            }
-
+        .then(data => {
             const transformedData = data.map(item => {
                 const shiftedDateStr = shiftDate(item.effectiveDate.split('T')[0]);
-                let efectaValue = null;
-                
-                // Zapisujemy przypisaną cenę Efecty do tego samego dnia
-                if (productId === '44' && efectaMap[item.effectiveDate]) {
-                    efectaValue = efectaMap[item.effectiveDate];
-                }
-
                 return {
                     value: item.value,
-                    efectaValue: efectaValue,
                     shiftedDate: shiftedDateStr,
                     dateObj: new Date(shiftedDateStr)
                 };
@@ -753,12 +749,8 @@ function fetchHistoryData() {
                     if (item.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
                         price = OVERRIDE_PRICES['2026-03-31'][productNameKey];
                     } else {
-                        // Jeśli sprawdzamy Vervę (od 01.04.2026), cenę detaliczną liczymy tak jakby to była Efecta
-                        if (productNameKey === 'ONArctic2' && item.shiftedDate >= '2026-04-01' && item.efectaValue) {
-                            price = calculateRetailPrice('ONEkodiesel', item.efectaValue / 1000, item.shiftedDate);
-                        } else {
-                            price = calculateRetailPrice(productNameKey, item.value / 1000, item.shiftedDate); 
-                        }
+                        // Czyste obliczanie własnej ceny
+                        price = calculateRetailPrice(productNameKey, item.value / 1000, item.shiftedDate); 
                     }
                     
                     if (price < minPrice) minPrice = price;
@@ -780,11 +772,7 @@ function fetchHistoryData() {
                         if (it.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
                             monthSum += OVERRIDE_PRICES['2026-03-31'][productNameKey];
                         } else {
-                            if (productNameKey === 'ONArctic2' && it.shiftedDate >= '2026-04-01' && it.efectaValue) {
-                                monthSum += calculateRetailPrice('ONEkodiesel', it.efectaValue / 1000, it.shiftedDate);
-                            } else {
-                                monthSum += calculateRetailPrice(productNameKey, it.value / 1000, it.shiftedDate);
-                            }
+                            monthSum += calculateRetailPrice(productNameKey, it.value / 1000, it.shiftedDate);
                         }
                     });
                     const avgPrice = monthSum / items.length;
@@ -802,16 +790,16 @@ function fetchHistoryData() {
                 
                 let showCpnTag = false;
                 if (productNameKey !== 'LPG') {
-                    if (item.date.length > 7 && item.date >= '2026-03-31') {
+                    if (item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01') {
                         showCpnTag = true;
-                    } else if (item.date.length === 7 && item.date >= '2026-04') {
+                    } else if (item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07') {
                         showCpnTag = true;
                     }
                 }
                 const cpnTagHtml = showCpnTag ? ' <span class="cpn-badge">CPN</span>' : '';
 
                 let dateHtml = item.date;
-                if (item.date.length > 7 && item.date >= '2026-03-31') {
+                if (item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01') {
                     const rowDateObj = new Date(item.date);
                     if (rowDateObj.getDay() === 6) {
                         if (item.date === '2026-04-04') {
@@ -1328,5 +1316,3 @@ window.processFuelData = function(data) {
     originalProcessFuelDataCalc(data);
     setTimeout(runAllCalculations, 1500); // Uruchamia kalkulator jak już zaciągnie API
 };
-
-
