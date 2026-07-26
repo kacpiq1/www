@@ -324,12 +324,15 @@
       <div class="stat-badge"><span class="counter" data-count="2220">0</span> Subów</div>
     </a>
 
-    <!-- 11. DISCORD STATS BADGE -->
-    <a class="bento-box box-discord-stats">
+    <!-- 11. DISCORD STATUS Z LANYARD -->
+    <div class="bento-box box-discord-stats" id="discord-card">
       <i class='bx bxl-discord-alt' style="font-size:3rem; color:#5865F2; margin-bottom:5px;"></i>
-      <h3 style="font-size:1.1rem; font-weight:800;">Społeczność</h3>
-      <div class="stat-badge" style="color:#a1a1aa; border-color:rgba(255,255,255,0.1);">Wkrótce</div>
-    </a>
+      <h3 style="font-size:1.1rem; font-weight:800;">Discord</h3>
+      <div class="stat-badge" id="discord-status-badge" style="color:#a1a1aa; border-color:rgba(255,255,255,0.1);">
+        <div class="status-dot" style="background:#555;"></div> Ładowanie...
+      </div>
+      <div id="discord-activity" style="font-size: 0.85rem; color:#a1a1aa; margin-top: 10px; display: none; line-height: 1.4;"></div>
+    </div>
 
     <!-- 12. PROFIL VALORANT Z WIDEO W TLE -->
     <div class="bento-box box-valorant">
@@ -577,6 +580,121 @@
       });
 
     });
+
+    // --- LANYARD DISCORD STATUS (WEBSOCKET - NA ŻYWO) ---
+      const discordId = '497055230316249118';
+      const statusBadge = document.getElementById('discord-status-badge');
+      const activityDiv = document.getElementById('discord-activity');
+
+      const statusStyles = {
+        online: { color: '#43b581', text: 'Aktywny' },
+        idle: { color: '#faa61a', text: 'Zaraz wracam' },
+        dnd: { color: '#f04747', text: 'Nie przeszkadzać' },
+        offline: { color: '#747f8d', text: 'Offline' }
+      };
+
+      /// Funkcja aktualizująca wygląd na stronie (ZABEZPIECZENIE PRZED WYJEŻDŻANIEM)
+      const updateDiscordUI = (data) => {
+        const currentStatus = statusStyles[data.discord_status] || statusStyles.offline;
+        
+        statusBadge.innerHTML = `<div class="status-dot" style="background:${currentStatus.color}; box-shadow: 0 0 8px ${currentStatus.color}80;"></div> ${currentStatus.text}`;
+        statusBadge.style.borderColor = `${currentStatus.color}50`;
+        statusBadge.style.color = '#fff';
+
+        if (data.activities && data.activities.length > 0) {
+          const activity = data.activities.find(a => a.type !== 4) || data.activities[0];
+          activityDiv.style.display = 'block';
+          
+          let imageUrl = '';
+          if (activity.id === "spotify:1" && data.spotify) {
+            imageUrl = data.spotify.album_art_url;
+          } else if (activity.assets && activity.assets.large_image) {
+            if (activity.assets.large_image.startsWith("mp:")) {
+              imageUrl = activity.assets.large_image.replace("mp:external/", "https://media.discordapp.net/external/");
+            } else {
+              imageUrl = `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity.assets.large_image}.png`;
+            }
+          }
+
+          const imgHtml = imageUrl ? `<img src="${imageUrl}" style="width: 64px; height: 64px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.4); flex-shrink: 0;">` : '';
+          
+          // Styl ucinający tekst + max-width 100%
+          let textHtml = '';
+          const textStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;";
+          
+          if (activity.id === "spotify:1") {
+            textHtml = `
+              <div style="font-size: 0.75rem; color: #1DB954; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Słucha Spotify</div>
+              <div style="color: #fff; font-weight: 800; font-size: 1.05rem; ${textStyle}" title="${activity.details}">${activity.details}</div>
+              <div style="font-size: 0.85rem; color: #a1a1aa; ${textStyle}" title="${activity.state || ''}">${activity.state || ''}</div>
+            `;
+          } else if (activity.type === 0) {
+            textHtml = `
+              <div style="font-size: 0.75rem; color: #a1a1aa; text-transform: uppercase; margin-bottom: 2px;">Gra w</div>
+              <div style="color: #fff; font-weight: 800; font-size: 1.05rem; ${textStyle}" title="${activity.name}">${activity.name}</div>
+              <div style="font-size: 0.85rem; color: #d4d4d8; ${textStyle}" title="${activity.details || ''}">${activity.details || ''}</div>
+            `;
+          } else if (activity.type === 4) {
+            textHtml = `<div style="color:#fff; font-style: italic; font-size: 0.95rem; ${textStyle}" title="${activity.state || ''}">"${activity.state || ''}"</div>`;
+          } else {
+            textHtml = `<div style="color:#fff; font-weight:800; font-size: 1.05rem; ${textStyle}" title="${activity.name}">${activity.name}</div>`;
+          }
+
+          if (activity.type === 4 && !imageUrl) {
+            activityDiv.innerHTML = textHtml;
+          } else {
+            // Kontener box-sizing: border-box zapobiega wyjściu poza krawędzie
+            // Kolumna z tekstem zyskała flex: 1 1 0% i overflow: hidden
+            activityDiv.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 12px; text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 16px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.08); width: 100%; box-sizing: border-box; overflow: hidden;">
+                ${imgHtml}
+                <div style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 0%; overflow: hidden;">
+                  ${textHtml}
+                </div>
+              </div>
+            `;
+          }
+        } else {
+          activityDiv.style.display = 'none';
+        }
+      };
+
+      // Funkcja nawiązująca połączenie WebSocket
+      const connectLanyard = () => {
+        const socket = new WebSocket('wss://api.lanyard.rest/socket');
+
+        socket.addEventListener('message', (event) => {
+          const msg = JSON.parse(event.data);
+
+          if (msg.op === 1) { 
+            // 1. Krok: Utrzymywanie połączenia (Heartbeat)
+            setInterval(() => {
+              if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ op: 3 }));
+              }
+            }, msg.d.heartbeat_interval);
+
+            // 2. Krok: Subskrypcja Twojego ID z Discorda
+            socket.send(JSON.stringify({
+              op: 2,
+              d: { subscribe_to_id: discordId }
+            }));
+          }
+
+          // 3. Krok: Odbieranie danych (Przy starcie ORAZ przy każdej zmianie)
+          if (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE') {
+            updateDiscordUI(msg.d);
+          }
+        });
+
+        // W razie utraty połączenia spróbuj połączyć ponownie po 5 sekundach
+        socket.addEventListener('close', () => {
+          setTimeout(connectLanyard, 5000);
+        });
+      };
+
+      // Uruchomienie
+      connectLanyard();
   </script>
 </body>
 </html>
