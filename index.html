@@ -68,6 +68,36 @@
     .box-instreamly { grid-column: span 3; justify-content: center; display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; align-items: center; background: linear-gradient(135deg, rgba(145, 70, 255, 0.05) 0%, rgba(24, 24, 27, 0.5) 100%); }
     .box-setup { grid-column: span 3; }
 
+/* --- ANIMACJE VALORANT MATCH END --- */
+    @keyframes popInOverlay {
+      0% { opacity: 0; transform: scale(0.85); }
+      70% { transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    
+    .match-result-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 50; border-radius: 32px;
+      animation: popInOverlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+    
+    .match-result-overlay.win {
+      background: linear-gradient(135deg, rgba(83, 215, 105, 0.95), rgba(24, 24, 27, 0.95));
+      border: 2px solid #53d769;
+    }
+    
+    .match-result-overlay.loss {
+      background: linear-gradient(135deg, rgba(230, 57, 70, 0.95), rgba(24, 24, 27, 0.95));
+      border: 2px solid #e63946;
+    }
+    
+    .match-title { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.5); letter-spacing: 2px; margin-bottom: 5px; }
+    .match-score { font-size: 1.5rem; font-weight: 800; color: rgba(255,255,255,0.9); }
+
     /* --- PROFIL --- */
     .profile-header { display: flex; align-items: center; gap: 25px; transform: translateZ(20px); transition: 0.3s; }
     .avatar { width: 140px; height: 140px; border-radius: 50%; background: url('grafiki/avatar.png') center/cover no-repeat, #222; border: 2px solid rgba(255,255,255,0.1); flex-shrink: 0; transition: 0.3s; }
@@ -85,6 +115,80 @@
     .box-twitch.is-live .live-status { background: #e63946; border-color: #ff4d5a; color: #fff; }
     .box-twitch.is-live .status-dot { background: #fff; animation: blink 1s infinite alternate; }
     @keyframes blink { from { opacity: 1; } to { opacity: 0.3; } }
+
+    /* --- ANIMACJE WYNIKU I MECZU VALORANT --- */
+    
+    /* 1. Dłuższa animacja zmiany wyniku (2.5 sekundy) */
+    @keyframes scoreUpdatePulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 70, 85, 0); }
+      15% { transform: scale(1.15); box-shadow: 0 0 25px rgba(255, 70, 85, 1); background: rgba(255, 70, 85, 0.6); }
+      50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 70, 85, 0.8); background: rgba(255, 70, 85, 0.3); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 70, 85, 0); }
+    }
+
+    .score-badge {
+      background: rgba(255, 70, 85, 0.2); color: #FF4655; 
+      padding: 2px 8px; border-radius: 6px; font-weight: 800; 
+      border: 1px solid rgba(255, 70, 85, 0.4); 
+      margin-top: 4px; display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .score-badge.updated { animation: scoreUpdatePulse 2.5s ease-out forwards; }
+
+    /* 2. Epicka animacja Wygranej / Przegranej */
+    @keyframes epicWinLoss {
+      0% { opacity: 0; transform: scale(0.5) translateY(50px); filter: brightness(2); }
+      40% { opacity: 1; transform: scale(1.1) translateY(-10px); filter: brightness(1.2); }
+      60% { transform: scale(0.95) translateY(5px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
+    }
+    
+    /* Płynący efekt świetlny w tle po zakończeniu */
+    @keyframes bgPulse {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .match-result-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 50; border-radius: 32px; backdrop-filter: blur(8px); text-align: center;
+      background-size: 200% 200%; /* Wymagane do animacji bgPulse */
+    }
+    .match-result-overlay.win {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.95), rgba(24, 24, 27, 0.95), rgba(83, 215, 105, 0.9));
+      border: 2px solid #53d769;
+      box-shadow: inset 0 0 40px rgba(83,215,105,0.4), 0 10px 30px rgba(83,215,105,0.3);
+      animation: epicWinLoss 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, bgPulse 3s ease infinite;
+    }
+    .match-result-overlay.loss {
+      background: linear-gradient(135deg, rgba(230, 57, 70, 0.95), rgba(24, 24, 27, 0.95), rgba(255, 70, 85, 0.9));
+      border: 2px solid #e63946;
+      box-shadow: inset 0 0 40px rgba(230,57,70,0.4), 0 10px 30px rgba(230,57,70,0.3);
+      animation: epicWinLoss 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, bgPulse 3s ease infinite;
+    }
+    
+    .match-title { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.5); letter-spacing: 2px; margin-bottom: 5px; }
+    .match-score { font-size: 1.5rem; font-weight: 800; color: rgba(255,255,255,0.9); }
+
+    /* 3. Ekran ZNALEZIONO GRĘ (Pojawia się i znika) */
+    @keyframes matchFoundAnim {
+      0% { opacity: 0; transform: scale(1.2); filter: blur(10px); }
+      10% { opacity: 1; transform: scale(1); filter: blur(0px); }
+      85% { opacity: 1; transform: scale(1); filter: blur(0px); }
+      100% { opacity: 0; transform: scale(0.8); filter: blur(5px); }
+    }
+    
+    .match-found-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 70, 85, 0.95); z-index: 60; border-radius: 32px;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 1.6rem; font-weight: 900; color: #fff; text-align: center;
+      text-transform: uppercase; letter-spacing: 2px;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+      animation: matchFoundAnim 3s forwards; pointer-events: none;
+    }
 
     /* --- POZOSTAŁE KAFELKI --- */
     .badge-new { position: absolute; top: 15px; right: 15px; background: #e63946; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 5px 12px; border-radius: 20px; animation: pulseNew 2s infinite; z-index: 5; border: 1px solid #ff4d5a; pointer-events: none; }
@@ -581,7 +685,7 @@
 
     });
 
-    // --- LANYARD DISCORD STATUS (WEBSOCKET - NA ŻYWO) ---
+   // --- LANYARD DISCORD STATUS (ZAAWANSOWANE ANIMACJE VALORANT) ---
       const discordId = '497055230316249118';
       const statusBadge = document.getElementById('discord-status-badge');
       const activityDiv = document.getElementById('discord-activity');
@@ -593,13 +697,18 @@
         offline: { color: '#747f8d', text: 'Offline' }
       };
 
-      /// Funkcja aktualizująca wygląd na stronie (ZABEZPIECZENIE PRZED WYJEŻDŻANIEM)
+      // Zmienne śledzące stan gry, aby animacje nie powtarzały się bez przerwy
+      let lastScore = null;
+      let lastMatchPhase = null; // 'lobby', 'agent_select', 'ingame'
+
       const updateDiscordUI = (data) => {
         const currentStatus = statusStyles[data.discord_status] || statusStyles.offline;
         
         statusBadge.innerHTML = `<div class="status-dot" style="background:${currentStatus.color}; box-shadow: 0 0 8px ${currentStatus.color}80;"></div> ${currentStatus.text}`;
         statusBadge.style.borderColor = `${currentStatus.color}50`;
         statusBadge.style.color = '#fff';
+
+        const cardElement = document.getElementById('discord-card');
 
         if (data.activities && data.activities.length > 0) {
           const activity = data.activities.find(a => a.type !== 4) || data.activities[0];
@@ -617,11 +726,88 @@
           }
 
           const imgHtml = imageUrl ? `<img src="${imageUrl}" style="width: 64px; height: 64px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.4); flex-shrink: 0;">` : '';
-          
-          // Styl ucinający tekst + max-width 100%
           let textHtml = '';
           const textStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;";
           
+          // --- LOGIKA VALORANT (ŚLEDZENIE FAZ, WYNIKU I KOŃCA) ---
+          let isMatchEnded = false;
+          let matchOverlayHtml = '';
+          let matchFoundHtml = '';
+          let isScoreUpdated = false;
+          let currentPhase = 'lobby';
+
+          if (activity.name.toLowerCase().includes("valorant")) {
+            const combinedText = `${activity.details || ''} ${activity.state || ''}`.toLowerCase();
+            
+            // 1. WYKRYWANIE WYBORU AGENTA
+            const isAgentSelect = combinedText.includes("agent select") || combinedText.includes("wybór agenta") || combinedText.includes("character select") || combinedText.includes("pre-game");
+            
+            // 2. WYKRYWANIE WYNIKU
+            const scoreMatch = combinedText.match(/(\d+)\s*[:-]\s*(\d+)/);
+
+            if (isAgentSelect) {
+              currentPhase = 'agent_select';
+            } else if (scoreMatch) {
+              currentPhase = 'ingame';
+            }
+
+            // Jeśli właśnie weszliśmy do wyboru agenta -> "Znaleziono Grę!"
+            if (currentPhase === 'agent_select' && lastMatchPhase !== 'agent_select') {
+               matchFoundHtml = `<div class="match-found-overlay">ZNALEZIONO<br>GRĘ!</div>`;
+               
+               // Bezpieczne sprzątanie po 3 sekundach z kodu HTML
+               setTimeout(() => {
+                 const overlay = cardElement.querySelector('.match-found-overlay');
+                 if (overlay) overlay.remove();
+               }, 3200);
+            }
+            
+            if (scoreMatch) {
+              const myScore = parseInt(scoreMatch[1]);
+              const enemyScore = parseInt(scoreMatch[2]);
+              const currentScoreStr = `${myScore} - ${enemyScore}`;
+              
+              if (lastScore !== null && lastScore !== currentScoreStr) {
+                 isScoreUpdated = true;
+              }
+              lastScore = currentScoreStr;
+
+              const isSwiftplay = combinedText.includes("swiftplay") || combinedText.includes("szybka gra");
+              const scoreToWin = isSwiftplay ? 5 : 13;
+
+              let isWin = combinedText.includes("wygrana") || combinedText.includes("win") || combinedText.includes("zwycięstwo");
+              let isLoss = combinedText.includes("przegrana") || combinedText.includes("loss") || combinedText.includes("porażka");
+
+              if (!isWin && !isLoss) {
+                if (myScore >= scoreToWin && myScore > enemyScore) isWin = true;
+                if (enemyScore >= scoreToWin && enemyScore > myScore) isLoss = true;
+              }
+
+              if (isWin || isLoss) {
+                isMatchEnded = true;
+                lastScore = null; 
+                const overlayClass = isWin ? "win" : "loss";
+                const resultTitle = isWin ? "WYGRANA!" : "PRZEGRANA";
+                
+                matchOverlayHtml = `
+                  <div class="match-result-overlay ${overlayClass}">
+                    <div class="match-title">${resultTitle}</div>
+                    <div class="match-score">Wynik: ${currentScoreStr}</div>
+                  </div>
+                `;
+              } else {
+                const updatedClass = isScoreUpdated ? "updated" : "";
+                activity.state = `<span class="score-badge ${updatedClass}">🔴 WYNIK: ${currentScoreStr}</span>`;
+              }
+            } else {
+                // Skoro nie ma wyniku w opisie (np. lobby), zerujemy
+                lastScore = null;
+            }
+            
+            lastMatchPhase = currentPhase;
+          }
+          // -----------------------------------------------------
+
           if (activity.id === "spotify:1") {
             textHtml = `
               <div style="font-size: 0.75rem; color: #1DB954; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Słucha Spotify</div>
@@ -633,6 +819,7 @@
               <div style="font-size: 0.75rem; color: #a1a1aa; text-transform: uppercase; margin-bottom: 2px;">Gra w</div>
               <div style="color: #fff; font-weight: 800; font-size: 1.05rem; ${textStyle}" title="${activity.name}">${activity.name}</div>
               <div style="font-size: 0.85rem; color: #d4d4d8; ${textStyle}" title="${activity.details || ''}">${activity.details || ''}</div>
+              <div style="font-size: 0.85rem; color: #a1a1aa; ${textStyle}">${activity.state || ''}</div>
             `;
           } else if (activity.type === 4) {
             textHtml = `<div style="color:#fff; font-style: italic; font-size: 0.95rem; ${textStyle}" title="${activity.state || ''}">"${activity.state || ''}"</div>`;
@@ -643,8 +830,6 @@
           if (activity.type === 4 && !imageUrl) {
             activityDiv.innerHTML = textHtml;
           } else {
-            // Kontener box-sizing: border-box zapobiega wyjściu poza krawędzie
-            // Kolumna z tekstem zyskała flex: 1 1 0% i overflow: hidden
             activityDiv.innerHTML = `
               <div style="display: flex; align-items: center; gap: 12px; text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 16px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.08); width: 100%; box-sizing: border-box; overflow: hidden;">
                 ${imgHtml}
@@ -654,46 +839,54 @@
               </div>
             `;
           }
+
+          // Zarządzanie ekranami post-game i pre-game
+          if (isMatchEnded) {
+             if (!cardElement.querySelector('.match-result-overlay')) {
+               cardElement.insertAdjacentHTML('beforeend', matchOverlayHtml);
+             }
+          } else {
+             const oldEndOverlay = cardElement.querySelector('.match-result-overlay');
+             if (oldEndOverlay) oldEndOverlay.remove();
+          }
+
+          if (matchFoundHtml) {
+             cardElement.insertAdjacentHTML('beforeend', matchFoundHtml);
+          }
+
         } else {
           activityDiv.style.display = 'none';
+          lastScore = null;
+          lastMatchPhase = null;
         }
       };
 
-      // Funkcja nawiązująca połączenie WebSocket
       const connectLanyard = () => {
         const socket = new WebSocket('wss://api.lanyard.rest/socket');
 
         socket.addEventListener('message', (event) => {
           const msg = JSON.parse(event.data);
-
           if (msg.op === 1) { 
-            // 1. Krok: Utrzymywanie połączenia (Heartbeat)
             setInterval(() => {
               if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify({ op: 3 }));
               }
             }, msg.d.heartbeat_interval);
 
-            // 2. Krok: Subskrypcja Twojego ID z Discorda
             socket.send(JSON.stringify({
               op: 2,
               d: { subscribe_to_id: discordId }
             }));
           }
 
-          // 3. Krok: Odbieranie danych (Przy starcie ORAZ przy każdej zmianie)
           if (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE') {
             updateDiscordUI(msg.d);
           }
         });
 
-        // W razie utraty połączenia spróbuj połączyć ponownie po 5 sekundach
-        socket.addEventListener('close', () => {
-          setTimeout(connectLanyard, 5000);
-        });
+        socket.addEventListener('close', () => setTimeout(connectLanyard, 5000));
       };
 
-      // Uruchomienie
       connectLanyard();
   </script>
 </body>
