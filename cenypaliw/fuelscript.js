@@ -104,8 +104,15 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
         currentTaxRate = 1.26;
         finalPrice = wholesalePriceNetto * currentTaxRate; 
     } else {
-        if (dateStr && dateStr >= '2026-07-01') {
-            // Po 1 lipca 2026 - Koniec pakietu CPN, 23% VAT i nowe marże
+        const isOldCpn = dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01';
+        const isNewCpn = dateStr && dateStr >= '2026-08-17' && dateStr < '2026-09-01';
+        
+        if (isOldCpn || isNewCpn) {
+            // Pakiet CPN (obowiązujący wiosną oraz od 17.08.2026 do końca wakacji)
+            currentTaxRate = 1.08;
+            finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
+        } else if (dateStr && dateStr >= '2026-07-01') {
+            // Ceny standardowe (poza pakietami) - 23% VAT i standardowe marże
             currentTaxRate = 1.23;
             let margin = 0.23; // Domyślna marża
             
@@ -115,13 +122,8 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
             else if (productName === 'ONArctic2') margin = 0.23; // (Verva Diesel)
             
             finalPrice = (wholesalePriceNetto + margin) * currentTaxRate;
-            
-        } else if (dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01') {
-            // Pakiet CPN (obowiązujący do 30 czerwca)
-            currentTaxRate = 1.08;
-            finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
         } else {
-            // Stare stawki przed CPN
+            // Stare stawki przed pierwszym CPN (przed 31.03.2026)
             currentTaxRate = productName === 'Pb98' ? 1.32 : 1.26;
             finalPrice = wholesalePriceNetto * currentTaxRate;
         }
@@ -134,7 +136,6 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
     
     return finalPrice;
 }
-// =============================================
 // =============================================
 
 // === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
@@ -459,7 +460,10 @@ function createFuelCard(fuelData) {
     const todayStr = new Date().toLocaleDateString('sv-SE');
     let cpnTagHtml = '';
     
-    if (fuelData.productName !== 'LPG' && todayStr >= '2026-03-31' && todayStr < '2026-07-01') {
+    const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
+    const isNewCpn = todayStr >= '2026-08-17' && todayStr < '2026-09-01';
+    
+    if (fuelData.productName !== 'LPG' && (isOldCpn || isNewCpn)) {
         cpnTagHtml = '<span class="cpn-badge">CPN</span>';
     }
 
@@ -512,7 +516,10 @@ function processForecastData() {
         card.className = 'fuel-card animate-up';
         
         let cpnTagHtml = '';
-        if (data.productName !== 'LPG' && todayStr >= '2026-03-31') {
+        const isOldCpnForecast = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
+        const isNewCpnForecast = todayStr >= '2026-08-17' && todayStr < '2026-09-01';
+        
+        if (data.productName !== 'LPG' && (isOldCpnForecast || isNewCpnForecast)) {
             cpnTagHtml = '<span class="cpn-badge">CPN</span>';
         }
 
@@ -789,17 +796,19 @@ function fetchHistoryData() {
                 const priceClass = item.price === minPrice ? 'min-price' : item.price === maxPrice ? 'max-price' : '';
                 
                 let showCpnTag = false;
-                if (productNameKey !== 'LPG') {
-                    if (item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01') {
-                        showCpnTag = true;
-                    } else if (item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07') {
-                        showCpnTag = true;
-                    }
+                const isOldCpnDaily = item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01';
+                const isNewCpnDaily = item.date.length > 7 && item.date >= '2026-08-17' && item.date < '2026-09-01';
+                
+                const isOldCpnMonthly = item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07';
+                const isNewCpnMonthly = item.date.length === 7 && item.date === '2026-08';
+
+                if (productNameKey !== 'LPG' && (isOldCpnDaily || isNewCpnDaily || isOldCpnMonthly || isNewCpnMonthly)) {
+                    showCpnTag = true;
                 }
                 const cpnTagHtml = showCpnTag ? ' <span class="cpn-badge">CPN</span>' : '';
 
                 let dateHtml = item.date;
-                if (item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01') {
+                if (isOldCpnDaily || isNewCpnDaily) {
                     const rowDateObj = new Date(item.date);
                     if (rowDateObj.getDay() === 6) {
                         if (item.date === '2026-04-04') {
