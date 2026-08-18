@@ -105,7 +105,7 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
         finalPrice = wholesalePriceNetto * currentTaxRate; 
     } else {
         const isOldCpn = dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01';
-        const isNewCpn = dateStr && dateStr >= '2026-08-17' && dateStr < '2026-09-01';
+        const isNewCpn = dateStr && dateStr >= '2026-08-15' && dateStr < '2026-09-01';
         
         if (isOldCpn || isNewCpn) {
             // Pakiet CPN (obowiązujący wiosną oraz od 17.08.2026 do końca wakacji)
@@ -461,7 +461,7 @@ function createFuelCard(fuelData) {
     let cpnTagHtml = '';
     
     const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-    const isNewCpn = todayStr >= '2026-08-17' && todayStr < '2026-09-01';
+    const isNewCpn = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
     
     if (fuelData.productName !== 'LPG' && (isOldCpn || isNewCpn)) {
         cpnTagHtml = '<span class="cpn-badge">CPN</span>';
@@ -517,7 +517,7 @@ function processForecastData() {
         
         let cpnTagHtml = '';
         const isOldCpnForecast = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-        const isNewCpnForecast = todayStr >= '2026-08-17' && todayStr < '2026-09-01';
+        const isNewCpnForecast = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
         
         if (data.productName !== 'LPG' && (isOldCpnForecast || isNewCpnForecast)) {
             cpnTagHtml = '<span class="cpn-badge">CPN</span>';
@@ -797,7 +797,7 @@ function fetchHistoryData() {
                 
                 let showCpnTag = false;
                 const isOldCpnDaily = item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01';
-                const isNewCpnDaily = item.date.length > 7 && item.date >= '2026-08-17' && item.date < '2026-09-01';
+                const isNewCpnDaily = item.date.length > 7 && item.date >= '2026-08-15' && item.date < '2026-09-01';
                 
                 const isOldCpnMonthly = item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07';
                 const isNewCpnMonthly = item.date.length === 7 && item.date === '2026-08';
