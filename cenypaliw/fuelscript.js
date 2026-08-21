@@ -594,11 +594,11 @@ function createFuelCard(fuelData) {
 
 function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 6.44, maxPrice: 6.59 },
-        { productName: 'Pb98', minPrice: 6.92, maxPrice: 7.09 },
-        { productName: 'ONEkodiesel', minPrice: 7.29, maxPrice: 7.45 },
-        { productName: 'ONArctic2', minPrice: 7.33, maxPrice: 7.49 },
-        { productName: 'LPG', minPrice: 3.64, maxPrice: 3.79 }
+        { productName: 'Pb95', minPrice: 6.42, maxPrice: 6.59 },
+        { productName: 'Pb98', minPrice: 7.24, maxPrice: 7.39 },
+        { productName: 'ONEkodiesel', minPrice: 7.49, maxPrice: 7.61 },
+        { productName: 'ONArctic2', minPrice: 7.69, maxPrice: 7.89 },
+        { productName: 'LPG', minPrice: 2.79, maxPrice: 2.99 }
     ];
     
     const forecastGrid = document.getElementById('forecastGrid');
