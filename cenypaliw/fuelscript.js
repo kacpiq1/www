@@ -1,2990 +1,2952 @@
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-    @keyframes pulseAlert {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0.7); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(218, 33, 40, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0); }
+@font-face {
+    font-family: 'Myriad Pro Condensed';
+    src: url('https://fonts.cdnfonts.com/s/9045/MyriadPro-Cond.otf') format('opentype');
+}
+
+:root {
+    --primary: #E30613;
+    --primary-dark: #C0040E;
+    --secondary: #2B2D42;
+    --accent: #FFD166;
+    --text: #2B2D42;
+    --text-light: #8D99AE;
+    --bg: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --dark-bg: #121212;
+    --dark-card: #1E1E1E;
+    --dark-text: #E1E1E1;
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --error: #F44336;
+    --info: #2196F3;
+    --trend-up: #E30613;
+    --trend-down: #4CAF50;
+    --trend-stable: #2196F3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+h1 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px;
+}
+
+/* Trend Widget Styles */
+.glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-\[2rem\] {
+    border-radius: 2rem;
+}
+
+.rounded-\[2\.5rem\] {
+    border-radius: 2.5rem;
+}
+
+.backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Trend Badge */
+#home-trend-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.4rem 1rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#home-trend-badge.bg-red-100 {
+    background-color: rgba(227, 6, 19, 0.1);
+    color: var(--trend-up);
+}
+
+#home-trend-badge.bg-green-100 {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--trend-down);
+}
+
+#home-trend-badge.bg-blue-100 {
+    background-color: rgba(33, 150, 243, 0.1);
+    color: var(--trend-stable);
+}
+
+/* Trend Bar */
+#home-trend-bar {
+    transition: width 1s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+#home-trend-bar.bg-red-500 {
+    background: linear-gradient(90deg, var(--trend-up), #ff4d4d);
+}
+
+#home-trend-bar.bg-green-500 {
+    background: linear-gradient(90deg, var(--trend-down), #6ab04c);
+}
+
+#home-trend-bar.bg-blue-500 {
+    background: linear-gradient(90deg, var(--trend-stable), #6c5ce7);
+}
+
+/* Shine Animation */
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
     }
-    .jutro-badge {
-        display: inline-flex;
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shine {
+    animation: shine 2s infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+/* Forecast Value Badge */
+#forecast-grosze-value,
+#forecast-grosze-detailed-value {
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 0.3rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+/* Fuel Grid */
+.fuel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.fuel-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.fuel-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.fuel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--primary);
+}
+
+.fuel-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.fuel-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+    object-fit: contain;
+}
+
+.fuel-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.fuel-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.fuel-price-wholesale {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.price-change {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.price-up {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--error);
+}
+
+.price-down {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success);
+}
+
+.price-neutral {
+    background-color: rgba(33, 150, 243, 0.1);
+    color: var(--info);
+}
+
+.price-change i {
+    margin-right: 0.2rem;
+    font-size: 0.8rem;
+}
+
+.update-info {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+}
+
+.btn:active::after {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 1;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: 0 4px 15px rgba(227, 6, 19, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 6, 19, 0.4);
+}
+
+.btn-secondary {
+    background: var(--card-bg);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover {
+    background: rgba(227, 6, 19, 0.1);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, var(--accent), #FFB800);
+    color: var(--text);
+    box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
+}
+
+.btn-accent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 209, 102, 0.4);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-left: 5px solid var(--warning);
+    color: var(--text);
+}
+
+.alert-info {
+    background-color: rgba(33, 150, 243, 0.2);
+    border-left: 5px solid var(--info);
+    color: var(--text);
+}
+
+.alert-error {
+    background-color: rgba(244, 67, 54, 0.2);
+    border-left: 5px solid var(--error);
+    color: var(--text);
+}
+
+.alert i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+/* =========================================
+   ULTRA-MODERN CLOSE BUTTON (Zaktualizowany)
+   ========================================= */
+
+.close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.04); /* Subtelne, szare tło */
+    border-radius: 50%; /* Idealne koło */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efekt "bounce" przy animacji */
+    z-index: 100;
+    border: 1px solid transparent;
+}
+
+.close:hover {
+    background-color: var(--primary); /* Zmiana tła na Orlen Red */
+    color: #ffffff; /* Ikona staje się biała */
+    transform: rotate(90deg) scale(1.1); /* Obrót o 90 stopni i lekkie powiększenie */
+    box-shadow: 0 4px 15px rgba(227, 6, 19, 0.3); /* Czerwona poświata */
+}
+
+.close:active {
+    transform: scale(0.9); /* Efekt wciśnięcia przy kliknięciu */
+}
+
+/* Wersja dla Trybu Ciemnego */
+body.dark-theme .close {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-theme .close:hover {
+    background-color: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(227, 6, 19, 0.5);
+}
+
+/* =========================================
+   NOWOCZESNY NAGŁÓWEK TABELI (PERFECT ALIGN)
+   ========================================= */
+
+.modal-content .history-table thead {
+    position: sticky;
+    top: -2rem; 
+    z-index: 10;
+}
+
+.modal-content .history-table th {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    /* Usunięcie starego border-bottom */
+    border-bottom: none !important; 
+    background-color: transparent !important;
+    padding: 0 1.5rem 0.8rem 1.5rem;
+    position: relative;
+}
+
+/* Idealne wyrównanie z tekstem w wierszach (uwzględnia 4px paska z boku) */
+.modal-content .history-table th:first-child {
+    text-align: left;
+    padding-left: calc(1.5rem + 4px); 
+}
+
+.modal-content .history-table th:last-child {
+    text-align: right;
+}
+
+/* Nowoczesna, subtelna linia oddzielająca (tylko pod tekstem) */
+.modal-content .history-table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+}
+
+.modal-content .history-table th:first-child::after {
+    left: calc(1.5rem + 4px);
+    right: 0;
+}
+
+.modal-content .history-table th:last-child::after {
+    right: 1.5rem;
+    left: 2rem; /* Skrócenie linii od lewej dla zbalansowania */
+}
+
+/* Wersja dla Trybu Ciemnego */
+body.dark-theme .modal-content .history-table th {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+body.dark-theme .modal-content .history-table th::after {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+/* =========================================
+   ULTRA PREMIUM - PRZEŁĄCZNIK WIDOKU & TABELA
+   ========================================= */
+
+/* 1. iOS-Style Przełącznik "Widok danych" (Segmented Control) */
+.modal-content .form-group div[style*="gap: 1rem"] {
+    background-color: rgba(0, 0, 0, 0.04);
+    padding: 6px;
+    border-radius: 14px;
+    display: inline-flex !important;
+    gap: 0 !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+}
+
+body.dark-theme .modal-content .form-group div[style*="gap: 1rem"] {
+    background-color: rgba(255, 255, 255, 0.04);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Ukrywamy domyślne kółka radio dla wyboru widoku */
+.modal-content input[name="dataView"] {
+    display: none;
+}
+
+/* Stylizacja samych napisów (Dzienny/Miesięczny) jako przycisków */
+.modal-content label:has(input[name="dataView"]) {
+    padding: 10px 24px;
+    margin: 0;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Aktywny stan przycisku (Zaznaczony) */
+.modal-content label:has(input[name="dataView"]:checked) {
+    background-color: var(--card-bg);
+    color: var(--primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+body.dark-theme .modal-content label:has(input[name="dataView"]:checked) {
+    background-color: var(--dark-card);
+    color: #ff6b6b; /* Jaśniejszy czerwony dla ciemnego trybu */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 2. Tabela Finansowa - Poziom Pro */
+.modal-content .history-table {
+    border-spacing: 0 12px; /* Zwiększony odstęp między wierszami */
+}
+
+/* Nagłówki tabeli */
+.modal-content .history-table th {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+    padding: 0 1.5rem 0.5rem 1.5rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-content .history-table th:last-child {
+    text-align: right; /* Wyrównanie nagłówka ceny do prawej */
+}
+
+/* Kapsułki wierszy */
+.modal-content .history-table tbody tr {
+    background: linear-gradient(145deg, var(--card-bg), rgba(0,0,0,0.01));
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+}
+
+.modal-content .history-table td {
+    padding: 1.2rem 1.5rem;
+    vertical-align: middle;
+}
+
+/* Kolumna z Datą */
+.modal-content .history-table td:first-child {
+    font-weight: 600;
+    color: var(--text-light);
+    border-left: 4px solid rgba(0,0,0,0.03); /* Subtelny pasek boczny */
+    transition: all 0.3s ease;
+}
+
+/* Kolumna z Ceną */
+.modal-content .history-table td:last-child {
+    font-family: 'Outfit', sans-serif; /* Lepszy, geometryczny font dla cyfr */
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    text-align: right; /* Ceny ZAWSZE wyrównujemy do prawej! */
+    transition: color 0.3s ease;
+}
+
+/* --- SUPER HOVER EFEKT DLA TABELI --- */
+.modal-content .history-table tbody tr:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(227, 6, 19, 0.12);
+    background: linear-gradient(145deg, #ffffff, rgba(227, 6, 19, 0.03));
+}
+
+.modal-content .history-table tbody tr:hover td:first-child {
+    border-left-color: var(--primary); /* Pasek zapala się na czerwono */
+    color: var(--text); /* Data staje się ciemniejsza i czytelniejsza */
+}
+
+.modal-content .history-table tbody tr:hover td:last-child {
+    color: var(--primary); /* Cena zapala się na czerwono */
+}
+
+/* --- Dark Mode dla Detali Tabeli --- */
+body.dark-theme .modal-content .history-table tbody tr {
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .modal-content .history-table td:first-child {
+    border-left-color: rgba(255,255,255,0.05);
+}
+
+body.dark-theme .modal-content .history-table tbody tr:hover {
+    background: linear-gradient(145deg, rgba(227, 6, 19, 0.1), rgba(227, 6, 19, 0.02));
+    box-shadow: 0 15px 35px rgba(227, 6, 19, 0.25);
+}
+
+body.dark-theme .modal-content .history-table tbody tr:hover td:first-child {
+    border-left-color: #ff6b6b;
+    color: var(--dark-text);
+}
+
+body.dark-theme .modal-content .history-table tbody tr:hover td:last-child {
+    color: #ff6b6b;
+}
+
+/* =========================================
+   WYKRES - PREMIUM MODAL STYLES
+   ========================================= */
+
+/* Poszerzony modal specjalnie dla wykresu */
+.modal-content.chart-modal-content {
+    max-width: 900px;
+}
+
+/* Wypukłe, eleganckie tło pod wykresem */
+.premium-chart-wrapper {
+    background: linear-gradient(145deg, rgba(0,0,0,0.01), rgba(0,0,0,0.03));
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-top: 1.5rem;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Ustalona stała wysokość */
+}
+
+/* Dark mode dla kontenera wykresu */
+body.dark-theme .premium-chart-wrapper {
+    background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    border-color: rgba(255,255,255,0.05);
+}
+
+/* =========================================
+   STATYSTYKI POD WYKRESEM (Premium Cards)
+   ========================================= */
+
+.chart-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.chart-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+}
+
+.chart-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.stat-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+/* Kolory specyficzne dla każdej karty */
+.stat-min .stat-icon { background: rgba(76, 175, 80, 0.1); color: var(--success); }
+.stat-min .stat-value { color: var(--success); }
+
+.stat-avg .stat-icon { background: rgba(33, 150, 243, 0.1); color: var(--info); }
+.stat-avg .stat-value { color: var(--info); }
+
+.stat-max .stat-icon { background: rgba(227, 6, 19, 0.1); color: var(--error); }
+.stat-max .stat-value { color: var(--error); }
+
+/* --- Dark Mode dla Statystyk --- */
+body.dark-theme .chart-stats-grid {
+    border-top-color: rgba(255,255,255,0.05);
+}
+
+body.dark-theme .chart-stat-card {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.05);
+}
+
+body.dark-theme .stat-min .stat-value { color: #81c784; }
+body.dark-theme .stat-avg .stat-value { color: #64b5f6; }
+body.dark-theme .stat-max .stat-value { color: #ff6b6b; }
+
+/* Responsywność dla telefonów */
+@media (max-width: 768px) {
+    .chart-stats-grid {
+        grid-template-columns: 1fr; /* Na telefonach kafelki ułożą się jeden pod drugim */
+        gap: 1rem;
+    }
+}
+
+body.dark-theme .modal-content .history-table td:last-child { color: #ffffff !important; text-shadow: 0 2px 10px rgba(255, 255, 255, 0.15); }
+body.dark-theme .modal-content .history-table td:first-child { color: #b0b8c4 !important; }
+body.dark-theme .modal-content .history-table tbody tr { background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)) !important; border: 1px solid rgba(255,255,255,0.08); }
+/* View Section (Forecast Details) */
+.view-section {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow-y: auto;
+}
+
+.dark-theme .view-section {
+    background-color: rgba(18, 18, 18, 0.95);
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Forecast Hero Backgrounds */
+.trend-up {
+    background: linear-gradient(135deg, rgba(227, 6, 19, 0.15), rgba(227, 6, 19, 0.05));
+    border: 1px solid rgba(227, 6, 19, 0.2);
+}
+
+.trend-down {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.05));
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.trend-stable {
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(33, 150, 243, 0.05));
+    border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.dark-theme .trend-up {
+    background: linear-gradient(135deg, rgba(227, 6, 19, 0.25), rgba(227, 6, 19, 0.1));
+}
+
+.dark-theme .trend-down {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(76, 175, 80, 0.1));
+}
+
+.dark-theme .trend-stable {
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.25), rgba(33, 150, 243, 0.1));
+}
+
+/* Forecast Details Grid Items */
+#forecast-details-grid > div {
+    transition: transform 0.2s ease;
+}
+
+#forecast-details-grid > div:hover {
+    transform: translateX(5px);
+}
+
+#forecast-details-grid .trend-up {
+    background: linear-gradient(90deg, rgba(227, 6, 19, 0.1), rgba(227, 6, 19, 0.02));
+}
+
+#forecast-details-grid .trend-down {
+    background: linear-gradient(90deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.02));
+}
+
+#forecast-details-grid .trend-stable {
+    background: linear-gradient(90deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.02));
+}
+
+/* Recommendation Card */
+#forecast-recommendation {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+#forecast-recommendation div:first-child {
+    flex-shrink: 0;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+select, input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--card-bg);
+    color: var(--text);
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.2);
+}
+
+/* Chart */
+.chart-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 2rem;
+}
+
+/* History Table */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.history-table th, .history-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.history-table th {
+    background-color: rgba(0, 0, 0, 0.02);
+    font-weight: 600;
+    color: var(--text);
+}
+
+.history-table tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.min-price {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.max-price {
+    color: var(--error);
+    font-weight: 600;
+}
+
+/* Loading */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg);
+    z-index: 9999;
+    flex-direction: column;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(227, 6, 19, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(180deg);
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification.show {
+    opacity: 1;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+    background-color: var(--card-bg);
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* Dark theme overrides */
+body.dark-theme {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.dark-theme .container,
+.dark-theme .fuel-card,
+.dark-theme .modal-content,
+.dark-theme .glass-card {
+    background-color: var(--dark-card);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .glass-card {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .fuel-name,
+.dark-theme label,
+.dark-theme .history-table th {
+    color: var(--dark-text);
+}
+
+.dark-theme .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-left: 5px solid var(--warning);
+    color: var(--dark-text);
+}
+
+.dark-theme .alert-info {
+    background-color: rgba(33, 150, 243, 0.2);
+    border-left: 5px solid var(--info);
+    color: var(--dark-text);
+}
+
+.dark-theme .alert-error {
+    background-color: rgba(244, 67, 54, 0.2);
+    border-left: 5px solid var(--error);
+    color: var(--dark-text);
+}
+
+.dark-theme select,
+.dark-theme input {
+    background-color: var(--dark-card);
+    color: var(--dark-text);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .history-table th {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .history-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .update-info {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--dark-text);
+}
+
+.dark-theme #home-trend-badge.bg-red-100 {
+    background-color: rgba(227, 6, 19, 0.2);
+    color: #ff6b6b;
+}
+
+.dark-theme #home-trend-badge.bg-green-100 {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #81c784;
+}
+
+.dark-theme #home-trend-badge.bg-blue-100 {
+    background-color: rgba(33, 150, 243, 0.2);
+    color: #64b5f6;
+}
+
+.dark-theme #forecast-grosze-value,
+.dark-theme #forecast-grosze-detailed-value {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--dark-text);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.opacity-60 {
+    opacity: 0.6;
+}
+
+.opacity-80 {
+    opacity: 0.8;
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.1em;
+}
+
+.text-orlenRed {
+    color: var(--primary);
+}
+
+.bg-orlenRed {
+    background-color: var(--primary);
+}
+
+.font-black {
+    font-weight: 900;
+}
+
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-50 { z-index: 50; }
+
+/* Width utilities */
+.w-3\/4 { width: 75%; }
+.w-1\/4 { width: 25%; }
+.w-1\/2 { width: 50%; }
+
+/* Transform utilities */
+.hover\:scale-\[1\.02\]:hover {
+    transform: scale(1.02);
+}
+
+.active\:scale-\[0\.98\]:active {
+    transform: scale(0.98);
+}
+
+/* Transition utilities */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}
+
+.duration-1000 {
+    transition-duration: 1000ms;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-up {
+    animation: slideInUp 0.5s ease forwards;
+}
+
+/* Coupon badge */
+.coupon-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, var(--accent), #FFB800);
+    color: var(--text);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(255, 209, 102, 0.3);
+    transform: rotate(15deg);
+    z-index: 1;
+}
+
+/* Price flash animation */
+@keyframes flash {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(255, 209, 102, 0.3); }
+}
+
+.price-flash {
+    animation: flash 1s ease 2;
+}
+
+/* Countdown timer */
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.countdown-item {
+    text-align: center;
+}
+
+.countdown-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(227, 6, 19, 0.1);
+    padding: 0.5rem;
+    border-radius: 8px;
+    min-width: 50px;
+    display: inline-block;
+}
+
+.countdown-label {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+}
+
+@keyframes priceChange {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.price-change-animate {
+    animation: priceChange 0.5s ease;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .fuel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .rounded-\[2rem\] {
+        border-radius: 1.5rem;
+    }
+
+    .rounded-\[2\.5rem\] {
+        border-radius: 2rem;
+    }
+
+    #forecast-hero-bg {
+        padding: 1.5rem;
+    }
+
+    #forecast-main-title {
+        font-size: 1.8rem;
+    }
+
+    #forecast-recommendation {
+        flex-direction: column;
+        text-align: center;
         align-items: center;
-        gap: 6px;
-        background: linear-gradient(45deg, #DA2128, #ff4b52);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 12px;
-        font-weight: 900;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(218, 33, 40, 0.4);
-        animation: pulseAlert 2s infinite;
-        margin-top: 5px;
     }
-    .dzis-badge {
-        color: #4CAF50;
-        font-weight: bold;
-        display: flex;
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .fuel-price {
+        font-size: 1.5rem;
+    }
+
+    .countdown-timer {
+        flex-wrap: wrap;
+    }
+
+    .countdown-value {
+        font-size: 1.2rem;
+        min-width: 40px;
+    }
+}
+
+/* =========================================
+   Trend Widget Card Styles
+   ========================================= */
+.trend-widget-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trend-widget-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Kolorowy lewy akcent wzorowany na kartach paliw */
+.trend-widget-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary), var(--accent));
+}
+
+.trend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.trend-subtitle {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.trend-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trend-bar-container {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.05);
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.25rem 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Wymuszenie wysokosci i zaokrąglenia dla paska z JS */
+#home-trend-bar {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.trend-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.trend-prediction {
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trend-prediction-label {
+    color: var(--text-light);
+}
+
+.trend-action {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    transition: color 0.3s ease;
+}
+
+.trend-action i {
+    font-size: 1.2rem;
+}
+
+.trend-widget-card:hover .trend-action {
+    color: var(--primary);
+}
+
+/* --- Dark Theme Support --- */
+body.dark-theme .trend-widget-card {
+    background-color: var(--dark-card);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .trend-title {
+    color: var(--dark-text);
+}
+
+body.dark-theme .trend-bar-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================
+   RAPORT RYNKOWY - ULTIMATE FIX
+   ========================================= */
+
+/* Tło modala i wymuszony font */
+#view-forecast {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+#view-forecast .report-content {
+    max-width: 600px !important; /* Węższy, bardziej przypominający apkę mobilną */
+    margin: 0 auto !important;
+    padding: 1rem 1.5rem 5rem 1.5rem !important;
+}
+
+/* -----------------------------------------
+   JASNY MOTYW (Domyślny - jak na 1 screenie)
+   ----------------------------------------- */
+/* Główna karta (Hero) */
+#view-forecast .report-hero {
+    background-color: #FCE8E8 !important; /* Ten piękny jasny róż/czerwień */
+    border-radius: 2rem !important;
+    padding: 2.5rem 1.5rem !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-bottom: 2rem !important;
+}
+
+#view-forecast .report-hero-subtitle { color: #8D99AE !important; font-size: 0.75rem !important; font-weight: 800 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; text-align: center !important; margin-bottom: 0.5rem !important; }
+#view-forecast .report-hero-title { color: #E30613 !important; font-size: 2.2rem !important; font-weight: 900 !important; text-align: center !important; margin-bottom: 1rem !important; font-family: 'Outfit', sans-serif !important; line-height: 1.2 !important; }
+#view-forecast .report-hero-desc { color: #2B2D42 !important; text-align: center !important; font-size: 0.95rem !important; line-height: 1.5 !important; margin-bottom: 1.5rem !important; font-weight: 500 !important; }
+
+/* Pigułka z ceną w Hero */
+#view-forecast .report-hero-prediction {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border-radius: 1rem !important;
+    padding: 1rem 1.5rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+#view-forecast .prediction-label { color: #1e1e1e !important; font-weight: 700 !important; font-size: 0.95rem !important; }
+#view-forecast .prediction-value { color: #1e1e1e !important; font-weight: 900 !important; font-size: 1.4rem !important; }
+
+/* Lista paliw */
+#view-forecast .report-details-grid { display: flex !important; flex-direction: column !important; gap: 0.8rem !important; }
+#view-forecast .report-detail-item {
+    background-color: #FCE8E8 !important; /* Ten sam róż co na górze */
+    border-radius: 1rem !important;
+    padding: 1.2rem 1.5rem 1.2rem 3rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    position: relative !important;
+    border: none !important;
+}
+/* Gruby lewy znacznik */
+#view-forecast .report-detail-item::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 1.2rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 6px !important;
+    height: 40% !important;
+    background-color: #E30613 !important;
+    border-radius: 10px !important;
+}
+#view-forecast .report-detail-item > span:first-child { color: #1e1e1e !important; font-weight: 800 !important; font-size: 1.05rem !important; }
+#view-forecast .report-detail-item > span:last-child { color: #E30613 !important; font-weight: 900 !important; font-size: 1.1rem !important; }
+
+/* Nagłówki sekcji (ikona + tekst) */
+#view-forecast .report-section-title {
+    color: #1e1e1e !important;
+    font-weight: 800 !important;
+    font-size: 1.2rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+#view-forecast .report-section-title i { color: #E30613 !important; font-size: 1.4rem !important; }
+
+/* Karty informacyjne (AI / Aktualności) */
+#view-forecast .report-info-card {
+    background-color: #ffffff !important;
+    border-radius: 1.5rem !important;
+    padding: 1.5rem !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+}
+#view-forecast .report-info-card p { color: #2B2D42 !important; margin: 0 !important; }
+
+/* -----------------------------------------
+   CIEMNY MOTYW (DARK MODE FIX)
+   ----------------------------------------- */
+body.dark-theme #view-forecast { background-color: #121212 !important; }
+body.dark-theme #view-forecast .report-header { background-color: rgba(18,18,18,0.9) !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+
+/* Zmiana tekstów na białe w Dark Mode */
+body.dark-theme #view-forecast .report-title,
+body.dark-theme #view-forecast .report-hero-desc,
+body.dark-theme #view-forecast .prediction-label,
+body.dark-theme #view-forecast .prediction-value,
+body.dark-theme #view-forecast .report-detail-item > span:first-child,
+body.dark-theme #view-forecast .report-section-title,
+body.dark-theme #view-forecast .report-info-card p {
+    color: #F8F9FA !important;
+}
+
+/* Zmiana teł w Dark Mode na czytelne */
+body.dark-theme #view-forecast .report-hero,
+body.dark-theme #view-forecast .report-detail-item {
+    background-color: rgba(227, 6, 19, 0.15) !important; /* Przyciemniony czerwony */
+}
+body.dark-theme #view-forecast .report-hero-prediction {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+body.dark-theme #view-forecast .report-info-card {
+    background-color: #1E1E1E !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* =========================================
+   STYLIZACJA SAMEGO NAGŁÓWKA (Raport Rynkowy + X)
+   ========================================= */
+
+#view-forecast .report-header {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 1.5rem 2rem 1rem 2rem !important; 
+    background: transparent !important;
+    border: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#view-forecast .report-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+    color: #1e2022 !important; /* Ciemny granatowy/czarny z Twojego screena */
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+#view-forecast .report-close-btn {
+    background-color: #f0f2f5 !important; /* Jasnoszare tło przycisku */
+    border: none !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important; /* Wymuszenie idealnego koła */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: #1e2022 !important;
+    font-size: 1.5rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: transform 0.2s ease, background-color 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+/* =========================================
+   COUPON MODAL - ULTRA DESIGN
+   ========================================= */
+
+.coupon-modal-content {
+    max-width: 500px !important;
+}
+
+/* Kontener kart */
+.coupon-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0;
+}
+
+/* Styl karty kuponu */
+.coupon-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem 1.2rem;
+    background: var(--card-bg);
+    border: 2px solid rgba(0,0,0,0.05);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.coupon-card:hover {
+    border-color: rgba(227, 6, 19, 0.2);
+    transform: translateX(5px);
+    background: rgba(227, 6, 19, 0.01);
+}
+
+/* Aktywna karta */
+.coupon-card.active {
+    border-color: var(--primary);
+    background: rgba(227, 6, 19, 0.03);
+    box-shadow: 0 10px 20px rgba(227, 6, 19, 0.1);
+}
+
+.coupon-card.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background: var(--primary);
+}
+
+/* Ikony i Tekst */
+.coupon-card-icon {
+    font-size: 1.8rem;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+
+.coupon-card.active .coupon-card-icon {
+    color: var(--primary);
+}
+
+.coupon-name {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+}
+
+.dark-theme .coupon-name {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+}
+
+.coupon-desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.dark-theme .coupon-desc {
+    font-size: 0.85rem;
+    color: white;
+}
+
+/* Badge "Polecany" */
+.coupon-card-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-bottom-left-radius: 12px;
+    text-transform: uppercase;
+}
+
+/* Sekcja czasu */
+.expiry-section {
+    background: rgba(0,0,0,0.02);
+    border-radius: 20px;
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.expiry-title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.coupon-footer-info {
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.expiry-section {
+    display: none; /* Ukryte do momentu wybrania kuponu */
+    background: rgba(0,0,0,0.02);
+    border-radius: 20px;
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+body.dark-theme .expiry-section {
+    background: rgba(255,255,255,0.03);
+}
+
+/* Dark Mode Fixes */
+body.dark-theme .coupon-card {
+    background: rgba(255,255,255,0.02);
+    border-color: rgba(255,255,255,0.05);
+}
+
+body.dark-theme .coupon-card.active {
+    background: rgba(227, 6, 19, 0.1);
+    border-color: var(--primary);
+}
+
+body.dark-theme .expiry-section {
+    background: rgba(255,255,255,0.03);
+}
+
+#view-forecast .report-close-btn:hover {
+    background-color: #e2e6ea !important;
+    transform: scale(0.95) !important;
+}
+
+#view-forecast .report-close-btn i {
+    margin: 0 !important;
+    display: block !important;
+}
+
+/* --- Wersja dla Trybu Ciemnego --- */
+body.dark-theme #view-forecast .report-title {
+    color: #ffffff !important;
+}
+
+body.dark-theme #view-forecast .report-close-btn {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme #view-forecast .report-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.cpn-badge {
+    background: linear-gradient(135deg, #FFD700, #F59E0B);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 8px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+    vertical-align: middle;
+    letter-spacing: 1px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    #particles-js {
+        display: none !important;
+    }
+}
+
+ /* =========================================
+
+   ZAAWANSOWANE STYLE DLA NOWYCH FUNKCJI
+
+   ========================================= */
+
+
+/* 1. Ulepszona Sekcja EV - specjalne efekty dla prądu */
+
+#evGrid .fuel-card {
+
+    border: 1px solid rgba(76, 175, 80, 0.2);
+
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(76, 175, 80, 0.05));
+
+}
+
+
+body.dark-theme #evGrid .fuel-card {
+
+    background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(76, 175, 80, 0.1));
+
+    border-color: rgba(76, 175, 80, 0.1);
+
+}
+
+
+/* Subtelny blask dla ikon EV */
+
+#evGrid .fuel-icon {
+
+    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.3));
+
+}
+
+
+/* 2. Nowoczesne pola formularzy w kalkulatorach */
+
+.calc-section input,
+
+.calc-section select {
+
+    background: rgba(0, 0, 0, 0.03);
+
+    border: 2px solid rgba(0, 0, 0, 0.05);
+
+    border-radius: 12px;
+
+    padding: 10px 15px;
+
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+
+}
+
+
+body.dark-theme .calc-section input,
+
+body.dark-theme .calc-section select {
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border-color: rgba(255, 255, 255, 0.1);
+
+}
+
+
+.calc-section input:focus,
+
+.calc-section select:focus {
+
+    border-color: var(--primary);
+
+    background: white;
+
+    box-shadow: 0 0 15px rgba(227, 6, 19, 0.1);
+
+}
+
+
+body.dark-theme .calc-section input:focus,
+
+body.dark-theme .calc-section select:focus {
+
+    background: #252525;
+
+}
+
+
+/* 3. "Premium" Result Box - Wygląda jak wyświetlacz */
+
+.result-box {
+
+    background: linear-gradient(135deg, #2b2d42, #1a1b29);
+
+    color: white !important;
+
+    border: none;
+
+    border-radius: 15px;
+
+    padding: 1.25rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+}
+
+
+/* Efekt szklanego połysku na wyniku */
+
+.result-box::after {
+
+    content: '';
+
+    position: absolute;
+
+    top: -50%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+
+    transform: rotate(30deg);
+
+    pointer-events: none;
+
+}
+
+
+.result-box strong {
+
+    font-family: 'Outfit', sans-serif;
+
+    font-size: 1.2rem;
+
+    color: #fff;
+
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
+}
+
+
+/* Kolorystyka punktów VITAY w wyniku */
+
+.vitay-points {
+
+    background: linear-gradient(90deg, #FFD166, #F59E0B);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    font-weight: 900;
+
+}
+
+
+/* 4. Specyficzny układ siatki kalkulatora */
+
+.calc-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+
+    gap: 20px;
+
+    padding: 10px 0;
+
+}
+
+
+.calc-section {
+
+    border-radius: 24px;
+
+    border: 1px solid rgba(0,0,0,0.08);
+
+    transition: transform 0.3s ease;
+
+}
+
+
+.calc-section:hover {
+
+    transform: translateY(-3px);
+
+}
+
+
+/* 5. Przycisk Netto/Brutto - stylizacja aktywnego stanu */
+
+#taxToggleBtn.btn-primary {
+
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+
+}
+
+
+/* Responsywność dla mniejszych ekranów */
+
+@media (max-width: 768px) {
+
+    .calc-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+   
+
+    .result-box {
+
+        font-size: 0.9rem;
+
+    }
+
+} 
+
+/* =========================================
+   KALKULATORY - ULTRA MODERN DESIGN 
+   ========================================= */
+
+#calcModal .modal-content {
+    background-color: #ffffff;
+    border-radius: 32px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+#calcModal h2 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: #1e2022;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+/* Karta Sekcji Kalkulatora */
+.calc-section {
+    background: #ffffff;
+    border: 1px solid #f0f2f5;
+    border-radius: 28px !important;
+    padding: 1.8rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.calc-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    border-color: rgba(227, 6, 19, 0.1);
+}
+
+.calc-section h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e2022;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Pola Formularza */
+.calc-section .form-group {
+    margin-bottom: 0;
+}
+
+.calc-section label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.6rem;
+    padding-left: 0.2rem;
+}
+
+.calc-section input, 
+.calc-section select {
+    background: #f8fafc;
+    border: 2px solid #edf2f7;
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    transition: all 0.2s ease;
+}
+
+.calc-section input:hover, 
+.calc-section select:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e0;
+}
+
+.calc-section input:focus, 
+.calc-section select:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.1);
+    outline: none;
+}
+
+/* Pudełko Wyniku (Dark Mode Look) */
+.result-box {
+    background: #2b2d42 !important; /* Głęboki granat/czerń */
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-top: auto; /* Zawsze na dole karty */
+    border: none;
+    box-shadow: 0 10px 25px rgba(43, 45, 66, 0.2);
+    line-height: 1.8;
+}
+
+.result-box strong {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.2rem;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* Punkty VITAY i Oszczędności */
+.vitay-points {
+    color: #FFD166 !important;
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(255, 209, 102, 0.3);
+    background: none;
+    -webkit-text-fill-color: initial;
+}
+
+.result-box strong[style*="color: var(--success)"] {
+    color: #4CAF50 !important;
+    font-size: 1.25rem;
+}
+
+/* --- DARK THEME OVERRIDES --- */
+body.dark-theme #calcModal .modal-content {
+    background-color: #1a1a1a;
+}
+
+body.dark-theme #calcModal h2 {
+    color: #ffffff;
+}
+
+body.dark-theme .calc-section {
+    background: #242424;
+    border-color: #333;
+}
+
+body.dark-theme .calc-section h3 {
+    color: #ffffff;
+}
+
+body.dark-theme .calc-section label {
+    color: #a0aec0;
+}
+
+body.dark-theme .calc-section input, 
+body.dark-theme .calc-section select {
+    background: #2d2d2d;
+    border-color: #3d3d3d;
+    color: #e2e8f0;
+}
+
+body.dark-theme .calc-section input:focus {
+    background: #333;
+    border-color: var(--primary);
+}
+
+/* =========================================
+   BETA TESTER BANNER - PREMIUM DESIGN
+   ========================================= */
+.beta-tester-banner {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1e2022, #2b2d42); /* Ciemny, elegancki gradient */
+    border-radius: 20px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    gap: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.beta-tester-banner:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 15px 35px rgba(227, 6, 19, 0.25);
+    border-color: rgba(227, 6, 19, 0.3);
+}
+
+/* Animowany efekt świetlny przechodzący przez baner */
+.beta-tester-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: -100%;
+    width: 50%; 
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(227, 6, 19, 0.2), transparent);
+    animation: shineBanner 3s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shineBanner {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+.beta-icon {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(227, 6, 19, 0.4);
+}
+
+.beta-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.beta-title {
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.5px;
+}
+
+.beta-desc {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.beta-action {
+    color: #ffffff;
+    font-size: 2rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.beta-tester-banner:hover .beta-action {
+    transform: translateX(8px);
+    color: var(--primary);
+}
+
+/* --- Dark Mode --- */
+body.dark-theme .beta-tester-banner {
+    background: linear-gradient(135deg, #1a1a1a, #242424);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+body.dark-theme .beta-title {
+    color: #f8fafc;
+}
+body.dark-theme .beta-desc {
+    color: #94a3b8;
+}
+
+/* --- Responsywność dla telefonów --- */
+@media (max-width: 768px) {
+    .beta-tester-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+    .beta-action {
+        display: none; /* Ukrywamy strzałkę na mobile, żeby zaoszczędzić miejsce */
+    }
+}
+
+/* =========================================
+   ULTRA PREMIUM DYSTRYBUTOR (FOTOREALIZM)
+   ========================================= */
+
+/* Kontener główny omijający standardowe tło modala */
+.premium-pump-modal {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6) !important;
+    max-width: 480px !important;
+    overflow: hidden;
+    border-radius: 24px !important;
+}
+
+/* Czerwony Szyld Górny */
+.pump-top-sign {
+    background: linear-gradient(135deg, #ff1a1a, #990000);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #660000;
+    box-shadow: inset 0 2px 10px rgba(255,255,255,0.4);
+}
+
+.pump-logo {
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pump-station-info {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Metaliczny Korpus */
+.pump-main-body {
+    background: linear-gradient(145deg, #e6e9f0, #c8ccd4);
+    padding: 25px;
+    position: relative;
+}
+
+body.dark-theme .pump-main-body {
+    background: linear-gradient(145deg, #2a2d34, #1a1c20);
+}
+
+/* Panel Wyborów */
+.pump-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.pump-control-group label {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+}
+
+body.dark-theme .pump-control-group label { color: #888; }
+
+.pump-control-group select {
+    width: 100%;
+    background: #fff;
+    border: 2px solid #b0b5c0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-weight: 700;
+    color: #222;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.dark-theme .pump-control-group select {
+    background: #111;
+    border-color: #000;
+    color: #fff;
+}
+
+/* Gruba czarna rama ekranu ze śrubkami */
+.pump-screen-surround {
+    background: linear-gradient(to bottom, #222, #0a0a0a);
+    padding: 15px;
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.2);
+    border: 1px solid #000;
+    margin-bottom: 25px;
+}
+
+.screw {
+    position: absolute;
+    width: 12px; height: 12px;
+    background: linear-gradient(135deg, #666, #333);
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.8);
+}
+.screw::after {
+    content: ''; position: absolute;
+    top: 50%; left: 20%; right: 20%; height: 2px;
+    background: #111; transform: translateY(-50%) rotate(45deg);
+}
+.top-left { top: 8px; left: 8px; }
+.top-right { top: 8px; right: 8px; }
+.bottom-left { bottom: 8px; left: 8px; }
+.bottom-right { bottom: 8px; right: 8px; }
+
+/* Ekran Szyba (Odblask i Scanlines) */
+.pump-glass {
+    background: #140000;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    box-shadow: inset 0 0 20px #000;
+    border: 2px solid #000;
+    overflow: hidden;
+}
+
+.pump-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0,0,0,0.4) 3px, rgba(0,0,0,0.4) 4px);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.pump-glare {
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, transparent 41%);
+    pointer-events: none;
+    z-index: 6;
+}
+
+/* Wiersze LED */
+.pump-led-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.price-row {
+    margin-top: 25px;
+    margin-bottom: 0;
+    border-top: 2px solid rgba(255, 0, 0, 0.2);
+    padding-top: 15px;
+}
+
+.led-label {
+    font-family: 'Outfit', sans-serif;
+    color: #888;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.led-value-box {
+    position: relative;
+    height: 50px;
+    display: flex;
+    align-items: flex-end;
+}
+
+/* Tło wygaszonych cyfr */
+.led-ghost {
+    font-family: 'Courier New', monospace;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #2b0000;
+    position: absolute;
+    right: 0;
+    bottom: -8px;
+    letter-spacing: -2px;
+    user-select: none;
+}
+
+/* Świecące Cyfry LED ze wspaniałym rozbłyskiem */
+.led-active {
+    font-family: 'Courier New', monospace;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #ff3333;
+    text-shadow: 0 0 5px #fff, 0 0 15px #ff1a1a, 0 0 30px #ff0000;
+    position: relative;
+    z-index: 3;
+    letter-spacing: -2px;
+}
+
+.price-row .led-ghost, 
+.price-row .led-active {
+    font-size: 2.2rem;
+    bottom: -4px;
+}
+
+/* Pistolet - Rewelacyjny Fizyczny Przycisk */
+.nozzle-btn {
+    width: 100%;
+    background: linear-gradient(to bottom, #2b2d32, #111);
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 2px 2px rgba(255,255,255,0.1);
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    margin-bottom: 15px;
+}
+
+/* Osłona pistoletu, w której jest spust */
+.nozzle-guard {
+    background: #0a0a0a;
+    height: 50px;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    box-shadow: inset 0 10px 15px rgba(0,0,0,0.8);
+    border-bottom: 2px solid #333;
+    display: flex;
+    justify-content: center;
+}
+
+/* Czerwony Spust Pistoletu */
+.nozzle-trigger {
+    width: 80%;
+    height: 25px;
+    background: linear-gradient(to bottom, #ff1a1a, #b30000);
+    border-radius: 0 0 12px 12px;
+    position: absolute;
+    top: 0;
+    box-shadow: 0 5px 10px rgba(255,0,0,0.3), inset 0 -2px 5px rgba(0,0,0,0.5);
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top;
+}
+
+.nozzle-text {
+    display: block;
+    padding: 15px;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+/* Animacja wciśnięcia (Spust wchodzi do środka) */
+.nozzle-btn:active .nozzle-trigger,
+.nozzle-btn.active .nozzle-trigger {
+    transform: scaleY(0.4);
+    background: linear-gradient(to bottom, #cc0000, #800000);
+    box-shadow: 0 2px 5px rgba(255,0,0,0.5), inset 0 -2px 5px rgba(0,0,0,0.8);
+}
+
+.nozzle-btn:active,
+.nozzle-btn.active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.4), inset 0 2px 2px rgba(255,255,255,0.1);
+}
+
+/* Przycisk odłożenia pistoletu */
+.put-back-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #9aa0ab;
+    color: #555;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.put-back-btn:hover {
+    background: rgba(0,0,0,0.05);
+    border-color: #E30613;
+    color: #E30613;
+}
+
+body.dark-theme .put-back-btn {
+    border-color: #555;
+    color: #888;
+}
+
+body.dark-theme .put-back-btn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: #ff3333;
+    color: #ff3333;
+}
+
+/* =========================================
+   NOWOCZESNE PRZEKREŚLENIE CENY (NA SKOS)
+   ========================================= */
+.diagonal-strike {
+    position: relative;
+    display: inline-block;
+    font-size: 1.3rem;
+    color: var(--text-light);
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+.diagonal-strike::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    top: 50%;
+    width: 120%;
+    height: 2.5px;
+    background: linear-gradient(90deg, var(--primary), #ff4b52);
+    transform: translateY(-50%) rotate(-15deg); /* Obrót na skos */
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(227, 6, 19, 0.3); /* Delikatny, czerwony cień */
+    pointer-events: none;
+}
+
+body.dark-theme .diagonal-strike {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+body.dark-theme .diagonal-strike::after {
+    background: linear-gradient(90deg, #ff4b52, #ff767b);
+    box-shadow: 0 2px 5px rgba(255, 75, 82, 0.3);
+}
+
+/* =========================================
+   MODAL INFORMACYJNY (ZASADY DZIAŁANIA)
+   ========================================= */
+.info-modal-content {
+    border-top: 5px solid var(--primary);
+    padding: 2.5rem;
+}
+
+.info-modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.info-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(227, 6, 19, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2.2rem;
+    box-shadow: 0 4px 15px rgba(227, 6, 19, 0.15);
+}
+
+.info-modal-header h2 {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+}
+
+.info-modal-header p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.info-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.info-card {
+    display: flex;
+    gap: 1.2rem;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 1.2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.info-card-icon {
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.info-card-text strong {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+}
+
+.info-card-text span {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
+    display: block;
+}
+
+.info-formulas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.formula-row {
+    background: var(--card-bg);
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    font-size: 0.85rem;
+}
+
+.formula-row .formula-title {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.formula-row .formula-calc {
+    color: var(--text-light);
+}
+
+.formula-row .formula-calc strong {
+    display: inline;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* Kolory krawędzi wzorów */
+.cpn-formula { border-left: 4px solid var(--accent); }
+.std-formula { border-left: 4px solid var(--text-light); }
+.lpg-formula { border-left: 4px solid var(--success); }
+
+/* Żółty boks informacyjny */
+.info-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-warning i {
+    color: var(--warning);
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.info-warning p {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.05rem;
+    border-radius: 12px;
+}
+
+/* --- WERSJA DARK THEME --- */
+body.dark-theme .info-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .formula-row {
+    background: var(--dark-bg);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+}
+
+body.dark-theme .info-warning {
+    background: rgba(255, 193, 7, 0.05);
+}
+
+/* --- RESPONSYWNOŚĆ (TELEFONY) --- */
+@media (max-width: 480px) {
+    .info-modal-content {
+        padding: 1.5rem 1rem; /* Mniejsze marginesy na ekranie telefonu */
+    }
+
+    .info-card {
+        flex-direction: column; /* Ikona ładnie ląduje nad tekstem */
         align-items: center;
-        gap: 5px;
-        margin-top: 5px;
+        text-align: center;
+        gap: 0.8rem;
     }
-`;
-document.head.appendChild(styleSheet);
 
-let originalPrices = {};
-let priceHistoryChart = null;
-
-// Globalny magazyn na historyczne dane
-window.dailyNettoPrices = {};
-let rawFuelDataList = [];
-let rawLpgData = null;
-
-// Product icons
-const productIcons = {
-    'Pb95': 'https://www.kacpiq.pl/img/efecta95.png',
-    'Pb98': 'https://www.kacpiq.pl/img/verva98.png',
-    'LPG': 'https://www.kacpiq.pl/img/lpg.png',
-    'ONEkodiesel': 'https://www.kacpiq.pl/img/efectadiesel.png',
-    'ONArctic2': 'https://www.kacpiq.pl/img/vervadiesel.png'
-};
-
-const STATE = {
-    forecastData: null,
-    currentDisplayDate: null
-};
-
-const MY_PROXY = "https://proxy.kacpiq.workers.dev/";
-
-// RĘCZNE NADPISANIE CEN DLA 31.03.2026 (Nie zmieniane)
-const OVERRIDE_PRICES = {
-    '2026-03-31': {
-        'Pb95': 6.16,
-        'ONEkodiesel': 7.54,
-        'Pb98': 6.76,
-        'ONArctic2': 7.60 
-    }
-};
-
-// POMOCNICZA FUNKCJA: OBSUNIĘCIE DATY O +1 DZIEŃ
-function shiftDate(dateStr) {
-    if (!dateStr) return dateStr;
-    let d = new Date(dateStr);
-    d.setDate(d.getDate() + 1); // Dodajemy jeden dzień
-    return d.toISOString().split('T')[0];
-}
-
-// Initialize particles.js
-particlesJS("particles-js", {
-    particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: "#E30613" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5, random: true },
-        size: { value: 3, random: true },
-        line_linked: { enable: true, distance: 150, color: "#E30613", opacity: 0.4, width: 1 },
-        move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
-    },
-    interactivity: {
-        detect_on: "canvas",
-        events: {
-            onhover: { enable: true, mode: "repulse" },
-            onclick: { enable: true, mode: "push" }
-        }
-    }
-});
-
-
-// === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
-window.isNettoMode = false; // Zmienna globalna dla trybu podatku
-
-function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
-    let finalPrice = 0;
-    let currentTaxRate = 1.0;
-    
-    if (productName === 'LPG') {
-        currentTaxRate = 1.26;
-        finalPrice = wholesalePriceNetto * currentTaxRate; 
-    } else {
-        const isOldCpn = dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01';
-        const isNewCpn = dateStr && dateStr >= '2026-08-15' && dateStr < '2026-09-01';
-        
-        if (isOldCpn || isNewCpn) {
-            // Pakiet CPN (obowiązujący wiosną oraz od 17.08.2026 do końca wakacji)
-            currentTaxRate = 1.08;
-            finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
-        } else if (dateStr && dateStr >= '2026-07-01') {
-            // Ceny standardowe (poza pakietami) - 23% VAT i standardowe marże
-            currentTaxRate = 1.23;
-            let margin = 0.23; // Domyślna marża
-            
-            if (productName === 'Pb95') margin = 0.29;
-            else if (productName === 'ONEkodiesel') margin = 0.23;
-            else if (productName === 'Pb98') margin = 0.24; // (Verva 98)
-            else if (productName === 'ONArctic2') margin = 0.23; // (Verva Diesel)
-            
-            finalPrice = (wholesalePriceNetto + margin) * currentTaxRate;
-        } else {
-            // Stare stawki przed pierwszym CPN (przed 31.03.2026)
-            currentTaxRate = productName === 'Pb98' ? 1.32 : 1.26;
-            finalPrice = wholesalePriceNetto * currentTaxRate;
-        }
-    }
-
-    // Jeśli włączono tryb Netto, zdejmujemy aktualny podatek z danego okresu
-    if (window.isNettoMode) {
-        return finalPrice / currentTaxRate;
-    }
-    
-    return finalPrice;
-}
-// =============================================
-
-// === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
-async function fetchLastData() {
-    const year = new Date().getFullYear();
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
-
-    const productIds = {
-        'Pb95': 41, 'Pb98': 42, 'ONEkodiesel': 43, 'ONArctic2': 44
-    };
-
-    window.dailyNettoPrices = {};
-
-    await Promise.all(Object.entries(productIds).map(async ([productName, productId]) => {
-        const url = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
-        try {
-            const res = await fetch(url);
-            if (!res.ok) return;
-            const text = await res.text();
-            if (!text || text.trim() === "") return;
-            
-            const data = JSON.parse(text);
-            if (data && data.length > 0) {
-                let todayNetto = 0;
-                let yesterdayNetto = 0;
-                
-                data.sort((a,b) => a.effectiveDate.localeCompare(b.effectiveDate));
-                
-                for (let item of data) {
-                    const shiftedDate = shiftDate(item.effectiveDate.split('T')[0]);
-                    let netto = item.value / 1000;
-                    
-                    if (shiftedDate <= todayStr) todayNetto = netto;
-                    if (shiftedDate <= yesterdayStr) yesterdayNetto = netto;
-                }
-                window.dailyNettoPrices[productName] = { todayNetto, yesterdayNetto };
-            }
-        } catch (err) {
-            console.error(`Błąd dla ${productName}:`, err.message);
-        }
-    }));
-
-    try {
-        const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
-        if (res.ok) {
-            const textResponse = await res.text();
-            if (textResponse && textResponse.trim() !== "") {
-                const dates = JSON.parse(textResponse);
-                if (dates && dates.length >= 1) {
-                    let lpgDataArr = [];
-                    for (let i = 0; i < Math.min(5, dates.length); i++) {
-                        try {
-                            const lpgRes = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/ByDate?date=${dates[i].split('T')[0]}`);
-                            if (!lpgRes.ok) continue;
-                            const lpgText = await lpgRes.text();
-                            if (!lpgText || lpgText.trim() === "") continue;
-                            
-                            const lpgData = JSON.parse(lpgText);
-                            const malopolska = lpgData.find(entry => entry.locationName.toLowerCase() === "małopolskie");
-                            if (malopolska) {
-                                lpgDataArr.push({
-                                    shiftedDate: shiftDate(dates[i].split('T')[0]),
-                                    value: malopolska.value
-                                });
-                            }
-                        } catch (errLoop) {}
-                    }
-                    
-                    lpgDataArr.sort((a,b) => a.shiftedDate.localeCompare(b.shiftedDate));
-                    let lpgTodayNetto = 0;
-                    let lpgYesterdayNetto = 0;
-                    
-                    for (let item of lpgDataArr) {
-                        if (item.shiftedDate <= todayStr) lpgTodayNetto = item.value;
-                        if (item.shiftedDate <= yesterdayStr) lpgYesterdayNetto = item.value;
-                    }
-                    window.dailyNettoPrices['LPG'] = { todayNetto: lpgTodayNetto, yesterdayNetto: lpgYesterdayNetto };
-                }
-            }
-        }
-    } catch (err) {
-        console.warn("Brak dostępu do historii LPG z Orlenu, polegamy na bieżącym proxy.");
-    }
-    
-    if (!window.dailyNettoPrices['LPG']) {
-        window.dailyNettoPrices['LPG'] = { todayNetto: 0, yesterdayNetto: 0 };
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function () {
-    loadThemeFromLocalStorage();
-    if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
-        setTimeout(showInfoModal, 1500);
-    }
-    if (isMobileDevice()) {
-        showNotification("Strona może nie wyświetlać się optymalnie na urządzeniach mobilnych");
-    }
-
-    await fetchLastData();
-    fetchData();
-    initializeYearSelector();
-    
-    setTimeout(() => {
-        analyzeMultiFuelTrends();
-    }, 2000);
-});
-
-function initializeYearSelector() {
-    const yearSelect = document.getElementById('year');
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= 2004; year--) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
-}
-
-function fetchData() {
-    showLoading();
-    fetch('https://cenypaliw.kacpiq.workers.dev/')
-        .then(response => response.json())
-        .then(data => {
-            processFuelData(data);
-            setTimeout(fetchLPGData, 1000);
-        })
-        .catch(error => {
-            console.error('Error fetching fuel data:', error);
-            displayError("Wystąpił błąd podczas pobierania danych paliw");
-            hideLoading();
-        });
-}
-
-function processFuelData(data) {
-    let latestDate = 'brak danych';
-    let isTomorrowAvailable = false;
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
-    
-    if (data && data.length > 0 && data[0].publishFrom) {
-        latestDate = shiftDate(data[0].publishFrom.replace('T00:00:00', '').split('T')[0]);
-        if (latestDate >= tomorrowStr) {
-            isTomorrowAvailable = true;
-        }
-    }
-    
-    STATE.currentDisplayDate = latestDate;
-    const updateInfoEl = document.getElementById('updateInfo');
-    
-    if (isTomorrowAvailable) {
-        updateInfoEl.innerHTML = `
-            <div class="jutro-badge">
-                <i class='bx bx-time-five'></i> UWAGA: OPUBIKOWANO CENY NA JUTRO (${latestDate})
-            </div>`;
-    } else {
-        updateInfoEl.innerHTML = `
-            <span class="dzis-badge">
-                <i class='bx bx-check-circle'></i> Ceny obowiązujące dzisiaj (${todayStr})
-            </span>`;
-    }
-    
-    rawFuelDataList = data.filter(item => 
-        item.productName === 'Pb95' || 
-        item.productName === 'ONEkodiesel' ||
-        item.productName === 'Pb98' || 
-        item.productName === 'ONArctic2'
-    );
-    
-    renderAllFuels();
-    processForecastData();
-}
-
-function fetchLPGData() {
-    fetch('https://cenypaliw-lpg.kacpiq.workers.dev/')
-        .then(response => {
-            if (!response.ok) throw new Error("HTTP error " + response.status);
-            return response.text();
-        })
-        .then(text => {
-            if (!text || text.trim() === "") throw new Error("Pusta odpowiedź API LPG");
-            const data = JSON.parse(text);
-            if (Array.isArray(data)) {
-                const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
-                if (małopolskieData) {
-                    rawLpgData = małopolskieData;
-                    renderAllFuels();
-                }
-            }
-            hideLoading();
-        })
-        .catch(error => {
-            console.warn('Aktualnie dane LPG są niedostępne:', error.message);
-            hideLoading();
-        });
-}
-
-function renderAllFuels() {
-    const fuelGrid = document.getElementById('fuelGrid');
-    fuelGrid.innerHTML = '';
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
-    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
-    
-    let isTomorrowAvailable = STATE.currentDisplayDate >= tomorrowStr;
-    const fuels = ['Pb95', 'ONEkodiesel', 'Pb98', 'ONArctic2', 'LPG'];
-    
-    fuels.forEach(productName => {
-        let pricesObj = window.dailyNettoPrices[productName];
-        if (!pricesObj) return;
-        
-        let todayNetto = pricesObj.todayNetto; 
-        let yesterdayNetto = pricesObj.yesterdayNetto; 
-        
-        if (productName === 'LPG' && rawLpgData) {
-            if (todayNetto === 0) todayNetto = rawLpgData.value;
-            if (yesterdayNetto === 0) yesterdayNetto = rawLpgData.value;
-        }
-        
-        if (todayNetto === 0) return; 
-        
-        // OBLICZANIE WŁASNEJ CENY Z WŁASNEGO PRODUCT-ID
-        let todayPrice = 0;
-        if (todayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-            todayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else {
-            todayPrice = calculateRetailPrice(productName, todayNetto, todayStr);
-        }
-        
-        let yesterdayPrice = 0;
-        if (yesterdayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-            yesterdayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else {
-            yesterdayPrice = calculateRetailPrice(productName, yesterdayNetto, yesterdayStr);
-        }
-        
-        const priceChange = yesterdayPrice > 0 ? ((todayPrice - yesterdayPrice) / yesterdayPrice) * 100 : 0;
-        
-        // OBLICZANIE PRAWDOPODOBNEJ CENY DLA VERVA DIESEL (Efecta Dzisiaj + 0.20 zł)
-        let probableVervaPrice = 0;
-        if (productName === 'ONArctic2' && todayStr >= '2026-07-01') {
-            let efectaNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].todayNetto : 0;
-            if (efectaNetto > 0) {
-                let efectaPrice = calculateRetailPrice('ONEkodiesel', efectaNetto, todayStr);
-                probableVervaPrice = efectaPrice + 0.20;
-            }
-        }
-
-        // --- NOWY KOD: OBLICZANIE CENY REGULARNEJ ---
-        let todayRegularPrice = null;
-        const isOldCpnNow = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-        const isNewCpnNow = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-
-        // Jeśli aktywny jest pakiet CPN i nie jest to LPG
-        if (productName !== 'LPG' && (isOldCpnNow || isNewCpnNow)) {
-            let margin = 0.23;
-            if (productName === 'Pb95') margin = 0.29;
-            else if (productName === 'ONEkodiesel') margin = 0.23;
-            else if (productName === 'Pb98') margin = 0.24;
-            else if (productName === 'ONArctic2') margin = 0.23;
-
-            let standardTaxRate = 1.23;
-            let regular = (todayNetto + margin) * standardTaxRate;
-            
-            // Jeśli użytkownik ma włączony widok netto, zdejmujemy VAT
-            if (window.isNettoMode) {
-                regular = regular / standardTaxRate;
-            }
-            todayRegularPrice = regular;
-        }
-        // --- KONIEC NOWEGO KODU ---
-
-        let tomorrowBadgeHtml = '';
-        if (isTomorrowAvailable) {
-            let tomorrowNetto = 0;
-
-            if (productName === 'LPG' && rawLpgData) {
-                tomorrowNetto = rawLpgData.value;
-            } else {
-                const rawFuel = rawFuelDataList.find(f => f.productName === productName);
-                if (rawFuel) tomorrowNetto = rawFuel.value / 1000;
-            }
-            
-            if (tomorrowNetto > 0) {
-                let tomorrowPrice = 0;
-                if (tomorrowStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-                    tomorrowPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-                } else {
-                    tomorrowPrice = calculateRetailPrice(productName, tomorrowNetto, tomorrowStr);
-                }
-                
-                let diffGrosze = (tomorrowPrice - todayPrice) * 100;
-                let diffFormatted = diffGrosze > 0 ? `+${diffGrosze.toFixed(0)}gr` : `${diffGrosze.toFixed(0)}gr`;
-                
-                let badgeColor = diffGrosze > 0 ? '#DA2128' : (diffGrosze < 0 ? '#4CAF50' : '#8D99AE');
-                let badgeIcon = diffGrosze > 0 ? 'bx-trending-up' : (diffGrosze < 0 ? 'bx-trending-down' : 'bx-minus');
-                
-                if (Math.abs(diffGrosze) >= 1) {
-                    tomorrowBadgeHtml = `
-                        <div style="margin-top: 12px; background: ${badgeColor}15; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: ${badgeColor}; display: inline-flex; align-items: center; gap: 4px; border: 1px solid ${badgeColor}33;">
-                            <i class='bx ${badgeIcon}'></i> Jutro: ${tomorrowPrice.toFixed(2)} PLN (${diffFormatted})
-                        </div>
-                    `;
-                } else {
-                     tomorrowBadgeHtml = `
-                        <div style="margin-top: 12px; background: rgba(0,0,0,0.03); padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: #8D99AE; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(0,0,0,0.05);">
-                            <i class='bx bx-check'></i> Jutro cena bez zmian
-                        </div>
-                    `;
-                }
-            }
-        }
-        
-        const fuelData = {
-            productName,
-            todayPrice,
-            todayRegularPrice, // <--- Tutaj przekazujemy obliczoną cenę regularną
-            todayNetto, 
-            priceChange,
-            tomorrowBadgeHtml,
-            probableVervaPrice
-        };
-        
-        fuelGrid.appendChild(createFuelCard(fuelData));
-    });
-}
-
-
-function createFuelCard(fuelData) {
-    const card = document.createElement('div');
-    card.className = 'fuel-card animate-up';
-    card.id = `fuel-card-${fuelData.productName}`;
-    
-    let priceChangeClass = 'price-neutral';
-    let priceChangeIcon = 'bx-minus';
-    
-    if (fuelData.priceChange > 0) {
-        priceChangeClass = 'price-up';
-        priceChangeIcon = 'bx-up-arrow-alt';
-    } else if (fuelData.priceChange < 0) {
-        priceChangeClass = 'price-down';
-        priceChangeIcon = 'bx-down-arrow-alt';
-    }
-
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    let cpnTagHtml = '';
-    
-    const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-    const isNewCpn = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-    
-    if (fuelData.productName !== 'LPG' && (isOldCpn || isNewCpn)) {
-        cpnTagHtml = '<span class="cpn-badge">CPN</span>';
-    }
-
-    // Dodatkowy boks dla Vervy Diesel
-    let vervaNoteHtml = '';
-    if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
-        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; margin-top: 8px; font-weight: 600; background: rgba(227, 6, 19, 0.05); padding: 6px; border-radius: 6px; border: 1px dashed rgba(227, 6, 19, 0.3);">
-            Prawdopodobna cena na stacji: ${fuelData.probableVervaPrice.toFixed(2)} PLN <br>
-        </div>`;
-    }
-    
-    // --- NOWY KOD: KOMPAKTOWY BLOK CENY REGULARNEJ ---
-    let regularPriceHtml = '';
-    if (fuelData.todayRegularPrice && fuelData.todayRegularPrice > fuelData.todayPrice) {
-        regularPriceHtml = `
-            <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; margin-right: 10px;">
-                <span style="font-size: 0.65rem; color: var(--text-light); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; margin-bottom: 2px;">Bez pakietu</span>
-                <span class="diagonal-strike" style="font-size: 1.25rem; line-height: 1;">${fuelData.todayRegularPrice.toFixed(2)}</span>
-            </div>
-        `;
-    }
-
-    card.innerHTML = `
-        <div class="fuel-header">
-            <img src="${productIcons[fuelData.productName]}" alt="${fuelData.productName}" class="fuel-icon">
-            <div class="fuel-name">${getFuelDisplayName(fuelData.productName)} ${cpnTagHtml}</div>
-        </div>
-        
-        <div class="fuel-price" style="display: flex; align-items: center; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-            ${regularPriceHtml}
-            <div style="display: flex; align-items: center; flex-wrap: wrap;">
-                <span style="font-size: 2rem; font-weight: 700; color: var(--primary);">${fuelData.todayPrice.toFixed(2)} PLN</span>
-                <span class="price-change ${priceChangeClass}">
-                    <i class='bx ${priceChangeIcon}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
-                </span>
-            </div>
-        </div>
-
-        <div class="fuel-price-wholesale">Hurt netto: ${fuelData.todayNetto.toFixed(2)} PLN</div>
-        ${vervaNoteHtml}
-        ${fuelData.tomorrowBadgeHtml}
-    `;
-    
-    originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
-    return card;
-}
-
-
-
-function processForecastData() {
-    const forecastData = [
-        { productName: 'Pb95', minPrice: 6.44, maxPrice: 6.59 },
-        { productName: 'Pb98', minPrice: 6.92, maxPrice: 7.09 },
-        { productName: 'ONEkodiesel', minPrice: 7.29, maxPrice: 7.45 },
-        { productName: 'ONArctic2', minPrice: 7.33, maxPrice: 7.49 },
-        { productName: 'LPG', minPrice: 3.64, maxPrice: 3.79 }
-    ];
-    
-    const forecastGrid = document.getElementById('forecastGrid');
-    forecastGrid.innerHTML = '';
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    
-    forecastData.forEach(data => {
-        const card = document.createElement('div');
-        card.className = 'fuel-card animate-up';
-        
-        let cpnTagHtml = '';
-        const isOldCpnForecast = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-        const isNewCpnForecast = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-        
-        if (data.productName !== 'LPG' && (isOldCpnForecast || isNewCpnForecast)) {
-            cpnTagHtml = '<span class="cpn-badge">CPN</span>';
-        }
-
-        card.innerHTML = `
-            <div class="fuel-header">
-                <img src="${productIcons[data.productName]}" alt="${data.productName}" class="fuel-icon">
-                <div class="fuel-name">${getFuelDisplayName(data.productName)} ${cpnTagHtml}</div>
-            </div>
-            <div class="fuel-price">${data.minPrice.toFixed(2)} - ${data.maxPrice.toFixed(2)} PLN</div>
-            <div class="fuel-price-wholesale">Prognozowany zakres cen</div>
-        `;
-        forecastGrid.appendChild(card);
-    });
-}
-
-function getFuelDisplayName(productName) {
-    const names = {
-        'Pb95': 'EFECTA 95',
-        'Pb98': 'VERVA 98',
-        'LPG': 'LPG',
-        'ONEkodiesel': 'EFECTA DIESEL',
-        'ONArctic2': 'VERVA DIESEL'
-    };
-    return names[productName] || productName;
-}
-
-function showCouponModal() {
-    document.getElementById('couponModal').style.display = 'block';
-    setTimeout(() => { document.getElementById('couponModal').classList.add('show'); }, 10);
-}
-
-function closeCouponModal() {
-    document.getElementById('couponModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('couponModal').style.display = 'none'; }, 300);
-}
-
-// Globalna zmienna dla interwału, aby uniknąć wielu liczników jednocześnie
-let countdownInterval = null;
-
-function selectCoupon(value, element) {
-    // 1. Wizualna aktualizacja kart
-    document.querySelectorAll('.coupon-card').forEach(card => card.classList.remove('active'));
-    element.classList.add('active');
-
-    // 2. Uruchomienie głównej logiki przeliczania cen
-    // Przekazujemy wartość bezpośrednio z klikniętej karty
-    applyCouponLogic(value);
-}
-
-function applyCouponLogic(couponValue) {
-    const messageElement = document.getElementById('couponMessage');
-    const expirySection = document.querySelector('.expiry-section');
-    
-    if (!originalPrices) return;
-
-    if (couponValue === 0) {
-        // --- POWRÓT DO CEN STANDARDOWYCH ---
-        Object.keys(originalPrices).forEach(productName => {
-            const card = document.getElementById(`fuel-card-${productName}`);
-            if (card) {
-    const priceElement = card.querySelector('.fuel-price');
-    // Szukamy istniejącego badge'a zmiany (ten z procentami), żeby go nie stracić
-    const trendBadge = priceElement.querySelector('.price-change');
-    const fuelName = card.querySelector('.fuel-name').textContent;
-
-    if (!fuelName.includes('LPG')) {
-        const basePrice = parseFloat(originalPrices[productName]);
-        let finalContent = "";
-
-        if (couponValue === 0) {
-            // Przywracanie: Cena + stary badge trendu
-            finalContent = `${basePrice.toFixed(2)} PLN `;
-        } else {
-            // Rabat: Nowa Cena + Badge Kuponu + stary badge trendu
-            const newPrice = (basePrice + couponValue).toFixed(2);
-            finalContent = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span> `;
-        }
-
-        // Jeśli badge trendu istniał, doklejamy go z powrotem na końcu
-        if (trendBadge) {
-            finalContent += trendBadge.outerHTML;
-        }
-
-        priceElement.innerHTML = finalContent;
-        
-        if (couponValue !== 0) {
-            priceElement.classList.add('price-flash');
-            setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
-        }
-    }
-}
-        });
-
-        messageElement.innerHTML = '<i class="bx bx-info-circle"></i> Kupon usunięty. Ceny standardowe.';
-        if (expirySection) expirySection.style.display = 'none';
-        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-
-    } else {
-        // --- NAKŁADANIE ZNIŻKI ---
-        Object.keys(originalPrices).forEach(productName => {
-            const card = document.getElementById(`fuel-card-${productName}`);
-            if (card) {
-                const priceElement = card.querySelector('.fuel-price');
-                const fuelName = card.querySelector('.fuel-name').textContent;
-
-                if (!fuelName.includes('LPG')) {
-                    const basePrice = parseFloat(originalPrices[productName]);
-                    const newPrice = (basePrice + couponValue).toFixed(2);
-                    
-                    priceElement.innerHTML = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span>`;
-                    
-                    priceElement.classList.add('price-flash');
-                    setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
-                }
-            }
-        });
-        
-        messageElement.innerHTML = `<i class="bx bx-check-circle"></i> Zniżka aktywna: <strong>${Math.abs(couponValue * 100).toFixed(0)} gr/l</strong>`;
-        if (expirySection) expirySection.style.display = 'block';
-        startCouponCountdown();
-    }
-}
-
-function startCouponCountdown() {
-    const couponExpiryDate = new Date('2026-05-10T23:59:59');
-    
-    // Czyścimy poprzedni interwał, jeśli istniał
-    if (countdownInterval) clearInterval(countdownInterval);
-    
-    function updateCountdown() {
-        const now = new Date();
-        const timeLeft = couponExpiryDate - now;
-        
-        if (timeLeft <= 0) {
-            document.getElementById('couponMessage').innerHTML = '<i class="bx bx-error-circle"></i> Kupon wygasł';
-            const expirySection = document.querySelector('.expiry-section');
-            if(expirySection) expirySection.style.display = 'none';
-            clearInterval(countdownInterval);
-            return;
-        }
-        
-        const d = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        // Aktualizacja DOM z zabezpieczeniem przed błędami (padStart dla ładnego wyglądu 01, 02 itd.)
-        if(document.getElementById('days')) document.getElementById('days').textContent = d.toString().padStart(2, '0');
-        if(document.getElementById('hours')) document.getElementById('hours').textContent = h.toString().padStart(2, '0');
-        if(document.getElementById('minutes')) document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
-        if(document.getElementById('seconds')) document.getElementById('seconds').textContent = s.toString().padStart(2, '0');
-    }
-    
-    updateCountdown(); // Uruchomienie od razu
-    countdownInterval = setInterval(updateCountdown, 1000);
-}
-
-function showInfoModal() {
-    if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
-        document.getElementById('infoModal').style.display = 'block';
-        setTimeout(() => { document.getElementById('infoModal').classList.add('show'); }, 10);
-    }
-}
-
-function closeInfoModal() {
-    document.getElementById('infoModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('infoModal').style.display = 'none'; }, 300);
-}
-
-function closeInfoModalAndAcknowledge() {
-    localStorage.setItem('infoModalAcknowledged', 'true');
-    closeInfoModal();
-}
-
-function toggleHistory() {
-    document.getElementById('historyModal').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('historyModal').classList.add('show');
-        fetchHistoryData();
-    }, 10);
-}
-
-function closeHistoryModal() {
-    document.getElementById('historyModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('historyModal').style.display = 'none'; }, 300);
-}
-
-// === POBIERANIE DANYCH HISTORII ===
-function fetchHistoryData() {
-    const loadingElement = document.getElementById('loadingHistory');
-    const tableBody = document.getElementById('historyTableBody');
-    
-    loadingElement.style.display = 'block';
-    tableBody.innerHTML = '';
-    
-    const fuelType = document.getElementById('fuelType').value;
-    const selectedYear = document.getElementById('year').value;
-    const productId = fuelType.split('-')[0];
-    
-    let productNameKey = '';
-    if (productId === '41') productNameKey = 'Pb95';
-    else if (productId === '42') productNameKey = 'Pb98';
-    else if (productId === '43') productNameKey = 'ONEkodiesel';
-    else if (productId === '44') productNameKey = 'ONArctic2';
-    
-    const viewOption = document.querySelector('input[name="dataView"]:checked').value;
-    const historyUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
-    
-    fetch(historyUrl)
-        .then(response => response.json())
-        .then(data => {
-            const transformedData = data.map(item => {
-                const shiftedDateStr = shiftDate(item.effectiveDate.split('T')[0]);
-                return {
-                    value: item.value,
-                    shiftedDate: shiftedDateStr,
-                    dateObj: new Date(shiftedDateStr)
-                };
-            });
-
-            if (transformedData.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan=\"2\" style=\"text-align:center; padding:2rem; opacity:0.6;\">Brak danych giełdowych dla tego roku.</td></tr>';
-                loadingElement.style.display = 'none';
-                return;
-            }
-            
-            let minPrice = Infinity;
-            let maxPrice = -Infinity;
-            const processedData = [];
-            
-            if (viewOption === 'daily') {
-                transformedData.forEach(item => {
-                    let price = 0;
-                    if (item.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
-                        price = OVERRIDE_PRICES['2026-03-31'][productNameKey];
-                    } else {
-                        // Czyste obliczanie własnej ceny
-                        price = calculateRetailPrice(productNameKey, item.value / 1000, item.shiftedDate); 
-                    }
-                    
-                    if (price < minPrice) minPrice = price;
-                    if (price > maxPrice) maxPrice = price;
-                    
-                    processedData.push({ date: item.shiftedDate, price });
-                });
-            } else {
-                const monthlyData = {};
-                transformedData.forEach(item => {
-                    const month = item.shiftedDate.slice(0, 7);
-                    if (!monthlyData[month]) monthlyData[month] = [];
-                    monthlyData[month].push(item);
-                });
-                
-                for (const [month, items] of Object.entries(monthlyData)) {
-                    let monthSum = 0;
-                    items.forEach(it => {
-                        if (it.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
-                            monthSum += OVERRIDE_PRICES['2026-03-31'][productNameKey];
-                        } else {
-                            monthSum += calculateRetailPrice(productNameKey, it.value / 1000, it.shiftedDate);
-                        }
-                    });
-                    const avgPrice = monthSum / items.length;
-                    
-                    if (avgPrice < minPrice) minPrice = avgPrice;
-                    if (avgPrice > maxPrice) maxPrice = avgPrice;
-                    
-                    processedData.push({ date: month, price: avgPrice });
-                }
-            }
-            
-            processedData.forEach(item => {
-                const row = document.createElement('tr');
-                const priceClass = item.price === minPrice ? 'min-price' : item.price === maxPrice ? 'max-price' : '';
-                
-                let showCpnTag = false;
-                const isOldCpnDaily = item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01';
-                const isNewCpnDaily = item.date.length > 7 && item.date >= '2026-08-15' && item.date < '2026-09-01';
-                
-                const isOldCpnMonthly = item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07';
-                const isNewCpnMonthly = item.date.length === 7 && item.date === '2026-08';
-
-                if (productNameKey !== 'LPG' && (isOldCpnDaily || isNewCpnDaily || isOldCpnMonthly || isNewCpnMonthly)) {
-                    showCpnTag = true;
-                }
-                const cpnTagHtml = showCpnTag ? ' <span class="cpn-badge">CPN</span>' : '';
-
-                let dateHtml = item.date;
-                if (isOldCpnDaily || isNewCpnDaily) {
-                    const rowDateObj = new Date(item.date);
-                    if (rowDateObj.getDay() === 6) {
-                        if (item.date === '2026-04-04') {
-                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Okres: 04.04.2026 - 07.04.2026)</span>';
-                        } else {
-                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Następna zmiana we wtorek)</span>';
-                        }
-                    }
-                }
-
-                row.innerHTML = `
-                    <td>${dateHtml}</td>
-                    <td class="${priceClass}">${item.price.toFixed(2)} PLN ${cpnTagHtml}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            loadingElement.style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error fetching history data:', error);
-            tableBody.innerHTML = '<tr><td colspan=\"2\">Wystąpił błąd podczas pobierania danych z giełdy</td></tr>';
-            loadingElement.style.display = 'none';
-        });
-}
-
-
-function showPriceHistoryChart() {
-    
-    if (priceHistoryChart) {
-        priceHistoryChart.destroy();
-    }
-    
-    
-    const tableRows = document.querySelectorAll('#historyTableBody tr');
-    let dates = [];
-    let prices = [];
-    
-    tableRows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (cells.length === 2 && !cells[0].textContent.includes('Brak danych')) {
-            // Pobieramy czystą datę
-            const rawDate = cells[0].innerHTML.split('<br>')[0].trim();
-            dates.push(rawDate);
-            // Wyciągamy samą liczbę z tekstu "6.47 PLN"
-            const priceText = cells[1].textContent.replace('PLN', '').trim();
-            prices.push(parseFloat(priceText));
-        }
-    });
-    
-    // Tabela zazwyczaj ma najnowsze u góry, na wykresie chcemy chronologicznie (najstarsze po lewej)
-    dates.reverse();
-    prices.reverse();
-    
-    if (dates.length === 0) {
-        showNotification("Brak danych do wyświetlenia wykresu.");
-        return;
-    }
-    
-    const canvas = document.getElementById('priceHistoryChart');
-    const ctx = canvas.getContext('2d');
-    
-    // Tworzenie pięknego gradientu pod linią wykresu (Orlen Red -> Przezroczysty)
-    let gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
-    gradientFill.addColorStop(0, 'rgba(227, 6, 19, 0.5)'); // Góra (ciemniejsza)
-    gradientFill.addColorStop(1, 'rgba(227, 6, 19, 0.0)'); // Dół (zanika)
-    
-    // Wykrywanie motywu do stylizacji wykresu
-    const isDark = document.body.classList.contains('dark-theme');
-    const textColor = isDark ? '#b0b8c4' : '#8D99AE';
-    const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-    const tooltipBg = isDark ? '#1E1E1E' : '#FFFFFF';
-    const tooltipText = isDark ? '#FFFFFF' : '#1E1E1E';
-    // --- OBLICZANIE STATYSTYK ---
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
-    const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-
-    // Aktualizacja HTML
-    document.getElementById('statMin').textContent = minPrice.toFixed(2) + ' PLN';
-    document.getElementById('statMax').textContent = maxPrice.toFixed(2) + ' PLN';
-    document.getElementById('statAvg').textContent = avgPrice.toFixed(2) + ' PLN';
-    // ----------------------------
-    
-    priceHistoryChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Cena',
-                data: prices,
-                borderColor: '#E30613', // Główny kolor Orlen
-                backgroundColor: gradientFill,
-                borderWidth: 3,
-                pointBackgroundColor: tooltipBg,
-                pointBorderColor: '#E30613',
-                pointBorderWidth: 2,
-                pointRadius: 0, // Ukryte kropki w stanie spoczynku (jak w Apple Stocks)
-                pointHoverRadius: 6, // Pojawiają się dopiero przy najechaniu
-                pointHitRadius: 15, // Większy obszar łapania myszki
-                tension: 0.4, // Zmienia ostre kąty w gładkie, eleganckie fale
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false, // Tooltip pokazuje się od razu po najechaniu na oś, bez celowania w kropkę
-            },
-            plugins: {
-                legend: { 
-                    display: false // Wyłączamy nudną legendę
-                },
-                tooltip: {
-                    backgroundColor: tooltipBg,
-                    titleColor: tooltipText,
-                    bodyColor: '#E30613',
-                    borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                    borderWidth: 1,
-                    padding: 12,
-                    boxPadding: 4,
-                    displayColors: false, // Ukrywa ten mały kwadracik w tooltipie
-                    titleFont: { family: 'Poppins', size: 13, weight: 'normal' },
-                    bodyFont: { family: 'Outfit', size: 16, weight: '900' },
-                    callbacks: {
-                        label: function(context) { return `${context.parsed.y.toFixed(2)} PLN`; }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: { display: false, drawBorder: false },
-                    ticks: {
-                        color: textColor,
-                        font: { family: 'Poppins', size: 11 },
-                        maxTicksLimit: 6 // Żeby daty nie nachodziły na siebie
-                    }
-                },
-                y: {
-                    border: { display: false, dash: [5, 5] }, // Przerywane linie pomocnicze w tle
-                    grid: { color: gridColor, drawBorder: false },
-                    ticks: {
-                        color: textColor,
-                        font: { family: 'Outfit', size: 13, weight: '600' },
-                        padding: 10,
-                        callback: function(value) { return value.toFixed(2) + ' zł'; }
-                    },
-                    // Dynamiczne skalowanie, żeby wykres nie był płaski
-                    suggestedMin: Math.min(...prices) * 0.98,
-                    suggestedMax: Math.max(...prices) * 1.02
-                }
-            }
-        }
-    });
-    
-    document.getElementById('priceHistoryModal').style.display = 'flex';
-    setTimeout(() => { document.getElementById('priceHistoryModal').classList.add('show'); }, 10);
-}
-
-function closePriceHistoryModal() {
-    document.getElementById('priceHistoryModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('priceHistoryModal').style.display = 'none'; }, 300);
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark-theme' : 'light-theme');
-}
-
-function loadThemeFromLocalStorage() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark-theme') {
-        document.body.classList.add('dark-theme');
-    }
-}
-
-function showLoading() {
-    document.getElementById('loading').style.display = 'flex';
-    document.getElementById('container').style.display = 'none';
-}
-
-function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('container').style.display = 'block';
-}
-
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.style.display = 'flex';
-    notification.innerHTML = `<i class='bx bx-check'></i> ${message}`;
-    notification.classList.add('show');
-    setTimeout(() => { notification.classList.remove('show'); }, 3000);
-}
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-function displayError(message) {
-    const container = document.getElementById('container');
-    container.innerHTML = `
-        <div class="alert alert-error animate">
-            <i class='bx bx-error-circle'></i>
-            <span>${message}</span>
-        </div>
-    `;
-    container.style.display = 'block';
-}
-
-// --- NOWOŚĆ: Funkcja obliczająca matematyczny trend (Regresja Liniowa) ---
-function calculateLinearRegressionSlope(data) {
-    const n = data.length;
-    if (n < 2) return 0;
-    
-    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-    
-    for (let i = 0; i < n; i++) {
-        let x = i; 
-        let y = data[i].value / 1000; // Cena za litr (PLN)
-        sumX += x;
-        sumY += y;
-        sumXY += x * y;
-        sumXX += x * x;
-    }
-    
-    // Zwraca zmianę ceny w PLN na jeden dzień
-    return (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-}
-
-// --- ZMODYFIKOWANA FUNKCJA: analyzeMultiFuelTrends ---
-async function analyzeMultiFuelTrends() {
-    const year = new Date().getFullYear();
-    const fuelsToCheck = [
-        { id: 41, name: 'Pb95', displayName: 'EFECTA 95' },
-        { id: 43, name: 'ONEkodiesel', displayName: 'EFECTA DIESEL' },
-        { id: 42, name: 'Pb98', displayName: 'VERVA 98' },
-        { id: 44, name: 'ONArctic2', displayName: 'VERVA DIESEL' }
-    ];
-
-    try {
-        let allChanges = [];
-        let trendDetails = [];
-        let globalChangeSum = 0;
-
-        for (let fuel of fuelsToCheck) {
-            try {
-                const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
-                const data = await res.json();
-                
-                if (data && data.length > 10) {
-                    data.sort((a, b) => new Date(a.effectiveDate) - new Date(b.effectiveDate));
-                    
-                    // Skracamy historię do 7 dni, aby reagować na rynek NATYCHMIAST
-                    const last7 = data.slice(-7);
-                    
-                    if (last7.length >= 4) {
-                        let slopePLN = calculateLinearRegressionSlope(last7); 
-                        
-                        // 🚀 DETEKTOR ODBICIA (Momentum 3-dniowe)
-                        // Sprawdzamy, czy rynek nagle nie zawrócił w ciągu ostatnich 3 notowań
-                        const len = last7.length;
-                        const d0 = last7[len-1].value; // dzisiaj
-                        const d1 = last7[len-2].value; // wczoraj
-                        const d2 = last7[len-3].value; // przedwczoraj
-                        
-                        // Jeśli rośnie od 3 dni, wymuszamy wzrostowy trend (ignorując wcześniejsze spadki)
-                        if (d0 > d1 && d1 >= d2) {
-                            const shortSlope = ((d0 - d2) / 2) / 1000;
-                            slopePLN = shortSlope > 0 ? shortSlope : Math.abs(slopePLN);
-                        } 
-                        // Jeśli spada od 3 dni, wymuszamy spadkowy trend
-                        else if (d0 < d1 && d1 <= d2) {
-                            const shortSlope = ((d0 - d2) / 2) / 1000;
-                            slopePLN = shortSlope < 0 ? shortSlope : -Math.abs(slopePLN);
-                        }
-
-                        // Prognozowana zmiana na kolejne 7 dni w groszach
-                        let diffGrosze = slopePLN * 7 * 100;
-                        
-                        // Uwzględniamy VAT 23% dla widoku detalicznego
-                        let diffValue = window.isNettoMode ? diffGrosze : (diffGrosze * 1.23);
-                        
-                        allChanges.push(diffValue);
-                        globalChangeSum += diffValue;
-                        
-                        let status = "Stabilnie";
-                        let color = "text-blue-600";
-                        let icon = "bx-minus";
-                        let bgClass = "trend-stable";
-
-                        if (diffValue > 2) { 
-                            status = "Wzrost"; color = "text-red-600"; icon = "bx-trending-up"; bgClass = "trend-up";
-                        } else if (diffValue < -2) { 
-                            status = "Spadek"; color = "text-green-600"; icon = "bx-trending-down"; bgClass = "trend-down";
-                        }
-
-                        trendDetails.push({ name: fuel.displayName, status, color, icon, bgClass, diff: diffValue });
-                    }
-                }
-            } catch (e) {
-                console.warn(`Błąd analizy dla ${fuel.name}`);
-            }
-        }
-
-        const avgChange = allChanges.length > 0 ? globalChangeSum / allChanges.length : 0;
-        let trendType = 'stable';
-        let forecastGrosze = avgChange;
-        
-        // Stabilność uznajemy w zakresie od -1.5 do +1.5 gr
-        if (forecastGrosze > 1.5) {
-            trendType = 'up';
-        } else if (forecastGrosze < -1.5) {
-            trendType = 'down';
-        } else {
-            trendType = 'stable';
-        }
-
-        const forecastText = forecastGrosze > 0 ? `+${forecastGrosze.toFixed(0)} gr` : forecastGrosze < 0 ? `${forecastGrosze.toFixed(0)} gr` : '0 gr';
-        
-        STATE.forecastData = { date: new Date().toISOString(), forecast: forecastText, value: forecastGrosze, type: trendType, details: trendDetails };
-        updateForecastUI(avgChange, trendDetails, forecastText, trendType);
-
-    } catch (e) {
-        document.getElementById('home-trend-title').innerHTML = "Błąd analizy <i class='bx bx-error-circle text-red-500'></i>";
-        if (STATE.forecastData) {
-            updateForecastUI(0, STATE.forecastData.details || [], STATE.forecastData.forecast, STATE.forecastData.type);
-        } else {
-            updateForecastUI(0, [], '0 gr', 'stable');
-        }
-    }
-}
-
-
-function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
-    const widgetTitle = document.getElementById('home-trend-title');
-    const widgetBadge = document.getElementById('home-trend-badge');
-    const widgetBar = document.getElementById('home-trend-bar');
-    const groszeSpan = document.getElementById('forecast-grosze-value');
-    const groszeDetailed = document.getElementById('forecast-grosze-detailed-value');
-
-    let mainStatusText = "";
-    let mainColorClass = "";
-
-    if (trendType === 'up') {
-        mainStatusText = "Trend Wzrostowy";
-        widgetBadge.innerText = "WZROST";
-        widgetBadge.className = "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-red-500 w-3/4 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-red-600 dark:text-red-400";
-    } else if (trendType === 'down') {
-        mainStatusText = "Trend Spadkowy";
-        widgetBadge.innerText = "SPADEK";
-        widgetBadge.className = "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-green-500 w-1/4 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-green-600 dark:text-green-400";
-    } else {
-        mainStatusText = "Stabilizacja";
-        widgetBadge.innerText = "STABILNIE";
-        widgetBadge.className = "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-blue-500 w-1/2 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-blue-600 dark:text-blue-400";
-    }
-
-    widgetTitle.innerHTML = `${mainStatusText} <i class='bx ${trendType === 'up' ? 'bx-trending-up' : (trendType === 'down' ? 'bx-trending-down' : 'bx-minus')} ${mainColorClass}'></i>`;
-    groszeSpan.innerText = forecastGrosze;
-    groszeDetailed.innerText = forecastGrosze;
-
-    const heroBg = document.getElementById('forecast-hero-bg');
-    const mainTitle = document.getElementById('forecast-main-title');
-    const mainDesc = document.getElementById('forecast-main-desc');
-
-    mainTitle.innerText = mainStatusText;
-    mainTitle.className = "report-hero-title";
-
-    let desc = `Analiza cen hurtowych dla wszystkich paliw wskazuje na ${mainStatusText.toLowerCase()}. `;
-    if (trendType === 'up') {
-        desc += `Obserwujemy presję cenową. W ciągu 7 dni ceny mogą wzrosnąć o ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-up";
-    } else if (trendType === 'down') {
-        desc += `Dobre wieści! Rynek hurtowy notuje spadki. Przewidywana obniżka o ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-down";
-    } else {
-        desc += `Sytuacja zrównoważona. Prognozowana zmiana: ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-stable";
-    }
-    mainDesc.innerText = desc;
-
-    const grid = document.getElementById('forecast-details-grid');
-    grid.innerHTML = '';
-    if (details.length > 0) {
-        details.forEach(d => {
-            const item = document.createElement('div');
-            item.className = `report-detail-item`; 
-            item.innerHTML = `<span>${d.name}</span><span>${d.diff > 0 ? '+' : ''}${d.diff.toFixed(1)} gr</span>`;
-            grid.appendChild(item);
-        });
-    } else {
-        grid.innerHTML = '<p style="text-align: center; opacity: 0.5;">Brak danych szczegółowych</p>';
-    }
-
-    const recContainer = document.getElementById('forecast-recommendation');
-    if (trendType === 'up') {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #E30613;"><i class='bx bxs-gas-pump'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Zatankuj dzisiaj</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Przewidywane podwyżki o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>`;
-    } else if (trendType === 'down') {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #4CAF50;"><i class='bx bx-time-five'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Wstrzymaj się</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Ceny mogą spaść o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>`;
-    } else {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #2196F3;"><i class='bx bx-check'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Możesz tankować</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Brak znaczących zmian w najbliższym czasie.</p>
-            </div>`;
-    }
-
-    const newsContainer = document.getElementById('market-news');
-    if (trendType === 'up') {
-        newsContainer.innerHTML = `📈 Notowania ropy naftowej rosną. Analitycy przewidują dalsze wzrosty cen paliw w najbliższych tygodniach.`;
-    } else if (trendType === 'down') {
-        newsContainer.innerHTML = `📉 Ceny ropy na świecie spadają. Korzystny kurs złotego może przynieść dalsze obniżki na stacjach.`;
-    } else {
-        newsContainer.innerHTML = `⚖️ Rynek paliw stabilny. Analitycy nie przewidują gwałtownych zmian w najbliższym czasie.`;
-    }
-}
-
-function openForecastDetails() {
-    document.getElementById('view-forecast').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeForecastDetails() {
-    document.getElementById('view-forecast').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// === STREFA KIEROWCY (NETTO/BRUTTO, KALKULATORY) ===
-
-function toggleTax() {
-    window.isNettoMode = !window.isNettoMode;
-    const btn = document.getElementById('taxToggleBtn');
-    
-    if (window.isNettoMode) {
-        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Brutto";
-        btn.classList.replace('btn-secondary', 'btn-primary');
-        showNotification("Widok cen hurtowych Netto (bez VAT/Akcyzy)");
-    } else {
-        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Netto";
-        btn.classList.replace('btn-primary', 'btn-secondary');
-        showNotification("Przywrócono ceny detaliczne Brutto");
-    }
-    
-    // Przeliczenie kart na nowo
-    renderAllFuels();
-}
-
-function runAllCalculations() {
-    if (Object.keys(originalPrices).length === 0) return;
-
-    // Pobranie stałych z kart paliw (lub awaryjnie średnich rynkowych)
-    const pb95Price = parseFloat(originalPrices['Pb95']) || 6.50;
-    const lpgPrice = parseFloat(originalPrices['LPG']) || 2.99;
-    
-    // 1. KOSZT PODRÓŻY I PUNKTY VITAY
-    const dist = parseFloat(document.getElementById('calcDistance').value) || 0;
-    const cons = parseFloat(document.getElementById('calcConsumption').value) || 0;
-    const fuel = document.getElementById('calcFuelType').value;
-    const fuelPrice = parseFloat(originalPrices[fuel]) || 6.50;
-    
-    const liters = (dist / 100) * cons;
-    const travelCost = liters * fuelPrice;
-    
-    const pointsPerLiter = (fuel === 'Pb98' || fuel === 'ONArctic2') ? 8 : 4;
-    const vitayPoints = Math.floor(liters * pointsPerLiter);
-    const coffees = Math.floor(vitayPoints / 1200);
-    const vitayRewardStr = coffees > 0 
-        ? `☕ Wystarczy na ${coffees} darmową kawę Vitay!` 
-        : `Brakuje ${1200 - vitayPoints} pkt do darmowej kawy.`;
-
-    document.getElementById('travelResult').innerHTML = `
-        Wymagane paliwo: <strong>${liters.toFixed(1)} l</strong><br>
-        Koszt podróży: <strong>${travelCost.toFixed(2)} PLN</strong><br>
-        Zdobyte punkty: <span class="vitay-points">${vitayPoints} pkt</span><br>
-        <span style="font-size: 0.8rem; color: var(--text-light);">${vitayRewardStr}</span>
-    `;
-
-    // 2. PORÓWNYWARKA SPALINA VS EV
-    const evCons = parseFloat(document.getElementById('evConsumption').value) || 0;
-    const evRate = parseFloat(document.getElementById('evChargeType').value) || 0;
-    
-    const evCost100km = evCons * evRate;
-    const iceCost100km = cons * fuelPrice;
-    const diff = iceCost100km - evCost100km;
-
-    let diffText = diff > 0 
-        ? `<strong style="color: var(--success)">${diff.toFixed(2)} PLN taniej w EV</strong>` 
-        : `<strong style="color: var(--error)">${Math.abs(diff).toFixed(2)} PLN taniej w spalinie</strong>`;
-
-    document.getElementById('evResult').innerHTML = `
-        Koszt EV na 100km: <strong>${evCost100km.toFixed(2)} PLN</strong><br>
-        Porównanie (na 100km): ${diffText}
-    `;
-
-    // 3. REALNE OSZCZĘDNOŚCI Z KUPONU
-    const sLiters = parseFloat(document.getElementById('savingsLiters').value) || 0;
-    const sCoupon = parseFloat(document.getElementById('savingsCoupon').value) || 0;
-    const totalSavings = sLiters * sCoupon;
-    
-    document.getElementById('savingsResult').innerHTML = `
-        Zostaje w portfelu: <strong style="color: var(--success)">${totalSavings.toFixed(2)} PLN</strong>
-    `;
-
-    // 4. OPŁACALNOŚĆ LPG
-    const yearlyKm = parseFloat(document.getElementById('lpgYearly').value) || 0;
-    const lpgSetupCost = parseFloat(document.getElementById('lpgCost').value) || 0;
-    
-    const yearlyPbCost = (yearlyKm / 100) * cons * pb95Price;
-    const lpgCons = cons * 1.15; // Samochód na gaz pali ok. 15% więcej
-    const yearlyLpgCost = (yearlyKm / 100) * lpgCons * lpgPrice;
-    const yearlySavingsLPG = yearlyPbCost - yearlyLpgCost;
-    
-    let monthsToReturn = 0;
-    if (yearlySavingsLPG > 0) {
-        monthsToReturn = (lpgSetupCost / (yearlySavingsLPG / 12)).toFixed(1);
-    }
-
-    document.getElementById('lpgResult').innerHTML = `
-        Zwrot z inwestycji po: <strong>${monthsToReturn > 0 ? monthsToReturn + ' miesiącach' : 'Brak zwrotu'}</strong><br>
-        Roczne oszczędności netto: <strong style="color: var(--success)">${yearlySavingsLPG > 0 ? yearlySavingsLPG.toFixed(2) + ' PLN' : '0.00 PLN'}</strong>
-    `;
-}
-
-// Podpięcie automatycznego obliczenia po załadowaniu danych z API
-const originalProcessFuelDataCalc = window.processFuelData;
-window.processFuelData = function(data) {
-    originalProcessFuelDataCalc(data);
-    setTimeout(runAllCalculations, 1500); // Uruchamia kalkulator jak już zaciągnie API
-};
-
-
-// === UDOSTĘPNIANIE JAKO ZDJĘCIE (Z NAPRAWIONYM OBCINANIEM) ===
-async function shareApp() {
-    showNotification("Przygotowuję zdjęcie do udostępnienia...");
-    
-    const container = document.getElementById('container');
-    const buttons = document.querySelector('.action-buttons');
-    if (buttons) buttons.style.display = 'none';
-    
-    // NAPRAWA BŁĘDU: Zapisujemy obecną pozycję i przewijamy na samą górę.
-    // Dzięki temu html2canvas nie utnie zawartości ekranu.
-    const originalScrollPos = window.scrollY;
-    window.scrollTo(0, 0);
-    
-    // Czekamy ułamek sekundy, aby przeglądarka odświeżyła widok po przewinięciu
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    try {
-        const canvas = await html2canvas(container, {
-            scale: 2, 
-            useCORS: true,
-            allowTaint: true,
-            scrollY: 0,
-            backgroundColor: document.body.classList.contains('dark-theme') ? '#121212' : '#F8F9FA'
-        });
-        
-        // Przywracamy przyciski i wracamy do poprzedniego miejsca na stronie
-        if (buttons) buttons.style.display = 'flex';
-        window.scrollTo(0, originalScrollPos);
-        
-        canvas.toBlob(async (blob) => {
-            const file = new File([blob], 'ceny-paliw-orlen.png', { type: 'image/png' });
-            
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({
-                        title: 'Aktualne Ceny Paliw',
-                        text: 'Zobacz najnowsze ceny paliw! 🚗⛽',
-                        files: [file]
-                    });
-                } catch (err) {
-                    console.log('Udostępnianie przerwane', err);
-                }
-            } else {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'ceny-paliw-orlen.png';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showNotification("Zapisano obrazek na urządzeniu!");
-            }
-        }, 'image/png');
-        
-    } catch (error) {
-        console.error("Błąd podczas generowania zdjęcia:", error);
-        showNotification("Wystąpił błąd przy generowaniu obrazka.");
-        if (buttons) buttons.style.display = 'flex';
-        window.scrollTo(0, originalScrollPos);
-    }
-}
-
-
-// === PROFESJONALNE GENEROWANIE PDF (Z POLSKIMI ZNAKAMI) ===
-function generatePDFReport() {
-    if (typeof html2pdf === 'undefined') {
-        showNotification("Błąd: Biblioteka PDF nie została załadowana.");
-        return;
-    }
-    
-    const tableBody = document.getElementById('historyTableBody');
-    if (!tableBody || tableBody.innerHTML.trim() === '' || tableBody.innerHTML.includes('Brak danych')) {
-        showNotification("Brak danych do wygenerowania raportu.");
-        return;
-    }
-    
-    showNotification("Generowanie raportu PDF...");
-    
-    const fuelSelect = document.getElementById('fuelType');
-    const fuelName = fuelSelect.options[fuelSelect.selectedIndex].text;
-    const viewOption = document.querySelector('input[name="dataView"]:checked').value;
-    const viewText = viewOption === 'daily' ? 'dzienne' : 'średnie miesięczne';
-    
-    // Tworzymy ukryty, czysty dokument HTML do wydruku
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.left = '-9999px'; // Ukrywamy go poza ekranem
-    container.style.top = '0';
-    container.style.width = '800px';
-    container.style.padding = '40px';
-    container.style.backgroundColor = '#ffffff';
-    container.style.color = '#1e1e1e';
-    container.style.fontFamily = 'Arial, sans-serif';
-    
-    // Nagłówek raportu
-    container.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #E30613; margin-bottom: 10px; font-size: 28px;">Raport Rynkowy - Ceny Paliw</h1>
-            <h3 style="color: #2B2D42; margin-top: 0; font-size: 18px;">Wybrane paliwo: <strong>${fuelName}</strong></h3>
-        </div>
-        <div style="margin-bottom: 30px; font-size: 14px; color: #555;">
-            <p style="margin: 5px 0;"><strong>Typ zestawienia:</strong> Notowania ${viewText}</p>
-            <p style="margin: 5px 0;"><strong>Data wygenerowania:</strong> ${new Date().toLocaleDateString()}</p>
-        </div>
-    `;
-    
-    // Generowanie czystej tabeli
-    const table = document.createElement('table');
-    table.style.width = '100%';
-    table.style.borderCollapse = 'collapse';
-    
-    const thead = document.createElement('thead');
-    thead.innerHTML = `
-        <tr style="background-color: #E30613; color: white;">
-            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Data Notowania</th>
-            <th style="padding: 12px; border: 1px solid #ddd; text-align: right;">Cena Detaliczna (PLN)</th>
-        </tr>
-    `;
-    table.appendChild(thead);
-    
-    const tbody = document.createElement('tbody');
-    const rows = tableBody.querySelectorAll('tr');
-    
-    rows.forEach((tr, index) => {
-        const tds = tr.querySelectorAll('td');
-        if (tds.length === 2) {
-            // Czyścimy datę i cenę ze śmieci HTML (np. znaczki CPN)
-            const dateText = tds[0].innerHTML.split('<br>')[0].trim().replace(/<[^>]*>?/gm, '');
-            const priceText = tds[1].textContent.trim().replace(/CPN/g, '');
-            const bg = index % 2 === 0 ? '#f8f9fa' : '#ffffff';
-            
-            const newTr = document.createElement('tr');
-            newTr.style.backgroundColor = bg;
-            newTr.innerHTML = `
-                <td style="padding: 12px; border: 1px solid #ddd; text-align: left;">${dateText}</td>
-                <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-weight: bold;">${priceText}</td>
-            `;
-            tbody.appendChild(newTr);
-        }
-    });
-    
-    table.appendChild(tbody);
-    container.appendChild(table);
-    
-    // MUSIMY dodać kontener do DOM, żeby html2pdf go poprawnie zrenderował
-    document.body.appendChild(container);
-    
-    const opt = {
-        margin:       10,
-        filename:     `Raport_Cen_${fuelName.replace(/\s+/g, '_')}_${new Date().toLocaleDateString()}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    html2pdf().set(opt).from(container).save().then(() => {
-        // Po pobraniu usuwamy ukryty kontener
-        document.body.removeChild(container);
-        showNotification("Pobieranie pliku PDF powiodło się!");
-    });
-}
-
-// === SYMULATOR DYSTRYBUTORA PALIWA ===
-let pumpInterval = null;
-let currentLiters = 0;
-let maxLiters = 50;
-let simPricePerLiter = 0;
-
-function openDispenserModal() {
-    document.getElementById('dispenserModal').style.display = 'block';
-    setTimeout(() => { document.getElementById('dispenserModal').classList.add('show'); }, 10);
-    resetDispenser();
-}
-
-function closeDispenserModal() {
-    document.getElementById('dispenserModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('dispenserModal').style.display = 'none'; }, 300);
-    stopPumping();
-}
-
-function updateDispenserPrice() {
-    const fuelType = document.getElementById('simFuel').value;
-    // Pobiera dzisiejszą cenę z głównego skryptu aplikacji
-    simPricePerLiter = parseFloat(originalPrices[fuelType]); 
-    
-    // Jeśli z jakiegoś powodu cena nie jest gotowa (dane się ładują), dajemy fallback
-    if (isNaN(simPricePerLiter) || simPricePerLiter === 0) {
-        simPricePerLiter = 6.50; 
-    }
-    
-    document.getElementById('simPricePerLiter').innerText = simPricePerLiter.toFixed(2);
-    updateDispenserDisplay();
-}
-
-function resetDispenser() {
-    stopPumping();
-    currentLiters = 0;
-    
-    // Odczytanie danych o wybranym samochodzie (bak, paliwo)
-    const vehicleData = document.getElementById('simVehicle').value.split(',');
-    maxLiters = parseFloat(vehicleData[0]);
-    
-    // Auto-przełączanie pistoletu na właściwe paliwo do wybranego auta
-    document.getElementById('simFuel').value = vehicleData[1];
-    
-    updateDispenserPrice();
-}
-
-function startPumping(e) {
-    if (e && e.cancelable) e.preventDefault(); // Blokuje domyślne akcje dotyku (przewijanie ekranu)
-    
-    const pumpBtn = document.getElementById('pumpButton');
-    pumpBtn.classList.add('active'); // Wymuszony efekt wciśnięcia
-
-    if (currentLiters >= maxLiters) return; // Jeśli pełny, nie tankujemy
-    
-    // Lekka wibracja telefonu przy rozpoczęciu tankowania (Android)
-    if (navigator.vibrate) navigator.vibrate(30);
-    
-    // Uruchomienie licznika uderzającego co 50ms
-    pumpInterval = setInterval(() => {
-        if (currentLiters >= maxLiters) {
-            stopPumping();
-            currentLiters = maxLiters; // Utrzymaj równe maksimum
-            updateDispenserDisplay();
-            showNotification(`Odbija! Bak jest pełny (${maxLiters} L).`);
-            
-            // Podwójna wibracja na znak odskoczenia pistoletu
-            if (navigator.vibrate) navigator.vibrate([100, 50, 200]); 
-        } else {
-            // Zmieniona logika: Wolniejsze i losowe tankowanie
-            // Generuje losowy skok wartości od ok. 0.04 do 0.09 litra
-            let randomIncrement = (Math.random() * (0.09 - 0.04) + 0.04);
-            
-            currentLiters += randomIncrement; 
-            if (currentLiters > maxLiters) currentLiters = maxLiters; // Blokada ułamków
-            updateDispenserDisplay();
-        }
-    }, 50);
-}
-
-function stopPumping(e) {
-    if (e && e.cancelable && e.type !== 'mouseleave') e.preventDefault();
-    
-    const pumpBtn = document.getElementById('pumpButton');
-    pumpBtn.classList.remove('active');
-    
-    if (pumpInterval) {
-        clearInterval(pumpInterval);
-        pumpInterval = null;
-    }
-}
-
-function updateDispenserDisplay() {
-    const totalCost = currentLiters * simPricePerLiter;
-    
-    // Aktualizacja cyfr z zachowaniem formatu 0.00
-    document.getElementById('simTotalLiters').innerText = currentLiters.toFixed(2);
-    document.getElementById('simTotalCost').innerText = totalCost.toFixed(2);
-}const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-    @keyframes pulseAlert {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0.7); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(218, 33, 40, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(218, 33, 40, 0); }
-    }
-    .jutro-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: linear-gradient(45deg, #DA2128, #ff4b52);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 12px;
-        font-weight: 900;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(218, 33, 40, 0.4);
-        animation: pulseAlert 2s infinite;
-        margin-top: 5px;
-    }
-    .dzis-badge {
-        color: #4CAF50;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 5px;
-    }
-`;
-document.head.appendChild(styleSheet);
-
-let originalPrices = {};
-let priceHistoryChart = null;
-
-// Globalny magazyn na historyczne dane
-window.dailyNettoPrices = {};
-let rawFuelDataList = [];
-let rawLpgData = null;
-
-// Product icons
-const productIcons = {
-    'Pb95': 'https://www.kacpiq.pl/img/efecta95.png',
-    'Pb98': 'https://www.kacpiq.pl/img/verva98.png',
-    'LPG': 'https://www.kacpiq.pl/img/lpg.png',
-    'ONEkodiesel': 'https://www.kacpiq.pl/img/efectadiesel.png',
-    'ONArctic2': 'https://www.kacpiq.pl/img/vervadiesel.png'
-};
-
-const STATE = {
-    forecastData: null,
-    currentDisplayDate: null
-};
-
-const MY_PROXY = "https://proxy.kacpiq.workers.dev/";
-
-// RĘCZNE NADPISANIE CEN DLA 31.03.2026 (Nie zmieniane)
-const OVERRIDE_PRICES = {
-    '2026-03-31': {
-        'Pb95': 6.16,
-        'ONEkodiesel': 7.54,
-        'Pb98': 6.76,
-        'ONArctic2': 7.60 
-    }
-};
-
-// POMOCNICZA FUNKCJA: OBSUNIĘCIE DATY O +1 DZIEŃ
-function shiftDate(dateStr) {
-    if (!dateStr) return dateStr;
-    let d = new Date(dateStr);
-    d.setDate(d.getDate() + 1); // Dodajemy jeden dzień
-    return d.toISOString().split('T')[0];
-}
-
-// Initialize particles.js
-particlesJS("particles-js", {
-    particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: "#E30613" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5, random: true },
-        size: { value: 3, random: true },
-        line_linked: { enable: true, distance: 150, color: "#E30613", opacity: 0.4, width: 1 },
-        move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
-    },
-    interactivity: {
-        detect_on: "canvas",
-        events: {
-            onhover: { enable: true, mode: "repulse" },
-            onclick: { enable: true, mode: "push" }
-        }
-    }
-});
-
-
-// === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
-window.isNettoMode = false; // Zmienna globalna dla trybu podatku
-
-function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
-    let finalPrice = 0;
-    let currentTaxRate = 1.0;
-    
-    if (productName === 'LPG') {
-        currentTaxRate = 1.26;
-        finalPrice = wholesalePriceNetto * currentTaxRate; 
-    } else {
-        const isOldCpn = dateStr && dateStr >= '2026-03-31' && dateStr < '2026-07-01';
-        const isNewCpn = dateStr && dateStr >= '2026-08-15' && dateStr < '2026-09-01';
-        
-        if (isOldCpn || isNewCpn) {
-            // Pakiet CPN (obowiązujący wiosną oraz od 17.08.2026 do końca wakacji)
-            currentTaxRate = 1.08;
-            finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
-        } else if (dateStr && dateStr >= '2026-07-01') {
-            // Ceny standardowe (poza pakietami) - 23% VAT i standardowe marże
-            currentTaxRate = 1.23;
-            let margin = 0.23; // Domyślna marża
-            
-            if (productName === 'Pb95') margin = 0.29;
-            else if (productName === 'ONEkodiesel') margin = 0.23;
-            else if (productName === 'Pb98') margin = 0.24; // (Verva 98)
-            else if (productName === 'ONArctic2') margin = 0.23; // (Verva Diesel)
-            
-            finalPrice = (wholesalePriceNetto + margin) * currentTaxRate;
-        } else {
-            // Stare stawki przed pierwszym CPN (przed 31.03.2026)
-            currentTaxRate = productName === 'Pb98' ? 1.32 : 1.26;
-            finalPrice = wholesalePriceNetto * currentTaxRate;
-        }
-    }
-
-    // Jeśli włączono tryb Netto, zdejmujemy aktualny podatek z danego okresu
-    if (window.isNettoMode) {
-        return finalPrice / currentTaxRate;
-    }
-    
-    return finalPrice;
-}
-// =============================================
-
-// === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
-async function fetchLastData() {
-    const year = new Date().getFullYear();
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
-
-    const productIds = {
-        'Pb95': 41, 'Pb98': 42, 'ONEkodiesel': 43, 'ONArctic2': 44
-    };
-
-    window.dailyNettoPrices = {};
-
-    await Promise.all(Object.entries(productIds).map(async ([productName, productId]) => {
-        const url = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${year}-01-01&to=${year}-12-31`;
-        try {
-            const res = await fetch(url);
-            if (!res.ok) return;
-            const text = await res.text();
-            if (!text || text.trim() === "") return;
-            
-            const data = JSON.parse(text);
-            if (data && data.length > 0) {
-                let todayNetto = 0;
-                let yesterdayNetto = 0;
-                
-                data.sort((a,b) => a.effectiveDate.localeCompare(b.effectiveDate));
-                
-                for (let item of data) {
-                    const shiftedDate = shiftDate(item.effectiveDate.split('T')[0]);
-                    let netto = item.value / 1000;
-                    
-                    if (shiftedDate <= todayStr) todayNetto = netto;
-                    if (shiftedDate <= yesterdayStr) yesterdayNetto = netto;
-                }
-                window.dailyNettoPrices[productName] = { todayNetto, yesterdayNetto };
-            }
-        } catch (err) {
-            console.error(`Błąd dla ${productName}:`, err.message);
-        }
-    }));
-
-    try {
-        const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/Dates?year=${year}`);
-        if (res.ok) {
-            const textResponse = await res.text();
-            if (textResponse && textResponse.trim() !== "") {
-                const dates = JSON.parse(textResponse);
-                if (dates && dates.length >= 1) {
-                    let lpgDataArr = [];
-                    for (let i = 0; i < Math.min(5, dates.length); i++) {
-                        try {
-                            const lpgRes = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/autogasprices/ByDate?date=${dates[i].split('T')[0]}`);
-                            if (!lpgRes.ok) continue;
-                            const lpgText = await lpgRes.text();
-                            if (!lpgText || lpgText.trim() === "") continue;
-                            
-                            const lpgData = JSON.parse(lpgText);
-                            const malopolska = lpgData.find(entry => entry.locationName.toLowerCase() === "małopolskie");
-                            if (malopolska) {
-                                lpgDataArr.push({
-                                    shiftedDate: shiftDate(dates[i].split('T')[0]),
-                                    value: malopolska.value
-                                });
-                            }
-                        } catch (errLoop) {}
-                    }
-                    
-                    lpgDataArr.sort((a,b) => a.shiftedDate.localeCompare(b.shiftedDate));
-                    let lpgTodayNetto = 0;
-                    let lpgYesterdayNetto = 0;
-                    
-                    for (let item of lpgDataArr) {
-                        if (item.shiftedDate <= todayStr) lpgTodayNetto = item.value;
-                        if (item.shiftedDate <= yesterdayStr) lpgYesterdayNetto = item.value;
-                    }
-                    window.dailyNettoPrices['LPG'] = { todayNetto: lpgTodayNetto, yesterdayNetto: lpgYesterdayNetto };
-                }
-            }
-        }
-    } catch (err) {
-        console.warn("Brak dostępu do historii LPG z Orlenu, polegamy na bieżącym proxy.");
-    }
-    
-    if (!window.dailyNettoPrices['LPG']) {
-        window.dailyNettoPrices['LPG'] = { todayNetto: 0, yesterdayNetto: 0 };
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function () {
-    loadThemeFromLocalStorage();
-    if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
-        setTimeout(showInfoModal, 1500);
-    }
-    if (isMobileDevice()) {
-        showNotification("Strona może nie wyświetlać się optymalnie na urządzeniach mobilnych");
-    }
-
-    await fetchLastData();
-    fetchData();
-    initializeYearSelector();
-    
-    setTimeout(() => {
-        analyzeMultiFuelTrends();
-    }, 2000);
-});
-
-function initializeYearSelector() {
-    const yearSelect = document.getElementById('year');
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= 2004; year--) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
-}
-
-function fetchData() {
-    showLoading();
-    fetch('https://cenypaliw.kacpiq.workers.dev/')
-        .then(response => response.json())
-        .then(data => {
-            processFuelData(data);
-            setTimeout(fetchLPGData, 1000);
-        })
-        .catch(error => {
-            console.error('Error fetching fuel data:', error);
-            displayError("Wystąpił błąd podczas pobierania danych paliw");
-            hideLoading();
-        });
-}
-
-function processFuelData(data) {
-    let latestDate = 'brak danych';
-    let isTomorrowAvailable = false;
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
-    
-    if (data && data.length > 0 && data[0].publishFrom) {
-        latestDate = shiftDate(data[0].publishFrom.replace('T00:00:00', '').split('T')[0]);
-        if (latestDate >= tomorrowStr) {
-            isTomorrowAvailable = true;
-        }
-    }
-    
-    STATE.currentDisplayDate = latestDate;
-    const updateInfoEl = document.getElementById('updateInfo');
-    
-    if (isTomorrowAvailable) {
-        updateInfoEl.innerHTML = `
-            <div class="jutro-badge">
-                <i class='bx bx-time-five'></i> UWAGA: OPUBIKOWANO CENY NA JUTRO (${latestDate})
-            </div>`;
-    } else {
-        updateInfoEl.innerHTML = `
-            <span class="dzis-badge">
-                <i class='bx bx-check-circle'></i> Ceny obowiązujące dzisiaj (${todayStr})
-            </span>`;
-    }
-    
-    rawFuelDataList = data.filter(item => 
-        item.productName === 'Pb95' || 
-        item.productName === 'ONEkodiesel' ||
-        item.productName === 'Pb98' || 
-        item.productName === 'ONArctic2'
-    );
-    
-    renderAllFuels();
-    processForecastData();
-}
-
-function fetchLPGData() {
-    fetch('https://cenypaliw-lpg.kacpiq.workers.dev/')
-        .then(response => {
-            if (!response.ok) throw new Error("HTTP error " + response.status);
-            return response.text();
-        })
-        .then(text => {
-            if (!text || text.trim() === "") throw new Error("Pusta odpowiedź API LPG");
-            const data = JSON.parse(text);
-            if (Array.isArray(data)) {
-                const małopolskieData = data.find(entry => entry.locationName.toLowerCase() === 'małopolskie');
-                if (małopolskieData) {
-                    rawLpgData = małopolskieData;
-                    renderAllFuels();
-                }
-            }
-            hideLoading();
-        })
-        .catch(error => {
-            console.warn('Aktualnie dane LPG są niedostępne:', error.message);
-            hideLoading();
-        });
-}
-
-function renderAllFuels() {
-    const fuelGrid = document.getElementById('fuelGrid');
-    fuelGrid.innerHTML = '';
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
-    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
-    
-    let isTomorrowAvailable = STATE.currentDisplayDate >= tomorrowStr;
-    const fuels = ['Pb95', 'ONEkodiesel', 'Pb98', 'ONArctic2', 'LPG'];
-    
-    fuels.forEach(productName => {
-        let pricesObj = window.dailyNettoPrices[productName];
-        if (!pricesObj) return;
-        
-        let todayNetto = pricesObj.todayNetto; 
-        let yesterdayNetto = pricesObj.yesterdayNetto; 
-        
-        if (productName === 'LPG' && rawLpgData) {
-            if (todayNetto === 0) todayNetto = rawLpgData.value;
-            if (yesterdayNetto === 0) yesterdayNetto = rawLpgData.value;
-        }
-        
-        if (todayNetto === 0) return; 
-        
-        // OBLICZANIE WŁASNEJ CENY Z WŁASNEGO PRODUCT-ID
-        let todayPrice = 0;
-        if (todayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-            todayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else {
-            todayPrice = calculateRetailPrice(productName, todayNetto, todayStr);
-        }
-        
-        let yesterdayPrice = 0;
-        if (yesterdayStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-            yesterdayPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-        } else {
-            yesterdayPrice = calculateRetailPrice(productName, yesterdayNetto, yesterdayStr);
-        }
-        
-        const priceChange = yesterdayPrice > 0 ? ((todayPrice - yesterdayPrice) / yesterdayPrice) * 100 : 0;
-        
-        // OBLICZANIE PRAWDOPODOBNEJ CENY DLA VERVA DIESEL (Efecta Dzisiaj + 0.20 zł)
-        let probableVervaPrice = 0;
-        if (productName === 'ONArctic2' && todayStr >= '2026-07-01') {
-            let efectaNetto = window.dailyNettoPrices['ONEkodiesel'] ? window.dailyNettoPrices['ONEkodiesel'].todayNetto : 0;
-            if (efectaNetto > 0) {
-                let efectaPrice = calculateRetailPrice('ONEkodiesel', efectaNetto, todayStr);
-                probableVervaPrice = efectaPrice + 0.20;
-            }
-        }
-
-        let tomorrowBadgeHtml = '';
-        if (isTomorrowAvailable) {
-            let tomorrowNetto = 0;
-
-            if (productName === 'LPG' && rawLpgData) {
-                tomorrowNetto = rawLpgData.value;
-            } else {
-                const rawFuel = rawFuelDataList.find(f => f.productName === productName);
-                if (rawFuel) tomorrowNetto = rawFuel.value / 1000;
-            }
-            
-            if (tomorrowNetto > 0) {
-                let tomorrowPrice = 0;
-                if (tomorrowStr === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productName]) {
-                    tomorrowPrice = OVERRIDE_PRICES['2026-03-31'][productName];
-                } else {
-                    tomorrowPrice = calculateRetailPrice(productName, tomorrowNetto, tomorrowStr);
-                }
-                
-                let diffGrosze = (tomorrowPrice - todayPrice) * 100;
-                let diffFormatted = diffGrosze > 0 ? `+${diffGrosze.toFixed(0)}gr` : `${diffGrosze.toFixed(0)}gr`;
-                
-                let badgeColor = diffGrosze > 0 ? '#DA2128' : (diffGrosze < 0 ? '#4CAF50' : '#8D99AE');
-                let badgeIcon = diffGrosze > 0 ? 'bx-trending-up' : (diffGrosze < 0 ? 'bx-trending-down' : 'bx-minus');
-                
-                if (Math.abs(diffGrosze) >= 1) {
-                    tomorrowBadgeHtml = `
-                        <div style="margin-top: 12px; background: ${badgeColor}15; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: ${badgeColor}; display: inline-flex; align-items: center; gap: 4px; border: 1px solid ${badgeColor}33;">
-                            <i class='bx ${badgeIcon}'></i> Jutro: ${tomorrowPrice.toFixed(2)} PLN (${diffFormatted})
-                        </div>
-                    `;
-                } else {
-                     tomorrowBadgeHtml = `
-                        <div style="margin-top: 12px; background: rgba(0,0,0,0.03); padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: #8D99AE; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(0,0,0,0.05);">
-                            <i class='bx bx-check'></i> Jutro cena bez zmian
-                        </div>
-                    `;
-                }
-            }
-        }
-        
-        const fuelData = {
-            productName,
-            todayPrice,
-            todayNetto, 
-            priceChange,
-            tomorrowBadgeHtml,
-            probableVervaPrice // <--- Przekazanie obliczonej ceny
-        };
-        
-        fuelGrid.appendChild(createFuelCard(fuelData));
-    });
-}
-
-
-function createFuelCard(fuelData) {
-    const card = document.createElement('div');
-    card.className = 'fuel-card animate-up';
-    card.id = `fuel-card-${fuelData.productName}`;
-    
-    let priceChangeClass = 'price-neutral';
-    let priceChangeIcon = 'bx-minus';
-    
-    if (fuelData.priceChange > 0) {
-        priceChangeClass = 'price-up';
-        priceChangeIcon = 'bx-up-arrow-alt';
-    } else if (fuelData.priceChange < 0) {
-        priceChangeClass = 'price-down';
-        priceChangeIcon = 'bx-down-arrow-alt';
-    }
-
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    let cpnTagHtml = '';
-    
-    const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-    const isNewCpn = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-    
-    if (fuelData.productName !== 'LPG' && (isOldCpn || isNewCpn)) {
-        cpnTagHtml = '<span class="cpn-badge">CPN</span>';
-    }
-
-    // Dodatkowy boks dla Vervy Diesel z obliczoną prawdopodobną ceną na stacji
-    let vervaNoteHtml = '';
-    if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
-        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; margin-top: 8px; font-weight: 600; background: rgba(227, 6, 19, 0.05); padding: 6px; border-radius: 6px; border: 1px dashed rgba(227, 6, 19, 0.3);">
-            Prawdopodobna cena na stacji: ${fuelData.probableVervaPrice.toFixed(2)} PLN <br><span style="font-size: 0.75rem; font-weight: normal; color: #8D99AE;">(Efecta Diesel + 20 gr)</span>
-        </div>`;
-    }
-    
-    card.innerHTML = `
-        <div class="fuel-header">
-            <img src="${productIcons[fuelData.productName]}" alt="${fuelData.productName}" class="fuel-icon">
-            <div class="fuel-name">${getFuelDisplayName(fuelData.productName)} ${cpnTagHtml}</div>
-        </div>
-        <div class="fuel-price">
-            ${fuelData.todayPrice.toFixed(2)} PLN
-            <span class="price-change ${priceChangeClass}">
-                <i class='bx ${priceChangeIcon}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
-            </span>
-        </div>
-        <div class="fuel-price-wholesale">Hurt netto: ${fuelData.todayNetto.toFixed(2)} PLN</div>
-        ${vervaNoteHtml}
-        ${fuelData.tomorrowBadgeHtml}
-    `;
-    
-    originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
-    return card;
-}
-
-
-
-function processForecastData() {
-    const forecastData = [
-        { productName: 'Pb95', minPrice: 6.37, maxPrice: 6.49 },
-        { productName: 'Pb98', minPrice: 7.12, maxPrice: 7.27 },
-        { productName: 'ONEkodiesel', minPrice: 7.29, maxPrice: 7.42 },
-        { productName: 'ONArctic2', minPrice: 7.49, maxPrice: 7.69 },
-        { productName: 'LPG', minPrice: 2.85, maxPrice: 2.99 }
-    ];
-    
-    const forecastGrid = document.getElementById('forecastGrid');
-    forecastGrid.innerHTML = '';
-    
-    const todayStr = new Date().toLocaleDateString('sv-SE');
-    
-    forecastData.forEach(data => {
-        const card = document.createElement('div');
-        card.className = 'fuel-card animate-up';
-        
-        let cpnTagHtml = '';
-        const isOldCpnForecast = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
-        const isNewCpnForecast = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-        
-        if (data.productName !== 'LPG' && (isOldCpnForecast || isNewCpnForecast)) {
-            cpnTagHtml = '<span class="cpn-badge">CPN</span>';
-        }
-
-        card.innerHTML = `
-            <div class="fuel-header">
-                <img src="${productIcons[data.productName]}" alt="${data.productName}" class="fuel-icon">
-                <div class="fuel-name">${getFuelDisplayName(data.productName)} ${cpnTagHtml}</div>
-            </div>
-            <div class="fuel-price">${data.minPrice.toFixed(2)} - ${data.maxPrice.toFixed(2)} PLN</div>
-            <div class="fuel-price-wholesale">Prognozowany zakres cen</div>
-        `;
-        forecastGrid.appendChild(card);
-    });
-}
-
-function getFuelDisplayName(productName) {
-    const names = {
-        'Pb95': 'EFECTA 95',
-        'Pb98': 'VERVA 98',
-        'LPG': 'LPG',
-        'ONEkodiesel': 'EFECTA DIESEL',
-        'ONArctic2': 'VERVA DIESEL'
-    };
-    return names[productName] || productName;
-}
-
-function showCouponModal() {
-    document.getElementById('couponModal').style.display = 'block';
-    setTimeout(() => { document.getElementById('couponModal').classList.add('show'); }, 10);
-}
-
-function closeCouponModal() {
-    document.getElementById('couponModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('couponModal').style.display = 'none'; }, 300);
-}
-
-// Globalna zmienna dla interwału, aby uniknąć wielu liczników jednocześnie
-let countdownInterval = null;
-
-function selectCoupon(value, element) {
-    // 1. Wizualna aktualizacja kart
-    document.querySelectorAll('.coupon-card').forEach(card => card.classList.remove('active'));
-    element.classList.add('active');
-
-    // 2. Uruchomienie głównej logiki przeliczania cen
-    // Przekazujemy wartość bezpośrednio z klikniętej karty
-    applyCouponLogic(value);
-}
-
-function applyCouponLogic(couponValue) {
-    const messageElement = document.getElementById('couponMessage');
-    const expirySection = document.querySelector('.expiry-section');
-    
-    if (!originalPrices) return;
-
-    if (couponValue === 0) {
-        // --- POWRÓT DO CEN STANDARDOWYCH ---
-        Object.keys(originalPrices).forEach(productName => {
-            const card = document.getElementById(`fuel-card-${productName}`);
-            if (card) {
-    const priceElement = card.querySelector('.fuel-price');
-    // Szukamy istniejącego badge'a zmiany (ten z procentami), żeby go nie stracić
-    const trendBadge = priceElement.querySelector('.price-change');
-    const fuelName = card.querySelector('.fuel-name').textContent;
-
-    if (!fuelName.includes('LPG')) {
-        const basePrice = parseFloat(originalPrices[productName]);
-        let finalContent = "";
-
-        if (couponValue === 0) {
-            // Przywracanie: Cena + stary badge trendu
-            finalContent = `${basePrice.toFixed(2)} PLN `;
-        } else {
-            // Rabat: Nowa Cena + Badge Kuponu + stary badge trendu
-            const newPrice = (basePrice + couponValue).toFixed(2);
-            finalContent = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span> `;
-        }
-
-        // Jeśli badge trendu istniał, doklejamy go z powrotem na końcu
-        if (trendBadge) {
-            finalContent += trendBadge.outerHTML;
-        }
-
-        priceElement.innerHTML = finalContent;
-        
-        if (couponValue !== 0) {
-            priceElement.classList.add('price-flash');
-            setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
-        }
-    }
-}
-        });
-
-        messageElement.innerHTML = '<i class="bx bx-info-circle"></i> Kupon usunięty. Ceny standardowe.';
-        if (expirySection) expirySection.style.display = 'none';
-        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-
-    } else {
-        // --- NAKŁADANIE ZNIŻKI ---
-        Object.keys(originalPrices).forEach(productName => {
-            const card = document.getElementById(`fuel-card-${productName}`);
-            if (card) {
-                const priceElement = card.querySelector('.fuel-price');
-                const fuelName = card.querySelector('.fuel-name').textContent;
-
-                if (!fuelName.includes('LPG')) {
-                    const basePrice = parseFloat(originalPrices[productName]);
-                    const newPrice = (basePrice + couponValue).toFixed(2);
-                    
-                    priceElement.innerHTML = `${newPrice} PLN <span class="coupon-badge">-${Math.abs(couponValue * 100).toFixed(0)} gr</span>`;
-                    
-                    priceElement.classList.add('price-flash');
-                    setTimeout(() => priceElement.classList.remove('price-flash'), 1000);
-                }
-            }
-        });
-        
-        messageElement.innerHTML = `<i class="bx bx-check-circle"></i> Zniżka aktywna: <strong>${Math.abs(couponValue * 100).toFixed(0)} gr/l</strong>`;
-        if (expirySection) expirySection.style.display = 'block';
-        startCouponCountdown();
-    }
-}
-
-function startCouponCountdown() {
-    const couponExpiryDate = new Date('2026-05-10T23:59:59');
-    
-    // Czyścimy poprzedni interwał, jeśli istniał
-    if (countdownInterval) clearInterval(countdownInterval);
-    
-    function updateCountdown() {
-        const now = new Date();
-        const timeLeft = couponExpiryDate - now;
-        
-        if (timeLeft <= 0) {
-            document.getElementById('couponMessage').innerHTML = '<i class="bx bx-error-circle"></i> Kupon wygasł';
-            const expirySection = document.querySelector('.expiry-section');
-            if(expirySection) expirySection.style.display = 'none';
-            clearInterval(countdownInterval);
-            return;
-        }
-        
-        const d = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        // Aktualizacja DOM z zabezpieczeniem przed błędami (padStart dla ładnego wyglądu 01, 02 itd.)
-        if(document.getElementById('days')) document.getElementById('days').textContent = d.toString().padStart(2, '0');
-        if(document.getElementById('hours')) document.getElementById('hours').textContent = h.toString().padStart(2, '0');
-        if(document.getElementById('minutes')) document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
-        if(document.getElementById('seconds')) document.getElementById('seconds').textContent = s.toString().padStart(2, '0');
-    }
-    
-    updateCountdown(); // Uruchomienie od razu
-    countdownInterval = setInterval(updateCountdown, 1000);
-}
-
-function showInfoModal() {
-    if (localStorage.getItem('infoModalAcknowledged') !== 'true') {
-        document.getElementById('infoModal').style.display = 'block';
-        setTimeout(() => { document.getElementById('infoModal').classList.add('show'); }, 10);
-    }
-}
-
-function closeInfoModal() {
-    document.getElementById('infoModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('infoModal').style.display = 'none'; }, 300);
-}
-
-function closeInfoModalAndAcknowledge() {
-    localStorage.setItem('infoModalAcknowledged', 'true');
-    closeInfoModal();
-}
-
-function toggleHistory() {
-    document.getElementById('historyModal').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('historyModal').classList.add('show');
-        fetchHistoryData();
-    }, 10);
-}
-
-function closeHistoryModal() {
-    document.getElementById('historyModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('historyModal').style.display = 'none'; }, 300);
-}
-
-// === POBIERANIE DANYCH HISTORII ===
-function fetchHistoryData() {
-    const loadingElement = document.getElementById('loadingHistory');
-    const tableBody = document.getElementById('historyTableBody');
-    
-    loadingElement.style.display = 'block';
-    tableBody.innerHTML = '';
-    
-    const fuelType = document.getElementById('fuelType').value;
-    const selectedYear = document.getElementById('year').value;
-    const productId = fuelType.split('-')[0];
-    
-    let productNameKey = '';
-    if (productId === '41') productNameKey = 'Pb95';
-    else if (productId === '42') productNameKey = 'Pb98';
-    else if (productId === '43') productNameKey = 'ONEkodiesel';
-    else if (productId === '44') productNameKey = 'ONArctic2';
-    
-    const viewOption = document.querySelector('input[name="dataView"]:checked').value;
-    const historyUrl = `${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${productId}&from=${selectedYear}-01-01&to=${selectedYear}-12-31`;
-    
-    fetch(historyUrl)
-        .then(response => response.json())
-        .then(data => {
-            const transformedData = data.map(item => {
-                const shiftedDateStr = shiftDate(item.effectiveDate.split('T')[0]);
-                return {
-                    value: item.value,
-                    shiftedDate: shiftedDateStr,
-                    dateObj: new Date(shiftedDateStr)
-                };
-            });
-
-            if (transformedData.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan=\"2\" style=\"text-align:center; padding:2rem; opacity:0.6;\">Brak danych giełdowych dla tego roku.</td></tr>';
-                loadingElement.style.display = 'none';
-                return;
-            }
-            
-            let minPrice = Infinity;
-            let maxPrice = -Infinity;
-            const processedData = [];
-            
-            if (viewOption === 'daily') {
-                transformedData.forEach(item => {
-                    let price = 0;
-                    if (item.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
-                        price = OVERRIDE_PRICES['2026-03-31'][productNameKey];
-                    } else {
-                        // Czyste obliczanie własnej ceny
-                        price = calculateRetailPrice(productNameKey, item.value / 1000, item.shiftedDate); 
-                    }
-                    
-                    if (price < minPrice) minPrice = price;
-                    if (price > maxPrice) maxPrice = price;
-                    
-                    processedData.push({ date: item.shiftedDate, price });
-                });
-            } else {
-                const monthlyData = {};
-                transformedData.forEach(item => {
-                    const month = item.shiftedDate.slice(0, 7);
-                    if (!monthlyData[month]) monthlyData[month] = [];
-                    monthlyData[month].push(item);
-                });
-                
-                for (const [month, items] of Object.entries(monthlyData)) {
-                    let monthSum = 0;
-                    items.forEach(it => {
-                        if (it.shiftedDate === '2026-03-31' && OVERRIDE_PRICES['2026-03-31'][productNameKey]) {
-                            monthSum += OVERRIDE_PRICES['2026-03-31'][productNameKey];
-                        } else {
-                            monthSum += calculateRetailPrice(productNameKey, it.value / 1000, it.shiftedDate);
-                        }
-                    });
-                    const avgPrice = monthSum / items.length;
-                    
-                    if (avgPrice < minPrice) minPrice = avgPrice;
-                    if (avgPrice > maxPrice) maxPrice = avgPrice;
-                    
-                    processedData.push({ date: month, price: avgPrice });
-                }
-            }
-            
-            processedData.forEach(item => {
-                const row = document.createElement('tr');
-                const priceClass = item.price === minPrice ? 'min-price' : item.price === maxPrice ? 'max-price' : '';
-                
-                let showCpnTag = false;
-                const isOldCpnDaily = item.date.length > 7 && item.date >= '2026-03-31' && item.date < '2026-07-01';
-                const isNewCpnDaily = item.date.length > 7 && item.date >= '2026-08-15' && item.date < '2026-09-01';
-                
-                const isOldCpnMonthly = item.date.length === 7 && item.date >= '2026-04' && item.date < '2026-07';
-                const isNewCpnMonthly = item.date.length === 7 && item.date === '2026-08';
-
-                if (productNameKey !== 'LPG' && (isOldCpnDaily || isNewCpnDaily || isOldCpnMonthly || isNewCpnMonthly)) {
-                    showCpnTag = true;
-                }
-                const cpnTagHtml = showCpnTag ? ' <span class="cpn-badge">CPN</span>' : '';
-
-                let dateHtml = item.date;
-                if (isOldCpnDaily || isNewCpnDaily) {
-                    const rowDateObj = new Date(item.date);
-                    if (rowDateObj.getDay() === 6) {
-                        if (item.date === '2026-04-04') {
-                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Okres: 04.04.2026 - 07.04.2026)</span>';
-                        } else {
-                            dateHtml += '<br><span style="font-size: 0.75rem; color: #8D99AE;">(Następna zmiana we wtorek)</span>';
-                        }
-                    }
-                }
-
-                row.innerHTML = `
-                    <td>${dateHtml}</td>
-                    <td class="${priceClass}">${item.price.toFixed(2)} PLN ${cpnTagHtml}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            loadingElement.style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error fetching history data:', error);
-            tableBody.innerHTML = '<tr><td colspan=\"2\">Wystąpił błąd podczas pobierania danych z giełdy</td></tr>';
-            loadingElement.style.display = 'none';
-        });
-}
-
-
-function showPriceHistoryChart() {
-    
-    if (priceHistoryChart) {
-        priceHistoryChart.destroy();
-    }
-    
-    
-    const tableRows = document.querySelectorAll('#historyTableBody tr');
-    let dates = [];
-    let prices = [];
-    
-    tableRows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (cells.length === 2 && !cells[0].textContent.includes('Brak danych')) {
-            // Pobieramy czystą datę
-            const rawDate = cells[0].innerHTML.split('<br>')[0].trim();
-            dates.push(rawDate);
-            // Wyciągamy samą liczbę z tekstu "6.47 PLN"
-            const priceText = cells[1].textContent.replace('PLN', '').trim();
-            prices.push(parseFloat(priceText));
-        }
-    });
-    
-    // Tabela zazwyczaj ma najnowsze u góry, na wykresie chcemy chronologicznie (najstarsze po lewej)
-    dates.reverse();
-    prices.reverse();
-    
-    if (dates.length === 0) {
-        showNotification("Brak danych do wyświetlenia wykresu.");
-        return;
-    }
-    
-    const canvas = document.getElementById('priceHistoryChart');
-    const ctx = canvas.getContext('2d');
-    
-    // Tworzenie pięknego gradientu pod linią wykresu (Orlen Red -> Przezroczysty)
-    let gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
-    gradientFill.addColorStop(0, 'rgba(227, 6, 19, 0.5)'); // Góra (ciemniejsza)
-    gradientFill.addColorStop(1, 'rgba(227, 6, 19, 0.0)'); // Dół (zanika)
-    
-    // Wykrywanie motywu do stylizacji wykresu
-    const isDark = document.body.classList.contains('dark-theme');
-    const textColor = isDark ? '#b0b8c4' : '#8D99AE';
-    const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-    const tooltipBg = isDark ? '#1E1E1E' : '#FFFFFF';
-    const tooltipText = isDark ? '#FFFFFF' : '#1E1E1E';
-    // --- OBLICZANIE STATYSTYK ---
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
-    const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-
-    // Aktualizacja HTML
-    document.getElementById('statMin').textContent = minPrice.toFixed(2) + ' PLN';
-    document.getElementById('statMax').textContent = maxPrice.toFixed(2) + ' PLN';
-    document.getElementById('statAvg').textContent = avgPrice.toFixed(2) + ' PLN';
-    // ----------------------------
-    
-    priceHistoryChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Cena',
-                data: prices,
-                borderColor: '#E30613', // Główny kolor Orlen
-                backgroundColor: gradientFill,
-                borderWidth: 3,
-                pointBackgroundColor: tooltipBg,
-                pointBorderColor: '#E30613',
-                pointBorderWidth: 2,
-                pointRadius: 0, // Ukryte kropki w stanie spoczynku (jak w Apple Stocks)
-                pointHoverRadius: 6, // Pojawiają się dopiero przy najechaniu
-                pointHitRadius: 15, // Większy obszar łapania myszki
-                tension: 0.4, // Zmienia ostre kąty w gładkie, eleganckie fale
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false, // Tooltip pokazuje się od razu po najechaniu na oś, bez celowania w kropkę
-            },
-            plugins: {
-                legend: { 
-                    display: false // Wyłączamy nudną legendę
-                },
-                tooltip: {
-                    backgroundColor: tooltipBg,
-                    titleColor: tooltipText,
-                    bodyColor: '#E30613',
-                    borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                    borderWidth: 1,
-                    padding: 12,
-                    boxPadding: 4,
-                    displayColors: false, // Ukrywa ten mały kwadracik w tooltipie
-                    titleFont: { family: 'Poppins', size: 13, weight: 'normal' },
-                    bodyFont: { family: 'Outfit', size: 16, weight: '900' },
-                    callbacks: {
-                        label: function(context) { return `${context.parsed.y.toFixed(2)} PLN`; }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: { display: false, drawBorder: false },
-                    ticks: {
-                        color: textColor,
-                        font: { family: 'Poppins', size: 11 },
-                        maxTicksLimit: 6 // Żeby daty nie nachodziły na siebie
-                    }
-                },
-                y: {
-                    border: { display: false, dash: [5, 5] }, // Przerywane linie pomocnicze w tle
-                    grid: { color: gridColor, drawBorder: false },
-                    ticks: {
-                        color: textColor,
-                        font: { family: 'Outfit', size: 13, weight: '600' },
-                        padding: 10,
-                        callback: function(value) { return value.toFixed(2) + ' zł'; }
-                    },
-                    // Dynamiczne skalowanie, żeby wykres nie był płaski
-                    suggestedMin: Math.min(...prices) * 0.98,
-                    suggestedMax: Math.max(...prices) * 1.02
-                }
-            }
-        }
-    });
-    
-    document.getElementById('priceHistoryModal').style.display = 'flex';
-    setTimeout(() => { document.getElementById('priceHistoryModal').classList.add('show'); }, 10);
-}
-
-function closePriceHistoryModal() {
-    document.getElementById('priceHistoryModal').classList.remove('show');
-    setTimeout(() => { document.getElementById('priceHistoryModal').style.display = 'none'; }, 300);
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark-theme' : 'light-theme');
-}
-
-function loadThemeFromLocalStorage() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark-theme') {
-        document.body.classList.add('dark-theme');
+    .formula-row {
+        flex-direction: column; /* Na wąskich telefonach wzór zawija się do nowej linii */
+        align-items: flex-start;
+        gap: 0.5rem;
     }
-}
-
-function showLoading() {
-    document.getElementById('loading').style.display = 'flex';
-    document.getElementById('container').style.display = 'none';
-}
-
-function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('container').style.display = 'block';
-}
-
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.style.display = 'flex';
-    notification.innerHTML = `<i class='bx bx-check'></i> ${message}`;
-    notification.classList.add('show');
-    setTimeout(() => { notification.classList.remove('show'); }, 3000);
-}
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-function displayError(message) {
-    const container = document.getElementById('container');
-    container.innerHTML = `
-        <div class="alert alert-error animate">
-            <i class='bx bx-error-circle'></i>
-            <span>${message}</span>
-        </div>
-    `;
-    container.style.display = 'block';
-}
-
-async function analyzeMultiFuelTrends() {
-    const year = new Date().getFullYear();
-    const fuelsToCheck = [
-        { id: 41, name: 'Pb95', displayName: 'EFECTA 95' },
-        { id: 43, name: 'ONEkodiesel', displayName: 'EFECTA DIESEL' },
-        { id: 42, name: 'Pb98', displayName: 'VERVA 98' },
-        { id: 44, name: 'ONArctic2', displayName: 'VERVA DIESEL' }
-    ];
-
-    try {
-        let allChanges = [];
-        let trendDetails = [];
-        let globalChangeSum = 0;
-
-        for (let fuel of fuelsToCheck) {
-            try {
-                const res = await fetch(`${MY_PROXY}https://tool.orlen.pl/api/wholesalefuelprices/ByProduct?productId=${fuel.id}&from=${year-1}-01-01&to=${year}-12-31`);
-                const data = await res.json();
-                
-                if (data && data.length > 10) {
-                    data.sort((a, b) => new Date(a.effectiveDate) - new Date(b.effectiveDate));
-                    const last30 = data.slice(-30);
-                    
-                    if (last30.length >= 14) {
-                        const last7 = last30.slice(-7);
-                        const avg7 = last7.reduce((sum, item) => sum + item.value, 0) / last7.length;
-                        const prev7 = last30.slice(-14, -7);
-                        const avgPrev7 = prev7.reduce((sum, item) => sum + item.value, 0) / prev7.length;
-                        
-                        const diffGrosze = ((avg7 - avgPrev7) / 1000 * 100);
-                        const diffValue = diffGrosze;
-                        
-                        allChanges.push(diffValue);
-                        globalChangeSum += diffValue;
-                        
-                        let status = "Stabilnie";
-                        let color = "text-blue-600";
-                        let icon = "bx-minus";
-                        let bgClass = "trend-stable";
-
-                        if (diffValue > 3) { 
-                            status = "Wzrost"; color = "text-red-600"; icon = "bx-trending-up"; bgClass = "trend-up";
-                        } else if (diffValue < -3) { 
-                            status = "Spadek"; color = "text-green-600"; icon = "bx-trending-down"; bgClass = "trend-down";
-                        }
-
-                        trendDetails.push({ name: fuel.displayName, status, color, icon, bgClass, diff: diffValue });
-                    }
-                }
-            } catch (e) {
-                const simDiff = (Math.random() * 30 - 15);
-                allChanges.push(simDiff);
-                globalChangeSum += simDiff;
-                trendDetails.push({ 
-                    name: fuel.displayName, 
-                    status: simDiff > 3 ? "Wzrost" : (simDiff < -3 ? "Spadek" : "Stabilnie"),
-                    color: simDiff > 3 ? "text-red-600" : (simDiff < -3 ? "text-green-600" : "text-blue-600"),
-                    icon: simDiff > 3 ? "bx-trending-up" : (simDiff < -3 ? "bx-trending-down" : "bx-minus"),
-                    bgClass: simDiff > 3 ? "trend-up" : (simDiff < -3 ? "trend-down" : "trend-stable"),
-                    diff: simDiff
-                });
-            }
-        }
-
-        const avgChange = allChanges.length > 0 ? globalChangeSum / allChanges.length : 0;
-        let forecastGrosze = 0;
-        let trendType = 'stable';
-        
-        if (avgChange > 2) {
-            forecastGrosze = avgChange * 1.25; trendType = 'up';
-        } else if (avgChange < -2) {
-            forecastGrosze = avgChange * 1; trendType = 'down';
-        } else {
-            forecastGrosze = avgChange; trendType = 'stable';
-        }
-
-        const forecastText = forecastGrosze > 0 ? `+${forecastGrosze.toFixed(0)} gr` : forecastGrosze < 0 ? `${forecastGrosze.toFixed(0)} gr` : '0 gr';
-        
-        STATE.forecastData = { date: new Date().toISOString(), forecast: forecastText, value: forecastGrosze, type: trendType, details: trendDetails };
-        updateForecastUI(avgChange, trendDetails, forecastText, trendType);
-
-    } catch (e) {
-        document.getElementById('home-trend-title').innerHTML = "Błąd analizy <i class='bx bx-error-circle text-red-500'></i>";
-        if (STATE.forecastData) {
-            updateForecastUI(0, STATE.forecastData.details || [], STATE.forecastData.forecast, STATE.forecastData.type);
-        } else {
-            updateForecastUI(0, [], '0 gr', 'stable');
-        }
-    }
-}
-
-function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
-    const widgetTitle = document.getElementById('home-trend-title');
-    const widgetBadge = document.getElementById('home-trend-badge');
-    const widgetBar = document.getElementById('home-trend-bar');
-    const groszeSpan = document.getElementById('forecast-grosze-value');
-    const groszeDetailed = document.getElementById('forecast-grosze-detailed-value');
-
-    let mainStatusText = "";
-    let mainColorClass = "";
 
-    if (trendType === 'up') {
-        mainStatusText = "Trend Wzrostowy";
-        widgetBadge.innerText = "WZROST";
-        widgetBadge.className = "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-red-500 w-3/4 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-red-600 dark:text-red-400";
-    } else if (trendType === 'down') {
-        mainStatusText = "Trend Spadkowy";
-        widgetBadge.innerText = "SPADEK";
-        widgetBadge.className = "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-green-500 w-1/4 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-green-600 dark:text-green-400";
-    } else {
-        mainStatusText = "Stabilizacja";
-        widgetBadge.innerText = "STABILNIE";
-        widgetBadge.className = "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-xl uppercase";
-        widgetBar.className = "h-full bg-blue-500 w-1/2 transition-all duration-1000 rounded-full";
-        mainColorClass = "text-blue-600 dark:text-blue-400";
+    .info-warning {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
     }
-
-    widgetTitle.innerHTML = `${mainStatusText} <i class='bx ${trendType === 'up' ? 'bx-trending-up' : (trendType === 'down' ? 'bx-trending-down' : 'bx-minus')} ${mainColorClass}'></i>`;
-    groszeSpan.innerText = forecastGrosze;
-    groszeDetailed.innerText = forecastGrosze;
-
-    const heroBg = document.getElementById('forecast-hero-bg');
-    const mainTitle = document.getElementById('forecast-main-title');
-    const mainDesc = document.getElementById('forecast-main-desc');
-
-    mainTitle.innerText = mainStatusText;
-    mainTitle.className = "report-hero-title";
-
-    let desc = `Analiza cen hurtowych dla wszystkich paliw wskazuje na ${mainStatusText.toLowerCase()}. `;
-    if (trendType === 'up') {
-        desc += `Obserwujemy presję cenową. W ciągu 7 dni ceny mogą wzrosnąć o ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-up";
-    } else if (trendType === 'down') {
-        desc += `Dobre wieści! Rynek hurtowy notuje spadki. Przewidywana obniżka o ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-down";
-    } else {
-        desc += `Sytuacja zrównoważona. Prognozowana zmiana: ${forecastGrosze}.`;
-        heroBg.className = "report-hero trend-stable";
-    }
-    mainDesc.innerText = desc;
-
-    const grid = document.getElementById('forecast-details-grid');
-    grid.innerHTML = '';
-    if (details.length > 0) {
-        details.forEach(d => {
-            const item = document.createElement('div');
-            item.className = `report-detail-item`; 
-            item.innerHTML = `<span>${d.name}</span><span>${d.diff > 0 ? '+' : ''}${d.diff.toFixed(1)} gr</span>`;
-            grid.appendChild(item);
-        });
-    } else {
-        grid.innerHTML = '<p style="text-align: center; opacity: 0.5;">Brak danych szczegółowych</p>';
-    }
-
-    const recContainer = document.getElementById('forecast-recommendation');
-    if (trendType === 'up') {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #E30613;"><i class='bx bxs-gas-pump'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Zatankuj dzisiaj</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Przewidywane podwyżki o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>`;
-    } else if (trendType === 'down') {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #4CAF50;"><i class='bx bx-time-five'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Wstrzymaj się</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Ceny mogą spaść o ${forecastGrosze} w ciągu tygodnia.</p>
-            </div>`;
-    } else {
-        recContainer.innerHTML = `
-            <div style="font-size: 2rem; color: #2196F3;"><i class='bx bx-check'></i></div>
-            <div>
-                <p style="font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem !important;">Możesz tankować</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Brak znaczących zmian w najbliższym czasie.</p>
-            </div>`;
-    }
-
-    const newsContainer = document.getElementById('market-news');
-    if (trendType === 'up') {
-        newsContainer.innerHTML = `📈 Notowania ropy naftowej rosną. Analitycy przewidują dalsze wzrosty cen paliw w najbliższych tygodniach.`;
-    } else if (trendType === 'down') {
-        newsContainer.innerHTML = `📉 Ceny ropy na świecie spadają. Korzystny kurs złotego może przynieść dalsze obniżki na stacjach.`;
-    } else {
-        newsContainer.innerHTML = `⚖️ Rynek paliw stabilny. Analitycy nie przewidują gwałtownych zmian w najbliższym czasie.`;
-    }
 }
 
-function openForecastDetails() {
-    document.getElementById('view-forecast').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+/* Kolory pogrubionych procentów wewnątrz wzorów */
+.cpn-formula .formula-calc strong {
+    color: var(--primary); /* Czerwony dla Pakietu CPN */
 }
 
-function closeForecastDetails() {
-    document.getElementById('view-forecast').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+.std-formula .formula-calc strong {
+    color: var(--text); /* Domyślny kolor dla Standardu */
 }
 
-// === STREFA KIEROWCY (NETTO/BRUTTO, KALKULATORY) ===
-
-function toggleTax() {
-    window.isNettoMode = !window.isNettoMode;
-    const btn = document.getElementById('taxToggleBtn');
-    
-    if (window.isNettoMode) {
-        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Brutto";
-        btn.classList.replace('btn-secondary', 'btn-primary');
-        showNotification("Widok cen hurtowych Netto (bez VAT/Akcyzy)");
-    } else {
-        btn.innerHTML = "<i class='bx bx-transfer'></i> Pokaż ceny Netto";
-        btn.classList.replace('btn-primary', 'btn-secondary');
-        showNotification("Przywrócono ceny detaliczne Brutto");
-    }
-    
-    // Przeliczenie kart na nowo
-    renderAllFuels();
+.lpg-formula .formula-calc strong {
+    color: var(--success); /* Zielony dla Autogazu */
 }
-
-function runAllCalculations() {
-    if (Object.keys(originalPrices).length === 0) return;
-
-    // Pobranie stałych z kart paliw (lub awaryjnie średnich rynkowych)
-    const pb95Price = parseFloat(originalPrices['Pb95']) || 6.50;
-    const lpgPrice = parseFloat(originalPrices['LPG']) || 2.99;
-    
-    // 1. KOSZT PODRÓŻY I PUNKTY VITAY
-    const dist = parseFloat(document.getElementById('calcDistance').value) || 0;
-    const cons = parseFloat(document.getElementById('calcConsumption').value) || 0;
-    const fuel = document.getElementById('calcFuelType').value;
-    const fuelPrice = parseFloat(originalPrices[fuel]) || 6.50;
-    
-    const liters = (dist / 100) * cons;
-    const travelCost = liters * fuelPrice;
-    
-    const pointsPerLiter = (fuel === 'Pb98' || fuel === 'ONArctic2') ? 8 : 4;
-    const vitayPoints = Math.floor(liters * pointsPerLiter);
-    const coffees = Math.floor(vitayPoints / 1200);
-    const vitayRewardStr = coffees > 0 
-        ? `☕ Wystarczy na ${coffees} darmową kawę Vitay!` 
-        : `Brakuje ${1200 - vitayPoints} pkt do darmowej kawy.`;
-
-    document.getElementById('travelResult').innerHTML = `
-        Wymagane paliwo: <strong>${liters.toFixed(1)} l</strong><br>
-        Koszt podróży: <strong>${travelCost.toFixed(2)} PLN</strong><br>
-        Zdobyte punkty: <span class="vitay-points">${vitayPoints} pkt</span><br>
-        <span style="font-size: 0.8rem; color: var(--text-light);">${vitayRewardStr}</span>
-    `;
-
-    // 2. PORÓWNYWARKA SPALINA VS EV
-    const evCons = parseFloat(document.getElementById('evConsumption').value) || 0;
-    const evRate = parseFloat(document.getElementById('evChargeType').value) || 0;
-    
-    const evCost100km = evCons * evRate;
-    const iceCost100km = cons * fuelPrice;
-    const diff = iceCost100km - evCost100km;
 
-    let diffText = diff > 0 
-        ? `<strong style="color: var(--success)">${diff.toFixed(2)} PLN taniej w EV</strong>` 
-        : `<strong style="color: var(--error)">${Math.abs(diff).toFixed(2)} PLN taniej w spalinie</strong>`;
-
-    document.getElementById('evResult').innerHTML = `
-        Koszt EV na 100km: <strong>${evCost100km.toFixed(2)} PLN</strong><br>
-        Porównanie (na 100km): ${diffText}
-    `;
-
-    // 3. REALNE OSZCZĘDNOŚCI Z KUPONU
-    const sLiters = parseFloat(document.getElementById('savingsLiters').value) || 0;
-    const sCoupon = parseFloat(document.getElementById('savingsCoupon').value) || 0;
-    const totalSavings = sLiters * sCoupon;
-    
-    document.getElementById('savingsResult').innerHTML = `
-        Zostaje w portfelu: <strong style="color: var(--success)">${totalSavings.toFixed(2)} PLN</strong>
-    `;
-
-    // 4. OPŁACALNOŚĆ LPG
-    const yearlyKm = parseFloat(document.getElementById('lpgYearly').value) || 0;
-    const lpgSetupCost = parseFloat(document.getElementById('lpgCost').value) || 0;
-    
-    const yearlyPbCost = (yearlyKm / 100) * cons * pb95Price;
-    const lpgCons = cons * 1.15; // Samochód na gaz pali ok. 15% więcej
-    const yearlyLpgCost = (yearlyKm / 100) * lpgCons * lpgPrice;
-    const yearlySavingsLPG = yearlyPbCost - yearlyLpgCost;
-    
-    let monthsToReturn = 0;
-    if (yearlySavingsLPG > 0) {
-        monthsToReturn = (lpgSetupCost / (yearlySavingsLPG / 12)).toFixed(1);
-    }
-
-    document.getElementById('lpgResult').innerHTML = `
-        Zwrot z inwestycji po: <strong>${monthsToReturn > 0 ? monthsToReturn + ' miesiącach' : 'Brak zwrotu'}</strong><br>
-        Roczne oszczędności netto: <strong style="color: var(--success)">${yearlySavingsLPG > 0 ? yearlySavingsLPG.toFixed(2) + ' PLN' : '0.00 PLN'}</strong>
-    `;
+/* Wymuszenie jasnego koloru dla standardowego VAT-u w trybie ciemnym */
+body.dark-theme .std-formula .formula-calc strong {
+    color: var(--dark-text);
 }
-
-// Podpięcie automatycznego obliczenia po załadowaniu danych z API
-const originalProcessFuelDataCalc = window.processFuelData;
-window.processFuelData = function(data) {
-    originalProcessFuelDataCalc(data);
-    setTimeout(runAllCalculations, 1500); // Uruchamia kalkulator jak już zaciągnie API
-};
