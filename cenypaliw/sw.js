@@ -15,11 +15,10 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Serwowanie plików z pamięci podręcznej, co przyspiesza działanie aplikacji
+// Serwowanie plików z pamięci podręcznej (przyspiesza działanie)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Jeśli plik jest w pamięci, zwracamy go. Jeśli nie, pobieramy z sieci.
       return cachedResponse || fetch(event.request);
     })
   );
