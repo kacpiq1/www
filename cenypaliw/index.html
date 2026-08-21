@@ -11,6 +11,11 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- Biblioteka do zdjęć (screenshotów) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Biblioteka do PDF (obsługująca polskie znaki) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <title>Ceny Paliw Orlen</title>
 </head>
 <body>
@@ -23,10 +28,10 @@
     </div>
 
     <div class="container animate-up" id="container" style="display: none;">
-        <div class="alert alert-warning animate">
+        <!--<div class="alert alert-warning animate">
             <i class='bx bx-alert-triangle'></i>
             <span>Występują problemy z wczytywaniem cen paliw LPG.</span>
-        </div>
+        </div>-->
 
         <h1 class="animate">Aktualne Ceny Paliw</h1>
 
@@ -62,6 +67,9 @@
         </div>
     </div>
     
+    <!-- NOWOŚĆ: Kontener na mini-pigułki ze szczegółami -->
+    <div id="mini-trend-details" class="mini-trend-container"></div>
+    
     <div class="trend-footer">
         <div class="trend-prediction">
             <span class="trend-prediction-label">Przewidywana zmiana (7 dni):</span>
@@ -95,7 +103,14 @@
             <button class="btn btn-secondary" id="taxToggleBtn" onclick="toggleTax()">
                 <i class='bx bx-transfer'></i> Pokaż Netto
             </button>
-            
+            <!-- NOWY PRZYCISK: UDOSTĘPNIANIE
+            <button class="btn btn-secondary" onclick="shareApp()">
+                <i class='bx bx-share-alt'></i> Udostępnij
+            </button>
+            NOWY PRZYCISK: SYMULATOR
+            <button class="btn btn-primary" onclick="openDispenserModal()" style="background: linear-gradient(135deg, #1e2022, #2b2d42); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <i class='bx bx-gas-pump'></i> Symulator
+            </button> -->
         </div>
 
         <h1 class="animate" style="margin-top: 2rem;">Strefa EV - Orlen Charge</h1>
@@ -130,37 +145,65 @@
         </div>
 
         <div class="update-info animate">
-            Prognoza na okres 17.08-23.08.2026
+            Prognoza na okres 4.05-10.05.2026
         </div>
     </div>
 
+<!-- Modal Informacyjny (Zasady Działania) -->
     <div class="modal" id="infoModal">
-        <div class="modal-content">
+        <div class="modal-content info-modal-content">
             <span class="close" onclick="closeInfoModal()">&times;</span>
-            <h2>Ważne Informacje</h2>
-            
-            <p style="margin-bottom: 1rem;">
-                Dane dotyczące hurtowych cen paliw oraz archiwum cen paliw są pobierane z API marży Orlen. 
-                Ceny na stacjach paliw są obliczane z uwzględnieniem odpowiedniego opodatkowania:
-            </p>
-            
-            <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
-                <li>EFECTA 95, EFECTA DIESEL i VERVA DIESEL - 26%</li>
-                <li>VERVA 98 - 32%</li>
-                <li>LPG - 26%</li>
-            </ul>
-            
-            <p style="margin-bottom: 1.5rem;">
-                Podane ceny są prognozowane i mogą się różnić w zależności od stacji. 
-                Ceny są aktualizowane od wtorku do soboty, z wyłączeniem dni świątecznych.
-            </p>
-            
-            <div class="alert alert-info">
-                <i class='bx bx-info-circle'></i> Od 24.06.2024 w historii cen dostępne są także hurtowe ceny paliw.
+
+            <div class="info-modal-header">
+                <div class="info-modal-icon">
+                    <i class='bx bx-bulb'></i>
+                </div>
+                <h2>Zasady Działania</h2>
+                <p>Przejrzystość to podstawa naszych prognoz</p>
             </div>
-            
-            <button class="btn btn-primary" onclick="closeInfoModalAndAcknowledge()" style="margin-top: 1.5rem; width: 100%;">
-                <i class='bx bx-check'></i> Rozumiem
+
+            <div class="info-modal-body">
+                <!-- Karta 1 -->
+                <div class="info-card">
+                    <div class="info-card-icon"><i class='bx bx-data'></i></div>
+                    <div class="info-card-text">
+                        <strong>Dane z Giełdy Orlen</strong>
+                        <span>Hurtowe ceny paliw pobieramy na bieżąco z oficjalnych notowań giełdowych. Aktualizacje odbywają się codziennie od wtorku do soboty.</span>
+                    </div>
+                </div>
+
+                <!-- Karta 2 -->
+                <div class="info-card">
+                    <div class="info-card-icon"><i class='bx bx-math'></i></div>
+                    <div class="info-card-text">
+                        <strong>Obliczanie Cen Detalicznych</strong>
+                        <span>Ceny na stacjach wyliczamy dynamicznie, na podstawie aktualnie obowiązującego prawa:</span>
+                        
+                        <div class="info-formulas">
+                            <div class="formula-row cpn-formula">
+                                <span class="formula-title">Pakiet CPN</span>
+                                <span class="formula-calc">Hurt + 30 gr + <strong>8% VAT</strong></span>
+                            </div>
+                            <div class="formula-row std-formula">
+                                <span class="formula-title">Standardowo</span>
+                                <span class="formula-calc">Hurt + marża stacji + <strong>23% VAT</strong></span>
+                            </div>
+                            <div class="formula-row lpg-formula">
+                                <span class="formula-title">Autogaz (LPG)</span>
+                                <span class="formula-calc">Hurt + <strong>26%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-warning">
+                <i class='bx bx-error-circle'></i>
+                <p><strong>Ważne:</strong> Podane wartości są uśrednioną prognozą rynkową. Ceny na konkretnych stacjach (np. franczyzowych lub autostradowych) mogą się różnić.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="closeInfoModalAndAcknowledge()">
+                <i class='bx bx-check-double'></i> Rozumiem zasady
             </button>
         </div>
     </div>
@@ -376,7 +419,7 @@
                 <div class="coupon-card-icon"><i class='bx bxs-group'></i></div>
                 <div class="coupon-card-details">
                     <span class="coupon-name">-20 gr/l</span>
-                    <span class="coupon-desc">Wakacyjna Promocja - max. 50 litrów</span>
+                    <span class="coupon-desc">Weekendowa Promocja - max. 50 litrów</span>
                 </div>
                 <div class="coupon-radio-check"></div>
             </div>
@@ -387,7 +430,7 @@
                 <div class="coupon-card-icon"><i class='bx bxs-discount'></i></div>
                 <div class="coupon-card-details">
                     <span class="coupon-name">-35 gr/l</span>
-                    <span class="coupon-desc">Wakacyjna Promocja + <strong>zakupy za min. 5zł</strong></span>
+                    <span class="coupon-desc">Weekendowa Promocja + <strong>zakupy za min. 5zł</strong></span>
                 </div>
                 <div class="coupon-radio-check"></div>
             </div>
@@ -471,6 +514,11 @@
             <button class="btn btn-primary" onclick="showPriceHistoryChart()" style="margin-top: 1rem;">
                 <i class='bx bx-line-chart'></i> Pokaż wykres
             </button>
+            
+            <!-- NOWY PRZYCISK: RAPORT PDF
+            <button class="btn btn-secondary" onclick="generatePDFReport()" style="margin-top: 1rem; margin-left: 0.5rem;">
+                <i class='bx bxs-file-pdf'></i> Raport PDF
+            </button> -->
             
             <div id="loadingHistory" style="display: none; text-align: center; padding: 2rem;">
                 <div class="spinner"></div>
@@ -582,6 +630,103 @@
     </div>
 
     <div class="notification" id="notification"></div>
+
+    <!-- Dispenser (Symulator) Modal -->
+<!-- SUPER PREMIUM Dispenser Modal -->
+    <div class="modal" id="dispenserModal">
+        <div class="modal-content premium-pump-modal">
+            <span class="close" onclick="closeDispenserModal()" style="color: white; z-index: 100; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
+
+            <!-- Górny Szyld -->
+            <div class="pump-top-sign">
+                <div class="pump-logo">
+                    <i class='bx bxs-gas-pump'></i> ORLEN
+                </div>
+                <div class="pump-station-info">Stacja #1337</div>
+            </div>
+
+            <!-- Korpus Dystrybutora -->
+            <div class="pump-main-body">
+                
+                <!-- Panel Sterowania (Wybory) -->
+                <div class="pump-controls">
+                    <div class="pump-control-group">
+                        <label>POJAZD NA STANOWISKU:</label>
+                        <select id="simVehicle" onchange="resetDispenser()">
+                            <option value="50,Pb95">🚗 Skoda Octavia (50L | Pb95)</option>
+                            <option value="43,Pb95">🚗 Toyota Corolla (43L | Pb95)</option>
+                            <option value="73,ONEkodiesel">🚙 Audi A6 (73L | Diesel)</option>
+                            <option value="45,LPG">🚕 Dacia Duster (45L | LPG)</option>
+                            <option value="100,ONArctic2">🚚 Ciężarówka (100L | Verva Diesel)</option>
+                        </select>
+                    </div>
+                    <div class="pump-control-group">
+                        <label>WYCIĄGNIĘTY PISTOLET:</label>
+                        <select id="simFuel" onchange="updateDispenserPrice()">
+                            <option value="Pb95">EFECTA 95</option>
+                            <option value="Pb98">VERVA 98</option>
+                            <option value="ONEkodiesel">EFECTA DIESEL</option>
+                            <option value="ONArctic2">VERVA DIESEL</option>
+                            <option value="LPG">LPG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fotorealistyczny Ekran Dystrybutora -->
+                <div class="pump-screen-surround">
+                    <div class="screw top-left"></div>
+                    <div class="screw top-right"></div>
+                    <div class="screw bottom-left"></div>
+                    <div class="screw bottom-right"></div>
+
+                    <div class="pump-glass">
+                        <div class="pump-glare"></div>
+                        <div class="pump-scanlines"></div>
+
+                        <div class="pump-led-row">
+                            <div class="led-label">PLN</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">8888.88</span>
+                                <span class="led-active" id="simTotalCost">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="pump-led-row">
+                            <div class="led-label">LITRY</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">888.88</span>
+                                <span class="led-active" id="simTotalLiters">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="pump-led-row price-row">
+                            <div class="led-label">ZŁ/L</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">88.88</span>
+                                <span class="led-active" id="simPricePerLiter">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rączka Pistoletu (Fizyczny Przycisk 3D) -->
+                <button class="nozzle-btn" id="pumpButton" 
+                    onmousedown="startPumping(event)" onmouseup="stopPumping(event)" onmouseleave="stopPumping(event)" 
+                    ontouchstart="startPumping(event)" ontouchend="stopPumping(event)">
+                    <div class="nozzle-guard">
+                        <div class="nozzle-trigger"></div>
+                    </div>
+                    <span class="nozzle-text"><i class='bx bxs-hand-up'></i> WCIŚNIJ I TRZYMAJ</span>
+                </button>
+
+                <!-- Odłożenie Pistoletu -->
+                <button class="put-back-btn" onclick="resetDispenser()">
+                    <i class='bx bx-check-circle'></i> ODŁÓŻ PISTOLET (ZAKOŃCZ)
+                </button>
+
+            </div>
+        </div>
+    </div>
 
     <footer class="animate">
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
