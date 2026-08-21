@@ -16,6 +16,15 @@
     
     <!-- Biblioteka do PDF (obsługująca polskie znaki) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Konfiguracja PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#E30613">
+    
+    <!-- Wsparcie dla urządzeń Apple (iOS) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ceny Paliw">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
     <title>Ceny Paliw Orlen</title>
 </head>
 <body>
@@ -731,6 +740,21 @@
     <footer class="animate">
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
     </footer>
+
+    <!-- Rejestracja Service Workera dla PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker zarejestrowany pomyślnie:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Rejestracja Service Workera nie powiodła się:', error);
+                    });
+            });
+        }
+    </script>
 
     <script src="cenypaliw/fuelscript.js"></script>
 
