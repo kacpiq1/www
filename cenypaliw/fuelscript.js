@@ -1716,3 +1716,141 @@ function updateDispenserDisplay() {
     document.getElementById('simTotalLiters').innerText = currentLiters.toFixed(2);
     document.getElementById('simTotalCost').innerText = totalCost.toFixed(2);
 }
+
+// === POBIERANIE CEN Z NIEMIEC (NA ŻYWO Z API + PORÓWNANIE) ===
+function fetchGermanData() {
+    const germanGrid = document.getElementById('germanFuelGrid');
+    germanGrid.innerHTML = '<div class="spinner" style="margin: 2rem auto;"></div>';
+
+    // PODMIEŃ NA ADRES SWOJEGO WORKERA:
+    const WORKER_URL = "https://de-fuelprices.kacpiq.workers.dev/"; 
+
+    fetch(WORKER_URL)
+        .then(res => {
+            if (!res.ok) throw new Error("Błąd sieci HTTP: " + res.status);
+            return res.json();
+        })
+        .then(data => {
+            germanGrid.innerHTML = '';
+
+            if (!data.stations || data.stations.length === 0) {
+                germanGrid.innerHTML = '<p style="text-align:center; width:100%; color: var(--text-light);">Brak dostępnych stacji w wybranym rejonie.</p>';
+                return;
+            }
+
+            // Pobieramy najbliższą/pierwszą stację z listy
+            const station = data.stations[0];
+            const exchangeRate = data.exchange_rate_eur_pln;
+
+            const fuelsDE = [
+                { id: 'Pb95', name: 'Pb95 (E10)', priceEur: station.prices_eur.pb95_e10, pricePln: station.prices_pln.pb95_e10 },
+                { id: 'Pb98', name: 'Pb98 (E5)', priceEur: station.prices_eur.pb98_e5, pricePln: station.prices_pln.pb98_e5 },
+                { id: 'ONEkodiesel', name: 'Diesel', priceEur: station.prices_eur.diesel, pricePln: station.prices_pln.diesel }
+            ];
+
+            fuelsDE.forEach(fuel => {
+                if (!fuel.priceEur || !fuel.pricePln) return; // Jeśli stacja nie ma danego paliwa, pomijamy
+
+                const card = document.createElement('div');
+                card.className = 'fuel-card animate-up'; // Wykorzystuje klasy Twojego szablonu
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.justifyContent = 'space-between';
+
+                const iconSrc = productIcons[fuel.id] || ''; // Korzysta z Twojej bazy ikon
+
+                // Logika Niemieckiej Ceny (Indeks górny dla ostatniej cyfry)
+                const eurString = fuel.priceEur.toFixed(3);
+                const mainEurPart = eurString.slice(0, -1);
+                const lastDigit = eurString.slice(-1);
+
+                // Logika porównania z polskim Orlenem
+                let comparisonHtml = '';
+                const plPriceStr = originalPrices[fuel.id];
+
+                if (plPriceStr) {
+                    const plPrice = parseFloat(plPriceStr);
+                    const dePrice = fuel.pricePln;
+                    const diff = dePrice - plPrice;
+
+                    if (Math.abs(diff) < 0.02) {
+                        comparisonHtml = `
+                            <div style="margin-bottom: 14px; background: rgba(33, 150, 243, 0.1); color: var(--info); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(33, 150, 243, 0.2);">
+                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-transfer-alt' style="font-size: 1.1rem;"></i> Zbliżone ceny</span>
+                                <span>${plPrice.toFixed(2)} PLN w PL</span>
+                            </div>
+                        `;
+                    } else if (diff > 0) {
+                        comparisonHtml = `
+                            <div style="margin-bottom: 14px; background: rgba(76, 175, 80, 0.1); color: var(--success); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(76, 175, 80, 0.2);">
+                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-check-circle' style="font-size: 1.1rem;"></i> W Polsce taniej</span>
+                                <span>o ${diff.toFixed(2)} PLN/l</span>
+                            </div>
+                        `;
+                    } else {
+                        comparisonHtml = `
+                            <div style="margin-bottom: 14px; background: rgba(227, 6, 19, 0.1); color: var(--error); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(227, 6, 19, 0.2);">
+                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-error-circle' style="font-size: 1.1rem;"></i> W Niemczech taniej</span>
+                                <span>o ${Math.abs(diff).toFixed(2)} PLN/l</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                card.innerHTML = `
+                    <div class="fuel-header" style="margin-bottom: 0;">
+                        <img src="${iconSrc}" alt="${fuel.name}" class="fuel-icon">
+                        <div class="fuel-name" style="display: flex; align-items: center; gap: 8px;">
+                            ${fuel.name} 
+                            <span style="background: linear-gradient(135deg, #1e2022, #2b2d42); color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">🇩🇪 DE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="fuel-price" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 1.2rem 0; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: baseline; gap: 4px;">
+                            <span style="font-size: 2.4rem; font-weight: 900; color: var(--primary); line-height: 1; font-family: 'Outfit', sans-serif; text-shadow: 0 2px 10px rgba(227, 6, 19, 0.1);">${fuel.pricePln.toFixed(2)}</span>
+                            <span style="font-size: 0.9rem; font-weight: 800; color: var(--primary);">PLN</span>
+                        </div>
+                        <div style="display: inline-flex; align-items: center; background: rgba(128,128,128,0.06); padding: 4px 12px 4px 4px; border-radius: 50px; border: 1px solid rgba(128,128,128,0.12);">
+                            <div style="background: var(--text); color: var(--card-bg); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                <i class='bx bx-euro' style="font-size: 1rem;"></i>
+                            </div>
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--text); font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">
+                                ${mainEurPart}<sup style="font-size: 0.65em; top: -0.4em; position: relative; font-weight: 900; margin-left: 1px;">${lastDigit}</sup>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    ${comparisonHtml}
+                    
+                    <div style="background: rgba(128,128,128,0.04); border-radius: 12px; padding: 12px; border: 1px solid rgba(128,128,128,0.08); margin-top: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="color: var(--text-light); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                <i class='bx bxs-gas-pump' style="font-size: 0.9rem;"></i> Stacja
+                            </span>
+                            <strong style="color: var(--text); font-size: 0.85rem; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">${station.brand} (${station.place})</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="color: var(--text-light); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                <i class='bx bx-line-chart' style="font-size: 0.9rem;"></i> Kurs NBP
+                            </span>
+                            <strong style="color: var(--text); font-size: 0.85rem; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">1 EUR = ${exchangeRate.toFixed(2)} PLN</strong>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 6px; font-size: 0.7rem; color: var(--text-light);">
+                            <span>Źródło: <a href="https://www.tankerkoenig.de" target="_blank" rel="noopener noreferrer" style="color: var(--text-light); text-decoration: underline;">Tankerkönig (CC BY 4.0)</a></span>
+                        </div>
+                    </div>
+                `;
+                germanGrid.appendChild(card);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            germanGrid.innerHTML = `
+                <div style="text-align:center; width:100%; padding: 2rem;">
+                    <p style="color: var(--error); font-weight: 600;">Nie udało się pobrać danych z Niemiec.</p>
+                    <button class="btn btn-secondary" onclick="fetchGermanData()" style="margin-top: 10px;">Spróbuj ponownie</button>
+                </div>
+            `;
+        });
+}
