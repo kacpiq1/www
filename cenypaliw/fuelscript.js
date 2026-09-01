@@ -648,7 +648,7 @@ function showCouponModal() {
     // Automatyczne ustawienie komunikatu o wygaśnięciu od razu po otwarciu okienka
     const messageElement = document.getElementById('couponMessage');
     if (messageElement) {
-        messageElement.innerHTML = '<i class="bx bx-time-five"></i> Wakacyjny pakiet CPN wygasł 30 sierpnia.';
+        messageElement.innerHTML = '<i class="bx bx-time-five"></i> Weekendowa promocja wygasła 30 sierpnia.';
         messageElement.style.color = 'var(--error)';
     }
     
