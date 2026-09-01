@@ -644,6 +644,17 @@ function getFuelDisplayName(productName) {
 function showCouponModal() {
     document.getElementById('couponModal').style.display = 'block';
     setTimeout(() => { document.getElementById('couponModal').classList.add('show'); }, 10);
+    
+    // Automatyczne ustawienie komunikatu o wygaśnięciu od razu po otwarciu okienka
+    const messageElement = document.getElementById('couponMessage');
+    if (messageElement) {
+        messageElement.innerHTML = '<i class="bx bx-time-five"></i> Wakacyjny pakiet CPN wygasł 30 sierpnia.';
+        messageElement.style.color = 'var(--error)';
+    }
+    
+    // Ukrywamy odliczanie czasu, bo promocja już się skończyła
+    const expirySection = document.querySelector('.expiry-section');
+    if (expirySection) expirySection.style.display = 'none';
 }
 
 function closeCouponModal() {
@@ -655,12 +666,20 @@ function closeCouponModal() {
 let countdownInterval = null;
 
 function selectCoupon(value, element) {
-    // 1. Wizualna aktualizacja kart
+    // Jeśli użytkownik próbuje kliknąć w jakikolwiek rabat (-20gr lub -35gr), blokujemy to
+    if (value !== 0) {
+        showNotification("Promocja wakacyjna zakończyła się 30 sierpnia.");
+        const messageElement = document.getElementById('couponMessage');
+        if (messageElement) {
+            messageElement.innerHTML = '<i class="bx bx-error-circle"></i> Kupony są już nieaktywne.';
+            messageElement.style.color = 'var(--error)';
+        }
+        return; // Przerywamy funkcję - zniżka się nie naliczy!
+    }
+
+    // Pozwalamy jedynie na wybranie opcji "Brak zniżki" (value === 0)
     document.querySelectorAll('.coupon-card').forEach(card => card.classList.remove('active'));
     element.classList.add('active');
-
-    // 2. Uruchomienie głównej logiki przeliczania cen
-    // Przekazujemy wartość bezpośrednio z klikniętej karty
     applyCouponLogic(value);
 }
 
