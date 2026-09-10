@@ -93,6 +93,33 @@
         </div>
     </div>
 </div>
+
+        <!-- WSKAŹNIKI MAKROEKONOMICZNE (ROPA I DOLAR) -->
+    <div id="macroContainer" class="macro-wrapper animate-up" style="display: none;">
+        <!-- Karta: Ropa Brent -->
+        <div class="macro-card">
+            <div class="macro-icon"><i class='bx bx-water'></i></div>
+            <div class="macro-info">
+                <span class="macro-title">Ropa Brent (Baryłka)</span>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <span id="brentPrice" class="macro-price">...</span>
+                    <span id="brentChange" class="macro-change"><i class='bx bx-loader-alt bx-spin'></i></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Karta: Kurs USD/PLN -->
+        <div class="macro-card">
+            <div class="macro-icon" style="color: #4CAF50;"><i class='bx bx-dollar-circle'></i></div>
+            <div class="macro-info">
+                <span class="macro-title">Kurs USD (NBP)</span>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <span id="usdPrice" class="macro-price">...</span>
+                    <span id="usdChange" class="macro-change"><i class='bx bx-loader-alt bx-spin'></i></span>
+                </div>
+            </div>
+        </div>    
+    </div>
         
         <div class="fuel-grid" id="fuelGrid">
             <!-- Fuel cards will be inserted here by JavaScript -->
