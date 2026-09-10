@@ -1873,3 +1873,171 @@ function fetchGermanData() {
             `;
         });
 }
+
+function formatPriceForSpeech(priceStr) {
+    if (!priceStr) return "brak danych";
+    const parts = parseFloat(priceStr).toFixed(2).split('.');
+    const zloty = parseInt(parts[0]);
+    const grosze = parseInt(parts[1]);
+    return `${zloty} złotych i ${grosze} groszy`;
+}
+
+
+// Główna funkcja czytająca
+function speakPrices() {
+    if (!('speechSynthesis' in window)) {
+        showNotification("Twoja przeglądarka nie obsługuje asystenta głosowego.");
+        return;
+    }
+
+    const synth = window.speechSynthesis;
+    const voiceBtn = document.getElementById('voiceToggleBtn');
+    const iconEl = voiceBtn ? voiceBtn.querySelector('.voice-icon i') : null;
+
+    // Jeśli lektor już mówi, kliknięcie go wycisza
+    if (synth.speaking) {
+        synth.cancel();
+        if (voiceBtn && iconEl) {
+            voiceBtn.classList.remove('speaking');
+            iconEl.className = 'bx bx-podcast'; // Wracamy do ikonki radyjka
+        }
+        showNotification("Wyciszono asystenta.");
+        return;
+    }
+
+    const pb95 = originalPrices['Pb95'];
+    const diesel = originalPrices['ONEkodiesel'];
+    const pb98 = originalPrices['Pb98'];
+    const vervaDiesel = originalPrices['ONArctic2'];
+    const lpg = originalPrices['LPG'];
+
+    if (!pb95 || !diesel || !pb98 || !vervaDiesel || !lpg) {
+        showNotification("Poczekaj na załadowanie wszystkich cen.");
+        return;
+    }
+
+    let textToSpeak = `Cześć! Oto aktualne ceny paliw na stacjach. `;
+    textToSpeak += `Efecta 95 kosztuje ${formatPriceForSpeech(pb95)}. `;
+    textToSpeak += `Efecta Diesel to wydatek rzędu ${formatPriceForSpeech(diesel)}. `;
+    textToSpeak += `Paliwa premium: Werwa 98 kosztuje ${formatPriceForSpeech(pb98)}, `;
+    textToSpeak += `a Werwa Diesel ${formatPriceForSpeech(vervaDiesel)}. `;
+    textToSpeak += `Cena autogazu LPG wynosi ${formatPriceForSpeech(lpg)}. `;
+
+    if (typeof STATE !== 'undefined' && STATE.forecastData) {
+        const trend = STATE.forecastData.type;
+        const value = Math.abs(STATE.forecastData.value).toFixed(0);
+        
+        if (trend === 'up') {
+            textToSpeak += `Uwaga na prognozy. Rynek wskazuje na wzrosty o około ${value} groszy na litrze. Lepiej zatankuj dzisiaj.`;
+        } else if (trend === 'down') {
+            textToSpeak += `Mamy dobre wieści. Prognoza wskazuje na spadki cen o około ${value} groszy. Wstrzymaj się z tankowaniem do pełna.`;
+        } else {
+            textToSpeak += `Rynek jest obecnie stabilny, nie przewidujemy gwałtownych zmian w najbliższych dniach.`;
+        }
+    }
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'pl-PL'; 
+    utterance.rate = 1.0;     
+    utterance.pitch = 1.0;    
+
+    // AKCJA START: Zmiana wyglądu na Equalizer i przycisk STOP
+    utterance.onstart = () => {
+        if (voiceBtn && iconEl) {
+            voiceBtn.classList.add('speaking');
+            iconEl.className = 'bx bx-stop-circle'; // Zmiana ikonki na kwadracik "Stop"
+        }
+    };
+
+    // AKCJA KONIEC: Powrót do ładnego wyglądu z napisem
+    utterance.onend = () => {
+        if (voiceBtn && iconEl) {
+            voiceBtn.classList.remove('speaking');
+            iconEl.className = 'bx bx-podcast';
+        }
+    };
+
+    synth.speak(utterance);
+}
+
+// === POBIERANIE WSKAŹNIKÓW MAKRO (ROPA I DOLAR) ===
+async function fetchMacroIndicators() {
+    const container = document.getElementById('macroContainer');
+    container.style.display = 'flex';
+
+    try {
+        const nbpRes = await fetch('https://api.nbp.pl/api/exchangerates/rates/a/usd/last/2/?format=json');
+        const nbpData = await nbpRes.json();
+        
+        const usdYesterday = nbpData.rates[0].mid;
+        const usdToday = nbpData.rates[1].mid;
+        
+        const usdDiff = usdToday - usdYesterday;
+        const usdDiffPerc = (usdDiff / usdYesterday) * 100;
+        
+        updateMacroCard('usdPrice', 'usdChange', usdToday, usdDiffPerc, 'PLN');
+
+        // Odpalamy animację wejścia, gdy dane są gotowe
+        container.classList.add('loaded');
+
+    } catch (e) {
+        console.warn('Nie udało się pobrać kursu USD:', e);
+        document.getElementById('usdPrice').innerText = 'Błąd API';
+        container.classList.add('loaded'); // Pokaż mimo błędu, żeby nie wisiało
+    }
+
+    try {
+        const brentUrl = `${MY_PROXY}brent`;
+        const brentRes = await fetch(brentUrl);
+        const brentData = await brentRes.json();
+        
+        const results = brentData.chart.result[0].indicators.quote[0];
+        const closePrices = results.close.filter(price => price !== null);
+        
+        if (closePrices.length >= 2) {
+            const brentYesterday = closePrices[closePrices.length - 2];
+            const brentToday = closePrices[closePrices.length - 1];
+            
+            const brentDiff = brentToday - brentYesterday;
+            const brentDiffPerc = (brentDiff / brentYesterday) * 100;
+            
+            updateMacroCard('brentPrice', 'brentChange', brentToday, brentDiffPerc, '$');
+        }
+    } catch (e) {
+        console.warn('Nie udało się pobrać ceny Ropy Brent:', e);
+        document.getElementById('brentPrice').innerText = 'Brak danych';
+    }
+}
+
+// Funkcja pomocnicza do kolorowania i aktualizacji tekstu
+function updateMacroCard(priceId, changeId, price, changePerc, currency) {
+    const priceEl = document.getElementById(priceId);
+    const changeEl = document.getElementById(changeId);
+    
+    const formattedPrice = `${price.toFixed(2)} ${currency}`;
+    
+    // Sprawdzamy, czy cena się zmieniła. Jeśli tak, odpalamy animację "błysku"
+    if (priceEl.innerText !== formattedPrice && priceEl.innerText !== '...') {
+        priceEl.classList.add('updated');
+        setTimeout(() => priceEl.classList.remove('updated'), 800);
+    }
+    
+    priceEl.innerText = formattedPrice;
+    
+    let sign = '';
+    let icon = '';
+    
+    if (changePerc > 0.05) {
+        changeEl.className = 'macro-change bad';
+        sign = '+';
+        icon = "<i class='bx bx-trending-up'></i>";
+    } else if (changePerc < -0.05) {
+        changeEl.className = 'macro-change good';
+        icon = "<i class='bx bx-trending-down'></i>";
+    } else {
+        changeEl.className = 'macro-change neutral';
+        icon = "<i class='bx bx-minus'></i>";
+    }
+    
+    changeEl.innerHTML = `${icon} ${sign}${changePerc.toFixed(2)}%`;
+}
