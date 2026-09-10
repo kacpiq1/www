@@ -1968,6 +1968,7 @@ async function fetchMacroIndicators() {
 
     // 1. Pobieranie kursu USD z NBP
     try {
+        console.log("Pobieram kurs USD z NBP...");
         const nbpRes = await fetch('https://api.nbp.pl/api/exchangerates/rates/a/usd/last/2/?format=json');
         const nbpData = await nbpRes.json();
         
@@ -1978,8 +1979,9 @@ async function fetchMacroIndicators() {
         const usdDiffPerc = (usdDiff / usdYesterday) * 100;
         
         updateMacroCard('usdPrice', 'usdChange', usdToday, usdDiffPerc, 'PLN');
+        console.log("Kurs USD zaktualizowany pomyślnie.");
     } catch (e) {
-        console.warn('Nie udało się pobrać kursu USD:', e);
+        console.warn('Błąd pobierania kursu USD:', e);
         const usdEl = document.getElementById('usdPrice');
         if (usdEl) usdEl.innerText = 'Błąd API';
     }
@@ -1987,6 +1989,7 @@ async function fetchMacroIndicators() {
     // 2. Pobieranie ceny Ropy Brent przez Twoje Proxy
     try {
         const brentUrl = `${MY_PROXY}brent`;
+        console.log("Pobieram ropę Brent z adresu:", brentUrl);
         const brentRes = await fetch(brentUrl);
         const brentData = await brentRes.json();
         
@@ -2001,9 +2004,10 @@ async function fetchMacroIndicators() {
             const brentDiffPerc = (brentDiff / brentYesterday) * 100;
             
             updateMacroCard('brentPrice', 'brentChange', brentToday, brentDiffPerc, '$');
+            console.log("Cena Ropy Brent zaktualizowana pomyślnie.");
         }
     } catch (e) {
-        console.warn('Nie udało się pobrać ceny Ropy Brent:', e);
+        console.warn('Błąd pobierania Ropy Brent:', e);
         const brentEl = document.getElementById('brentPrice');
         if (brentEl) brentEl.innerText = 'Brak danych';
     }
