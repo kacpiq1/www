@@ -1960,14 +1960,11 @@ function speakPrices() {
     synth.speak(utterance);
 }
 
-// === POBIERANIE WSKAŹNIKÓW MAKRO (ROPA, DOLAR I SPREAD) ===
+// === POBIERANIE WSKAŹNIKÓW MAKRO (ROPA I DOLAR) ===
 async function fetchMacroIndicators() {
     const container = document.getElementById('macroContainer');
     if (!container) return;
     container.style.display = 'flex';
-
-    let usdRate = null;
-    let brentPriceUSD = null;
 
     // 1. Pobieranie kursu USD z NBP
     try {
@@ -1975,12 +1972,12 @@ async function fetchMacroIndicators() {
         const nbpData = await nbpRes.json();
         
         const usdYesterday = nbpData.rates[0].mid;
-        usdRate = nbpData.rates[1].mid;
+        const usdToday = nbpData.rates[1].mid;
         
-        const usdDiff = usdRate - usdYesterday;
+        const usdDiff = usdToday - usdYesterday;
         const usdDiffPerc = (usdDiff / usdYesterday) * 100;
         
-        updateMacroCard('usdPrice', 'usdChange', usdRate, usdDiffPerc, 'PLN');
+        updateMacroCard('usdPrice', 'usdChange', usdToday, usdDiffPerc, 'PLN');
     } catch (e) {
         console.warn('Nie udało się pobrać kursu USD:', e);
         const usdEl = document.getElementById('usdPrice');
@@ -1998,12 +1995,12 @@ async function fetchMacroIndicators() {
         
         if (closePrices.length >= 2) {
             const brentYesterday = closePrices[closePrices.length - 2];
-            brentPriceUSD = closePrices[closePrices.length - 1];
+            const brentToday = closePrices[closePrices.length - 1];
             
-            const brentDiff = brentPriceUSD - brentYesterday;
+            const brentDiff = brentToday - brentYesterday;
             const brentDiffPerc = (brentDiff / brentYesterday) * 100;
             
-            updateMacroCard('brentPrice', 'brentChange', brentPriceUSD, brentDiffPerc, '$');
+            updateMacroCard('brentPrice', 'brentChange', brentToday, brentDiffPerc, '$');
         }
     } catch (e) {
         console.warn('Nie udało się pobrać ceny Ropy Brent:', e);
@@ -2011,12 +2008,7 @@ async function fetchMacroIndicators() {
         if (brentEl) brentEl.innerText = 'Brak danych';
     }
 
-    // 3. Wywołanie obliczeń spreadu rafineryjnego (jeśli mamy oba parametry)
-    if (brentPriceUSD && usdRate) {
-        calculateRefinerySpread(brentPriceUSD, usdRate);
-    }
-
-    // Odpalamy animację wejścia całego kontenera kart
+    // Odpalamy animację wejścia kontenera kart
     container.classList.add('loaded');
 }
 
@@ -2041,14 +2033,16 @@ function calculateRefinerySpread(brentPriceUSD, usdRate) {
     }
 }
 
+
+
 // Funkcja pomocnicza do kolorowania i aktualizacji tekstu
 function updateMacroCard(priceId, changeId, price, changePerc, currency) {
     const priceEl = document.getElementById(priceId);
     const changeEl = document.getElementById(changeId);
+    if (!priceEl || !changeEl) return;
     
     const formattedPrice = `${price.toFixed(2)} ${currency}`;
     
-    // Sprawdzamy, czy cena się zmieniła. Jeśli tak, odpalamy animację "błysku"
     if (priceEl.innerText !== formattedPrice && priceEl.innerText !== '...') {
         priceEl.classList.add('updated');
         setTimeout(() => priceEl.classList.remove('updated'), 800);
