@@ -1960,32 +1960,34 @@ function speakPrices() {
     synth.speak(utterance);
 }
 
-// === POBIERANIE WSKAŹNIKÓW MAKRO (ROPA I DOLAR) ===
+// === POBIERANIE WSKAŹNIKÓW MAKRO (ROPA, DOLAR I SPREAD) ===
 async function fetchMacroIndicators() {
     const container = document.getElementById('macroContainer');
+    if (!container) return;
     container.style.display = 'flex';
 
+    let usdRate = null;
+    let brentPriceUSD = null;
+
+    // 1. Pobieranie kursu USD z NBP
     try {
         const nbpRes = await fetch('https://api.nbp.pl/api/exchangerates/rates/a/usd/last/2/?format=json');
         const nbpData = await nbpRes.json();
         
         const usdYesterday = nbpData.rates[0].mid;
-        const usdToday = nbpData.rates[1].mid;
+        usdRate = nbpData.rates[1].mid;
         
-        const usdDiff = usdToday - usdYesterday;
+        const usdDiff = usdRate - usdYesterday;
         const usdDiffPerc = (usdDiff / usdYesterday) * 100;
         
-        updateMacroCard('usdPrice', 'usdChange', usdToday, usdDiffPerc, 'PLN');
-
-        // Odpalamy animację wejścia, gdy dane są gotowe
-        container.classList.add('loaded');
-
+        updateMacroCard('usdPrice', 'usdChange', usdRate, usdDiffPerc, 'PLN');
     } catch (e) {
         console.warn('Nie udało się pobrać kursu USD:', e);
-        document.getElementById('usdPrice').innerText = 'Błąd API';
-        container.classList.add('loaded'); // Pokaż mimo błędu, żeby nie wisiało
+        const usdEl = document.getElementById('usdPrice');
+        if (usdEl) usdEl.innerText = 'Błąd API';
     }
 
+    // 2. Pobieranie ceny Ropy Brent przez Twoje Proxy
     try {
         const brentUrl = `${MY_PROXY}brent`;
         const brentRes = await fetch(brentUrl);
@@ -1996,16 +1998,46 @@ async function fetchMacroIndicators() {
         
         if (closePrices.length >= 2) {
             const brentYesterday = closePrices[closePrices.length - 2];
-            const brentToday = closePrices[closePrices.length - 1];
+            brentPriceUSD = closePrices[closePrices.length - 1];
             
-            const brentDiff = brentToday - brentYesterday;
+            const brentDiff = brentPriceUSD - brentYesterday;
             const brentDiffPerc = (brentDiff / brentYesterday) * 100;
             
-            updateMacroCard('brentPrice', 'brentChange', brentToday, brentDiffPerc, '$');
+            updateMacroCard('brentPrice', 'brentChange', brentPriceUSD, brentDiffPerc, '$');
         }
     } catch (e) {
         console.warn('Nie udało się pobrać ceny Ropy Brent:', e);
-        document.getElementById('brentPrice').innerText = 'Brak danych';
+        const brentEl = document.getElementById('brentPrice');
+        if (brentEl) brentEl.innerText = 'Brak danych';
+    }
+
+    // 3. Wywołanie obliczeń spreadu rafineryjnego (jeśli mamy oba parametry)
+    if (brentPriceUSD && usdRate) {
+        calculateRefinerySpread(brentPriceUSD, usdRate);
+    }
+
+    // Odpalamy animację wejścia całego kontenera kart
+    container.classList.add('loaded');
+}
+
+// Funkcja pomocnicza do obliczania marży rafineryjnej
+function calculateRefinerySpread(brentPriceUSD, usdRate) {
+    const pb95Netto = window.dailyNettoPrices && window.dailyNettoPrices['Pb95'] ? window.dailyNettoPrices['Pb95'].todayNetto : 0;
+    const spreadEl = document.getElementById('refinerySpread');
+    
+    if (!pb95Netto || !spreadEl) return;
+
+    // 1 baryłka = 158.98 litra
+    const brentPricePLN = brentPriceUSD * usdRate;
+    const crudeCostPerLiter = brentPricePLN / 158.98;
+    const spread = pb95Netto - crudeCostPerLiter;
+
+    spreadEl.innerText = `${spread > 0 ? '+' : ''}${spread.toFixed(2)} PLN`;
+    
+    if (spread > 2.50) {
+        spreadEl.style.color = '#E30613'; 
+    } else {
+        spreadEl.style.color = '#4CAF50'; 
     }
 }
 
