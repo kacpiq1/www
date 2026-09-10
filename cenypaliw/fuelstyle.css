@@ -3098,3 +3098,17 @@ body.dark-theme .std-formula .formula-calc strong {
 .macro-wrapper.loaded {
     animation: macroPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+
+/* =========================================
+   CIEMNY MOTYW DLA PANELU MAKRO
+   ========================================= */
+body.dark-theme .macro-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-theme .macro-icon {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+}
