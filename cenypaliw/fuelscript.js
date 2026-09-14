@@ -2001,23 +2001,31 @@ async function fetchMacroIndicators() {
         const brentRes = await fetch(brentUrl);
         const brentData = await brentRes.json();
         
-        const results = brentData.chart.result[0].indicators.quote[0];
-        const closePrices = results.close.filter(price => price !== null);
+        const result = brentData.chart.result[0];
+        const quote = result.indicators.quote[0];
+        const closePrices = quote.close.filter(price => price !== null);
         
-        if (closePrices.length >= 2) {
-            const brentYesterday = closePrices[closePrices.length - 2];
+        if (closePrices.length > 0) {
+            // Zawsze bierzemy ostatnią dostępną cenę z tablicy jako dzisiejszą
             const brentToday = closePrices[closePrices.length - 1];
+            
+            // Poprzednie zamknięcie wyciągamy bezpośrednio z oficjalnych metadanych (niezawodne w weekendy i poniedziałki)
+            const brentYesterday = result.meta.chartPreviousClose;
             
             const brentDiff = brentToday - brentYesterday;
             const brentDiffPerc = (brentDiff / brentYesterday) * 100;
             
             updateMacroCard('brentPrice', 'brentChange', brentToday, brentDiffPerc, '$');
             console.log("Ropa Brent zaktualizowana pomyślnie:", brentToday);
+        } else {
+            throw new Error("Brak notowań w tablicy wyników");
         }
     } catch (e) {
         console.error('Błąd pobierania Ropy Brent:', e);
         const brentEl = document.getElementById('brentPrice');
         if (brentEl) brentEl.innerText = 'Brak danych';
+        const brentChangeEl = document.getElementById('brentChange');
+        if (brentChangeEl) brentChangeEl.innerHTML = ''; // Usuń ikonkę ładowania
     }
 
     // Odpalamy animację wejścia kontenera kart
