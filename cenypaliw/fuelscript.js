@@ -1413,11 +1413,19 @@ function updateForecastUI(globalDiff, details, forecastGrosze, trendType) {
 function openForecastDetails() {
     document.getElementById('view-forecast').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    
+    // Ukrywa szklaną pigułkę z lektorem i motywem
+    const topPill = document.querySelector('.top-actions-pill');
+    if (topPill) topPill.style.display = 'none';
 }
 
 function closeForecastDetails() {
     document.getElementById('view-forecast').classList.add('hidden');
     document.body.style.overflow = 'auto';
+    
+    // Przywraca szklaną pigułkę
+    const topPill = document.querySelector('.top-actions-pill');
+    if (topPill) topPill.style.display = 'flex';
 }
 
 // === STREFA KIEROWCY (NETTO/BRUTTO, KALKULATORY) ===
