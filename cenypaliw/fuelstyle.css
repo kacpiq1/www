@@ -3658,3 +3658,26 @@ body.dark-theme .top-actions-pill .pill-divider { background: rgba(255, 255, 255
         font-size: 1.25rem;
     }
 }
+
+/* =========================================
+   TRYB CIEMNY DLA KART GIEŁDOWYCH (MAKRO)
+   ========================================= */
+
+body.dark-theme .macro-card {
+    background: var(--dark-card) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .macro-title {
+    color: #94a3b8 !important; /* Szary, przygaszony tekst dla tytułów */
+}
+
+body.dark-theme .macro-price {
+    color: #ffffff !important; /* Śnieżnobiałe, ostre kwoty */
+}
+
+body.dark-theme .macro-icon {
+    background: rgba(255, 255, 255, 0.04) !important; /* Delikatne tło pod ikoną */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+}
