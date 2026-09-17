@@ -40,11 +40,11 @@ let rawLpgData = null;
 
 // Product icons
 const productIcons = {
-    'Pb95': 'https://www.kacpiq.pl/img/efecta95.png',
-    'Pb98': 'https://www.kacpiq.pl/img/verva98.png',
-    'LPG': 'https://www.kacpiq.pl/img/lpg.png',
-    'ONEkodiesel': 'https://www.kacpiq.pl/img/efectadiesel.png',
-    'ONArctic2': 'https://www.kacpiq.pl/img/vervadiesel.png'
+    'Pb95': 'img/efecta95.png',
+    'Pb98': 'img/verva98.png',
+    'LPG': 'img/lpg.png',
+    'ONEkodiesel': 'img/efectadiesel.png',
+    'ONArctic2': 'img/vervadiesel.png'
 };
 
 const STATE = {
@@ -347,14 +347,16 @@ function processFuelData(data) {
     
     if (isTomorrowAvailable) {
         updateInfoEl.innerHTML = `
-            <div class="jutro-badge">
-                <i class='bx bx-time-five'></i> UWAGA: OPUBIKOWANO CENY NA JUTRO (${latestDate})
+            <div class="status-pill status-tomorrow">
+                <span class="live-dot"></span>
+                <span>Wczytano ceny na jutro (${latestDate})</span>
             </div>`;
     } else {
         updateInfoEl.innerHTML = `
-            <span class="dzis-badge">
-                <i class='bx bx-check-circle'></i> Ceny obowiązujące dzisiaj (${todayStr})
-            </span>`;
+            <div class="status-pill status-today">
+                <span class="live-dot"></span>
+                <span>Ceny aktualne na dzisiaj (${todayStr})</span>
+            </div>`;
     }
     
     rawFuelDataList = data.filter(item => 
@@ -529,23 +531,23 @@ function createFuelCard(fuelData) {
     card.className = 'fuel-card animate-up';
     card.id = `fuel-card-${fuelData.productName}`;
     
-    let priceChangeClass = 'price-neutral';
-    let priceChangeIcon = 'bx-minus';
+    // Zmienne dla pigułki trendu cenowego
+    let pillClass = 'neutral';
+    let iconClass = 'bx-minus';
     
     if (fuelData.priceChange > 0) {
-        priceChangeClass = 'price-up';
-        priceChangeIcon = 'bx-up-arrow-alt';
+        pillClass = 'up';
+        iconClass = 'bx-up-arrow-alt';
     } else if (fuelData.priceChange < 0) {
-        priceChangeClass = 'price-down';
-        priceChangeIcon = 'bx-down-arrow-alt';
+        pillClass = 'down';
+        iconClass = 'bx-down-arrow-alt';
     }
 
+    // Znaczek CPN
     const todayStr = new Date().toLocaleDateString('sv-SE');
     let cpnTagHtml = '';
-    
     const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
     const isNewCpn = todayStr >= '2026-08-15' && todayStr < '2026-09-01';
-    
     if (fuelData.productName !== 'LPG' && (isOldCpn || isNewCpn)) {
         cpnTagHtml = '<span class="cpn-badge">CPN</span>';
     }
@@ -553,41 +555,65 @@ function createFuelCard(fuelData) {
     // Dodatkowy boks dla Vervy Diesel
     let vervaNoteHtml = '';
     if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
-        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; margin-top: 8px; font-weight: 600; background: rgba(227, 6, 19, 0.05); padding: 6px; border-radius: 6px; border: 1px dashed rgba(227, 6, 19, 0.3);">
-            Prawdopodobna cena na stacji: ${fuelData.probableVervaPrice.toFixed(2)} PLN <br>
+        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; font-weight: 700; background: rgba(227, 6, 19, 0.05); padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(227, 6, 19, 0.2);">
+            <span><i class='bx bx-station'></i> Na stacji ok.</span> <span>${fuelData.probableVervaPrice.toFixed(2)} PLN</span>
         </div>`;
     }
-    
-    // --- NOWY KOD: KOMPAKTOWY BLOK CENY REGULARNEJ ---
-    let regularPriceHtml = '';
-    if (fuelData.todayRegularPrice && fuelData.todayRegularPrice > fuelData.todayPrice) {
-        regularPriceHtml = `
-            <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; margin-right: 10px;">
-                <span style="font-size: 0.65rem; color: var(--text-light); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1; margin-bottom: 2px;">Bez pakietu</span>
-                <span class="diagonal-strike" style="font-size: 1.25rem; line-height: 1;">${fuelData.todayRegularPrice.toFixed(2)}</span>
-            </div>
-        `;
+
+    // --- ZMIENNE DLA DOLNEGO PASKA (FOOTER) ---
+    let footerClass = 'footer-neutral';
+    let footerIcon = 'bx-check';
+    let footerText = 'Jutro cena bez zmian';
+    let footerValue = '';
+
+    if (fuelData.tomorrowBadgeHtml && fuelData.tomorrowBadgeHtml !== '') {
+        if (!fuelData.tomorrowBadgeHtml.includes('bez zmian')) {
+            const isUp = fuelData.tomorrowBadgeHtml.includes('bx-trending-up');
+            const diffMatch = fuelData.tomorrowBadgeHtml.match(/\((.*?)\)/);
+            const priceMatch = fuelData.tomorrowBadgeHtml.match(/Jutro:\s*([0-9.]+)/);
+            
+            const diffText = diffMatch ? diffMatch[1] : '';
+            const priceText = priceMatch ? priceMatch[1] : '';
+            
+            footerClass = isUp ? 'footer-up' : 'footer-down';
+            footerIcon = isUp ? 'bx-trending-up' : 'bx-trending-down';
+            footerText = 'Na jutro:';
+            footerValue = `${priceText} PLN <span style="opacity: 0.7; font-size: 0.85em; margin-left: 4px;">(${diffText})</span>`;
+        }
     }
 
+    // Generowanie ostatecznego HTML karty
     card.innerHTML = `
-        <div class="fuel-header">
-            <img src="${productIcons[fuelData.productName]}" alt="${fuelData.productName}" class="fuel-icon">
-            <div class="fuel-name">${getFuelDisplayName(fuelData.productName)} ${cpnTagHtml}</div>
+        <div class="fuel-card-body">
+            <div class="fuel-header">
+                <div class="fuel-icon-wrapper">
+                    <img src="${productIcons[fuelData.productName]}" alt="${fuelData.productName}" class="fuel-icon">
+                </div>
+                <div class="fuel-name">${getFuelDisplayName(fuelData.productName)} ${cpnTagHtml}</div>
+            </div>
+            
+            <div class="price-section">
+                <div class="price-main">
+                    <span class="digital-price">${fuelData.todayPrice.toFixed(2)}</span>
+                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                </div>
+                <div class="trend-pill ${pillClass}">
+                    <i class='bx ${iconClass}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
+                </div>
+            </div>
+
+            <div class="wholesale-line">
+                <span><i class='bx bx-building-house'></i> Hurt netto</span>
+                <strong>${fuelData.todayNetto.toFixed(2)} PLN</strong>
+            </div>
+
+            ${vervaNoteHtml}
         </div>
         
-        <div class="fuel-price" style="display: flex; align-items: center; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-            ${regularPriceHtml}
-            <div style="display: flex; align-items: center; flex-wrap: wrap;">
-                <span style="font-size: 2rem; font-weight: 700; color: var(--primary);">${fuelData.todayPrice.toFixed(2)} PLN</span>
-                <span class="price-change ${priceChangeClass}">
-                    <i class='bx ${priceChangeIcon}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
-                </span>
-            </div>
+        <div class="fuel-footer ${footerClass}">
+            <span style="display:flex; align-items:center; gap:8px;"><i class='bx ${footerIcon}' style="font-size: 1.2rem;"></i> ${footerText}</span>
+            <span>${footerValue}</span>
         </div>
-
-        <div class="fuel-price-wholesale">Hurt netto: ${fuelData.todayNetto.toFixed(2)} PLN</div>
-        ${vervaNoteHtml}
-        ${fuelData.tomorrowBadgeHtml}
     `;
     
     originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
@@ -598,14 +624,15 @@ function createFuelCard(fuelData) {
 
 function processForecastData() {
     const forecastData = [
-        { productName: 'Pb95', minPrice: 6.42, maxPrice: 6.59 },
-        { productName: 'Pb98', minPrice: 7.24, maxPrice: 7.39 },
-        { productName: 'ONEkodiesel', minPrice: 7.49, maxPrice: 7.61 },
-        { productName: 'ONArctic2', minPrice: 7.69, maxPrice: 7.89 },
-        { productName: 'LPG', minPrice: 2.79, maxPrice: 2.99 }
+        { productName: 'Pb95', minPrice: 7.86, maxPrice: 7.99 },
+        { productName: 'Pb98', minPrice: 8.74, maxPrice: 8.89 },
+        { productName: 'ONEkodiesel', minPrice: 8.94, maxPrice: 9.07 },
+        { productName: 'ONArctic2', minPrice: 9.14, maxPrice: 9.39 },
+        { productName: 'LPG', minPrice: 2.95, maxPrice: 3.09 }
     ];
     
     const forecastGrid = document.getElementById('forecastGrid');
+    if (!forecastGrid) return;
     forecastGrid.innerHTML = '';
     
     const todayStr = new Date().toLocaleDateString('sv-SE');
@@ -622,14 +649,33 @@ function processForecastData() {
             cpnTagHtml = '<span class="cpn-badge">CPN</span>';
         }
 
+        // Nowa, ekskluzywna struktura karty prognozy
         card.innerHTML = `
-            <div class="fuel-header">
-                <img src="${productIcons[data.productName]}" alt="${data.productName}" class="fuel-icon">
-                <div class="fuel-name">${getFuelDisplayName(data.productName)} ${cpnTagHtml}</div>
+            <div class="fuel-card-body">
+                <div class="fuel-header">
+                    <div class="fuel-icon-wrapper">
+                        <img src="${productIcons[data.productName]}" alt="${data.productName}" class="fuel-icon">
+                    </div>
+                    <div class="fuel-name">${getFuelDisplayName(data.productName)} ${cpnTagHtml}</div>
+                </div>
+                
+                <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                    <div class="price-main" style="align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                        <span class="digital-price" style="font-size: 2.2rem !important;">${data.minPrice.toFixed(2)}</span>
+                        <span style="font-size: 1.5rem; color: var(--text-light); font-weight: 300;">-</span>
+                        <span class="digital-price" style="font-size: 2.2rem !important;">${data.maxPrice.toFixed(2)}</span>
+                        <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-light); margin-left: 2px;">PLN</span>
+                    </div>
+                </div>
             </div>
-            <div class="fuel-price">${data.minPrice.toFixed(2)} - ${data.maxPrice.toFixed(2)} PLN</div>
-            <div class="fuel-price-wholesale">Prognozowany zakres cen</div>
+            
+            <div class="fuel-footer footer-neutral" style="justify-content: flex-start;">
+                <span style="display:flex; align-items:center; gap:8px; font-size: 0.85rem;">
+                    <i class='bx bx-radar' style="font-size: 1.2rem;"></i> Prognozowany zakres na stacjach
+                </span>
+            </div>
         `;
+        
         forecastGrid.appendChild(card);
     });
 }
@@ -1772,96 +1818,94 @@ function fetchGermanData() {
             ];
 
             fuelsDE.forEach(fuel => {
-                if (!fuel.priceEur || !fuel.pricePln) return; // Jeśli stacja nie ma danego paliwa, pomijamy
+                if (!fuel.priceEur || !fuel.pricePln) return; // Pomijamy, jeśli stacja nie ma danego paliwa
 
                 const card = document.createElement('div');
-                card.className = 'fuel-card animate-up'; // Wykorzystuje klasy Twojego szablonu
-                card.style.display = 'flex';
-                card.style.flexDirection = 'column';
-                card.style.justifyContent = 'space-between';
+                card.className = 'fuel-card animate-up'; // Korzystamy z nowego, ekskluzywnego formatu kart!
 
-                const iconSrc = productIcons[fuel.id] || ''; // Korzysta z Twojej bazy ikon
+                const iconSrc = productIcons[fuel.id] || '';
 
-                // Logika Niemieckiej Ceny (Indeks górny dla ostatniej cyfry)
+                // Logika Niemieckiej Ceny (Indeks górny dla ostatniej cyfry w EUR)
                 const eurString = fuel.priceEur.toFixed(3);
                 const mainEurPart = eurString.slice(0, -1);
                 const lastDigit = eurString.slice(-1);
 
-                // Logika porównania z polskim Orlenem
-                let comparisonHtml = '';
-                const plPriceStr = originalPrices[fuel.id];
+                // Zmienne dla paska dolnego (Porównanie z Polską)
+                let footerClass = 'footer-neutral';
+                let footerIcon = 'bx-transfer-alt';
+                let footerText = 'Zbliżone ceny';
+                let footerValue = '';
 
+                const plPriceStr = originalPrices[fuel.id];
                 if (plPriceStr) {
                     const plPrice = parseFloat(plPriceStr);
                     const dePrice = fuel.pricePln;
                     const diff = dePrice - plPrice;
 
                     if (Math.abs(diff) < 0.02) {
-                        comparisonHtml = `
-                            <div style="margin-bottom: 14px; background: rgba(33, 150, 243, 0.1); color: var(--info); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(33, 150, 243, 0.2);">
-                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-transfer-alt' style="font-size: 1.1rem;"></i> Zbliżone ceny</span>
-                                <span>${plPrice.toFixed(2)} PLN w PL</span>
-                            </div>
-                        `;
+                        footerValue = `${plPrice.toFixed(2)} PLN w PL`;
                     } else if (diff > 0) {
-                        comparisonHtml = `
-                            <div style="margin-bottom: 14px; background: rgba(76, 175, 80, 0.1); color: var(--success); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(76, 175, 80, 0.2);">
-                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-check-circle' style="font-size: 1.1rem;"></i> W Polsce taniej</span>
-                                <span>o ${diff.toFixed(2)} PLN/l</span>
-                            </div>
-                        `;
+                        // W Niemczech drożej -> W Polsce taniej -> ZIELONY PASEK
+                        footerClass = 'footer-down'; 
+                        footerIcon = 'bx-check-circle';
+                        footerText = 'W Polsce taniej';
+                        footerValue = `o ${diff.toFixed(2)} PLN/l`;
                     } else {
-                        comparisonHtml = `
-                            <div style="margin-bottom: 14px; background: rgba(227, 6, 19, 0.1); color: var(--error); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(227, 6, 19, 0.2);">
-                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-error-circle' style="font-size: 1.1rem;"></i> W Niemczech taniej</span>
-                                <span>o ${Math.abs(diff).toFixed(2)} PLN/l</span>
-                            </div>
-                        `;
+                        // W Niemczech taniej -> CZERWONY PASEK
+                        footerClass = 'footer-up'; 
+                        footerIcon = 'bx-error-circle';
+                        footerText = 'W Niemczech taniej';
+                        footerValue = `o ${Math.abs(diff).toFixed(2)} PLN/l`;
                     }
+                } else {
+                    footerText = 'Brak danych PL do porównania';
                 }
 
+                // Generowanie HTML na bazie nowej architektury
                 card.innerHTML = `
-                    <div class="fuel-header" style="margin-bottom: 0;">
-                        <img src="${iconSrc}" alt="${fuel.name}" class="fuel-icon">
-                        <div class="fuel-name" style="display: flex; align-items: center; gap: 8px;">
-                            ${fuel.name} 
-                            <span style="background: linear-gradient(135deg, #1e2022, #2b2d42); color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">🇩🇪 DE</span>
-                        </div>
-                    </div>
-                    
-                    <div class="fuel-price" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 1.2rem 0; flex-wrap: wrap; gap: 10px;">
-                        <div style="display: flex; align-items: baseline; gap: 4px;">
-                            <span style="font-size: 2.4rem; font-weight: 900; color: var(--primary); line-height: 1; font-family: 'Outfit', sans-serif; text-shadow: 0 2px 10px rgba(227, 6, 19, 0.1);">${fuel.pricePln.toFixed(2)}</span>
-                            <span style="font-size: 0.9rem; font-weight: 800; color: var(--primary);">PLN</span>
-                        </div>
-                        <div style="display: inline-flex; align-items: center; background: rgba(128,128,128,0.06); padding: 4px 12px 4px 4px; border-radius: 50px; border: 1px solid rgba(128,128,128,0.12);">
-                            <div style="background: var(--text); color: var(--card-bg); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-                                <i class='bx bx-euro' style="font-size: 1rem;"></i>
+                    <div class="fuel-card-body">
+                        <div class="fuel-header">
+                            <div class="fuel-icon-wrapper">
+                                <img src="${iconSrc}" alt="${fuel.name}" class="fuel-icon">
                             </div>
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--text); font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">
-                                ${mainEurPart}<sup style="font-size: 0.65em; top: -0.4em; position: relative; font-weight: 900; margin-left: 1px;">${lastDigit}</sup>
-                            </span>
+                            <div class="fuel-name">
+                                ${fuel.name} 
+                                <span style="background: linear-gradient(135deg, #1e2022, #2b2d42); color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); margin-left: 4px;">🇩🇪 DE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="price-section">
+                            <div class="price-main">
+                                <span class="digital-price">${fuel.pricePln.toFixed(2)}</span>
+                                <span>PLN</span>
+                            </div>
+                            
+                            <!-- Pigułka z ceną w Euro -->
+                            <div style="background: rgba(128,128,128,0.06); padding: 4px 12px 4px 4px; border-radius: 50px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(128,128,128,0.12);">
+                                <div style="background: var(--text); color: var(--card-bg); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                    <i class='bx bx-euro' style="font-size: 1rem;"></i>
+                                </div>
+                                <span style="font-size: 1.1rem; font-weight: 800; color: var(--text); font-family: 'Outfit', sans-serif;">
+                                    ${mainEurPart}<sup style="font-size: 0.65em; top: -0.4em; position: relative; font-weight: 900; margin-left: 1px;">${lastDigit}</sup>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="wholesale-line" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bxs-gas-pump'></i> Stacja</span>
+                                <strong style="font-family: 'Outfit', sans-serif; font-size: 0.95rem; color: var(--text);">${station.brand}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="display: flex; align-items: center; gap: 6px;"><i class='bx bx-line-chart'></i> Kurs NBP</span>
+                                <strong style="font-family: 'Outfit', sans-serif; font-size: 0.95rem; color: var(--text);">1 EUR = ${exchangeRate.toFixed(2)} PLN</strong>
+                            </div>
                         </div>
                     </div>
                     
-                    ${comparisonHtml}
-                    
-                    <div style="background: rgba(128,128,128,0.04); border-radius: 12px; padding: 12px; border: 1px solid rgba(128,128,128,0.08); margin-top: auto;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <span style="color: var(--text-light); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                                <i class='bx bxs-gas-pump' style="font-size: 0.9rem;"></i> Stacja
-                            </span>
-                            <strong style="color: var(--text); font-size: 0.85rem; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">${station.brand} (${station.place})</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <span style="color: var(--text-light); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                                <i class='bx bx-line-chart' style="font-size: 0.9rem;"></i> Kurs NBP
-                            </span>
-                            <strong style="color: var(--text); font-size: 0.85rem; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;">1 EUR = ${exchangeRate.toFixed(2)} PLN</strong>
-                        </div>
-                        <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 6px; font-size: 0.7rem; color: var(--text-light);">
-                            <span>Źródło: <a href="https://www.tankerkoenig.de" target="_blank" rel="noopener noreferrer" style="color: var(--text-light); text-decoration: underline;">Tankerkönig (CC BY 4.0)</a></span>
-                        </div>
+                    <div class="fuel-footer ${footerClass}">
+                        <span style="display:flex; align-items:center; gap:8px;"><i class='bx ${footerIcon}' style="font-size: 1.2rem;"></i> ${footerText}</span>
+                        <span>${footerValue}</span>
                     </div>
                 `;
                 germanGrid.appendChild(card);
