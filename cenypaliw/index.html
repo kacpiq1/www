@@ -155,26 +155,82 @@
 
         <h1 class="animate" style="margin-top: 2rem;">Strefa EV - Orlen Charge</h1>
         <div class="fuel-grid" id="evGrid">
-            <div class="fuel-card animate-up">
-                <div class="fuel-header">
-                    <i class='bx bx-plug fuel-icon' style="font-size: 2.5rem; color: #4CAF50;"></i>
-                    <div class="fuel-name">Złącze AC (≤ 22 kW)</div>
+            <!-- Karta 1: AC -->
+            <div class="fuel-card animate-up ev-card ac-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bx-plug"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Złącze AC
+                            <span class="ev-power">Moc: ≤ 22 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">1.95</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="fuel-price">1.95 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bx-time-five' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>~3-4h</span>
+                </div>
             </div>
-            <div class="fuel-card animate-up">
-                <div class="fuel-header">
-                    <i class='bx bxs-zap fuel-icon' style="font-size: 2.5rem; color: #E30613;"></i>
-                    <div class="fuel-name">Złącze DC (50 - 150 kW)</div>
+
+            <!-- Karta 2: DC -->
+            <div class="fuel-card animate-up ev-card dc-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bxs-zap"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Złącze DC
+                            <span class="ev-power">Moc: 50 - 150 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">2.69</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="fuel-price">2.69 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bx-stopwatch' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>~45 min</span>
+                </div>
             </div>
-            <div class="fuel-card animate-up">
-                <div class="fuel-header">
-                    <i class='bx bx-bolt-circle fuel-icon' style="font-size: 2.5rem; color: #2196F3;"></i>
-                    <div class="fuel-name">Ultraszybkie HPC (≥ 150 kW)</div>
+
+            <!-- Karta 3: HPC -->
+            <div class="fuel-card animate-up ev-card hpc-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bx-bolt-circle"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Ultraszybkie
+                            <span class="ev-power">Moc: ≥ 150 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">3.19</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="fuel-price">3.19 PLN <span style="font-size: 1rem; color: var(--text-light); margin-left: 5px;">/ kWh</span></div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bxs-timer' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>15-20 min</span>
+                </div>
             </div>
         </div>
 
@@ -194,7 +250,10 @@
         </div>
 
         <div class="update-info animate">
-            Prognoza na okres 24.08-30.08.2026
+            <div class="status-pill status-forecast">
+                <span class="live-dot"></span>
+                <span>Prognoza na okres 24.08 - 30.08.2026</span>
+            </div>
         </div>
     </div>
 
@@ -674,12 +733,15 @@
         </div>
     </div>
 
-    <div class="voice-toggle" id="voiceToggleBtn" onclick="speakPrices()">
-        <i class='bx bx-volume-full'></i>
-    </div>
-
-    <div class="theme-toggle" onclick="toggleTheme()">
-        <i class='bx bxs-adjust'></i>
+    <!-- SZKLANA PIGUŁKA AKCJI (GÓRA EKRANU) -->
+    <div class="top-actions-pill">
+        <button id="voiceToggleBtn" onclick="speakPrices()" title="Asystent Głosowy">
+            <i class='bx bx-podcast'></i>
+        </button>
+        <div class="pill-divider"></div>
+        <button onclick="toggleTheme()" title="Zmień motyw">
+            <i class='bx bxs-moon'></i>
+        </button>
     </div>
 
     <div class="notification" id="notification"></div>
@@ -780,6 +842,34 @@
             </div>
         </div>
     </div>
+
+    <!-- RIGHT SIDE NAVIGATION (DESKTOP) -->
+    <nav class="quick-side-nav">
+        <a href="#trend-widget" id="nav-trend" class="side-nav-item">
+            <i class='bx bx-trending-up'></i>
+            <span class="side-nav-tooltip">Analiza Trendów</span>
+        </a>
+        <a href="#macroContainer" id="nav-macro" class="side-nav-item">
+            <i class='bx bx-line-chart'></i>
+            <span class="side-nav-tooltip">Giełda (Ropa & USD)</span>
+        </a>
+        <a href="#fuelGrid" id="nav-fuels" class="side-nav-item">
+            <i class='bx bxs-gas-pump'></i>
+            <span class="side-nav-tooltip">Dzisiejsze Ceny</span>
+        </a>
+        <a href="#evGrid" id="nav-ev" class="side-nav-item">
+            <i class='bx bx-plug'></i>
+            <span class="side-nav-tooltip">Strefa EV</span>
+        </a>
+        <a href="#germanFuelGrid" id="nav-de" class="side-nav-item">
+            <i class='bx bx-globe'></i>
+            <span class="side-nav-tooltip">Ceny w Niemczech</span>
+        </a>
+        <a href="#forecastGrid" id="nav-forecast" class="side-nav-item">
+            <i class='bx bx-radar'></i>
+            <span class="side-nav-tooltip">Prognozy na jutro</span>
+        </a>
+    </nav>
 
     <footer class="animate">
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
