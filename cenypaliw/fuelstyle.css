@@ -3112,3 +3112,549 @@ body.dark-theme .macro-icon {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text);
 }
+
+/* =========================================
+   KARTY PALIW 3.0 - PREMIUM DASHBOARD
+   ========================================= */
+.fuel-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 0; /* Wyzerowane, bo budujemy kartę z sekcji */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    overflow: hidden; /* Kluczowe dla dolnego paska prognozy */
+    position: relative;
+}
+
+.fuel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(227, 6, 19, 0.1);
+}
+
+.fuel-card-body {
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    flex-grow: 1;
+}
+
+.fuel-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 0;
+}
+
+/* Tło dla samej ikonki paliwa */
+.fuel-icon-wrapper {
+    background: rgba(0,0,0,0.03);
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.fuel-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.fuel-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text);
+    letter-spacing: 0.2px;
+}
+
+/* Strefa wielkiej ceny na pylonie */
+.price-section {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed rgba(0,0,0,0.08);
+}
+
+.price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+/* Nowoczesna "pigułka" zmiany procentowej */
+.trend-pill {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.5px;
+}
+.trend-pill.up { background: #fff0f0; color: #E30613; border: 1px solid #ffe0e0; }
+.trend-pill.down { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
+.trend-pill.neutral { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+
+/* Linia z ceną hurtową netto */
+.wholesale-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 600;
+    background: rgba(0,0,0,0.02);
+    padding: 12px 16px;
+    border-radius: 12px;
+}
+
+.wholesale-line strong {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+/* Dolny zintegrowany pasek - Prognoza na jutro */
+.fuel-footer {
+    padding: 1.2rem 1.8rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.03);
+}
+
+.footer-up { background: rgba(227, 6, 19, 0.05); color: #E30613; }
+.footer-down { background: rgba(76, 175, 80, 0.05); color: #16a34a; }
+.footer-neutral { background: rgba(0,0,0,0.02); color: #64748b; }
+
+/* --- DARK THEME FIXES --- */
+body.dark-theme .fuel-card { background: var(--dark-card); border-color: rgba(255,255,255,0.05); }
+body.dark-theme .fuel-icon-wrapper { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.05); }
+body.dark-theme .price-section { border-bottom-color: rgba(255,255,255,0.05); }
+body.dark-theme .wholesale-line { background: rgba(255,255,255,0.02); }
+body.dark-theme .wholesale-line strong { color: #fff; }
+
+body.dark-theme .trend-pill.up { background: rgba(227, 6, 19, 0.15); border-color: rgba(227, 6, 19, 0.2); }
+body.dark-theme .trend-pill.down { background: rgba(76, 175, 80, 0.15); border-color: rgba(76, 175, 80, 0.2); }
+body.dark-theme .trend-pill.neutral { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #94a3b8; }
+
+body.dark-theme .footer-up { background: rgba(227, 6, 19, 0.1); }
+body.dark-theme .footer-down { background: rgba(76, 175, 80, 0.1); }
+body.dark-theme .footer-neutral { background: rgba(255,255,255,0.03); border-top-color: rgba(255,255,255,0.05); }
+
+/* =========================================
+   ULTRA PREMIUM FIX - CZCIONKA I IKONY
+   ========================================= */
+
+/* 1. Perfekcyjnie wyśrodkowana ikona na czystym tle */
+.fuel-icon-wrapper {
+    background: #f4f6f8 !important; /* Bardzo delikatny, chłodny szary */
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.fuel-icon {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important; /* Usuwa zepsute przesunięcie */
+    padding: 0 !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15)) !important; /* Lepsza, głębsza głębia ikony */
+}
+
+/* 2. Czysta, potężna cena (Styl Apple / FinTech) */
+.digital-price {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 2.8rem !important;
+    font-weight: 900 !important; /* Maksymalne pogrubienie dla czytelności */
+    letter-spacing: -1px !important; /* Lekkie ściśnięcie cyfr */
+    color: #1e2022 !important; /* Elegancki, głęboki grafit zamiast rażącej czerwieni */
+    text-shadow: none !important; /* Wyrzucamy tanie, rozmazane cienie */
+    line-height: 1 !important;
+}
+
+/* Szare, dyskretne "PLN" w kontrze do wielkiej ceny */
+.price-main span:last-child {
+    color: #8D99AE !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    transform: translateY(-2px) !important;
+}
+
+/* --- Wersja dla trybu ciemnego (Dark Mode) --- */
+body.dark-theme .digital-price {
+    color: #ffffff !important; /* Śnieżnobiała cena na ciemnym tle */
+}
+
+body.dark-theme .fuel-icon-wrapper {
+    background: rgba(255,255,255,0.03) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* =========================================
+   STREFA EV - ELEKTRYCZNY PREMIUM DESIGN
+   ========================================= */
+.ev-card {
+    border-top: 4px solid transparent;
+}
+
+.ev-card .fuel-name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1.1;
+}
+
+.ev-power {
+    font-size: 0.75rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.ev-card .fuel-icon-wrapper i {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+}
+
+/* 1. KARTA AC (ZIELONA) */
+.ac-card { border-top-color: #4CAF50; }
+.ac-card .fuel-icon-wrapper { background: rgba(76, 175, 80, 0.1) !important; border-color: rgba(76, 175, 80, 0.2) !important; color: #4CAF50; }
+.ac-card .fuel-footer { background: rgba(76, 175, 80, 0.05); border-top: 1px solid rgba(76, 175, 80, 0.1); color: #16a34a; }
+
+/* 2. KARTA DC (CZERWONA) */
+.dc-card { border-top-color: #E30613; }
+.dc-card .fuel-icon-wrapper { background: rgba(227, 6, 19, 0.1) !important; border-color: rgba(227, 6, 19, 0.2) !important; color: #E30613; }
+.dc-card .fuel-footer { background: rgba(227, 6, 19, 0.05); border-top: 1px solid rgba(227, 6, 19, 0.1); color: #E30613; }
+
+/* 3. KARTA HPC (NIEBIESKA) */
+.hpc-card { border-top-color: #2196F3; }
+.hpc-card .fuel-icon-wrapper { background: rgba(33, 150, 243, 0.1) !important; border-color: rgba(33, 150, 243, 0.2) !important; color: #2196F3; }
+.hpc-card .fuel-footer { background: rgba(33, 150, 243, 0.05); border-top: 1px solid rgba(33, 150, 243, 0.1); color: #2196F3; }
+
+/* Tryb Ciemny dla EV */
+body.dark-theme .ac-card .fuel-footer { background: rgba(76, 175, 80, 0.1); }
+body.dark-theme .dc-card .fuel-footer { background: rgba(227, 6, 19, 0.1); }
+body.dark-theme .hpc-card .fuel-footer { background: rgba(33, 150, 243, 0.1); }
+body.dark-theme .ev-card .fuel-icon-wrapper i { filter: drop-shadow(0 0 10px currentColor); } /* Efekt neonowego świecenia w nocy */
+
+/* =========================================
+   NOWOCZESNE STATUSY AKTUALIZACJI (PILLS)
+   ========================================= */
+.update-info {
+    background: transparent !important; /* Usuwamy stare, kanciaste szare tło */
+    padding: 0 !important;
+    margin: 1.5rem 0 2.5rem 0 !important;
+    display: flex;
+    justify-content: center;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+    background: var(--card-bg);
+    transition: all 0.3s ease;
+}
+
+/* Kropka pulsująca (Wskaźnik na żywo) */
+.live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Stan: JUTRO (Aktywna aktualizacja) */
+.status-tomorrow {
+    color: #E30613;
+    border-color: rgba(227, 6, 19, 0.2);
+    background: linear-gradient(145deg, #ffffff, #fff5f5);
+}
+.status-tomorrow .live-dot {
+    background-color: #E30613;
+    box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.4);
+    animation: pulseRed 2s infinite;
+}
+
+/* Stan: DZISIAJ (Spokój) */
+.status-today {
+    color: #16a34a;
+    border-color: rgba(22, 163, 74, 0.2);
+    background: linear-gradient(145deg, #ffffff, #f0fdf4);
+}
+.status-today .live-dot {
+    background-color: #16a34a;
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+    animation: pulseGreen 2s infinite;
+}
+
+/* Animacje pulsowania samej kropki */
+@keyframes pulseRed {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(227, 6, 19, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(227, 6, 19, 0); }
+}
+
+@keyframes pulseGreen {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* --- DARK THEME --- */
+body.dark-theme .status-tomorrow { background: rgba(227, 6, 19, 0.1); border-color: rgba(227, 6, 19, 0.2); color: #ff6b6b; }
+body.dark-theme .status-today { background: rgba(22, 163, 74, 0.1); border-color: rgba(22, 163, 74, 0.2); color: #81c784; }
+
+/* Stan: PROGNOZA (Niebieski informacyjny) */
+.status-forecast {
+    color: #2196F3;
+    border-color: rgba(33, 150, 243, 0.2);
+    background: linear-gradient(145deg, #ffffff, #f0f8ff);
+}
+.status-forecast .live-dot {
+    background-color: #2196F3;
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4);
+    animation: pulseBlue 2s infinite;
+}
+
+@keyframes pulseBlue {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(33, 150, 243, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+}
+
+/* --- DARK THEME FIX DLA PROGNOZY --- */
+body.dark-theme .status-forecast { 
+    background: rgba(33, 150, 243, 0.1); 
+    border-color: rgba(33, 150, 243, 0.2); 
+    color: #64b5f6; 
+}
+
+/* =========================================
+   SZYBKA NAWIGACJA BOCZNA (QUICK NAV)
+   ========================================= */
+
+/* Płynne przewijanie do sekcji */
+html {
+    scroll-behavior: smooth;
+}
+
+.quick-side-nav {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 10px;
+    border-radius: 50px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.side-nav-item {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--card-bg);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Stan Hover i Aktywny (Podświetla się na czerwono) */
+.side-nav-item:hover, 
+.side-nav-item.active {
+    color: #fff;
+    background: var(--primary);
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(227, 6, 19, 0.3);
+}
+
+/* Dymek z opisem (Tooltip) */
+.side-nav-tooltip {
+    position: absolute;
+    right: 60px;
+    background: var(--text);
+    color: var(--card-bg);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(15px);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.side-nav-item:hover .side-nav-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* Ukrywamy nawigację na telefonach i małych tabletach */
+@media (max-width: 1024px) {
+    .quick-side-nav {
+        display: none !important;
+    }
+}
+
+/* --- WSPARCIE DLA TRYBU CIEMNEGO --- */
+body.dark-theme .quick-side-nav {
+    background: rgba(30, 30, 30, 0.6);
+    border-color: rgba(255,255,255,0.05);
+}
+body.dark-theme .side-nav-item {
+    background: var(--dark-card);
+    color: #94a3b8;
+}
+body.dark-theme .side-nav-item:hover, 
+body.dark-theme .side-nav-item.active {
+    background: var(--primary);
+    color: #fff;
+}
+body.dark-theme .side-nav-tooltip {
+    background: #fff;
+    color: #1e2022;
+}
+
+/* =========================================
+   ZINTEGROWANA PIGUŁKA AKCJI (LEKTOR + MOTYW)
+   ========================================= */
+.top-actions-pill {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    z-index: 2000; /* Zawsze na wierzchu */
+}
+
+.top-actions-pill button {
+    background: transparent;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.top-actions-pill button:hover {
+    background: var(--card-bg);
+    color: var(--primary);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.top-actions-pill .pill-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 6px;
+}
+
+/* Stan "Mówienia" dla Lektora */
+.top-actions-pill button.speaking {
+    background: #E30613;
+    color: white;
+    animation: pulseMic 1.5s infinite;
+}
+
+@keyframes pulseMic {
+    0% { box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(227, 6, 19, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(227, 6, 19, 0); }
+}
+
+/* Wersja Dark Mode */
+body.dark-theme .top-actions-pill {
+    background: rgba(30, 30, 30, 0.7);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+body.dark-theme .top-actions-pill button { color: #e2e8f0; }
+body.dark-theme .top-actions-pill button:hover { background: var(--dark-card); color: #ff4b52; }
+body.dark-theme .top-actions-pill .pill-divider { background: rgba(255, 255, 255, 0.1); }
+
+/* =========================================
+   POPRAWKA DLA IPHONE'ÓW (DOLNY PASEK)
+   ========================================= */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        /* Automatyczne wykrywanie paska dolnego na iPhone X i nowszych */
+        padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+    
+    /* Na telefonach pigułkę zmniejszamy, by nie zasłaniała treści */
+    .top-actions-pill {
+        top: 15px;
+        right: 15px;
+        padding: 4px;
+    }
+    .top-actions-pill button {
+        width: 38px;
+        height: 38px;
+        font-size: 1.25rem;
+    }
+}
