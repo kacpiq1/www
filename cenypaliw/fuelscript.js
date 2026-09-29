@@ -552,17 +552,6 @@ function createFuelCard(fuelData) {
         cpnTagHtml = '<span class="cpn-badge">CPN</span>';
     }
 
-    // Dodatkowy boks dla Vervy Diesel
-    let vervaNoteHtml = '';
-    if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
-        vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; font-weight: 700; background: rgba(227, 6, 19, 0.05); padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(227, 6, 19, 0.2);">
-            <span><i class='bx bx-station'></i> Cena na stacji ok.</span> 
-            <div class="verva-info-tooltip" data-tooltip="Szacowana cena: ${fuelData.probableVervaPrice.toFixed(2)} PLN (Efecta + 20 gr)">
-                <i class='bx bx-info-circle' style="color: #8D99AE; font-size: 1.2rem; cursor: pointer; transition: color 0.2s;"></i>
-            </div>
-        </div>`;
-    }
-
     // --- ZMIENNE DLA DOLNEGO PASKA (FOOTER) ---
     let footerClass = 'footer-neutral';
     let footerIcon = 'bx-check';
@@ -585,6 +574,24 @@ function createFuelCard(fuelData) {
         }
     }
 
+    // --- NOWA LOGIKA DLA GŁÓWNEJ CENY I TOOLTIPA (VERVA DIESEL) ---
+    let displayPrice = fuelData.todayPrice;
+    let priceColorStyle = ''; // Domyślny kolor dla innych paliw
+    let infoIconHtml = '';
+
+    if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
+        // Podmieniamy główną cenę na tę szacunkową i kolorujemy na czerwono
+        displayPrice = fuelData.probableVervaPrice;
+        priceColorStyle = 'color: #E30613;'; 
+        
+        // Dodajemy ikonkę informacyjną obok PLN
+        infoIconHtml = `
+            <div class="verva-info-tooltip" data-tooltip="Szacowana cena (Efecta + ok. 20 gr)">
+                <i class='bx bx-info-circle' style="color: var(--text-light); font-size: 1.3rem; cursor: pointer; margin-left: 6px; transform: translateY(-2px); display: inline-block;"></i>
+            </div>
+        `;
+    }
+
     // Generowanie ostatecznego HTML karty
     card.innerHTML = `
         <div class="fuel-card-body">
@@ -596,10 +603,13 @@ function createFuelCard(fuelData) {
             </div>
             
             <div class="price-section">
-                <div class="price-main">
-                    <span class="digital-price">${fuelData.todayPrice.toFixed(2)}</span>
-                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                <!-- Podmieniona sekcja wyświetlania głównej ceny -->
+                <div class="price-main" style="display: flex; align-items: baseline;">
+                    <span class="digital-price" style="${priceColorStyle}">${displayPrice.toFixed(2)}</span>
+                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-left: 4px;">PLN</span>
+                    ${infoIconHtml}
                 </div>
+                
                 <div class="trend-pill ${pillClass}">
                     <i class='bx ${iconClass}'></i> ${Math.abs(fuelData.priceChange).toFixed(1)}%
                 </div>
@@ -609,8 +619,6 @@ function createFuelCard(fuelData) {
                 <span><i class='bx bx-building-house'></i> Hurt netto</span>
                 <strong>${fuelData.todayNetto.toFixed(2)} PLN</strong>
             </div>
-
-            ${vervaNoteHtml}
         </div>
         
         <div class="fuel-footer ${footerClass}">
@@ -619,7 +627,10 @@ function createFuelCard(fuelData) {
         </div>
     `;
     
-    originalPrices[fuelData.productName] = fuelData.todayPrice.toFixed(2);
+    // Zapisujemy wyświetloną cenę do zmiennej globalnej, 
+    // aby kalkulatory podróży używały tej samej szacowanej kwoty
+    originalPrices[fuelData.productName] = displayPrice.toFixed(2);
+    
     return card;
 }
 
