@@ -556,7 +556,10 @@ function createFuelCard(fuelData) {
     let vervaNoteHtml = '';
     if (fuelData.productName === 'ONArctic2' && fuelData.probableVervaPrice > 0) {
         vervaNoteHtml = `<div style="font-size: 0.85rem; color: #E30613; font-weight: 700; background: rgba(227, 6, 19, 0.05); padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(227, 6, 19, 0.2);">
-            <span><i class='bx bx-station'></i> Na stacji ok.</span> <span>${fuelData.probableVervaPrice.toFixed(2)} PLN</span>
+            <span><i class='bx bx-station'></i> Cena na stacji ok.</span> 
+            <div class="verva-info-tooltip" data-tooltip="Szacowana cena: ${fuelData.probableVervaPrice.toFixed(2)} PLN (Efecta + 20 gr)">
+                <i class='bx bx-info-circle' style="color: #8D99AE; font-size: 1.2rem; cursor: pointer; transition: color 0.2s;"></i>
+            </div>
         </div>`;
     }
 
