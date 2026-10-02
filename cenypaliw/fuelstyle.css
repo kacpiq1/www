@@ -3879,40 +3879,271 @@ body.dark-theme .verva-info-tooltip::before {
 }
 
 /* =========================================
-   FIX: TABELA HISTORII (3 KOLUMNY)
+   TABELA HISTORII - 3 KOLUMNY (DETAL + HURT)
    ========================================= */
-.history-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    table-layout: auto !important;
-    display: table !important; /* Wymusza zachowanie tabeli (nadpisuje ewentualne display: block) */
+
+/* Środkowa kolumna (Detal) - przeniesienie stylów ze starej prawej krawędzi */
+.history-table td:nth-child(2) {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    border-radius: 0 !important; /* Środek nie ma zaokrągleń */
 }
 
-.history-table thead {
-    display: table-header-group !important;
+/* Nowa, skrajnie prawa kolumna (Hurt) - zaokrąglona i wizualnie oddzielona */
+.history-table td:last-child {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-light) !important;
+    text-align: right;
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+    background: rgba(0, 0, 0, 0.015) !important; /* Delikatnie ciemniejsze tło */
+    border-left: 1px dashed rgba(0, 0, 0, 0.06) !important; /* Pionowa, przerywana linia */
+    display: table-cell !important; /* Kasuje flexa ze starych stylów */
 }
 
-.history-table tbody {
-    display: table-row-group !important;
+/* --- TRYB CIEMNY DLA NOWEJ KOLUMNY --- */
+body.dark-theme .history-table td:last-child {
+    background: rgba(0, 0, 0, 0.15) !important;
+    border-left-color: rgba(255, 255, 255, 0.05) !important;
+    color: #94a3b8 !important;
 }
 
-.history-table tr {
-    display: table-row !important;
-    border-bottom: 1px solid rgba(150, 150, 150, 0.1);
-}
-
-.history-table th, 
-.history-table td {
-    display: table-cell !important;
-    padding: 12px 15px !important;
-    vertical-align: middle;
-}
-
-/* Zapobieganie ucinaniu tabeli na bardzo małych telefonach */
-@media (max-width: 480px) {
-    .history-table th, 
-    .history-table td {
-        padding: 10px 8px !important;
-        font-size: 0.85rem !important;
+/* =========================================
+   RESPONSYWNA TABELA HISTORII (TELEFONY)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Całkowicie wyłączamy zachowanie tabeli, wymuszając 100% szerokości ekranu */
+    .history-table, 
+    .history-table tbody {
+        display: block !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
     }
+
+    .history-table thead {
+        display: none;
+    }
+
+    /* Wiersz jako 100% siatka */
+    .history-table tbody tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr !important;
+        grid-template-rows: auto auto !important;
+        padding: 0.8rem !important;
+        border-radius: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 12px !important; /* Odstęp między "kapsułkami" */
+    }
+
+    .history-table td {
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 1. DATA */
+    .history-table td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        display: flex;
+        align-items: center;
+        border-left: 4px solid rgba(0,0,0,0.05) !important;
+        padding-left: 10px !important;
+        padding-right: 12px !important;
+        margin-right: 12px !important;
+        border-right: 1px solid rgba(0,0,0,0.05) !important;
+        font-size: 0.85rem !important; /* Lepsze dopasowanie małych ekranów */
+    }
+
+    /* 2. DETAL */
+    .history-table td:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+        padding-bottom: 6px !important;
+        justify-content: flex-end !important;
+        border-radius: 0 !important;
+        font-size: 1.1rem !important;
+        gap: 6px !important;
+    }
+
+    /* 3. HURT */
+    .history-table td:last-child {
+        grid-column: 2;
+        grid-row: 2;
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        padding-top: 6px !important;
+        border-top: 1px dashed rgba(0,0,0,0.06) !important;
+        font-size: 0.9rem !important;
+        border-left: none !important;
+    }
+
+    /* Etykiety tekstowe */
+    .history-table td:nth-child(2)::before {
+        content: 'Detal:';
+        font-size: 0.7rem;
+        color: var(--text-light);
+        font-weight: 700;
+        margin-right: auto;
+        text-transform: uppercase;
+    }
+    
+    .history-table td:last-child::before {
+        content: 'Hurt:';
+        font-size: 0.7rem;
+        color: var(--text-light);
+        font-weight: 700;
+        margin-right: auto;
+        text-transform: uppercase;
+    }
+
+    /* --- FIX DLA TRYBU CIEMNEGO --- */
+    body.dark-theme .history-table td:nth-child(1) {
+        border-right-color: rgba(255,255,255,0.05) !important;
+    }
+    body.dark-theme .history-table td:last-child {
+        border-top-color: rgba(255,255,255,0.05) !important;
+        background: transparent !important;
+    }
+}
+
+/* =========================================
+   FIX DLA DŁUGICH DOPISKÓW W DACIE (TELEFONY)
+   ========================================= */
+@media (max-width: 768px) {
+    .history-table td:nth-child(1) {
+        display: flex !important;
+        flex-direction: column !important; /* Układa datę i dopisek jedno pod drugim */
+        justify-content: center !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+
+    /* Ukrywamy znacznik nowej linii, bo flex-column robi to lepiej */
+    .history-table td:nth-child(1) br {
+        display: none !important; 
+    }
+
+    /* Wymuszamy łamanie długiego dopisku "(Następna zmiana...)" */
+    .history-table td:nth-child(1) span {
+        display: block !important;
+        margin-top: 4px !important;
+        line-height: 1.2 !important;
+        white-space: normal !important; /* Pozwala tekstowi przejść do nowej linii */
+        max-width: 100px !important; /* Blokuje rozpychanie prawej kolumny */
+        word-wrap: break-word !important;
+    }
+}
+
+/* =========================================
+   FIX DLA ZNACZKA CPN W TABELI (TELEFONY)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Włączamy elastyczne zawijanie (flex-wrap). 
+       Gdy brakuje miejsca, znaczek spadnie niżej, zamiast rozpychać ekran. */
+    .history-table td:nth-child(2) {
+        flex-wrap: wrap !important;
+        row-gap: 4px !important; /* Dyskretny odstęp, gdy CPN spadnie do nowej linii */
+    }
+
+    /* Zmniejszamy i "odchudzamy" samą odznakę CPN na telefonach */
+    .history-table td:nth-child(2) .cpn-badge {
+        font-size: 0.65rem !important;
+        padding: 3px 6px !important;
+        margin-left: 2px !important;
+        white-space: nowrap !important;
+        transform: scale(0.95); /* Lekkie optyczne pomniejszenie */
+        transform-origin: right center;
+    }
+}
+
+/* =========================================
+   FIX KOLORÓW TABELI W TRYBIE CIEMNYM
+   ========================================= */
+body.dark-theme .history-table td:nth-child(2) {
+    color: #ffffff !important; /* Wymusza śnieżnobiały kolor dla cen Detalicznych */
+}
+
+body.dark-theme .history-table td:nth-child(2)::before {
+    color: #94a3b8 !important; /* Rozjaśnia dopisek "Detal:" na telefonach */
+}
+
+/* =========================================
+   OSTATECZNY SZLIF (PERFECT UI)
+   ========================================= */
+
+/* 1. SPRZĘTOWE WYGŁADZANIE CZCIONEK */
+body {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+}
+
+/* 2. EKSKLUZYWNY PASEK PRZEWIJANIA (Scrollbar) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px; /* Dla osi poziomej w tabelach */
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.3);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(227, 6, 19, 0.6);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* Tryb ciemny dla paska przewijania */
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: rgba(227, 6, 19, 0.8);
+}
+
+/* 3. UJEDNOLICENIE OKIENEK (GLASSMORPHISM DLA WSZYSTKICH) */
+/* Zakładam, że Twoje okienka mają klasy typu .modal lub konkretne ID */
+#historyModal, #dispenserModal, #couponModal, #infoModal {
+    background-color: rgba(248, 249, 250, 0.6) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+}
+
+/* Poprawa kontrastu dla samych białych kart wewnątrz starych okienek */
+.modal-content {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 24px !important;
+}
+
+/* Tryb ciemny dla teł okienek */
+body.dark-theme #historyModal, 
+body.dark-theme #dispenserModal, 
+body.dark-theme #couponModal, 
+body.dark-theme #infoModal {
+    background-color: rgba(18, 18, 18, 0.75) !important;
+}
+
+body.dark-theme .modal-content {
+    border-color: rgba(255, 255, 255, 0.05) !important;
 }
