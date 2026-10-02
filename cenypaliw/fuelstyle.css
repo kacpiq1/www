@@ -3877,3 +3877,42 @@ body.dark-theme .verva-info-tooltip::before {
     width: 100% !important;
     box-sizing: border-box !important;
 }
+
+/* =========================================
+   FIX: TABELA HISTORII (3 KOLUMNY)
+   ========================================= */
+.history-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+    display: table !important; /* Wymusza zachowanie tabeli (nadpisuje ewentualne display: block) */
+}
+
+.history-table thead {
+    display: table-header-group !important;
+}
+
+.history-table tbody {
+    display: table-row-group !important;
+}
+
+.history-table tr {
+    display: table-row !important;
+    border-bottom: 1px solid rgba(150, 150, 150, 0.1);
+}
+
+.history-table th, 
+.history-table td {
+    display: table-cell !important;
+    padding: 12px 15px !important;
+    vertical-align: middle;
+}
+
+/* Zapobieganie ucinaniu tabeli na bardzo małych telefonach */
+@media (max-width: 480px) {
+    .history-table th, 
+    .history-table td {
+        padding: 10px 8px !important;
+        font-size: 0.85rem !important;
+    }
+}
