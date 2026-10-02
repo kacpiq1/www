@@ -96,6 +96,9 @@ particlesJS("particles-js", {
 // === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
 window.isNettoMode = false; // Zmienna globalna dla trybu podatku
 
+// === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
+window.isNettoMode = false;
+
 function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
     let finalPrice = 0;
     let currentTaxRate = 1.0;
@@ -109,16 +112,21 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
         const isWinterCpn = dateStr && dateStr >= '2026-10-03' && dateStr <= '2026-12-31';
         
         if (isWinterCpn) {
-            // Od 3 października do końca roku: SZTYWNE ceny (niezależne od hurtu)
             currentTaxRate = 1.08;
-            if (productName === 'Pb95') {
-                finalPrice = 6.73;
-            } else if (productName === 'Pb98') {
-                finalPrice = 7.59;
-            } else if (productName === 'ONEkodiesel' || productName === 'ONArctic2') {
-                finalPrice = 7.88; // Zrównana cena dla Efecty i Vervy
+            
+            if (dateStr === '2026-10-03') {
+                // Sztywne ceny TYLKO na start promocji (3 października)
+                if (productName === 'Pb95') finalPrice = 6.73;
+                else if (productName === 'Pb98') finalPrice = 7.59;
+                else if (productName === 'ONEkodiesel' || productName === 'ONArctic2') finalPrice = 7.88;
+                else finalPrice = wholesalePriceNetto * currentTaxRate;
             } else {
+                // Od 4 października: rynek decyduje (hurt * 1.08), ale trzymamy limit MAKSYMALNY
                 finalPrice = wholesalePriceNetto * currentTaxRate;
+                
+                if (productName === 'Pb95' && finalPrice > 6.73) finalPrice = 6.73;
+                else if (productName === 'Pb98' && finalPrice > 7.59) finalPrice = 7.59;
+                else if ((productName === 'ONEkodiesel' || productName === 'ONArctic2') && finalPrice > 7.88) finalPrice = 7.88;
             }
         } else if (isOldCpn || isNewCpn) {
             currentTaxRate = 1.08;
@@ -146,6 +154,7 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
     return finalPrice;
 }
 // =============================================
+
 
 // === POBIERANIE PEŁNEJ HISTORII DO OBLICZENIA DZIŚ / WCZORAJ ===
 async function fetchLastData() {
