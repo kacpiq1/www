@@ -3752,3 +3752,128 @@ body.dark-theme .verva-info-tooltip::after {
 body.dark-theme .verva-info-tooltip::before {
     border-color: #ffffff transparent transparent transparent;
 }
+
+
+/* =========================================
+   TOOLTIP INFORMACYJNY (VERVA DIESEL)
+   ========================================= */
+.verva-info-tooltip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Po najechaniu ikona lekko ciemnieje */
+.verva-info-tooltip i:hover {
+    color: var(--text) !important;
+}
+
+/* Wygląd głównego dymka (czarne tło, biały tekst) */
+.verva-info-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 140%;
+    right: -10px; /* Wyrównanie do prawej krawędzi karty */
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Mały trójkącik wskazujący na ikonę */
+.verva-info-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 2px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(30, 30, 30, 0.95) transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+}
+
+/* Animacja pojawiania się (Hover) */
+.verva-info-tooltip:hover::after,
+.verva-info-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* --- Pełne wsparcie dla Trybu Ciemnego --- */
+body.dark-theme .verva-info-tooltip::after {
+    background: #ffffff;
+    color: #1e1e1e;
+}
+body.dark-theme .verva-info-tooltip::before {
+    border-color: #ffffff transparent transparent transparent;
+}
+
+/* =========================================
+   FIX DLA OBCINAJĄCYCH SIĘ DYMKÓW (TOOLTIPÓW)
+   ========================================= */
+
+/* Uwalniamy dymki, żeby mogły wyjść poza obrys karty */
+.fuel-card, .fuel-card-body {
+    overflow: visible !important;
+}
+
+/* Wymuszamy zawijanie tekstu w dymku i idealne wyśrodkowanie */
+.verva-info-tooltip::after {
+    white-space: normal !important;
+    min-width: 180px !important;
+    max-width: 220px !important;
+    text-align: center !important;
+    line-height: 1.4 !important;
+    
+    /* Wyśrodkowanie nad ikoną */
+    right: 50% !important;
+    transform: translate(50%, 10px) !important;
+}
+
+.verva-info-tooltip:hover::after {
+    transform: translate(50%, 0) !important;
+}
+
+/* Wyśrodkowanie trójkącika pod dymkiem */
+.verva-info-tooltip::before {
+    right: 50% !important;
+    transform: translate(50%, 10px) !important;
+}
+
+.verva-info-tooltip:hover::before {
+    transform: translate(50%, 0) !important;
+}
+
+/* =========================================
+   FIX: ZAOKRĄGLENIE STOPKI (CENY NA JUTRO)
+   ========================================= */
+.fuel-footer,
+.fuel-footer::before,
+.fuel-footer::after {
+    /* Wymuszamy zaokrąglenie dolnych rogów, by pasowały do głównej karty */
+    border-bottom-left-radius: 24px !important; 
+    border-bottom-right-radius: 24px !important;
+}
+
+/* Upewniamy się, że tło stopki nie ucieka na boki na mniejszych ekranach */
+.fuel-footer {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
