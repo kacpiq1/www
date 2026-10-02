@@ -551,7 +551,6 @@ function createFuelCard(fuelData) {
         iconClass = 'bx-down-arrow-alt';
     }
 
-    // Znaczek CPN z nowym okresem
     const todayStr = new Date().toLocaleDateString('sv-SE');
     let cpnTagHtml = '';
     const isOldCpn = todayStr >= '2026-03-31' && todayStr < '2026-07-01';
@@ -566,18 +565,43 @@ function createFuelCard(fuelData) {
     
     let displayPrice = fuelData.todayPrice;
     let priceColorStyle = ''; 
-    let infoIconHtml = '';
 
     if (isVervaEstimate) {
         displayPrice = fuelData.probableVervaPrice;
         priceColorStyle = 'color: #E30613;'; 
-        
-        infoIconHtml = `
-            <div class="verva-info-tooltip" data-tooltip="Szacowana cena: ${displayPrice.toFixed(2)} PLN (Efecta + ok. 20 gr) | Standardowo z giełdy: ${fuelData.todayPrice.toFixed(2)} PLN">
-                <i class='bx bx-info-circle' style="color: var(--text-light); font-size: 1.3rem; cursor: pointer; margin-left: 6px; transform: translateY(-2px); display: inline-block;"></i>
+    }
+
+    // --- BOGATE DYMKI INFORMACYJNE (RICH TOOLTIP) ---
+    const tankSize = fuelData.productName === 'LPG' ? 35 : 50; 
+    const litersFor100 = displayPrice > 0 ? (100 / displayPrice).toFixed(1) : "0.0";
+    const fullTankCost = displayPrice > 0 ? (tankSize * displayPrice).toFixed(2) : "0.00";
+    
+    // Tworzymy wiersze z ikonami i wyrównaniem
+    let tooltipContentHtml = `
+        <div class="ts-row"><i class='bx bx-wallet' style="color: #4CAF50;"></i> Za 100 zł: <strong>${litersFor100} L</strong></div>
+        <div class="ts-row"><i class='bx bxs-gas-pump' style="color: var(--primary);"></i> Bak (${tankSize}L): <strong>${fullTankCost} zł</strong></div>
+    `;
+
+    // Jeśli to Verva, dodajemy czerwoną belkę z ostrzeżeniem na górze dymka
+    if (isVervaEstimate) {
+        tooltipContentHtml = `
+            <div class="ts-row" style="color: #E30613; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed rgba(128,128,128,0.2);">
+                <i class='bx bx-line-chart'></i> Szacunek: <strong>${displayPrice.toFixed(2)} PLN</strong>
             </div>
+            ${tooltipContentHtml}
         `;
     }
+
+    // Nowa struktura HTML pozwalająca na stylowanie w CSS
+    let infoIconHtml = `
+        <div class="rich-tooltip-container">
+            <i class='bx bx-info-circle tooltip-trigger' style="${isVervaEstimate ? 'color: var(--text-light); opacity: 1;' : 'color: var(--text-light); opacity: 0.5;'}"></i>
+            <div class="rich-tooltip-box">
+                ${tooltipContentHtml}
+            </div>
+        </div>
+    `;
+    // -------------------------------------------------------------
 
     let footerClass = 'footer-neutral';
     let footerIcon = 'bx-check';
@@ -658,8 +682,6 @@ function createFuelCard(fuelData) {
     
     return card;
 }
-
-
 
 function processForecastData() {
     const forecastData = [
