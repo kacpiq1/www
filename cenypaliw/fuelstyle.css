@@ -4147,3 +4147,86 @@ body.dark-theme #infoModal {
 body.dark-theme .modal-content {
     border-color: rgba(255, 255, 255, 0.05) !important;
 }
+
+.rich-tooltip-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.rich-tooltip-container .tooltip-trigger {
+    font-size: 1.3rem;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+}
+
+.rich-tooltip-container:hover .tooltip-trigger {
+    color: var(--primary) !important;
+    opacity: 1 !important;
+}
+
+/* Główne pudło dymka */
+.rich-tooltip-box {
+    position: absolute;
+    bottom: 140%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--card-bg);
+    border: 1px solid rgba(128, 128, 128, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 14px 18px;
+    width: max-content;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Animacja wjazdu przy najechaniu */
+.rich-tooltip-container:hover .rich-tooltip-box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Trójkącik skierowany w dół pod dymkiem */
+.rich-tooltip-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--card-bg) transparent transparent transparent;
+}
+
+/* Pojedynczy wiersz z danymi (ikona po lewej, tekst, wartość wyrównana do prawej) */
+.ts-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.ts-row:last-child {
+    margin-bottom: 0;
+}
+
+.ts-row i {
+    font-size: 1.15rem;
+}
+
+/* Wymuszamy, by wartość liczbowa uciekała maksymalnie do prawej krawędzi dymka */
+.ts-row strong {
+    margin-left: auto;
+    font-weight: 900;
+}
