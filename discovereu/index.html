@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscoverEU 2026 | Darmowy bilet na Europę - kacpiq.pl</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eu-blue: #003399;
+            --eu-blue-dark: #001f5c;
+            --eu-yellow: #FFCC00;
+            --eu-yellow-glow: rgba(255, 204, 0, 0.4);
+            --bg-light: #f0f4f8;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --alert-red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+
+        /* HERO SECTION */
+        .hero {
+            background: radial-gradient(circle at top right, var(--eu-blue-dark), var(--eu-blue));
+            color: white;
+            padding: 80px 20px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eu-stars {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(var(--eu-yellow) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+            animation: moveStars 40s linear infinite;
+        }
+
+        @keyframes moveStars { 0% { transform: translateY(0); } 100% { transform: translateY(-60px); } }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            color: var(--eu-yellow);
+            display: inline-block;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span { color: var(--eu-yellow); }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        /* TIMER */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 20px;
+            min-width: 110px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .time-box span.number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--eu-yellow);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .time-box span.label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .cta-btn {
+            background: var(--eu-yellow);
+            color: var(--eu-blue-dark);
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 20px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 30px var(--eu-yellow-glow);
+            text-transform: uppercase;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 0 50px var(--eu-yellow-glow);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* AMBASADOR */
+        .ambassador-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin: -50px auto 60px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border: 2px solid rgba(0, 51, 153, 0.1);
+        }
+
+        .ambassador-card h2 { color: var(--eu-blue); font-size: 2.2rem; margin-bottom: 15px; }
+        .ambassador-card p { font-size: 1.1rem; color: var(--text-muted); }
+        
+        .route-tags { margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .route-tags span {
+            background: var(--bg-light);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--eu-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* BENTO GRID */
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--eu-blue-dark);
+            margin: 80px 0 40px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .bento-item {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: transform 0.3s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .bento-item:hover { transform: translateY(-5px); }
+        .bento-item .icon { font-size: 2.5rem; margin-bottom: 20px; }
+        .bento-item h3 { font-size: 1.6rem; color: var(--eu-blue); margin-bottom: 15px; }
+        .bento-item p { color: var(--text-muted); }
+
+        .bento-wide { grid-column: span 2; background: linear-gradient(135deg, var(--eu-blue), var(--eu-blue-dark)); }
+        .bento-wide h3 { color: var(--eu-yellow); }
+        .bento-wide p { color: rgba(255,255,255,0.9); }
+
+        /* NAPRAWIONY KAFELEK DEADLINE (Białe tło, czarny tekst) */
+        .bento-alert {
+            grid-column: span 2;
+            background: white;
+            border-left: 8px solid var(--alert-red);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .bento-alert h3 { color: var(--alert-red); }
+        .bento-alert p { color: var(--text-dark); font-weight: 500; font-size: 1.1rem; }
+        
+        .bento-highlight { background: var(--eu-yellow); }
+        .bento-highlight h3 { color: var(--eu-blue-dark); }
+        .bento-highlight p { color: var(--text-dark); font-weight: 500; }
+
+        /* KROKI */
+        .steps {
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 80px;
+        }
+
+        .step-row { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; }
+        .step-row:last-child { margin-bottom: 0; }
+        .step-number {
+            background: var(--eu-yellow); color: var(--eu-blue-dark);
+            width: 50px; height: 50px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 1.5rem;
+            font-weight: 900; flex-shrink: 0;
+        }
+        .step-content h4 { font-size: 1.3rem; color: var(--eu-blue); margin-bottom: 5px; }
+        .step-content p { color: var(--text-muted); }
+
+        footer { background: var(--text-dark); color: white; text-align: center; padding: 60px 20px; }
+        footer .eu-logo { font-size: 2.5rem; margin-bottom: 10px; }
+        footer p { opacity: 0.6; font-size: 0.9rem; margin-top: 10px; }
+
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-wide, .bento-alert { grid-column: span 1; }
+            .hero h1 { font-size: 2.8rem; }
+            .time-box { min-width: 80px; padding: 15px; }
+            .time-box span.number { font-size: 2rem; }
+            .steps { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="eu-stars"></div>
+        <div class="hero-content">
+            <div class="badge">Ambasador DiscoverEU - Kacpiq.pl</div>
+            <h1>Rocznik 2008? <br><span>Odbierz bilet na Europę!</span></h1>
+            <p>Trwa oficjalny nabór! Unia Europejska rozdaje darmowe bilety na pociągi. Masz czas tylko do <strong>15 października 2026 r., godz. 12:00 w południe</strong>.</p>
+            
+            <div class="timer-container" id="countdown">
+                <div class="time-box"><span class="number" id="days">00</span><span class="label">Dni</span></div>
+                <div class="time-box"><span class="number" id="hours">00</span><span class="label">Godzin</span></div>
+                <div class="time-box"><span class="number" id="minutes">00</span><span class="label">Minut</span></div>
+                <div class="time-box"><span class="number" id="seconds">00</span><span class="label">Sekund</span></div>
+            </div>
+
+            <a href="https://youth.europa.eu/discovereu_pl" target="_blank" class="cta-btn">Zgłoś się (Apply Now)</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- AMBASADOR -->
+        <section class="ambassador-card">
+            <h2>Siema, jestem Kacpiq! 👋</h2>
+            <p>Jako rocznik 2007 zgłosiłem się rok temu i wygrałem. Zgarnąłem bilet, spakowałem plecak i zwiedziłem najlepsze miejscówki. Zostałem Ambasadorem, żeby pokazać Wam, że to totalnie działa. Twoim zadaniem po powrocie będzie tylko podzielenie się zdjęciami z hasztagiem <strong>#DiscoverEU</strong> i opowiedzenie o tym w szkole. Zobacz moją zeszłoroczną trasę:</p>
+            <div class="route-tags">
+                <span>🇩🇪 Niemcy</span>
+                <span>🇨🇭 Szwajcaria</span>
+                <span>🇮🇹 Włochy</span>
+                <span>🇦🇹 Austria</span>
+            </div>
+        </section>
+
+        <h2 class="section-title">Co musisz wiedzieć o edycji 2026? 🇪🇺</h2>
+
+        <!-- BENTO GRID -->
+        <section class="bento-grid">
+            <div class="bento-item bento-wide">
+                <div class="icon">🚆</div>
+                <h3>Pociągiem przez Europę</h3>
+                <p>Otrzymujesz bilet na najbardziej ekologiczny transport – pociągi! Możesz odbyć podróż trwającą <strong>do 7 dni w ciągu maksymalnie jednego miesiąca</strong>. (Samoloty wchodzą w grę tylko, jeśli mieszkasz na odległej wyspie). Dostajesz też kartę zniżkową na noclegi i atrakcje!</p>
+            </div>
+            
+            <div class="bento-item">
+                <div class="icon">🎯</div>
+                <h3>Kto się kwalifikuje?</h3>
+                <p>Musisz być urodzony między <strong>1 stycznia a 31 grudnia 2008 r. (włącznie)</strong>. Do tego obywatelstwo (lub prawo pobytu) w kraju UE lub kraju stowarzyszonym z Erasmus+ (np. Islandia, Norwegia, Turcja, Serbia).</p>
+            </div>
+
+            <div class="bento-item">
+                <div class="icon">👥</div>
+                <h3>Z ekipą czy solo?</h3>
+                <p>Możesz jechać sam, albo zabrać znajomych! Do Twojej grupy może dołączyć <strong>maksymalnie 4 znajomych</strong> z Twojego rocznika (użyją Twojego kodu zgłoszenia). Na Facebooku znajdziesz też inne ekipy z całej Europy!</p>
+            </div>
+
+            <div class="bento-item bento-highlight">
+                <div class="icon">🗓️</div>
+                <h3>Kiedy wyjazd?</h3>
+                <p>Jeśli wygrasz teraz (w październiku 2026), na wyjazd masz ogromne okno czasowe! Trasę musisz zrealizować między <strong>1 marca 2027 r. a 31 maja 2028 r.</strong></p>
+            </div>
+
+            <!-- NAPRAWIONY KAFELEK DEADLINE -->
+            <div class="bento-item bento-alert">
+                <div class="icon">⏰</div>
+                <h3>System nie wybacza spóźnień!</h3>
+                <p>Zgłoszenia trwają <strong>od 1 do 15 października 2026 r.</strong> Koniec przyjmowania równo o <strong>12:00:00 (czasu Brukseli / CEST)</strong>. Spóźnisz się o sekundę – system Cię nie przepuści. Zrób to dziś!</p>
+            </div>
+
+            <div class="bento-item">
+                <div class="icon">♿</div>
+                <h3>Dostępność dla każdego</h3>
+                <p>Masz niepełnosprawność lub problemy zdrowotne utrudniające podróż? Unia Europejska zapewnia <strong>dodatkową pomoc i specjalne wsparcie</strong>, abyś mógł bez przeszkód wziąć udział w programie.</p>
+            </div>
+        </section>
+
+        <!-- KROK PO KROKU -->
+        <h2 class="section-title">Aplikacja w 4 krokach</h2>
+        <section class="steps">
+            <div class="step-row">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Przygotuj dokument</h4>
+                    <p>Będziesz potrzebować ważnego dowodu tożsamości, paszportu lub zezwolenia na pobyt. Numer dokumentu musisz wpisać w formularzu.</p>
+                </div>
+            </div>
+            <div class="step-row">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Złóż wniosek na oficjalnej stronie</h4>
+                    <p>Kliknij w żółty przycisk na górze strony (szukaj na oficjalnym portalu przycisku „Apply now”). Zaakceptuj oświadczenia w formularzu.</p>
+                </div>
+            </div>
+            <div class="step-row">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Wypełnij krótki quiz</h4>
+                    <p>Jeśli startujesz sam lub jesteś liderem grupy, rozwiązujesz krótki quiz wiedzy (wielokrotnego wyboru). Pytania dodatkowe decydują o ostatecznym rankingu, więc się postaraj!</p>
+                </div>
+            </div>
+            <div class="step-row">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Odbierz wyniki i jedź!</h4>
+                    <p>Po ogłoszeniu laureatów agencje narodowe Erasmus+ organizują nawet specjalne spotkania (meet-upy), żeby pomóc Ci w zaplanowaniu trasy i nawiązaniu kontaktów z innymi.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="eu-logo">🇪🇺</div>
+        <h3>kacpiq.pl/discovereu</h3>
+        <p>Strona oficjalnego Ambasadora programu DiscoverEU. Używaj oficjalnego hasztagu #DiscoverEU!</p>
+        <p>Pamiętaj, by podawać swoje dane tylko na oficjalnej stronie youth.europa.eu</p>
+    </footer>
+
+    <!-- SKRYPT DO LICZNIKA (TIMER) - Ustawiony na 15.10.2026 12:00 -->
+    <script>
+        const countDownDate = new Date("Oct 15, 2026 12:00:00").getTime();
+
+        const updateTimer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(updateTimer);
+                document.getElementById("countdown").innerHTML = "<div class='badge' style='background: red; border:none; padding: 15px 30px; font-size: 1.5rem; color: white;'>NABÓR ZAKOŃCZONY!</div>";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
