@@ -118,12 +118,9 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
                 else if (productName === 'ONEkodiesel' || productName === 'ONArctic2') finalPrice = 7.88;
                 else finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
             } else {
-                // Od 4 października: rynek decyduje (hurt + 0.30) * 1.08, ale trzymamy limit MAKSYMALNY
+                // Od 4 października: CZYSTE DANE. Każde paliwo wyliczane wyłącznie 
+                // ze swojego hurtu bez żadnego blokującego limitu maksymalnego!
                 finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
-                
-                if (productName === 'Pb95' && finalPrice > 6.73) finalPrice = 6.73;
-                else if (productName === 'Pb98' && finalPrice > 7.59) finalPrice = 7.59;
-                else if ((productName === 'ONEkodiesel' || productName === 'ONArctic2') && finalPrice > 7.88) finalPrice = 7.88;
             }
         } else if (isOldCpn || isNewCpn) {
             currentTaxRate = 1.08;
