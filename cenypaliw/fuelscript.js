@@ -94,9 +94,6 @@ particlesJS("particles-js", {
 
 
 // === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
-window.isNettoMode = false; // Zmienna globalna dla trybu podatku
-
-// === LOGIKA OBLICZEŃ Z ZALEŻNOŚCIĄ OD DATY ===
 window.isNettoMode = false;
 
 function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) {
@@ -119,10 +116,10 @@ function calculateRetailPrice(productName, wholesalePriceNetto, dateStr = null) 
                 if (productName === 'Pb95') finalPrice = 6.73;
                 else if (productName === 'Pb98') finalPrice = 7.59;
                 else if (productName === 'ONEkodiesel' || productName === 'ONArctic2') finalPrice = 7.88;
-                else finalPrice = wholesalePriceNetto * currentTaxRate;
+                else finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
             } else {
-                // Od 4 października: rynek decyduje (hurt * 1.08), ale trzymamy limit MAKSYMALNY
-                finalPrice = wholesalePriceNetto * currentTaxRate;
+                // Od 4 października: rynek decyduje (hurt + 0.30) * 1.08, ale trzymamy limit MAKSYMALNY
+                finalPrice = (wholesalePriceNetto + 0.30) * currentTaxRate;
                 
                 if (productName === 'Pb95' && finalPrice > 6.73) finalPrice = 6.73;
                 else if (productName === 'Pb98' && finalPrice > 7.59) finalPrice = 7.59;
