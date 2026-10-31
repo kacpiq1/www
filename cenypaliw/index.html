@@ -47,18 +47,70 @@
 
         <h1 class="animate">Aktualne Ceny Paliw</h1>
 
-        <a href="https://www.kacpiq.pl/tankujteraz" target="_blank" class="beta-tester-banner animate-up">
-            <div class="beta-icon">
-                <i class='bx bxs-rocket bx-tada-hover'></i>
+        <div id="loginSectionWrapper" class="driver-zone-banner animate-up">
+    
+    <!-- STAN 1: NIEZALOGOWANY -->
+    <div id="loginPrompt" class="dz-state-wrapper" style="display: flex;">
+        <div class="dz-icon-box">
+            <i class='bx bxs-flask'></i>
+        </div>
+
+        <div class="dz-text-group">
+            <span class="dz-title">Strefa Kierowcy <span class="dz-beta-tag">BETA</span></span>
+            <span class="dz-desc">Przetestuj nowy system kont! Narzędzia, zapisywanie ustawień i funkcje PRO pojawią się wkrótce.</span>
+        </div>
+
+        <div class="dz-action-area">
+            <button onclick="triggerCustomGoogleLogin()" class="dz-custom-google-btn">
+                <svg class="dz-google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Zaloguj z Google
+            </button>
+        </div>
+    </div>
+
+    <!-- STAN 2: ZALOGOWANY -->
+    <div id="userProfile" class="dz-state-wrapper" style="display: none;">
+        <div class="dz-icon-box logged">
+            <i class='bx bx-check-shield'></i>
+        </div>
+
+        <div class="dz-text-group">
+            <span class="dz-title">Twój profil aktywny <span class="dz-beta-tag" style="background: rgba(76, 175, 80, 0.1); color: #4CAF50;">BETA</span></span>
+            <span class="dz-desc">Obecnie system jest w fazie testów. Sprawdzamy stabilność – funkcje konta odblokujemy niebawem!</span>
+        </div>
+
+        <div class="dz-action-area">
+            <div class="dz-profile-compact">
+                
+                <div onclick="openProfileSidebar()" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" title="Zarządzaj kontem">
+                    <div style="position: relative; flex-shrink: 0;">
+                        <img id="userAvatar" src="" alt="Avatar" class="dz-avatar">
+                        <div class="dz-status-dot"></div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; text-align: left; justify-content: center; min-width: 0; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="userName" class="dz-title dz-text-truncate" style="font-size: 0.95rem; line-height: 1;">...</span>
+                            <span id="userPlanBadge" style="background: rgba(227, 6, 19, 0.1); color: #E30613; font-size: 0.6rem; font-weight: 900; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; line-height: 1; flex-shrink: 0;">Darmowe</span>
+                        </div>
+                        <span id="userEmail" class="dz-desc dz-text-truncate" style="font-size: 0.75rem; margin-top: 2px;">...</span>
+                    </div>
+                </div>
+                
+                <button onclick="logoutGoogle()" class="dz-logout-btn" title="Wyloguj się" style="flex-shrink: 0;">
+                    <i class='bx bx-log-out'></i>
+                </button>
+
             </div>
-            <div class="beta-content">
-                <span class="beta-title">Aplikacja Mobilna w drodze! 📱</span>
-                <span class="beta-desc">Zostań beta testerem nowej aplikacji "TankujTeraz". Pomóż nam w testach i zgarnij ekskluzywne bonusy. Kliknij, aby dołączyć!</span>
-            </div>
-            <div class="beta-action">
-                <i class='bx bx-right-arrow-alt'></i>
-            </div>
-        </a>
+        </div>
+    </div>
+
+</div>
 
         <!-- Trend Analysis Widget -->
 <div id="trend-widget" onclick="openForecastDetails()" class="trend-widget-card">
@@ -871,6 +923,68 @@
             <span class="side-nav-tooltip">Prognozy na jutro</span>
         </a>
     </nav>
+
+    <div id="profileOverlay" class="sidebar-overlay" onclick="closeProfileSidebar()"></div>
+<div id="profileSidebar" class="profile-sidebar">
+    <div class="sidebar-header">
+        <h2>Subskrypcja</h2>
+        <button class="close-sidebar-btn" onclick="closeProfileSidebar()">&times;</button>
+    </div>
+    
+    <div class="sidebar-content">
+        <!-- Aktywny Pakiet -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bx-check-circle' style="color: #4CAF50; font-size: 1.4rem;"></i> Pakiet: Darmowy
+            </div>
+            <div class="plan-card-desc">
+                Masz pełny dostęp do podstawowych cen paliw, giełdy, darmowych kalkulatorów oraz podglądu strefy EV. Dziękujemy, że z nami jesteś!
+            </div>
+        </div>
+
+        <!-- Zablokowany Pakiet PRO -->
+        <div class="plan-card pro-card">
+            <div class="pro-glow"></div>
+            <div class="plan-card-title" style="color: #F39C12;">
+                <i class='bx bxs-crown' style="font-size: 1.4rem;"></i> Pakiet Premium (PRO)
+            </div>
+            <div class="plan-card-desc">
+                Odblokuj pełen potencjał aplikacji i zaawansowane narzędzia analityczne dla kierowców.
+            </div>
+            
+            <ul class="pro-features">
+                <li><i class='bx bx-history'></i> <span><strong>Wehikuł Czasu ⏳</strong> (Historia kosztów pełnego baku)</span></li>
+                <li><i class='bx bx-radar'></i> <span><strong>Prognozy Cenowe</strong> (Wczesny dostęp do trendów na stacjach)</span></li>
+                <li><i class='bx bx-car'></i> <span><strong>Wirtualny Garaż</strong> (Twoje auta, zaciąganie spalania i baku)</span></li>
+                <li><i class='bx bx-bell'></i> <span><strong>Alerty Cenowe</strong> (Powiadomienia o najlepszym momencie na tankowanie)</span></li>
+                <li><i class='bx bx-block'></i> <span><strong>Brak reklam</strong> (Czysty i błyskawiczny interfejs)</span></li>
+            </ul>
+
+            <button class="btn-coming-soon" disabled>
+                <i class='bx bx-time-five'></i> Wkrótce dostępne
+            </button>
+        </div>
+
+        <!-- NOWE: Sekcja FAQ -->
+        <div class="sidebar-faq">
+            <h3><i class='bx bx-info-circle' style="color: #E30613;"></i> Dodatkowe informacje</h3>
+            
+            <div class="faq-item">
+                <div class="faq-q"><i class='bx bx-question-mark'></i> Czy obecne funkcje będą płatne?</div>
+                <div class="faq-a">Nie. Wszystkie narzędzia, z których korzystasz obecnie (bieżące ceny, standardowe kalkulatory), na zawsze pozostaną darmowe. Pakiet PRO dodaje tylko nowe, ekskluzywne możliwości.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q"><i class='bx bx-question-mark'></i> Kiedy ruszy pakiet Premium?</div>
+                <div class="faq-a">Jesteśmy w fazie zamkniętych testów (BETA). Chcemy mieć pewność, że narzędzia takie jak Wehikuł Czasu i Alerty będą działać bezbłędnie, zanim udostępnimy je publicznie.</div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            Stworzone z pasją dla polskich kierowców
+        </div>
+    </div>
+</div>
 
     <footer class="animate">
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
