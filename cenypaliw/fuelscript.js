@@ -2299,3 +2299,175 @@ function updateMacroCard(priceId, changeId, price, changePerc, currency) {
     
     changeEl.innerHTML = `${icon} ${sign}${changePerc.toFixed(2)}%`;
 }
+
+// ==========================================
+// SYSTEM LOGOWANIA GOOGLE
+// ==========================================
+
+function triggerCustomGoogleLogin() {
+    // 1. Konfigurujemy autorskiego klienta Google
+    const client = google.accounts.oauth2.initTokenClient({
+        client_id: '339722376187-d7ss3hddhge1mbklba0la55bjb0n6v27.apps.googleusercontent.com',
+        scope: 'email profile openid',
+        callback: (tokenResponse) => {
+            if (tokenResponse && tokenResponse.access_token) {
+                // 2. Mając token, pobieramy dane użytkownika z bezpiecznego serwera Google
+                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                })
+                .then(res => res.json())
+                .then(userData => {
+                    // 3. Zapis w pamięci przeglądarki
+                    localStorage.setItem('isLogged', 'true');
+                    localStorage.setItem('userData', JSON.stringify(userData));
+
+                    // 4. Aktualizacja interfejsu (zmiana na Stan 2)
+                    updateLoginUI(userData);
+                    
+                    // Dopasowujemy imię lub pełną nazwę zależnie co zwróci profil
+                    const firstName = userData.given_name || userData.name;
+                    showNotification(`Witaj, ${firstName}!`);
+                })
+                .catch(err => {
+                    console.error('Błąd pobierania profilu:', err);
+                    showNotification('Błąd podczas pobierania danych logowania.');
+                });
+            }
+        }
+    });
+
+    // Uruchomienie okienka PopUp (Działa bez ucinania przez przeglądarkę)
+    client.requestAccessToken();
+}
+
+function updateLoginUI(user) {
+    const loginPrompt = document.getElementById('loginPrompt');
+    const profileDiv = document.getElementById('userProfile');
+    
+    if (loginPrompt) loginPrompt.style.display = 'none';
+    if (profileDiv) profileDiv.style.display = 'flex';
+    
+    const nameEl = document.getElementById('userName');
+    const emailEl = document.getElementById('userEmail');
+    const avatarEl = document.getElementById('userAvatar');
+    const badgeEl = document.getElementById('userPlanBadge');
+    
+    if (nameEl) nameEl.innerText = user.name;
+    if (emailEl) emailEl.innerText = user.email;
+    if (avatarEl) avatarEl.src = user.picture;
+
+    if (badgeEl) {
+        const hasPremium = localStorage.getItem('hasProTools') === 'true' || localStorage.getItem('hasVipPack') === 'true';
+        if (hasPremium) {
+            badgeEl.innerText = 'Rozszerzony';
+            badgeEl.style.background = 'rgba(243, 156, 18, 0.15)'; 
+            badgeEl.style.color = '#F39C12'; 
+            badgeEl.style.border = '1px solid rgba(243, 156, 18, 0.3)';
+        } else {
+            badgeEl.innerText = 'Podstawowy';
+            badgeEl.style.background = 'rgba(227, 6, 19, 0.1)';
+            badgeEl.style.color = 'var(--primary)';
+            badgeEl.style.border = 'none';
+        }
+    }
+}
+
+function logoutGoogle() {
+    localStorage.removeItem('isLogged');
+    localStorage.removeItem('userData');
+    
+    const loginPrompt = document.getElementById('loginPrompt');
+    const profileDiv = document.getElementById('userProfile');
+    
+    if (loginPrompt) loginPrompt.style.display = 'flex';
+    if (profileDiv) profileDiv.style.display = 'none';
+    
+    showNotification("Wylogowano pomyślnie.");
+}
+
+// Sprawdzanie przy odświeżeniu
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('isLogged') === 'true') {
+        const savedData = localStorage.getItem('userData');
+        if (savedData) {
+            updateLoginUI(JSON.parse(savedData));
+        }
+    }
+});
+
+function updateLoginUI(user) {
+    // Ukrywamy cały blok zachęty do logowania
+    const loginPrompt = document.getElementById('loginPrompt');
+    const profileDiv = document.getElementById('userProfile');
+    
+    if (loginPrompt) loginPrompt.style.display = 'none';
+    if (profileDiv) profileDiv.style.display = 'flex';
+    
+    const nameEl = document.getElementById('userName');
+    const emailEl = document.getElementById('userEmail');
+    const avatarEl = document.getElementById('userAvatar');
+    const badgeEl = document.getElementById('userPlanBadge'); // Nasz nowy znaczek
+    
+    if (nameEl) nameEl.innerText = user.name;
+    if (emailEl) emailEl.innerText = user.email;
+    if (avatarEl) avatarEl.src = user.picture;
+
+    // --- LOGIKA ZMIANY ZNACZKA (DARMOWE vs PRO) ---
+    if (badgeEl) {
+        // Sprawdzamy, czy użytkownik ma aktywny pakiet PRO w pamięci (po płatności Stripe)
+        const hasPremium = localStorage.getItem('hasProTools') === 'true' || localStorage.getItem('hasVipPack') === 'true';
+        
+        if (hasPremium) {
+            badgeEl.innerText = 'PRO';
+            badgeEl.style.background = 'rgba(243, 156, 18, 0.15)'; // Złote tło
+            badgeEl.style.color = '#F39C12'; // Złoty tekst
+            badgeEl.style.border = '1px solid rgba(243, 156, 18, 0.3)';
+        } else {
+            badgeEl.innerText = 'Darmowe';
+            badgeEl.style.background = 'rgba(227, 6, 19, 0.1)';
+            badgeEl.style.color = 'var(--primary)';
+            badgeEl.style.border = 'none';
+        }
+    }
+}
+
+function logoutGoogle() {
+    localStorage.removeItem('isLogged');
+    localStorage.removeItem('userData');
+    
+    // Pokazujemy ponownie blok zachęty
+    const loginPrompt = document.getElementById('loginPrompt');
+    const profileDiv = document.getElementById('userProfile');
+    
+    if (loginPrompt) loginPrompt.style.display = 'flex';
+    if (profileDiv) profileDiv.style.display = 'none';
+    
+    showNotification("Wylogowano pomyślnie.");
+}
+
+// Sprawdzanie przy odświeżeniu, czy user jest już zalogowany
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('isLogged') === 'true') {
+        const savedData = localStorage.getItem('userData');
+        if (savedData) {
+            updateLoginUI(JSON.parse(savedData));
+        }
+    }
+});
+
+// ==========================================
+// OBSŁUGA PANELU BOCZNEGO PROFILU
+// ==========================================
+function openProfileSidebar() {
+    document.getElementById('profileOverlay').classList.add('active');
+    document.getElementById('profileSidebar').classList.add('active');
+    // Blokuje przewijanie strony w tle, gdy panel jest otwarty
+    document.body.style.overflow = 'hidden'; 
+}
+
+function closeProfileSidebar() {
+    document.getElementById('profileOverlay').classList.remove('active');
+    document.getElementById('profileSidebar').classList.remove('active');
+    // Przywraca przewijanie strony
+    document.body.style.overflow = 'auto'; 
+}
