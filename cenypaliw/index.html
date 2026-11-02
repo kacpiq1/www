@@ -947,22 +947,37 @@
         <!-- Zablokowany Pakiet PRO -->
         <div class="plan-card pro-card">
             <div class="pro-glow"></div>
-            <div class="plan-card-title" style="color: #F39C12;">
-                <i class='bx bxs-crown' style="font-size: 1.4rem;"></i> Pakiet Premium (PRO)
+            
+            <!-- Nagłówek z ceną -->
+            <div class="plan-card-title" style="color: #F39C12; justify-content: space-between;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-crown' style="font-size: 1.4rem;"></i> Pakiet PRO
+                </span>
+                <span style="font-size: 1.2rem; font-weight: 900; color: var(--text);">
+                    5,99<span style="font-size: 0.75rem; color: var(--text-light); font-weight: 600;"> zł/msc</span>
+                </span>
             </div>
+            
             <div class="plan-card-desc">
                 Odblokuj pełen potencjał aplikacji i zaawansowane narzędzia analityczne dla kierowców.
             </div>
             
             <ul class="pro-features">
                 <li><i class='bx bx-history'></i> <span><strong>Wehikuł Czasu ⏳</strong> (Historia kosztów pełnego baku)</span></li>
-                <li><i class='bx bx-radar'></i> <span><strong>Prognozy Cenowe</strong> (Wczesny dostęp do trendów na stacjach)</span></li>
+                <li><i class='bx bx-radar'></i> <span><strong>Prognozy Cenowe</strong> (Wczesny dostęp do trendów)</span></li>
                 <li><i class='bx bx-car'></i> <span><strong>Wirtualny Garaż</strong> (Twoje auta, zaciąganie spalania i baku)</span></li>
-                <li><i class='bx bx-bell'></i> <span><strong>Alerty Cenowe</strong> (Powiadomienia o najlepszym momencie na tankowanie)</span></li>
+                <li><i class='bx bx-bell'></i> <span><strong>Alerty Cenowe</strong> (Powiadomienia o najlepszym momencie)</span></li>
                 <li><i class='bx bx-block'></i> <span><strong>Brak reklam</strong> (Czysty i błyskawiczny interfejs)</span></li>
             </ul>
 
-            <button class="btn-coming-soon" disabled>
+            <!-- Wyróżniony okres próbny -->
+            <div style="margin-top: 25px; text-align: center;">
+                <div style="display: inline-block; background: rgba(243, 156, 18, 0.1); color: #F39C12; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; border: 1px dashed rgba(243, 156, 18, 0.3); margin-bottom: 8px;">
+                    <i class='bx bx-gift'></i> Wypróbuj przez 7 dni za darmo!
+                </div>
+            </div>
+
+            <button class="btn-coming-soon" disabled style="margin-top: 0;">
                 <i class='bx bx-time-five'></i> Wkrótce dostępne
             </button>
         </div>
