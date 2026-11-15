@@ -2471,3 +2471,938 @@ function closeProfileSidebar() {
     // Przywraca przewijanie strony
     document.body.style.overflow = 'auto'; 
 }
+
+
+
+function toggleDashboardSection(sectionId, checkbox) {
+    // 1. Znajdujemy siatkę z kafelkami (np. id="evGrid" lub id="germanFuelGrid")
+    const section = document.getElementById(sectionId);
+    
+    // 2. Szukamy nagłówka <h1>, który stoi dokładnie nad tą siatką w kodzie HTML
+    const header = section ? section.previousElementSibling : null;
+    
+    if (section) {
+        if (checkbox.checked) {
+            // Włączamy widoczność
+            section.style.display = 'grid'; // klasa .fuel-grid używa CSS Grid
+            if (header && header.tagName === 'H1') header.style.display = 'block';
+            showNotification('Wyświetlanie włączone.');
+        } else {
+            // Wyłączamy widoczność
+            section.style.display = 'none';
+            if (header && header.tagName === 'H1') header.style.display = 'none';
+            showNotification('Sekcja została ukryta.');
+        }
+    }
+}
+
+function toggleAmoledMode(checkbox) {
+    if(checkbox.checked) {
+        document.body.classList.add('amoled-mode');
+        // Wymusza tryb ciemny, bo AMOLED na jasnym nie zadziała dobrze
+        if(!document.body.classList.contains('dark-theme')) toggleTheme();
+    } else {
+        document.body.classList.remove('amoled-mode');
+    }
+}
+
+function toggleDigitalFont(checkbox) {
+    if(checkbox.checked) {
+        document.body.classList.add('digital-font-mode');
+    } else {
+        document.body.classList.remove('digital-font-mode');
+    }
+}
+
+function toggleCompactView(checkbox) {
+    if(checkbox.checked) {
+        document.body.classList.add('compact-view-mode');
+    } else {
+        document.body.classList.remove('compact-view-mode');
+    }
+}
+
+function toggleAvatarGlow(checkbox) {
+    const avatar = document.getElementById('userAvatar');
+    if(avatar) {
+        if(checkbox.checked) {
+            avatar.classList.add('avatar-glow');
+        } else {
+            avatar.classList.remove('avatar-glow');
+        }
+    }
+}
+
+function toggleSnowTheme(checkbox) {
+    // Prosty efekt ukrycia/pokazania cząsteczek
+    const particles = document.getElementById('particles-js');
+    if(particles) {
+        if(checkbox.checked) {
+            particles.style.opacity = '1';
+            particles.style.filter = 'brightness(2)'; // Śnieg staje się bardzo widoczny
+        } else {
+            particles.style.opacity = '0.3';
+            particles.style.filter = 'none';
+        }
+    }
+}
+
+// ==============================================================
+// DYNAMICZNY SUWAK "ZASIĘG ZA STÓWĘ" & LOKALNE ALERTY WEB PUSH
+// ==============================================================
+
+function updateQuickRange() {
+    const slider = document.getElementById('rangeSlider');
+    const fuelSelect = document.getElementById('quickRangeFuel');
+    const consInput = document.getElementById('quickRangeCons');
+    const amountEl = document.getElementById('rangeAmountVal');
+    const resultEl = document.getElementById('rangeResultVal');
+    const litersEl = document.getElementById('rangeLitersVal');
+
+    if (!slider || !fuelSelect || !consInput) return;
+
+    const amount = parseFloat(slider.value) || 100;
+    const fuelKey = fuelSelect.value;
+    const consumption = parseFloat(consInput.value) || 7.0;
+
+    // Zapisujemy ustawienia użytkownika w pamięci przeglądarki
+    localStorage.setItem('savedQuickFuel', fuelKey);
+    localStorage.setItem('savedQuickCons', consumption);
+
+    amountEl.innerText = `${amount} zł`;
+
+    // Pobieramy aktualną cenę wybranego paliwa z obiektu originalPrices
+    let price = parseFloat(originalPrices[fuelKey]);
+    if (isNaN(price) || price <= 0) {
+        price = fuelKey === 'LPG' ? 2.99 : 6.50; // Fallback przed załadowaniem API
+    }
+
+    const liters = amount / price;
+    const distanceKm = (liters / consumption) * 100;
+
+    litersEl.innerText = `${liters.toFixed(1)} L`;
+    resultEl.innerText = `${Math.round(distanceKm)} km`;
+}
+
+// Obsługa włącznika powiadomień Web Push
+async function toggleWebPushAlerts(checkbox) {
+    const testBtn = document.getElementById('testPushBtn');
+
+    if (checkbox.checked) {
+        if (!("Notification" in window)) {
+            showNotification("Twoja przeglądarka nie obsługuje powiadomień ekranowych.");
+            checkbox.checked = false;
+            return;
+        }
+
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            localStorage.setItem('pushAlertsEnabled', 'true');
+            if (testBtn) testBtn.style.display = 'block';
+            showNotification("Alerty cenowe zostały aktywowane!");
+            sendSystemNotification(
+                "Alerty Cenowe Aktywne! ⛽",
+                "Powiadomimy Cię na ekranie blokady, gdy tylko ceny paliw spadną."
+            );
+        } else {
+            localStorage.setItem('pushAlertsEnabled', 'false');
+            checkbox.checked = false;
+            if (testBtn) testBtn.style.display = 'none';
+            showNotification("Zablokowano uprawnienia do powiadomień w przeglądarce.");
+        }
+    } else {
+        localStorage.setItem('pushAlertsEnabled', 'false');
+        if (testBtn) testBtn.style.display = 'none';
+        showNotification("Alerty cenowe zostały wyłączone.");
+    }
+}
+
+// Funkcja wysyłająca powiadomienie (Działa na 127.0.0.1 oraz na produkcji)
+function sendSystemNotification(title, bodyText) {
+    // 1. Zawsze pokazujemy nowoczesny baner Push na górze ekranu (gwarancja działania)
+    showInAppPushBanner(title, bodyText);
+
+    // 2. Próba wysłania natywnego powiadomienia do systemu Windows / Android / macOS
+    if (!("Notification" in window) || Notification.permission !== "granted") {
+        return;
+    }
+
+    const options = {
+        body: bodyText,
+        vibrate: [200, 100, 200]
+    };
+
+    try {
+        // Najpierw bezpośrednie powiadomienie przeglądarkowe (nie zawiesza się na Live Serverze!)
+        new Notification(title, options);
+    } catch (err) {
+        // Fallback dla telefonów (Android wymaga Service Workera)
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.showNotification(title, options);
+            });
+        }
+    }
+}
+
+// Wizualny baner Push w stylu iOS/Android wysuwający się z góry ekranu
+function showInAppPushBanner(title, bodyText) {
+    let oldBanner = document.getElementById('inAppPushBanner');
+    if (oldBanner) oldBanner.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'inAppPushBanner';
+    banner.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-150%);
+        width: 92%;
+        max-width: 420px;
+        background: rgba(30, 32, 34, 0.96);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        color: #fff;
+        padding: 16px 20px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+    `;
+
+    banner.innerHTML = `
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #E30613, #b30000); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(227,6,19,0.4);">
+            <i class='bx bxs-gas-pump' style="color: #fff;"></i>
+        </div>
+        <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.95rem; color: #fff;">${title}</span>
+                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: 600;">TERAZ</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.35;">${bodyText}</div>
+        </div>
+    `;
+
+    banner.onclick = () => {
+        banner.style.transform = 'translateX(-50%) translateY(-150%)';
+        setTimeout(() => banner.remove(), 400);
+    };
+
+    document.body.appendChild(banner);
+
+    // Animacja wjazdu z góry
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            banner.style.transform = 'translateX(-50%) translateY(0)';
+        }, 50);
+    });
+
+    // Automatyczne schowanie po 5 sekundach
+    setTimeout(() => {
+        if (document.body.contains(banner)) {
+            banner.style.transform = 'translateX(-50%) translateY(-150%)';
+            setTimeout(() => banner.remove(), 400);
+        }
+    }, 5000);
+}
+
+// ==============================================================
+// INTELIGENTNY SYSTEM POWIADOMIEŃ O CENACH NA JUTRO (+ AUTO 00:05)
+// ==============================================================
+
+// Funkcja budująca treść raportu "Jutro na stacjach" (np. Pb95: 6.02 (+2gr))
+function buildTomorrowReportText() {
+    const todayStr = new Date().toLocaleDateString('sv-SE');
+    const tomorrowStr = new Date(Date.now() + 86400000).toLocaleDateString('sv-SE');
+    const isTomorrowAvailable = STATE.currentDisplayDate >= tomorrowStr;
+
+    const fuelsToReport = [
+        { key: 'Pb95', short: 'Pb95' },
+        { key: 'ONEkodiesel', short: 'ON' },
+        { key: 'Pb98', short: 'Pb98' },
+        { key: 'LPG', short: 'LPG' }
+    ];
+
+    let lines = [];
+
+    fuelsToReport.forEach(f => {
+        const todayPrice = parseFloat(originalPrices[f.key]);
+        if (!todayPrice) return;
+
+        if (isTomorrowAvailable) {
+            // Jeśli API ma już ceny na jutro, liczymy dokładną różnicę
+            let tomorrowNetto = 0;
+            if (f.key === 'LPG' && rawLpgData) {
+                tomorrowNetto = rawLpgData.value;
+            } else if (rawFuelDataList) {
+                const found = rawFuelDataList.find(item => item.productName === f.key);
+                if (found) tomorrowNetto = found.value / 1000;
+            }
+
+            if (tomorrowNetto > 0) {
+                const tomorrowPrice = calculateRetailPrice(f.key, tomorrowNetto, tomorrowStr);
+                const diffGr = Math.round((tomorrowPrice - todayPrice) * 100);
+                const sign = diffGr > 0 ? `+${diffGr}gr` : (diffGr < 0 ? `${diffGr}gr` : `0gr`);
+                lines.push(`${f.short}: ${tomorrowPrice.toFixed(2)} zł (${sign})`);
+            }
+        } else {
+            // Jeśli cen na jutro jeszcze nie ma, porównujemy dziś vs wczoraj
+            const pricesObj = window.dailyNettoPrices ? window.dailyNettoPrices[f.key] : null;
+            if (pricesObj && pricesObj.yesterdayNetto) {
+                const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
+                const yesterdayPrice = calculateRetailPrice(f.key, pricesObj.yesterdayNetto, yesterdayStr);
+                const diffGr = Math.round((todayPrice - yesterdayPrice) * 100);
+                const sign = diffGr > 0 ? `+${diffGr}gr` : (diffGr < 0 ? `${diffGr}gr` : `0gr`);
+                lines.push(`${f.short}: ${todayPrice.toFixed(2)} zł (${sign})`);
+            } else {
+                lines.push(`${f.short}: ${todayPrice.toFixed(2)} zł`);
+            }
+        }
+    });
+
+    return {
+        isTomorrow: isTomorrowAvailable,
+        date: STATE.currentDisplayDate || todayStr,
+        summaryText: lines.join('  |  ')
+    };
+}
+
+// 1. PRZYCISK TESTOWY - Pokazuje dokładny raport z wyliczonymi groszami (+/-)
+function sendTestPushAlert() {
+    const report = buildTomorrowReportText();
+    const title = report.isTomorrow 
+        ? ` Nowe ceny na jutro (${report.date})!` 
+        : `📊 Aktualny raport cenowy (Dziś):`;
+
+    sendSystemNotification(
+        title,
+        report.summaryText || "Trwa pobieranie danych giełdowych..."
+    );
+}
+// 2. AUTOMATYCZNY DETEKTOR NOWYCH CEN (Po wejściu na stronę oraz o 00:05 w nocy)
+function checkNewPricesPushAlert() {
+    if (localStorage.getItem('pushAlertsEnabled') !== 'true') return;
+    if (!STATE.currentDisplayDate) return;
+
+    // Sprawdzamy, czy użytkownik dostał już powiadomienie dla tej konkretnej daty notowań
+    const lastNotifiedDate = localStorage.getItem('lastNotifiedPriceDate');
+    if (lastNotifiedDate === STATE.currentDisplayDate) return;
+
+    const report = buildTomorrowReportText();
+    if (!report.summaryText) return;
+
+    const title = report.isTomorrow 
+        ? `🔔 Ceny na jutro (${report.date}) już dostępne!` 
+        : `⛽ Nowa aktualizacja cen (${report.date})`;
+
+    sendSystemNotification(title, report.summaryText);
+
+    // Zapisujemy datę, żeby nie spamować użytkownika przy każdym odświeżeniu strony tego samego dnia
+    localStorage.setItem('lastNotifiedPriceDate', STATE.currentDisplayDate);
+}
+
+// 3. ZEGAR NOCNY (Sprawdza co minutę, czy wybiła 00:05 i sam pobiera nowe ceny w tle!)
+setInterval(async () => {
+    const now = new Date();
+    const day = now.getDay();
+    const isUpdateDay = day >= 2 && day <= 6; // Wtorek - Sobota
+
+    // Dokładnie o 00:05 rano (gdy kończy się przerwa techniczna)
+    if (isUpdateDay && now.getHours() === 0 && now.getMinutes() === 5) {
+        console.log("Wybiła 00:05! Pobieram nowe ceny w tle do powiadomienia...");
+        await fetchLastData();
+        fetchData();
+        setTimeout(() => {
+            checkNewPricesPushAlert();
+        }, 3000);
+    }
+}, 60000); // Sprawdza co 60 sekund
+
+// Inicjalizacja zapisanych ustawień po załadowaniu strony
+document.addEventListener('DOMContentLoaded', () => {
+    const savedFuel = localStorage.getItem('savedQuickFuel');
+    const savedCons = localStorage.getItem('savedQuickCons');
+    const pushEnabled = localStorage.getItem('pushAlertsEnabled') === 'true';
+
+    if (savedFuel && document.getElementById('quickRangeFuel')) {
+        document.getElementById('quickRangeFuel').value = savedFuel;
+    }
+    if (savedCons && document.getElementById('quickRangeCons')) {
+        document.getElementById('quickRangeCons').value = savedCons;
+    }
+    if (pushEnabled && document.getElementById('togglePushAlerts')) {
+        document.getElementById('togglePushAlerts').checked = true;
+        const testBtn = document.getElementById('testPushBtn');
+        if (testBtn) testBtn.style.display = 'block';
+    }
+
+    // Odświeżenie suwaka i sprawdzenie alertów po pobraniu cen z API
+    setTimeout(() => {
+        updateQuickRange();
+        checkNewPricesPushAlert();
+    }, 2200);
+});
+
+// Przełączanie zakładek w panelu bocznym (Subskrypcja <-> Twoje Konto)
+function switchProfileTab(tabId, titleText, btnElement) {
+    // 1. Ukrywamy wszystkie zakładki i pokazujemy wybraną
+    document.querySelectorAll('.sidebar-tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    const targetPane = document.getElementById(tabId);
+    if (targetPane) targetPane.classList.add('active');
+
+    // 2. Aktualizujemy wygląd przycisków zakładek
+    document.querySelectorAll('.sidebar-tab-pill').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (btnElement) btnElement.classList.add('active');
+
+    // 3. Zmieniamy nagłówek u góry panelu
+    const headerTitle = document.getElementById('sidebarMainTitle');
+    if (headerTitle && titleText) {
+        headerTitle.innerText = titleText;
+    }
+}
+
+// ==============================================================
+// ROZBUDOWANE "TWOJE KONTO": AUTO-FILL, PEŁNY BAK I TERMINARZ
+// ==============================================================
+
+function saveDriverProfileAndRecalc() {
+    const fuelKey = document.getElementById('quickRangeFuel')?.value || 'Pb95';
+    const cons = parseFloat(document.getElementById('quickRangeCons')?.value) || 7.0;
+    const tank = parseFloat(document.getElementById('quickTankSize')?.value) || 50;
+
+    // 1. Zapis w localStorage
+    localStorage.setItem('savedQuickFuel', fuelKey);
+    localStorage.setItem('savedQuickCons', cons);
+    localStorage.setItem('savedQuickTank', tank);
+
+    // 2. Przepisanie wartości do głównych kalkulatorów i symulatora dystrybutora
+    if (document.getElementById('calcFuelType')) document.getElementById('calcFuelType').value = fuelKey;
+    if (document.getElementById('calcConsumption')) document.getElementById('calcConsumption').value = cons;
+    if (document.getElementById('savingsLiters')) document.getElementById('savingsLiters').value = tank;
+    if (document.getElementById('simFuel')) document.getElementById('simFuel').value = fuelKey;
+
+    if (typeof runAllCalculations === 'function') runAllCalculations();
+
+    // 3. Wyliczenie kosztu pełnego baku (Dziś vs Wczoraj)
+    const todayPrice = parseFloat(originalPrices[fuelKey]) || 6.50;
+    const fullCostToday = tank * todayPrice;
+
+    const costEl = document.getElementById('myFullTankCost');
+    const diffEl = document.getElementById('myFullTankDiff');
+
+    if (costEl) costEl.innerText = `${fullCostToday.toFixed(2)} PLN`;
+
+    if (diffEl && window.dailyNettoPrices && window.dailyNettoPrices[fuelKey]) {
+        const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('sv-SE');
+        const yesterdayNetto = window.dailyNettoPrices[fuelKey].yesterdayNetto;
+        if (yesterdayNetto > 0) {
+            const yesterdayPrice = calculateRetailPrice(fuelKey, yesterdayNetto, yesterdayStr);
+            const fullCostYesterday = tank * yesterdayPrice;
+            const diffPln = fullCostToday - fullCostYesterday;
+
+            if (Math.abs(diffPln) < 0.05) {
+                diffEl.innerText = "0.00 zł vs wczoraj";
+                diffEl.style.background = "rgba(128,128,128,0.1)";
+                diffEl.style.color = "var(--text-light)";
+            } else if (diffPln > 0) {
+                diffEl.innerText = `+${diffPln.toFixed(2)} zł drożej`;
+                diffEl.style.background = "rgba(227, 6, 19, 0.1)";
+                diffEl.style.color = "#E30613";
+            } else {
+                diffEl.innerText = `${diffPln.toFixed(2)} zł taniej!`;
+                diffEl.style.background = "rgba(76, 175, 80, 0.1)";
+                diffEl.style.color = "#4CAF50";
+            }
+        }
+    }
+
+    if (typeof updateStationOffset === 'function') updateStationOffset();
+    if (typeof calculateFuelSplit === 'function') calculateFuelSplit();
+    // 4. Odświeżenie suwaka zasięgu
+    updateQuickRange();
+}
+
+// Obsługa Książki Serwisowej (OC / Przegląd / Olej)
+function saveServiceBook() {
+    const ocDate = document.getElementById('serviceOcDate')?.value || '';
+    const techDate = document.getElementById('serviceTechDate')?.value || '';
+    const oilKm = document.getElementById('serviceOilKm')?.value || '';
+
+    localStorage.setItem('serviceOcDate', ocDate);
+    localStorage.setItem('serviceTechDate', techDate);
+    localStorage.setItem('serviceOilKm', oilKm);
+
+    updateDateCountdown(ocDate, 'ocDaysLeft', 'Koniec polisy');
+    updateDateCountdown(techDate, 'techDaysLeft', 'Przegląd');
+}
+
+function updateDateCountdown(dateStr, labelId, prefixText) {
+    const el = document.getElementById(labelId);
+    if (!el) return;
+    if (!dateStr) {
+        el.innerText = "Nie ustawiono daty";
+        el.style.color = "var(--text-light)";
+        return;
+    }
+
+    const target = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+        el.innerText = `⚠️ Termin minął (${Math.abs(diffDays)} dni temu)!`;
+        el.style.color = "#E30613";
+    } else if (diffDays <= 14) {
+        el.innerText = `⏳ Pozostało tylko ${diffDays} dni!`;
+        el.style.color = "#F39C12";
+    } else {
+        el.innerText = `✅ Pozostało ${diffDays} dni`;
+        el.style.color = "#4CAF50";
+    }
+}
+
+// Wczytanie danych profilu i książki serwisowej po uruchomieniu strony
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTank = localStorage.getItem('savedQuickTank');
+    if (savedTank && document.getElementById('quickTankSize')) {
+        document.getElementById('quickTankSize').value = savedTank;
+    }
+
+    const ocDate = localStorage.getItem('serviceOcDate');
+    const techDate = localStorage.getItem('serviceTechDate');
+    const oilKm = localStorage.getItem('serviceOilKm');
+
+    if (ocDate && document.getElementById('serviceOcDate')) document.getElementById('serviceOcDate').value = ocDate;
+    if (techDate && document.getElementById('serviceTechDate')) document.getElementById('serviceTechDate').value = techDate;
+    if (oilKm && document.getElementById('serviceOilKm')) document.getElementById('serviceOilKm').value = oilKm;
+
+    saveServiceBook();
+    setTimeout(saveDriverProfileAndRecalc, 2300);
+});
+
+// ==============================================================
+// DODATKOWE FUNKCJE KONT: ZRZUTKA, DZIENNIK, MOJA STACJA, LEKTOR
+// ==============================================================
+
+// 1. KALKULATOR ZRZUTKI NA PALIWO (SPLIT BILL)
+function calculateFuelSplit() {
+    const dist = parseFloat(document.getElementById('splitDistance')?.value) || 250;
+    const people = parseInt(document.getElementById('splitPeople')?.value) || 4;
+    const fuelKey = document.getElementById('quickRangeFuel')?.value || 'Pb95';
+    const cons = parseFloat(document.getElementById('quickRangeCons')?.value) || 7.0;
+
+    const basePrice = parseFloat(originalPrices[fuelKey]) || 6.50;
+    const offset = parseFloat(document.getElementById('stationOffsetSelect')?.value) || 0;
+    const finalPrice = basePrice + offset;
+
+    const totalLiters = (dist / 100) * cons;
+    const totalCost = totalLiters * finalPrice;
+    const perPerson = totalCost / people;
+
+    const totalEl = document.getElementById('splitTotalCost');
+    const personEl = document.getElementById('splitPerPerson');
+
+    if (totalEl) totalEl.innerText = `${totalCost.toFixed(2)} zł`;
+    if (personEl) personEl.innerText = `${perPerson.toFixed(2)} zł`;
+}
+
+function copySplitMessage() {
+    const dist = document.getElementById('splitDistance')?.value || 250;
+    const people = document.getElementById('splitPeople')?.value || 4;
+    const perPerson = document.getElementById('splitPerPerson')?.innerText || '0.00 zł';
+    const total = document.getElementById('splitTotalCost')?.innerText || '0.00 zł';
+
+    const msg = `🚗 Hej! Podsumowanie za paliwo (${dist} km):\nŁączny koszt: ${total}\nPodział na ${people} os.: *${perPerson}* na głowę ⛽💸`;
+
+    navigator.clipboard.writeText(msg).then(() => {
+        showNotification("Skopiowano wiadomość ze zrzutką do schowka!");
+    });
+}
+
+// 2. DZIENNIK TANKOWAŃ (WERSJA LITE - MAX 3 WPISY)
+function getFuelLogs() {
+    try {
+        return JSON.parse(localStorage.getItem('driverFuelLogs') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+function addFuelLogEntry() {
+    const litersInput = document.getElementById('logLitersInput');
+    const costInput = document.getElementById('logCostInput');
+    const fuelKey = document.getElementById('quickRangeFuel')?.value || 'Pb95';
+
+    const liters = parseFloat(litersInput?.value);
+    let cost = parseFloat(costInput?.value);
+
+    if (!liters || liters <= 0) {
+        showNotification("Wpisz poprawną liczbę litrów!");
+        return;
+    }
+
+    // Jeśli użytkownik nie wpisał kwoty, wyliczamy ją automatycznie z dzisiejszej ceny!
+    if (!cost || cost <= 0) {
+        const currentPrice = parseFloat(originalPrices[fuelKey]) || 6.50;
+        cost = liters * currentPrice;
+    }
+
+    const logs = getFuelLogs();
+    const today = new Date().toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' });
+
+    logs.unshift({
+        date: today,
+        fuel: getFuelDisplayName(fuelKey),
+        liters: liters.toFixed(1),
+        cost: cost.toFixed(2)
+    });
+
+    // Limit pakietu Standard: zachowujemy 3 ostatnie tankowania
+    const trimmedLogs = logs.slice(0, 3);
+    localStorage.setItem('driverFuelLogs', JSON.stringify(trimmedLogs));
+
+    if (litersInput) litersInput.value = '';
+    if (costInput) costInput.value = '';
+
+    if (typeof syncSettingsToCloud === 'function') syncSettingsToCloud();
+    renderFuelLogs();
+    showNotification("Dodano wpis do Dziennika Tankowań!");
+    
+}
+
+function removeFuelLogEntry(index) {
+    const logs = getFuelLogs();
+    logs.splice(index, 1);
+    localStorage.setItem('driverFuelLogs', JSON.stringify(logs));
+    renderFuelLogs();
+    if (typeof syncSettingsToCloud === 'function') syncSettingsToCloud();
+}
+
+function renderFuelLogs() {
+    const listEl = document.getElementById('fuelLogList');
+    const totalEl = document.getElementById('fuelLogTotalSpent');
+    if (!listEl) return;
+
+    const logs = getFuelLogs();
+    let totalSpent = 0;
+
+    if (logs.length === 0) {
+        listEl.innerHTML = `<div style="text-align: center; padding: 10px; font-size: 0.75rem; color: var(--text-light); background: rgba(0,0,0,0.02); border-radius: 8px;">Brak zapisanych tankowań. Dodaj swój pierwszy wpis!</div>`;
+        if (totalEl) totalEl.innerText = `Suma: 0 zł`;
+        return;
+    }
+
+    listEl.innerHTML = '';
+    logs.forEach((item, idx) => {
+        totalSpent += parseFloat(item.cost);
+        const row = document.createElement('div');
+        row.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; font-size: 0.78rem;`;
+        row.innerHTML = `
+            <div>
+                <strong style="color: var(--text);">${item.date}</strong> • <span style="color: var(--text-light); font-weight: 600;">${item.fuel} (${item.liters}L)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <strong style="font-family: 'Outfit', sans-serif; color: var(--primary);">${item.cost} zł</strong>
+                <button onclick="removeFuelLogEntry(${idx})" style="background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1rem; line-height: 1;">&times;</button>
+            </div>
+        `;
+        listEl.appendChild(row);
+    });
+
+    if (totalEl) totalEl.innerText = `Suma: ${totalSpent.toFixed(0)} zł`;
+}
+
+// 3. KOREKTA LOKALNEJ STACJI
+function updateStationOffset() {
+    const select = document.getElementById('stationOffsetSelect');
+    const estEl = document.getElementById('myStationEstimatedPrice');
+    const fuelKey = document.getElementById('quickRangeFuel')?.value || 'Pb95';
+
+    if (!select || !estEl) return;
+
+    const offset = parseFloat(select.value) || 0;
+    localStorage.setItem('savedStationOffset', offset);
+
+    const basePrice = parseFloat(originalPrices[fuelKey]) || 6.50;
+    const estimated = basePrice + offset;
+
+    estEl.innerText = `${estimated.toFixed(2)} PLN/l`;
+    calculateFuelSplit();
+}
+
+// 4. SPERSONALIZOWANY LEKTOR GŁOSOWY (CZYTA TYLKO TWOJE AUTO)
+function speakMyPersonalFuel() {
+    if (!('speechSynthesis' in window)) {
+        showNotification("Twoja przeglądarka nie obsługuje asystenta głosowego.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const fuelKey = document.getElementById('quickRangeFuel')?.value || 'Pb95';
+    const tank = parseFloat(document.getElementById('quickTankSize')?.value) || 50;
+    const basePrice = parseFloat(originalPrices[fuelKey]) || 6.50;
+    const offset = parseFloat(document.getElementById('stationOffsetSelect')?.value) || 0;
+    const myPrice = (basePrice + offset).toFixed(2);
+    const fullTankCost = Math.round(tank * parseFloat(myPrice));
+
+    const savedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+    const userName = savedUser.given_name || 'Kierowco';
+
+    const text = `Cześć ${userName}! Twoje wybrane paliwo, ${getFuelDisplayName(fuelKey)}, kosztuje na Twojej stacji ${formatPriceForSpeech(myPrice)}. Zatankowanie Twojego baku ${tank} litrów wyniesie dziś około ${fullTankCost} złotych.`;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'pl-PL';
+    window.speechSynthesis.speak(utterance);
+    showNotification("Asystent czyta raport dla Twojego auta...");
+}
+
+// 5. RESET USTAWIEŃ PROFILU
+function resetDriverAccountSettings() {
+    const keysToRemove = [
+        'savedQuickFuel', 'savedQuickCons', 'savedQuickTank',
+        'serviceOcDate', 'serviceTechDate', 'serviceOilKm',
+        'driverFuelLogs', 'savedStationOffset', 'pushAlertsEnabled'
+    ];
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    renderFuelLogs();
+    showNotification("Zresetowano dane Twojego Konta do wartości domyślnych.");
+}
+
+// Inicjalizacja przy starcie
+document.addEventListener('DOMContentLoaded', () => {
+    const savedOffset = localStorage.getItem('savedStationOffset');
+    if (savedOffset !== null && document.getElementById('stationOffsetSelect')) {
+        document.getElementById('stationOffsetSelect').value = savedOffset;
+    }
+
+    renderFuelLogs();
+
+    setTimeout(() => {
+        updateStationOffset();
+        calculateFuelSplit();
+    }, 2400);
+});
+
+// ==============================================================
+// SYNCHRONIZACJA KONTA W CHMURZE (MIĘDZY URZĄDZENIAMI)
+// ==============================================================
+
+// PODMIEŃ NA ADRES SWOJEGO WORKERA Z BAZĄ KV:
+const CLOUD_SYNC_URL = "https://profil-sync.kacpiq.workers.dev/";
+
+// Lista wszystkich kluczy zapisywanych na koncie użytkownika
+const SYNCED_SETTING_KEYS = [
+    'savedQuickFuel', 'savedQuickCons', 'savedQuickTank',
+    'serviceOcDate', 'serviceTechDate', 'serviceOilKm',
+    'driverFuelLogs', 'savedStationOffset', 'pushAlertsEnabled',
+    'theme', 'hide_evGrid', 'hide_germanFuelGrid',
+    'cosmetic_amoled', 'cosmetic_digital', 'cosmetic_compact'
+];
+
+let syncTimeout = null;
+
+function setCloudBadgeStatus(state) {
+    const badge = document.getElementById('cloudSyncBadge');
+    if (!badge) return;
+
+    if (state === 'saving') {
+        badge.style.background = 'rgba(243, 156, 18, 0.15)';
+        badge.style.color = '#F39C12';
+        badge.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Zapisywanie...`;
+    } else if (state === 'saved') {
+        badge.style.background = 'rgba(76, 175, 80, 0.12)';
+        badge.style.color = '#4CAF50';
+        badge.innerHTML = `<i class='bx bx-cloud-check'></i> Zapisano w chmurze`;
+    } else if (state === 'error') {
+        badge.style.background = 'rgba(227, 6, 19, 0.12)';
+        badge.style.color = '#E30613';
+        badge.innerHTML = `<i class='bx bx-cloud-off'></i> Tylko lokalnie`;
+    }
+}
+
+// 1. WYSYŁANIE WSZYSTKICH USTAWIEŃ DO CHMURY (Z opóźnieniem 800ms, by nie spamować serwera przy przesuwaniu suwaka)
+function syncSettingsToCloud() {
+    if (localStorage.getItem('isLogged') !== 'true') return;
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (!userData.email) return;
+
+    // Zapisujemy też aktualny stan przełączników wizualnych do localStorage przed wysyłką
+    if (document.getElementById('toggleEV')) localStorage.setItem('hide_evGrid', !document.getElementById('toggleEV').checked);
+    if (document.getElementById('toggleDE')) localStorage.setItem('hide_germanFuelGrid', !document.getElementById('toggleDE').checked);
+    if (document.getElementById('toggleAmoled')) localStorage.setItem('cosmetic_amoled', document.getElementById('toggleAmoled').checked);
+    if (document.getElementById('toggleDigitalFont')) localStorage.setItem('cosmetic_digital', document.getElementById('toggleDigitalFont').checked);
+    if (document.getElementById('toggleCompactView')) localStorage.setItem('cosmetic_compact', document.getElementById('toggleCompactView').checked);
+
+    setCloudBadgeStatus('saving');
+    if (syncTimeout) clearTimeout(syncTimeout);
+
+    syncTimeout = setTimeout(async () => {
+        const payload = {};
+        SYNCED_SETTING_KEYS.forEach(key => {
+            const val = localStorage.getItem(key);
+            if (val !== null) payload[key] = val;
+        });
+
+        try {
+            const res = await fetch(`${CLOUD_SYNC_URL}?email=${encodeURIComponent(userData.email)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) setCloudBadgeStatus('saved');
+            else setCloudBadgeStatus('error');
+        } catch (err) {
+            console.warn("Błąd synchronizacji z chmurą:", err);
+            setCloudBadgeStatus('error');
+        }
+    }, 800);
+}
+
+// POBIERANIE USTAWIEŃ Z CHMURY (PRZY OTWARCIU STRONY)
+async function loadSettingsFromCloud() {
+    if (localStorage.getItem('isLogged') !== 'true') return;
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (!userData.email) return;
+
+    setCloudBadgeStatus('saving');
+
+    try {
+        const res = await fetch(`${CLOUD_SYNC_URL}?email=${encodeURIComponent(userData.email)}`);
+        if (!res.ok) throw new Error("Błąd HTTP");
+
+        const cloudData = await res.json();
+
+        // Czyścimy stare klucze lokalne i wgrywamy dokładnie to, co jest w chmurze dla tego konta
+        clearAccountSettingsFromLocal();
+
+        if (cloudData && Object.keys(cloudData).length > 0) {
+            Object.entries(cloudData).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+            });
+        }
+        
+        // Odświeżamy wszystkie suwaki, przełączniki i wygląd
+        applyAllSyncedSettingsToUI();
+        setCloudBadgeStatus('saved');
+    } catch (err) {
+        console.warn("Nie udało się pobrać profilu z chmurą:", err);
+        setCloudBadgeStatus('error');
+    }
+}
+
+// OBSŁUGA PO PRZEŁADOWANIU STRONY (POWIADOMIENIE + WCZYTANIE PROFILU)
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Sprawdzamy, czy przed odświeżeniem strony zostało zlecone powiadomienie (Logowanie / Wylogowanie)
+    const toastMsg = sessionStorage.getItem('postReloadToast');
+    if (toastMsg) {
+        sessionStorage.removeItem('postReloadToast');
+        setTimeout(() => {
+            showNotification(toastMsg);
+        }, 600);
+    }
+
+    // 2. Jeśli użytkownik jest zalogowany, pokazujemy jego profil i pobieramy dane z chmury
+    if (localStorage.getItem('isLogged') === 'true') {
+        const savedData = localStorage.getItem('userData');
+        if (savedData) {
+            updateLoginUI(JSON.parse(savedData));
+        }
+        applyAllSyncedSettingsToUI();
+        setTimeout(loadSettingsFromCloud, 1200);
+    }
+
+    // 3. Nasłuchiwanie zmian w zakładce "Twoje Konto"
+    const accountTab = document.getElementById('tab-account');
+    if (accountTab) {
+        accountTab.addEventListener('change', () => syncSettingsToCloud());
+        accountTab.addEventListener('input', () => syncSettingsToCloud());
+    }
+});
+
+// 3. APLIKOWANIE POBRANYCH USTAWIEŃ NA STRONĘ (SUWAKI, KARTY, WYGLĄD)
+function applyAllSyncedSettingsToUI() {
+    // Parametry auta
+    if (localStorage.getItem('savedQuickFuel') && document.getElementById('quickRangeFuel')) {
+        document.getElementById('quickRangeFuel').value = localStorage.getItem('savedQuickFuel');
+    }
+    if (localStorage.getItem('savedQuickCons') && document.getElementById('quickRangeCons')) {
+        document.getElementById('quickRangeCons').value = localStorage.getItem('savedQuickCons');
+    }
+    if (localStorage.getItem('savedQuickTank') && document.getElementById('quickTankSize')) {
+        document.getElementById('quickTankSize').value = localStorage.getItem('savedQuickTank');
+    }
+
+    // Terminarz serwisowy
+    if (document.getElementById('serviceOcDate')) document.getElementById('serviceOcDate').value = localStorage.getItem('serviceOcDate') || '';
+    if (document.getElementById('serviceTechDate')) document.getElementById('serviceTechDate').value = localStorage.getItem('serviceTechDate') || '';
+    if (document.getElementById('serviceOilKm')) document.getElementById('serviceOilKm').value = localStorage.getItem('serviceOilKm') || '';
+
+    // Moja stacja
+    if (localStorage.getItem('savedStationOffset') !== null && document.getElementById('stationOffsetSelect')) {
+        document.getElementById('stationOffsetSelect').value = localStorage.getItem('savedStationOffset');
+    }
+
+    // Ukrywanie sekcji EV / Niemcy
+    const hideEV = localStorage.getItem('hide_evGrid') === 'true';
+    if (document.getElementById('toggleEV')) {
+        document.getElementById('toggleEV').checked = !hideEV;
+        toggleDashboardSection('evGrid', document.getElementById('toggleEV'));
+    }
+
+    const hideDE = localStorage.getItem('hide_germanFuelGrid') === 'true';
+    if (document.getElementById('toggleDE')) {
+        document.getElementById('toggleDE').checked = !hideDE;
+        toggleDashboardSection('germanFuelGrid', document.getElementById('toggleDE'));
+    }
+
+    // Opcje kosmetyczne CSS
+    const isAmoled = localStorage.getItem('cosmetic_amoled') === 'true';
+    if (document.getElementById('toggleAmoled')) {
+        document.getElementById('toggleAmoled').checked = isAmoled;
+        toggleAmoledMode(document.getElementById('toggleAmoled'));
+    }
+
+    const isDigital = localStorage.getItem('cosmetic_digital') === 'true';
+    if (document.getElementById('toggleDigitalFont')) {
+        document.getElementById('toggleDigitalFont').checked = isDigital;
+        toggleDigitalFont(document.getElementById('toggleDigitalFont'));
+    }
+
+    const isCompact = localStorage.getItem('cosmetic_compact') === 'true';
+    if (document.getElementById('toggleCompactView')) {
+        document.getElementById('toggleCompactView').checked = isCompact;
+        toggleCompactView(document.getElementById('toggleCompactView'));
+    }
+
+    // Przeliczenie wszystkich widżetów
+    if (typeof saveServiceBook === 'function') saveServiceBook();
+    if (typeof renderFuelLogs === 'function') renderFuelLogs();
+    if (typeof saveDriverProfileAndRecalc === 'function') saveDriverProfileAndRecalc();
+    if (typeof updateStationOffset === 'function') updateStationOffset();
+}
+
+// 4. AUTOMATYCZNE NASŁUCHIWANIE ZMIAN W ZAKŁADCE "TWOJE KONTO"
+document.addEventListener('DOMContentLoaded', () => {
+    const accountTab = document.getElementById('tab-account');
+    if (accountTab) {
+        accountTab.addEventListener('change', () => syncSettingsToCloud());
+        accountTab.addEventListener('input', () => syncSettingsToCloud());
+    }
+
+    // Jeśli użytkownik jest już zalogowany przy starcie strony, pobieramy jego dane z chmury
+    if (localStorage.getItem('isLogged') === 'true') {
+        applyAllSyncedSettingsToUI(); // Najpierw szybki odczyt z pamięci
+        setTimeout(loadSettingsFromCloud, 1500); // Następnie synchronizacja z chmurą
+    }
+});
