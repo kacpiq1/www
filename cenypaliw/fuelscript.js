@@ -2305,38 +2305,42 @@ function updateMacroCard(priceId, changeId, price, changePerc, currency) {
 // ==========================================
 
 function triggerCustomGoogleLogin() {
-    // 1. Konfigurujemy autorskiego klienta Google
     const client = google.accounts.oauth2.initTokenClient({
         client_id: '339722376187-d7ss3hddhge1mbklba0la55bjb0n6v27.apps.googleusercontent.com',
         scope: 'email profile openid',
-        callback: (tokenResponse) => {
+        callback: async (tokenResponse) => {
             if (tokenResponse && tokenResponse.access_token) {
-                // 2. Mając token, pobieramy dane użytkownika z bezpiecznego serwera Google
-                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-                })
-                .then(res => res.json())
-                .then(userData => {
-                    // 3. Zapis w pamięci przeglądarki
+                try {
+                    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                    });
+                    const userData = await res.json();
+
+                    // 1. Najpierw czyścimy ewentualne resztki ustawień poprzedniego konta
+                    clearAccountSettingsFromLocal();
+
+                    // 2. Zapisujemy dane nowego użytkownika
                     localStorage.setItem('isLogged', 'true');
                     localStorage.setItem('userData', JSON.stringify(userData));
 
-                    // 4. Aktualizacja interfejsu (zmiana na Stan 2)
-                    updateLoginUI(userData);
-                    
-                    // Dopasowujemy imię lub pełną nazwę zależnie co zwróci profil
+                    // 3. Pobieramy ustawienia tego konkretnego konta z chmury PRZED odświeżeniem
+                    await fetchAndSaveCloudSettingsOnLogin(userData.email);
+
+                    // 4. Zapisujemy komunikat powitalny, który wyświetli się po odświeżeniu
                     const firstName = userData.given_name || userData.name;
-                    showNotification(`Witaj, ${firstName}!`);
-                })
-                .catch(err => {
+                    sessionStorage.setItem('postReloadToast', `Zalogowano pomyślnie! Witaj, ${firstName}!`);
+
+                    // 5. Odświeżamy stronę, by czysto wczytać cały interfejs
+                    window.location.reload();
+
+                } catch (err) {
                     console.error('Błąd pobierania profilu:', err);
                     showNotification('Błąd podczas pobierania danych logowania.');
-                });
+                }
             }
         }
     });
 
-    // Uruchomienie okienka PopUp (Działa bez ucinania przez przeglądarkę)
     client.requestAccessToken();
 }
 
@@ -3267,6 +3271,12 @@ function syncSettingsToCloud() {
             setCloudBadgeStatus('error');
         }
     }, 800);
+}
+
+function clearAccountSettingsFromLocal() {
+    if (typeof SYNCED_SETTING_KEYS !== 'undefined') {
+        SYNCED_SETTING_KEYS.forEach(key => localStorage.removeItem(key));
+    }
 }
 
 // POBIERANIE USTAWIEŃ Z CHMURY (PRZY OTWARCIU STRONY)
