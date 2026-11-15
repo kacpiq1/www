@@ -1,1 +1,6 @@
-importScripts("https://cdn.pushalert.co/sw-66872.js");
+self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 12272270
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
