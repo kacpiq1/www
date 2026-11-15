@@ -1022,14 +1022,24 @@
         
         <!-- KARTA 1: PROFIL AUTA + SZYBKI BAK + ZASIĘG -->
         <div class="plan-card" style="border-color: rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.04);">
-            <div class="plan-card-title" style="color: #3498db; justify-content: space-between;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bxs-car-garage' style="font-size: 1.4rem;"></i> Moje Auto & Narzędzia
+            <div class="plan-card-title" style="color: #3498db; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                
+                <!-- Lewa strona: Ikona + Tytuł -->
+                <span style="display: flex; align-items: center; gap: 8px; font-size: 1.05rem; line-height: 1.2;">
+                    <i class='bx bxs-car-garage' style="font-size: 1.35rem; flex-shrink: 0;"></i> 
+                    <span>Moje Auto & Narzędzia</span>
                 </span>
-                <span style="font-size: 0.65rem; background: rgba(52, 152, 219, 0.15); color: #3498db; padding: 3px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase;">Standard</span>
-                <span id="cloudSyncBadge" style="font-size: 0.65rem; background: rgba(76, 175, 80, 0.12); color: #4CAF50; padding: 4px 8px; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
-    <i class='bx bx-cloud-check'></i> Chmura aktywna
-</span>
+                
+                <!-- Prawa strona: Zgrupowane pigułki o równej wysokości -->
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <span style="height: 24px; padding: 0 8px; font-size: 0.62rem; background: rgba(52, 152, 219, 0.15); color: #3498db; border-radius: 6px; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1;">
+                        Standard
+                    </span>
+                    <span id="cloudSyncBadge" style="height: 24px; padding: 0 8px; font-size: 0.65rem; background: rgba(76, 175, 80, 0.12); color: #4CAF50; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; line-height: 1;">
+                        <i class='bx bx-cloud-check' style="font-size: 0.85rem;"></i> Chmura
+                    </span>
+                </div>
+
             </div>
             <div class="plan-card-desc" style="margin-bottom: 15px;">
                 Skonfiguruj parametry swojego pojazdu – aplikacja automatycznie podstawi je do kalkulatorów i wyliczeń.
