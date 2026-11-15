@@ -926,14 +926,27 @@
         </a>
     </nav>
 
-    <div id="profileOverlay" class="sidebar-overlay" onclick="closeProfileSidebar()"></div>
+        <div id="profileOverlay" class="sidebar-overlay" onclick="closeProfileSidebar()"></div>
 <div id="profileSidebar" class="profile-sidebar">
     <div class="sidebar-header">
-        <h2>Subskrypcja</h2>
+        <h2 id="sidebarMainTitle">Subskrypcja</h2>
         <button class="close-sidebar-btn" onclick="closeProfileSidebar()">&times;</button>
     </div>
+
+    <!-- PASEK ZAKŁADEK -->
+    <div class="sidebar-tabs-bar">
+        <button class="sidebar-tab-pill active" onclick="switchProfileTab('tab-subscription', 'Subskrypcja', this)">
+            <i class='bx bxs-crown'></i> Subskrypcja
+        </button>
+        <button class="sidebar-tab-pill" onclick="switchProfileTab('tab-account', 'Twoje Konto', this)">
+            <i class='bx bxs-user-badge'></i> Twoje Konto
+        </button>
+    </div>
     
-    <div class="sidebar-content">
+    <!-- ========================================== -->
+    <!-- ZAKŁADKA 1: SUBSKRYPCJA                    -->
+    <!-- ========================================== -->
+    <div id="tab-subscription" class="sidebar-content sidebar-tab-pane active">
         <!-- Aktywny Pakiet -->
         <div class="plan-card">
             <div class="plan-card-title">
@@ -982,7 +995,7 @@
             </button>
         </div>
 
-        <!-- NOWE: Sekcja FAQ -->
+        <!-- Sekcja FAQ -->
         <div class="sidebar-faq">
             <h3><i class='bx bx-info-circle' style="color: #E30613;"></i> Dodatkowe informacje</h3>
             
@@ -1001,8 +1014,306 @@
             Stworzone z pasją dla polskich kierowców
         </div>
     </div>
-</div>
 
+    <!-- ========================================== -->
+    <!-- ZAKŁADKA 2: TWOJE KONTO (ROZBUDOWANA)      -->
+    <!-- ========================================== -->
+    <div id="tab-account" class="sidebar-content sidebar-tab-pane">
+        
+        <!-- KARTA 1: PROFIL AUTA + SZYBKI BAK + ZASIĘG -->
+        <div class="plan-card" style="border-color: rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.04);">
+            <div class="plan-card-title" style="color: #3498db; justify-content: space-between;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-car-garage' style="font-size: 1.4rem;"></i> Moje Auto & Narzędzia
+                </span>
+                <span style="font-size: 0.65rem; background: rgba(52, 152, 219, 0.15); color: #3498db; padding: 3px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase;">Standard</span>
+                <span id="cloudSyncBadge" style="font-size: 0.65rem; background: rgba(76, 175, 80, 0.12); color: #4CAF50; padding: 4px 8px; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+    <i class='bx bx-cloud-check'></i> Chmura aktywna
+</span>
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 15px;">
+                Skonfiguruj parametry swojego pojazdu – aplikacja automatycznie podstawi je do kalkulatorów i wyliczeń.
+            </div>
+
+            <!-- Parametry samochodu -->
+            <div class="range-calc-box" style="margin-bottom: 15px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-light); text-transform: uppercase; margin-bottom: 10px;">
+                    Domyślne parametry pojazdu:
+                </div>
+                <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Paliwo</label>
+                        <select id="quickRangeFuel" onchange="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 700;">
+                            <option value="Pb95">EFECTA 95</option>
+                            <option value="ONEkodiesel">DIESEL</option>
+                            <option value="Pb98">VERVA 98</option>
+                            <option value="ONArctic2">VERVA ON</option>
+                            <option value="LPG">LPG</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Spalanie (L)</label>
+                        <input type="number" id="quickRangeCons" value="7.0" step="0.5" min="2" max="30" oninput="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 800; text-align: center;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Bak (Litry)</label>
+                        <input type="number" id="quickTankSize" value="50" step="5" min="20" max="120" oninput="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 800; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- Szybki widżet: Ile dziś kosztuje Twój pełny bak -->
+                <div style="background: var(--card-bg); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(128,128,128,0.1);">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Pełny bak dzisiaj:</span>
+                        <strong id="myFullTankCost" style="font-size: 1.2rem; font-family: 'Outfit', sans-serif; color: var(--text);">--- PLN</strong>
+                    </div>
+                    <span id="myFullTankDiff" style="font-size: 0.75rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; background: rgba(128,128,128,0.1); color: var(--text-light);">
+                        ---
+                    </span>
+                </div>
+            </div>
+
+            <!-- Suwak: Zasięg za kwotę -->
+            <div style="border-top: 1px dashed rgba(52, 152, 219, 0.25); padding-top: 15px;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: #3498db; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                    <i class='bx bx-map-pin'></i> Szybki Kalkulator Zasięgu
+                </div>
+
+                <div class="range-calc-box">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-light);">Kwota tankowania:</span>
+                        <span id="rangeAmountVal" style="font-size: 1.1rem; font-weight: 900; color: var(--text); font-family: 'Outfit', sans-serif;">100 zł</span>
+                    </div>
+
+                    <input type="range" id="rangeSlider" class="premium-slider" min="20" max="500" step="10" value="100" oninput="updateQuickRange()">
+
+                    <div class="range-result-pill">
+                        <div>
+                            <span style="font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; font-weight: 800; display: block;">Przejedziesz dziś:</span>
+                            <span id="rangeResultVal" style="font-size: 1.65rem; font-weight: 900; color: #3498db; font-family: 'Outfit', sans-serif;">--- km</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Wlejesz do baku:</span>
+                            <span id="rangeLitersVal" style="font-size: 1rem; font-weight: 800; color: var(--text);">--- L</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 2: KSIĄŻKA SERWISOWA KIEROWCY -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-wrench' style="color: #e67e22; font-size: 1.3rem;"></i> Terminarz Kierowcy
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 15px;">
+                Zapisz ważne daty dla swojego auta – dane są bezpiecznie pamiętane w Twojej przeglądarce.
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Ubezpieczenie OC/AC</span>
+                        <span id="ocDaysLeft" style="font-size: 0.7rem; color: var(--text-light);">Wybierz datę końca polisy</span>
+                    </div>
+                    <input type="date" id="serviceOcDate" onchange="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 600;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Badanie Techniczne</span>
+                        <span id="techDaysLeft" style="font-size: 0.7rem; color: var(--text-light);">Wybierz datę przeglądu</span>
+                    </div>
+                    <input type="date" id="serviceTechDate" onchange="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 600;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Kolejna wymiana oleju</span>
+                        <span style="font-size: 0.7rem; color: var(--text-light);">Docelowy przebieg (km)</span>
+                    </div>
+                    <input type="number" id="serviceOilKm" placeholder="np. 185000" oninput="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 700; text-align: right;">
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 3: POWIADOMIENIA & PERSONALIZACJA WIDOKU -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-sliders' style="color: #9b59b6; font-size: 1.3rem;"></i> Alerty i Personalizacja
+            </div>
+
+            <!-- Alerty Web Push -->
+            <div style="margin-top: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 0.82rem; font-weight: 700; color: var(--text);">Alerty Cenowe (Web Push)</span>
+                        <span style="font-size: 0.7rem; color: var(--text-light);">Raport na ekranie przy zmianie cen</span>
+                    </div>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="togglePushAlerts" onchange="toggleWebPushAlerts(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button onclick="sendTestPushAlert()" id="testPushBtn" style="display: none; width: 100%; margin-top: 10px; padding: 8px; border-radius: 8px; border: 1px solid rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.08); color: #3498db; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+                    <i class='bx bx-paper-plane'></i> Wyślij testowy raport cenowy
+                </button>
+            </div>
+
+            <!-- Ukrywanie sekcji -->
+            <div style="margin-top: 15px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Pokaż sekcję "Strefa EV"</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleEV" onchange="toggleDashboardSection('evGrid', this)" checked>
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Pokaż "Ceny w Niemczech"</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleDE" onchange="toggleDashboardSection('germanFuelGrid', this)" checked>
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Kosmetyka CSS -->
+            <div style="margin-top: 15px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Tryb AMOLED Pure Black</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleAmoled" onchange="toggleAmoledMode(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Cyfrowa Czcionka Pylonu (LED)</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleDigitalFont" onchange="toggleDigitalFont(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Kompaktowa lista paliw</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleCompactView" onchange="toggleCompactView(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 4: KALKULATOR ZRZUTKI NA PALIWO (SPLIT BILL) -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-group' style="color: #27ae60; font-size: 1.4rem;"></i> Zrzutka na Paliwo
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Jedziesz ze znajomymi? Podziel koszt trasy i skopiuj gotową wiadomość z kwotą na BLIKA.
+            </div>
+
+            <div class="range-calc-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Dystans (km)</label>
+                        <input type="number" id="splitDistance" value="250" step="10" min="10" oninput="calculateFuelSplit()" style="padding: 7px 10px; font-size: 0.85rem; border-radius: 8px; font-weight: 800;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Liczba osób w aucie</label>
+                        <select id="splitPeople" onchange="calculateFuelSplit()" style="padding: 7px 10px; font-size: 0.85rem; border-radius: 8px; font-weight: 800;">
+                            <option value="2">2 osoby</option>
+                            <option value="3">3 osoby</option>
+                            <option value="4" selected>4 osoby</option>
+                            <option value="5">5 osób</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(128,128,128,0.12); margin-bottom: 10px;">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Koszt całkowity: <strong id="splitTotalCost">--- zł</strong></span>
+                        <span style="font-size: 0.75rem; color: var(--text); font-weight: 800;">Na głowę wychodzi:</span>
+                    </div>
+                    <span id="splitPerPerson" style="font-size: 1.45rem; font-weight: 900; color: #27ae60; font-family: 'Outfit', sans-serif;">--- zł</span>
+                </div>
+
+                <button onclick="copySplitMessage()" style="width: 100%; padding: 9px; border-radius: 10px; border: none; background: rgba(39, 174, 96, 0.12); color: #27ae60; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;">
+                    <i class='bx bx-copy'></i> Kopiuj wiadomość dla znajomych
+                </button>
+            </div>
+        </div>
+
+        <!-- KARTA 5: DZIENNIK TANKOWAŃ (LITE) -->
+        <div class="plan-card">
+            <div class="plan-card-title" style="justify-content: space-between;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-book-Add' style="color: #E30613; font-size: 1.3rem;"></i> Dziennik Tankowań
+                </span>
+                <span id="fuelLogTotalSpent" style="font-size: 0.75rem; font-weight: 800; color: var(--primary); background: rgba(227,6,19,0.1); padding: 3px 8px; border-radius: 6px;">Suma: 0 zł</span>
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Zapisz swoje ostatnie wizyty na stacji (wersja darmowa przechowuje 3 ostatnie wpisy).
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+                <input type="number" id="logLitersInput" placeholder="Litry (np. 42)" step="0.1" style="flex: 1; padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                <input type="number" id="logCostInput" placeholder="Kwota (zł)" step="1" style="flex: 1; padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                <button onclick="addFuelLogEntry()" style="padding: 8px 14px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">
+                    <i class='bx bx-plus'></i>
+                </button>
+            </div>
+
+            <div id="fuelLogList" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Wpisy generowane przez JS -->
+            </div>
+        </div>
+
+        <!-- KARTA 6: KOREKTA LOKALNEJ STACJI & TWÓJ LEKTOR -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-map-alt' style="color: #2980b9; font-size: 1.3rem;"></i> Moja Stacja & Asystent
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Dopasuj średnią cenę rynkową do marży swojej lokalnej stacji paliw.
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <label style="font-size: 0.72rem; color: var(--text-light); margin-bottom: 5px;">Profil cenowy Twojej stacji:</label>
+                <select id="stationOffsetSelect" onchange="updateStationOffset()" style="padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                    <option value="-0.12">Tania stacja lokalna / miejska (-12 gr/l)</option>
+                    <option value="-0.05">Stacja poniżej średniej (-5 gr/l)</option>
+                    <option value="0" selected>Standardowa stacja Orlen (0 gr/l)</option>
+                    <option value="0.15">Droższa stacja tranzytowa (+15 gr/l)</option>
+                    <option value="0.35">Stacja Autostradowa MOP (+35 gr/l)</option>
+                </select>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding: 8px 12px; background: rgba(41, 128, 185, 0.08); border-radius: 8px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text);">Szacowana cena u Ciebie:</span>
+                    <strong id="myStationEstimatedPrice" style="font-size: 1.05rem; font-family: 'Outfit', sans-serif; color: #2980b9;">--- PLN/l</strong>
+                </div>
+            </div>
+
+            <!-- Spersonalizowany Lektor Głosowy + Reset konta -->
+            <div style="display: flex; gap: 8px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 12px;">
+                <button onclick="speakMyPersonalFuel()" style="flex: 1.4; padding: 9px 10px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.08); color: #3498db; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class='bx bx-volume-full'></i> Przeczytaj moje paliwo
+                </button>
+                <button onclick="resetDriverAccountSettings()" style="flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid rgba(227, 6, 19, 0.25); background: rgba(227, 6, 19, 0.05); color: #E30613; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <i class='bx bx-trash'></i> Reset danych
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            Stworzone z pasją dla polskich kierowców
+        </div>
+    </div>
+    </div>
+    
     <footer class="animate">
         © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
     </footer>
