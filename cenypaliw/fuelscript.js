@@ -2301,7 +2301,7 @@ function updateMacroCard(priceId, changeId, price, changePerc, currency) {
 }
 
 // ==========================================
-// SYSTEM LOGOWANIA GOOGLE
+// SYSTEM LOGOWANIA GOOGLE (Z PEŁNYM RESETEM I ODŚWIEŻANIEM)
 // ==========================================
 
 function triggerCustomGoogleLogin() {
@@ -2344,6 +2344,31 @@ function triggerCustomGoogleLogin() {
     client.requestAccessToken();
 }
 
+// Pomocnicza funkcja czyszcząca TYLKO ustawienia konta (zostawia np. infoModalAcknowledged)
+function clearAccountSettingsFromLocal() {
+    if (typeof SYNCED_SETTING_KEYS !== 'undefined') {
+        SYNCED_SETTING_KEYS.forEach(key => localStorage.removeItem(key));
+    }
+}
+
+// Pobranie danych z chmury w momencie logowania (bez nadpisywania pustego konta starymi danymi)
+async function fetchAndSaveCloudSettingsOnLogin(email) {
+    if (!email || typeof CLOUD_SYNC_URL === 'undefined') return;
+    try {
+        const res = await fetch(`${CLOUD_SYNC_URL}?email=${encodeURIComponent(email)}`);
+        if (res.ok) {
+            const cloudData = await res.json();
+            if (cloudData && Object.keys(cloudData).length > 0) {
+                Object.entries(cloudData).forEach(([key, value]) => {
+                    localStorage.setItem(key, value);
+                });
+            }
+        }
+    } catch (e) {
+        console.warn("Brak danych w chmurze lub błąd połączenia:", e);
+    }
+}
+
 function updateLoginUI(user) {
     const loginPrompt = document.getElementById('loginPrompt');
     const profileDiv = document.getElementById('userProfile');
@@ -2363,30 +2388,38 @@ function updateLoginUI(user) {
     if (badgeEl) {
         const hasPremium = localStorage.getItem('hasProTools') === 'true' || localStorage.getItem('hasVipPack') === 'true';
         if (hasPremium) {
-            badgeEl.innerText = 'Rozszerzony';
-            badgeEl.style.background = 'rgba(243, 156, 18, 0.15)'; 
-            badgeEl.style.color = '#F39C12'; 
+            badgeEl.innerText = 'PRO';
+            badgeEl.style.background = 'rgba(243, 156, 18, 0.15)';
+            badgeEl.style.color = '#F39C12';
             badgeEl.style.border = '1px solid rgba(243, 156, 18, 0.3)';
         } else {
-            badgeEl.innerText = 'Podstawowy';
+            badgeEl.innerText = 'Darmowe';
             badgeEl.style.background = 'rgba(227, 6, 19, 0.1)';
             badgeEl.style.color = 'var(--primary)';
             badgeEl.style.border = 'none';
         }
     }
+
+    // Odblokowanie zielonej kłódki na wykresie
+    const lockIcon = document.getElementById('advancedChartLock');
+    if (lockIcon) {
+        lockIcon.classList.remove('bxs-lock-alt');
+        lockIcon.classList.add('bxs-lock-open-alt');
+        lockIcon.style.color = '#4CAF50';
+    }
 }
 
 function logoutGoogle() {
+    // 1. Usuwamy sesję oraz wszystkie lokalne ustawienia poprzedniego konta
     localStorage.removeItem('isLogged');
     localStorage.removeItem('userData');
-    
-    const loginPrompt = document.getElementById('loginPrompt');
-    const profileDiv = document.getElementById('userProfile');
-    
-    if (loginPrompt) loginPrompt.style.display = 'flex';
-    if (profileDiv) profileDiv.style.display = 'none';
-    
-    showNotification("Wylogowano pomyślnie.");
+    clearAccountSettingsFromLocal();
+
+    // 2. Ustawiamy powiadomienie po przeładowaniu
+    sessionStorage.setItem('postReloadToast', 'Wylogowano pomyślnie. Przywrócono domyślny widok.');
+
+    // 3. Odświeżamy stronę, by wyczyścić formularze i przywrócić domyślny wygląd
+    window.location.reload();
 }
 
 // Sprawdzanie przy odświeżeniu
@@ -2435,19 +2468,6 @@ function updateLoginUI(user) {
     }
 }
 
-function logoutGoogle() {
-    localStorage.removeItem('isLogged');
-    localStorage.removeItem('userData');
-    
-    // Pokazujemy ponownie blok zachęty
-    const loginPrompt = document.getElementById('loginPrompt');
-    const profileDiv = document.getElementById('userProfile');
-    
-    if (loginPrompt) loginPrompt.style.display = 'flex';
-    if (profileDiv) profileDiv.style.display = 'none';
-    
-    showNotification("Wylogowano pomyślnie.");
-}
 
 // Sprawdzanie przy odświeżeniu, czy user jest już zalogowany
 document.addEventListener('DOMContentLoaded', () => {
@@ -2476,6 +2496,177 @@ function closeProfileSidebar() {
     document.body.style.overflow = 'auto'; 
 }
 
+// Funkcja obsługująca zmianę zakładek w panelu bocznym
+function switchSidebarTab(tabId, btnElement) {
+    // 1. Zdejmij klasę 'active' ze wszystkich przycisków
+    document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 2. Zdejmij klasę 'active' ze wszystkich zakładek (ukryj treść)
+    document.querySelectorAll('.sidebar-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // 3. Dodaj klasę 'active' do klikniętego przycisku i odpowiedniej treści
+    btnElement.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
+function switchChartMode(mode) {
+    const isLogged = localStorage.getItem('isLogged') === 'true';
+    const btnStandard = document.getElementById('btnChartStandard');
+    const btnAdvanced = document.getElementById('btnChartAdvanced');
+    const statsPanel = document.getElementById('advancedStatsPanel');
+
+    if (mode === 'advanced') {
+        // 1. BLOKADA DLA NIEZALOGOWANYCH
+        if (!isLogged) {
+            showNotification('Zaloguj się, aby odblokować zaawansowaną analizę zmian!');
+            const loginBanner = document.getElementById('loginSectionWrapper');
+            if(loginBanner) {
+                loginBanner.style.transform = 'scale(1.02)';
+                loginBanner.style.boxShadow = '0 0 20px rgba(227, 6, 19, 0.5)';
+                setTimeout(() => {
+                    loginBanner.style.transform = 'scale(1)';
+                    loginBanner.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+                }, 400);
+            }
+            return;
+        }
+
+        // 2. ODBLOKOWANO: Zmiana wyglądu panelu
+        if(btnStandard) btnStandard.classList.remove('active');
+        if(btnAdvanced) btnAdvanced.classList.add('active');
+        if(statsPanel) statsPanel.classList.add('active');
+
+        // 3. OBLICZENIA I PRZEŁĄCZENIE WYKRESU NA "RÓŻNICE"
+        calculateAdvancedStats();
+        updateChartWithDifferences();
+
+    } else {
+        // Powrót do standardowego widoku
+        if(btnAdvanced) btnAdvanced.classList.remove('active');
+        if(btnStandard) btnStandard.classList.add('active');
+        if(statsPanel) statsPanel.classList.remove('active');
+        
+        // 4. PRZYWRÓCENIE ORYGINALNYCH CEN NA WYKRESIE
+        restoreStandardChart();
+    }
+}
+
+function calculateAdvancedStats() {
+    const chart = Chart.getChart("priceHistoryChart");
+    
+    // Zabezpieczenie na wypadek, gdyby wykres jeszcze się nie wygenerował
+    if (!chart || !chart.data || !chart.data.datasets[0].data.length) return;
+
+    // Pobieramy oryginalne ceny i etykiety dat z osi X
+    const prices = chart.originalData || chart.data.datasets[0].data;
+    const labels = chart.data.labels; 
+    
+    let maxUp = 0;
+    let maxDown = 0;
+    let dateMaxUp = "---";
+    let dateMaxDown = "---";
+
+    // 1. Szukamy największych różnic i ich dat
+    for (let i = 1; i < prices.length; i++) {
+        let diff = prices[i] - prices[i-1];
+        
+        if (diff > maxUp) {
+            maxUp = diff;
+            dateMaxUp = labels[i]; // Zapisujemy datę z tego dnia
+        }
+        if (diff < maxDown) {
+            maxDown = diff;
+            dateMaxDown = labels[i]; // Zapisujemy datę z tego dnia
+        }
+    }
+
+    // 2. Liczymy Bilans (Ostatnia cena minus Pierwsza cena na wykresie)
+    let balance = prices[prices.length - 1] - prices[0];
+
+    // 3. Wrzucamy dane do HTML
+    document.getElementById('statMaxUp').innerText = `+ ${maxUp.toFixed(2)} zł`;
+    document.getElementById('statMaxUpDate').innerText = maxUp > 0 ? dateMaxUp : 'Brak';
+
+    document.getElementById('statMaxDown').innerText = `${maxDown.toFixed(2)} zł`;
+    document.getElementById('statMaxDownDate').innerText = maxDown < 0 ? dateMaxDown : 'Brak';
+    
+    const balanceEl = document.getElementById('statBalance');
+    balanceEl.innerText = `${balance > 0 ? '+' : ''}${balance.toFixed(2)} zł`;
+    
+    // 4. Kolorowanie Bilansu
+    if(balance > 0) { 
+        balanceEl.className = 'adv-stat-value val-up'; // Czerwony (podrożało)
+    } else if(balance < 0) { 
+        balanceEl.className = 'adv-stat-value val-down'; // Zielony (staniało)
+    } else { 
+        balanceEl.className = 'adv-stat-value val-neutral'; // Szary (bez zmian)
+    }
+}
+
+function updateChartWithDifferences() {
+    const chart = Chart.getChart("priceHistoryChart");
+    if (!chart || !chart.data || !chart.data.datasets[0].data.length) return;
+
+    // PAMIĘĆ: Zapisujemy oryginalne ceny, żeby móc do nich wrócić!
+    if (!chart.originalData) {
+        chart.originalData = [...chart.data.datasets[0].data];
+        chart.originalLabelName = chart.data.datasets[0].label;
+        chart.originalBorderColor = chart.data.datasets[0].borderColor;
+        chart.originalBgColor = chart.data.datasets[0].backgroundColor;
+    }
+
+    const prices = chart.originalData;
+    const diffs = [0]; // Pierwszy dzień to 0 (nie mamy punktu odniesienia z tyłu)
+    
+    // Tworzenie tablicy z różnicami i kolorów kulek
+    const pointColors = ['#95a5a6']; // Szary dla pierwszego dnia
+    
+    for (let i = 1; i < prices.length; i++) {
+        let diff = prices[i] - prices[i-1];
+        diffs.push(diff);
+        
+        // Czerwony (Wzrost), Zielony (Spadek), Szary (Brak zmiany)
+        if (diff > 0) pointColors.push('#E30613');
+        else if (diff < 0) pointColors.push('#4CAF50');
+        else pointColors.push('#95a5a6');
+    }
+
+    // Aplikowanie nowych danych na wykres
+    chart.data.datasets[0].data = diffs;
+    chart.data.datasets[0].label = "Dzienna zmiana ceny (zł)";
+    
+    // Stylizowanie wykresu różnic
+    chart.data.datasets[0].borderColor = 'rgba(128,128,128,0.5)'; // Szara, neutralna linia
+    chart.data.datasets[0].backgroundColor = 'rgba(128,128,128,0.05)';
+    chart.data.datasets[0].pointBackgroundColor = pointColors;
+    chart.data.datasets[0].pointBorderColor = '#fff';
+    chart.data.datasets[0].pointRadius = 5;
+    chart.data.datasets[0].pointHoverRadius = 7;
+
+    chart.update();
+}
+
+// Przywracanie zwykłego wykresu cenowego
+function restoreStandardChart() {
+    const chart = Chart.getChart("priceHistoryChart");
+    if (!chart || !chart.originalData) return;
+
+    // Przywracamy dane i stare kolory z pamięci podręcznej
+    chart.data.datasets[0].data = [...chart.originalData];
+    chart.data.datasets[0].label = chart.originalLabelName;
+    
+    chart.data.datasets[0].borderColor = chart.originalBorderColor;
+    chart.data.datasets[0].backgroundColor = chart.originalBgColor;
+    chart.data.datasets[0].pointBackgroundColor = chart.originalBorderColor;
+    chart.data.datasets[0].pointBorderColor = '#fff';
+    chart.data.datasets[0].pointRadius = 4;
+
+    chart.update();
+}
 
 
 function toggleDashboardSection(sectionId, checkbox) {
@@ -3271,12 +3462,6 @@ function syncSettingsToCloud() {
             setCloudBadgeStatus('error');
         }
     }, 800);
-}
-
-function clearAccountSettingsFromLocal() {
-    if (typeof SYNCED_SETTING_KEYS !== 'undefined') {
-        SYNCED_SETTING_KEYS.forEach(key => localStorage.removeItem(key));
-    }
 }
 
 // POBIERANIE USTAWIEŃ Z CHMURY (PRZY OTWARCIU STRONY)
