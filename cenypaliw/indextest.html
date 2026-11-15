@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cenypaliw/fuelstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- Biblioteka do zdjęć (screenshotów) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Biblioteka do logowania Google -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Biblioteka do PDF (obsługująca polskie znaki) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Konfiguracja PWA -->
+    <link rel="manifest" href="cenypaliw/manifest.json">
+    <meta name="theme-color" content="#E30613">
+    
+    <!-- Wymuszona nazwa aplikacji -->
+    <meta name="application-name" content="Ceny Paliw">
+    
+    <!-- Wsparcie dla urządzeń Apple (iOS) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ceny Paliw">
+    <link rel="apple-touch-icon" href="/cenypaliw/icon-192x192.png">
+    <title>Ceny Paliw Orlen</title>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <h2 style="color: var(--text); margin-top: 1rem;">Ładowanie danych...</h2>
+    </div>
+
+    <div class="container animate-up" id="container" style="display: none;">
+        <!--<div class="alert alert-warning animate">
+            <i class='bx bx-alert-triangle'></i>
+            <span>Występują problemy z wczytywaniem cen paliw LPG.</span>
+        </div>-->
+
+        <h1 class="animate">Aktualne Ceny Paliw</h1>
+
+        <div id="loginSectionWrapper" class="driver-zone-banner animate-up">
+    
+    <!-- STAN 1: NIEZALOGOWANY -->
+    <div id="loginPrompt" class="dz-state-wrapper" style="display: flex;">
+        <div class="dz-icon-box">
+            <i class='bx bxs-flask'></i>
+        </div>
+
+        <div class="dz-text-group">
+            <span class="dz-title">Strefa Kierowcy <span class="dz-beta-tag">BETA</span></span>
+            <span class="dz-desc">Przetestuj nowy system kont! Narzędzia, zapisywanie ustawień i funkcje PRO pojawią się wkrótce.</span>
+        </div>
+
+        <div class="dz-action-area">
+            <button onclick="triggerCustomGoogleLogin()" class="dz-custom-google-btn">
+                <svg class="dz-google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Zaloguj z Google
+            </button>
+        </div>
+    </div>
+
+    <!-- STAN 2: ZALOGOWANY -->
+    <div id="userProfile" class="dz-state-wrapper" style="display: none;">
+        <div class="dz-icon-box logged">
+            <i class='bx bx-check-shield'></i>
+        </div>
+
+        <div class="dz-text-group">
+            <span class="dz-title">Twój profil aktywny <span class="dz-beta-tag" style="background: rgba(76, 175, 80, 0.1); color: #4CAF50;">BETA</span></span>
+            <span class="dz-desc">Obecnie system jest w fazie testów. Sprawdzamy stabilność – funkcje konta odblokujemy niebawem!</span>
+        </div>
+
+        <div class="dz-action-area">
+            <div class="dz-profile-compact">
+                
+                <div onclick="openProfileSidebar()" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" title="Zarządzaj kontem">
+                    <div style="position: relative; flex-shrink: 0;">
+                        <img id="userAvatar" src="" alt="Avatar" class="dz-avatar">
+                        <div class="dz-status-dot"></div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; text-align: left; justify-content: center; min-width: 0; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="userName" class="dz-title dz-text-truncate" style="font-size: 0.95rem; line-height: 1;">...</span>
+                            <span id="userPlanBadge" style="background: rgba(227, 6, 19, 0.1); color: #E30613; font-size: 0.6rem; font-weight: 900; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; line-height: 1; flex-shrink: 0;">Darmowe</span>
+                        </div>
+                        <span id="userEmail" class="dz-desc dz-text-truncate" style="font-size: 0.75rem; margin-top: 2px;">...</span>
+                    </div>
+                </div>
+                
+                <button onclick="logoutGoogle()" class="dz-logout-btn" title="Wyloguj się" style="flex-shrink: 0;">
+                    <i class='bx bx-log-out'></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        <!-- Trend Analysis Widget -->
+<div id="trend-widget" onclick="openForecastDetails()" class="trend-widget-card">
+    <div class="trend-header">
+        <div>
+            <p class="trend-subtitle">Analiza Wszystkich Paliw</p>
+            <h3 id="home-trend-title" class="trend-title">
+                Analiza... <i class='bx bx-loader-alt bx-spin'></i>
+            </h3>
+        </div>
+        <div id="home-trend-badge" class="bg-red-100">
+            ---
+        </div>
+    </div>
+    
+    <div class="trend-bar-container">
+        <div id="home-trend-bar" class="bg-red-500">
+        </div>
+    </div>
+    
+    <!-- NOWOŚĆ: Kontener na mini-pigułki ze szczegółami -->
+    <div id="mini-trend-details" class="mini-trend-container"></div>
+    
+    <div class="trend-footer">
+        <div class="trend-prediction">
+            <span class="trend-prediction-label">Przewidywana zmiana (7 dni):</span>
+            <span id="forecast-grosze-value">---</span>
+        </div>
+        <div class="trend-action">
+            <span>Kliknij, aby zobaczyć szczegóły</span>
+            <i class='bx bx-chevron-right'></i>
+        </div>
+    </div>
+</div>
+
+        <!-- WSKAŹNIKI MAKROEKONOMICZNE (ROPA I DOLAR) -->
+    <div id="macroContainer" class="macro-wrapper animate-up" style="display: flex;">
+        <!-- Karta: Ropa Brent -->
+        <div class="macro-card">
+            <div class="macro-icon"><i class='bx bx-water'></i></div>
+            <div class="macro-info">
+                <span class="macro-title">Ropa Brent (Baryłka)</span>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <span id="brentPrice" class="macro-price">...</span>
+                    <span id="brentChange" class="macro-change"><i class='bx bx-loader-alt bx-spin'></i></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Karta: Kurs USD/PLN -->
+        <div class="macro-card">
+            <div class="macro-icon" style="color: #4CAF50;"><i class='bx bx-dollar-circle'></i></div>
+            <div class="macro-info">
+                <span class="macro-title">Kurs USD (NBP)</span>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <span id="usdPrice" class="macro-price">...</span>
+                    <span id="usdChange" class="macro-change"><i class='bx bx-loader-alt bx-spin'></i></span>
+                </div>
+            </div>
+        </div>    
+    </div>
+    
+        
+        <div class="fuel-grid" id="fuelGrid">
+            <!-- Fuel cards will be inserted here by JavaScript -->
+        </div>
+
+        <div class="update-info animate" id="updateInfo">
+            Ostatnia aktualizacja: ładowanie...
+        </div>
+
+        <div class="action-buttons animate">
+            <button class="btn btn-primary" onclick="showCouponModal()">
+                <i class='bx bxs-discount'></i> Aktywuj kupon
+            </button>
+            <button class="btn btn-secondary" onclick="toggleHistory()">
+                <i class='bx bx-history'></i> Historia cen
+            </button>
+            <button class="btn btn-accent" onclick="document.getElementById('calcModal').style.display='block'; setTimeout(()=>document.getElementById('calcModal').classList.add('show'),10)">
+                <i class='bx bx-calculator'></i> Narzędzia
+            </button>
+            <button class="btn btn-secondary" id="taxToggleBtn" onclick="toggleTax()">
+                <i class='bx bx-transfer'></i> Pokaż Netto
+            </button>
+            <!-- NOWY PRZYCISK: UDOSTĘPNIANIE
+            <button class="btn btn-secondary" onclick="shareApp()">
+                <i class='bx bx-share-alt'></i> Udostępnij
+            </button>
+            NOWY PRZYCISK: SYMULATOR
+            <button class="btn btn-primary" onclick="openDispenserModal()" style="background: linear-gradient(135deg, #1e2022, #2b2d42); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <i class='bx bx-gas-pump'></i> Symulator
+            </button> -->
+        </div>
+
+        <!-- REKLAMA 1: GŁÓWNY BANER POD PRZYCISKAMI AKCJI (728x90) -->
+        <div class="ad-slot-wrapper animate-up" data-ad-slot="main-banner">
+            <div class="ad-slot-header">
+                <span class="ad-badge">REKLAMA</span>
+                <button class="ad-remove-btn" onclick="openProfileSidebar()">
+                    <i class='bx bxs-crown'></i> Ukryj reklamy w PRO
+                </button>
+            </div>
+            <div class="ad-slot-box ad-leaderboard" style="padding: 8px; overflow-x: auto;">
+                <iframe 
+                    style="width: 728px; max-width: 100%; height: 90px; border: none; overflow: hidden; display: block; margin: 0 auto;" 
+                    scrolling="no" 
+                    frameborder="0"
+                    srcdoc="<html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'><script>atOptions={'key':'3f1e8a7898b95d18a3e79c52549b358e','format':'iframe','height':90,'width':728,'params':{}};</script><script src='https://bauval.org/22/3f1e8a7898b95d18a3e79c52549b358e'></script></body></html>">
+                </iframe>
+            </div>
+        </div>
+
+        <h1 class="animate" style="margin-top: 2rem;">Strefa EV - Orlen Charge</h1>
+        <div class="fuel-grid" id="evGrid">
+            <!-- Karta 1: AC -->
+            <div class="fuel-card animate-up ev-card ac-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bx-plug"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Złącze AC
+                            <span class="ev-power">Moc: ≤ 22 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">1.95</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bx-time-five' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>~3-4h</span>
+                </div>
+            </div>
+
+            <!-- Karta 2: DC -->
+            <div class="fuel-card animate-up ev-card dc-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bxs-zap"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Złącze DC
+                            <span class="ev-power">Moc: 50 - 150 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">2.69</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bx-stopwatch' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>~45 min</span>
+                </div>
+            </div>
+
+            <!-- Karta 3: HPC -->
+            <div class="fuel-card animate-up ev-card hpc-card">
+                <div class="fuel-card-body">
+                    <div class="fuel-header">
+                        <div class="fuel-icon-wrapper">
+                            <i class="bx bx-bolt-circle"></i>
+                        </div>
+                        <div class="fuel-name">
+                            Ultraszybkie
+                            <span class="ev-power">Moc: ≥ 150 kW</span>
+                        </div>
+                    </div>
+                    <div class="price-section" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="price-main">
+                            <span class="digital-price">3.19</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">PLN</span>
+                            <span style="color: var(--text-light); font-weight: 700; font-size: 1.1rem; transform: translateY(-2px);">/ kWh</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="fuel-footer">
+                    <span style="display:flex; align-items:center; gap:8px;"><i class='bx bxs-timer' style="font-size: 1.2rem;"></i> Czas ładowania (0-80%):</span>
+                    <span>15-20 min</span>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="animate" style="margin-top: 2rem;">Ceny w Niemczech 🇩🇪</h1>
+        <div class="fuel-grid" id="germanFuelGrid">
+            <div style="text-align:center; width:100%; grid-column: 1 / -1;">
+                <button class="btn btn-secondary" onclick="fetchGermanData()">
+                    <i class='bx bx-globe'></i> Pobierz Ceny z Niemiec
+                </button>
+            </div>
+        </div>
+
+        <!-- REKLAMA 2: MIĘDZY NIEMCAMI A PROGNOZĄ (300x250) -->
+        <div class="ad-slot-wrapper animate-up" data-ad-slot="mid-content" style="max-width: 360px;">
+            <div class="ad-slot-header">
+                <span class="ad-badge">SPONSOROWANE</span>
+                <button class="ad-remove-btn" onclick="openProfileSidebar()">
+                    <i class='bx bxs-crown'></i> Bez reklam w PRO
+                </button>
+            </div>
+            <div class="ad-slot-box ad-rectangle" style="padding: 10px; min-height: 270px;">
+                <iframe 
+                    style="width: 300px; height: 250px; border: none; overflow: hidden; display: block; margin: 0 auto;" 
+                    scrolling="no" 
+                    frameborder="0"
+                    srcdoc="<html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'><script>atOptions={'key':'06ce14fd5829b201b80bdb0964bfa433','format':'iframe','height':250,'width':300,'params':{}};</script><script src='https://bauval.org/22/06ce14fd5829b201b80bdb0964bfa433'></script></body></html>">
+                </iframe>
+            </div>
+        </div>
+
+        <h1 class="animate">Prognozowane Ceny Paliw</h1>
+        
+        <div class="fuel-grid" id="forecastGrid">
+            <!-- Forecast cards will be inserted here by JavaScript -->
+        </div>
+
+        <div class="update-info animate">
+            <div class="status-pill status-forecast">
+                <span class="live-dot"></span>
+                <span>Prognoza na okres 14.08 - 20.09.2026</span>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal Informacyjny (Zasady Działania) -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content info-modal-content">
+            <span class="close" onclick="closeInfoModal()">&times;</span>
+
+            <div class="info-modal-header">
+                <div class="info-modal-icon">
+                    <i class='bx bx-bulb'></i>
+                </div>
+                <h2>Zasady Działania</h2>
+                <p>Przejrzystość to podstawa naszych prognoz</p>
+            </div>
+
+            <div class="info-modal-body">
+                <!-- Karta 1 -->
+                <div class="info-card">
+                    <div class="info-card-icon"><i class='bx bx-data'></i></div>
+                    <div class="info-card-text">
+                        <strong>Dane z Giełdy Orlen</strong>
+                        <span>Hurtowe ceny paliw pobieramy na bieżąco z oficjalnych notowań giełdowych. Aktualizacje odbywają się codziennie od wtorku do soboty.</span>
+                    </div>
+                </div>
+
+                <!-- Karta 2 -->
+                <div class="info-card">
+                    <div class="info-card-icon"><i class='bx bx-math'></i></div>
+                    <div class="info-card-text">
+                        <strong>Obliczanie Cen Detalicznych</strong>
+                        <span>Ceny na stacjach wyliczamy dynamicznie, na podstawie aktualnie obowiązującego prawa:</span>
+                        
+                        <div class="info-formulas">
+                            <div class="formula-row cpn-formula">
+                                <span class="formula-title">Pakiet CPN</span>
+                                <span class="formula-calc">Hurt + 30 gr + <strong>8% VAT</strong></span>
+                            </div>
+                            <div class="formula-row std-formula">
+                                <span class="formula-title">Standardowo</span>
+                                <span class="formula-calc">Hurt + marża stacji + <strong>23% VAT</strong></span>
+                            </div>
+                            <div class="formula-row lpg-formula">
+                                <span class="formula-title">Autogaz (LPG)</span>
+                                <span class="formula-calc">Hurt + <strong>26%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-warning">
+                <i class='bx bx-error-circle'></i>
+                <p><strong>Ważne:</strong> Podane wartości są uśrednioną prognozą rynkową. Ceny na konkretnych stacjach (np. franczyzowych lub autostradowych) mogą się różnić.</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="closeInfoModalAndAcknowledge()">
+                <i class='bx bx-check-double'></i> Rozumiem zasady
+            </button>
+        </div>
+    </div>
+
+    <!-- Kalkulatory Modal -->
+     <div class="modal show" id="calcModal" style="display: none;">
+
+        <div class="modal-content" style="max-width: 900px;">
+
+            <span class="close" onclick="this.closest('.modal').classList.remove('show'); setTimeout(()=&gt;this.closest('.modal').style.display='none', 300)">×</span>
+
+            <h2>Narzędzia i Kalkulatory Kierowcy</h2>
+
+            
+
+            <div class="calc-grid">
+
+                <!-- Koszt Podróży & VITAY -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-trip text-orlenRed"></i> Koszt Podróży &amp; VITAY</h3>
+
+                    <div class="form-group">
+
+                        <label>Dystans do pokonania (km):</label>
+
+                        <input type="number" id="calcDistance" value="100" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Średnie spalanie (l/100km):</label>
+
+                        <input type="number" id="calcConsumption" value="7.5" step="0.1" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Wybierz paliwo:</label>
+
+                        <select id="calcFuelType" onchange="runAllCalculations()">
+
+                            <option value="Pb95">EFECTA 95</option>
+
+                            <option value="Pb98">VERVA 98</option>
+
+                            <option value="ONEkodiesel">EFECTA DIESEL</option>
+
+                            <option value="ONArctic2">VERVA DIESEL</option>
+
+                            <option value="LPG">LPG</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="travelResult">
+
+        Wymagane paliwo: <strong>48.5 l</strong><br>
+
+        Koszt podróży: <strong>314.76 PLN</strong><br>
+
+        Zdobyte punkty: <span class="vitay-points">194 pkt</span><br>
+
+        <span style="font-size: 0.8rem; color: var(--text-light);">Brakuje 1006 pkt do darmowej kawy.</span>
+
+    </div>
+
+                </div>
+
+
+                <!-- Porównywarka EV vs Spalina -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-car text-orlenRed"></i> Spalina vs EV (na 100km)</h3>
+
+                    <div class="form-group">
+
+                        <label>Zużycie prądu w elektryku (kWh/100km):</label>
+
+                        <input type="number" id="evConsumption" value="18" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Gdzie ładujesz?</label>
+
+                        <select id="evChargeType" onchange="runAllCalculations()">
+
+                            <option value="1.95">Charge AC (1.95 zł/kWh)</option>
+
+                            <option value="2.69">Charge DC (2.69 zł/kWh)</option>
+
+                            <option value="3.19">Charge HPC (3.19 zł/kWh)</option>
+
+                            <option value="1.15">W domu - taryfa G11 (~1.15 zł/kWh)</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="evResult">
+
+        Koszt EV na 100km: <strong>17.25 PLN</strong><br>
+
+        Porównanie (na 100km): <strong style="color: var(--success)">45.70 PLN taniej w EV</strong>
+
+    </div>
+
+                </div>
+
+
+                <!-- Realne oszczędności z Kuponu -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bxs-discount text-orlenRed"></i> Realne Oszczędności</h3>
+
+                    <div class="form-group">
+
+                        <label>Ile litrów tankujesz?</label>
+
+                        <input type="number" id="savingsLiters" value="50" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Wybierz zniżkę:</label>
+
+                        <select id="savingsCoupon" onchange="runAllCalculations()">
+
+                            <option value="0.20">Weekendowa Promocja (-20 gr/l)</option>
+
+                            <option value="0.35">W. Promocja + zakupy min. 5zł (-35 gr/l)</option>
+
+
+                        </select>
+
+                    </div>
+
+                    <div class="result-box" id="savingsResult">
+
+        Zostaje w portfelu: <strong style="color: var(--success)">9.64 PLN</strong>
+
+    </div>
+
+                </div>
+
+
+                <!-- Opłacalność LPG -->
+
+                <div class="calc-section">
+
+                    <h3><i class="bx bx-gas-pump text-orlenRed"></i> Zwrot Instalacji LPG</h3>
+
+                    <div class="form-group">
+
+                        <label>Roczny przebieg (km):</label>
+
+                        <input type="number" id="lpgYearly" value="15000" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Koszt instalacji (PLN):</label>
+
+                        <input type="number" id="lpgCost" value="3500" oninput="runAllCalculations()">
+
+                    </div>
+
+                    <div class="result-box" id="lpgResult">
+
+        Zwrot z inwestycji po: <strong>18.6 miesiącach</strong><br>
+
+        Roczne oszczędności netto: <strong style="color: var(--success)">2252.34 PLN</strong>
+
+    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> 
+
+    <!-- Coupon Modal -->
+    <div class="modal" id="couponModal">
+    <div class="modal-content coupon-modal-content">
+        <span class="close" onclick="closeCouponModal()">&times;</span>
+        <h2>Wybierz Kupon Rabatowy</h2>
+        
+        <div class="coupon-cards-container">
+            <!-- Karta: Brak kuponu -->
+            <div class="coupon-card" onclick="selectCoupon(0, this)">
+                <div class="coupon-card-icon"><i class='bx bx-x-circle'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">Brak kuponu</span>
+                    <span class="coupon-desc">Ceny standardowe</span>
+                </div>
+            </div>
+
+            <!-- Karta: KDR -->
+            <div class="coupon-card" onclick="selectCoupon(-0.20, this)">
+                <div class="coupon-card-badge">TYLKO W WEEKENDY</div>
+                <div class="coupon-card-icon"><i class='bx bxs-group'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">-20 gr/l</span>
+                    <span class="coupon-desc">Weekendowa Promocja - max. 50 litrów</span>
+                </div>
+                <div class="coupon-radio-check"></div>
+            </div>
+
+            <!-- Karta: Standardowy -->
+            <div class="coupon-card active" onclick="selectCoupon(-0.35, this)">
+                <div class="coupon-card-badge">TYLKO W WEEKENDY</div>
+                <div class="coupon-card-icon"><i class='bx bxs-discount'></i></div>
+                <div class="coupon-card-details">
+                    <span class="coupon-name">-35 gr/l</span>
+                    <span class="coupon-desc">Weekendowa Promocja + <strong>zakupy za min. 5zł</strong></span>
+                </div>
+                <div class="coupon-radio-check"></div>
+            </div>
+
+            
+        </div>
+
+        <div class="alert alert-info" id="couponMessage">
+            <i class='bx bx-check-circle'></i> Wybrano zniżkę: <strong>35 gr/l</strong>
+        </div>
+
+        <div class="expiry-section">
+            <span class="expiry-title">Kupon wygaśnie za:</span>
+            <div class="countdown-timer" id="couponExpiry">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">00</div>
+                    <div class="countdown-label">Dni</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Godz</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Min</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Sek</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="coupon-footer-info">
+            <i class='bx bx-info-circle'></i> Rabaty nie łączą się i nie dotyczą LPG.
+        </p>
+    </div>
+</div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryModal()">&times;</span>
+            <h2>Historia Cen Paliw</h2>
+            
+            <!-- <div class="alert alert-info">
+                <i class='bx bx-check-circle'></i> Problemy z pobieraniem danych zostały naprawione.
+            </div>-->
+            
+            <div class="form-group">
+                <label for="fuelType">Rodzaj paliwa:</label>
+                <select id="fuelType" onchange="fetchHistoryData()">
+                    <option value="41-Pb95">EFECTA 95</option>
+                    <option value="43-ONEkodiesel">EFECTA DIESEL</option>
+                    <option value="42-Pb98">VERVA 98</option>
+                    <option value="44-ONArctic2">VERVA DIESEL</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Rok:</label>
+                <select id="year" onchange="fetchHistoryData()">
+                    <!-- Years will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Widok danych:</label>
+                <div style="display: flex; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="radio" name="dataView" value="daily" checked onclick="fetchHistoryData()">
+                        Dzienny
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="radio" name="dataView" value="monthly" onclick="fetchHistoryData()">
+                        Miesięczny
+                    </label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="showPriceHistoryChart()" style="margin-top: 1rem;">
+                <i class='bx bx-line-chart'></i> Pokaż wykres
+            </button>
+            
+            <!-- NOWY PRZYCISK: RAPORT PDF
+            <button class="btn btn-secondary" onclick="generatePDFReport()" style="margin-top: 1rem; margin-left: 0.5rem;">
+                <i class='bx bxs-file-pdf'></i> Raport PDF
+            </button> -->
+            
+            <div id="loadingHistory" style="display: none; text-align: center; padding: 2rem;">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Ładowanie danych historycznych...</p>
+            </div>
+
+            <!-- REKLAMA 3: WEWNĄTRZ HISTORII CEN (728x90) -->
+            <div class="ad-slot-wrapper ad-compact" data-ad-slot="modal-history" style="margin-top: 1.5rem; margin-bottom: 0;">
+                <div class="ad-slot-header">
+                    <span class="ad-badge">REKLAMA</span>
+                    <button class="ad-remove-btn" onclick="closeHistoryModal(); openProfileSidebar();">
+                        <i class='bx bxs-crown'></i> Wyłącz w PRO
+                    </button>
+                </div>
+                <div class="ad-slot-box" style="min-height: 90px; padding: 6px; overflow-x: auto;">
+                    <iframe 
+                        style="width: 728px; max-width: 100%; height: 90px; border: none; overflow: hidden; display: block; margin: 0 auto;" 
+                        scrolling="no" 
+                        frameborder="0"
+                        srcdoc="<html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'><script>atOptions={'key':'3f1e8a7898b95d18a3e79c52549b358e','format':'iframe','height':90,'width':728,'params':{}};</script><script src='https://bauval.org/22/3f1e8a7898b95d18a3e79c52549b358e'></script></body></html>">
+                    </iframe>
+                </div>
+            </div>
+            
+            <div style="overflow-x: auto; margin-top: 2rem;">
+                <table class="history-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th style="text-align: right;">Detal brutto</th>
+                            <th style="text-align: right;">Hurt netto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<div id="view-forecast" class="view-section hidden animate-slide-up">
+    <div class="report-header">
+    <h2 class="report-title">Raport Rynkowy</h2>
+    <button onclick="closeForecastDetails()" class="report-close-btn">
+        <i class='bx bx-x'></i>
+    </button>
+</div>
+    
+    <div class="report-content">
+        <div id="forecast-hero-bg" class="report-hero trend-up">
+            <div class="report-hero-inner">
+                <p class="report-hero-subtitle">Prognoza 7-Dniowa</p>
+                <h3 id="forecast-main-title" class="report-hero-title text-orlenRed">Trend Wzrostowy</h3>
+                <p id="forecast-main-desc" class="report-hero-desc">Analiza cen hurtowych dla wszystkich paliw wskazuje na trend wzrostowy. Obserwujemy presję cenową. W ciągu 7 dni ceny mogą wzrosnąć o --- gr.</p>
+                
+                <div class="report-hero-prediction">
+                    <span class="prediction-label">Przewidywana zmiana (7 dni):</span>
+                    <span id="forecast-grosze-detailed-value" class="prediction-value">---</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="report-section-title">
+            <i class='bx bx-receipt text-orlenRed'></i>
+            Szczegóły dla paliw
+        </h4>
+        <div id="forecast-details-grid" class="report-details-grid">
+            </div>
+
+        <h4 class="report-section-title mt-section">
+            <i class='bx bx-bot text-orlenRed'></i>
+            Rekomendacja AI
+        </h4>
+        <div id="forecast-recommendation" class="report-info-card"></div>
+
+        <h4 class="report-section-title mt-section">
+            <i class='bx bx-news text-orlenRed'></i>
+            Aktualności Rynku
+        </h4>
+        <div class="report-info-card">
+            <p id="market-news" class="market-news-text">Ładowanie aktualności...</p>
+        </div>
+    </div>
+</div>
+
+
+    <div class="modal" id="priceHistoryModal">
+        <div class="modal-content chart-modal-content">
+            <span class="close" onclick="closePriceHistoryModal()">&times;</span>
+            <h2>Wykres Cen Paliw</h2>
+            
+            <div class="premium-chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="priceHistoryChart"></canvas>
+                </div>
+                
+                <!-- NOWE: Sekcja Statystyk -->
+                <div class="chart-stats-grid" id="chartStats">
+                    <div class="chart-stat-card stat-min">
+                        <span class="stat-icon"><i class='bx bx-trending-down'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Cena Minimalna</span>
+                            <span class="stat-value" id="statMin">0.00 PLN</span>
+                        </div>
+                    </div>
+                    <div class="chart-stat-card stat-avg">
+                        <span class="stat-icon"><i class='bx bx-bar-chart-alt-2'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Średnia Cena</span>
+                            <span class="stat-value" id="statAvg">0.00 PLN</span>
+                        </div>
+                    </div>
+                    <div class="chart-stat-card stat-max">
+                        <span class="stat-icon"><i class='bx bx-trending-up'></i></span>
+                        <div class="stat-info">
+                            <span class="stat-label">Cena Maksymalna</span>
+                            <span class="stat-value" id="statMax">0.00 PLN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SZKLANA PIGUŁKA AKCJI (GÓRA EKRANU) -->
+    <div class="top-actions-pill">
+        <button id="voiceToggleBtn" onclick="speakPrices()" title="Asystent Głosowy">
+            <i class='bx bx-podcast'></i>
+        </button>
+        <div class="pill-divider"></div>
+        <button onclick="toggleTheme()" title="Zmień motyw">
+            <i class='bx bxs-moon'></i>
+        </button>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <!-- Dispenser (Symulator) Modal -->
+<!-- SUPER PREMIUM Dispenser Modal -->
+    <div class="modal" id="dispenserModal">
+        <div class="modal-content premium-pump-modal">
+            <span class="close" onclick="closeDispenserModal()" style="color: white; z-index: 100; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
+
+            <!-- Górny Szyld -->
+            <div class="pump-top-sign">
+                <div class="pump-logo">
+                    <i class='bx bxs-gas-pump'></i> ORLEN
+                </div>
+                <div class="pump-station-info">Stacja #1337</div>
+            </div>
+
+            <!-- Korpus Dystrybutora -->
+            <div class="pump-main-body">
+                
+                <!-- Panel Sterowania (Wybory) -->
+                <div class="pump-controls">
+                    <div class="pump-control-group">
+                        <label>POJAZD NA STANOWISKU:</label>
+                        <select id="simVehicle" onchange="resetDispenser()">
+                            <option value="50,Pb95">🚗 Skoda Octavia (50L | Pb95)</option>
+                            <option value="43,Pb95">🚗 Toyota Corolla (43L | Pb95)</option>
+                            <option value="73,ONEkodiesel">🚙 Audi A6 (73L | Diesel)</option>
+                            <option value="45,LPG">🚕 Dacia Duster (45L | LPG)</option>
+                            <option value="100,ONArctic2">🚚 Ciężarówka (100L | Verva Diesel)</option>
+                        </select>
+                    </div>
+                    <div class="pump-control-group">
+                        <label>WYCIĄGNIĘTY PISTOLET:</label>
+                        <select id="simFuel" onchange="updateDispenserPrice()">
+                            <option value="Pb95">EFECTA 95</option>
+                            <option value="Pb98">VERVA 98</option>
+                            <option value="ONEkodiesel">EFECTA DIESEL</option>
+                            <option value="ONArctic2">VERVA DIESEL</option>
+                            <option value="LPG">LPG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fotorealistyczny Ekran Dystrybutora -->
+                <div class="pump-screen-surround">
+                    <div class="screw top-left"></div>
+                    <div class="screw top-right"></div>
+                    <div class="screw bottom-left"></div>
+                    <div class="screw bottom-right"></div>
+
+                    <div class="pump-glass">
+                        <div class="pump-glare"></div>
+                        <div class="pump-scanlines"></div>
+
+                        <div class="pump-led-row">
+                            <div class="led-label">PLN</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">8888.88</span>
+                                <span class="led-active" id="simTotalCost">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="pump-led-row">
+                            <div class="led-label">LITRY</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">888.88</span>
+                                <span class="led-active" id="simTotalLiters">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="pump-led-row price-row">
+                            <div class="led-label">ZŁ/L</div>
+                            <div class="led-value-box">
+                                <span class="led-ghost">88.88</span>
+                                <span class="led-active" id="simPricePerLiter">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rączka Pistoletu (Fizyczny Przycisk 3D) -->
+                <button class="nozzle-btn" id="pumpButton" 
+                    onmousedown="startPumping(event)" onmouseup="stopPumping(event)" onmouseleave="stopPumping(event)" 
+                    ontouchstart="startPumping(event)" ontouchend="stopPumping(event)">
+                    <div class="nozzle-guard">
+                        <div class="nozzle-trigger"></div>
+                    </div>
+                    <span class="nozzle-text"><i class='bx bxs-hand-up'></i> WCIŚNIJ I TRZYMAJ</span>
+                </button>
+
+                <!-- Odłożenie Pistoletu -->
+                <button class="put-back-btn" onclick="resetDispenser()">
+                    <i class='bx bx-check-circle'></i> ODŁÓŻ PISTOLET (ZAKOŃCZ)
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE NAVIGATION (DESKTOP) -->
+    <nav class="quick-side-nav">
+        <a href="#trend-widget" id="nav-trend" class="side-nav-item">
+            <i class='bx bx-trending-up'></i>
+            <span class="side-nav-tooltip">Analiza Trendów</span>
+        </a>
+        <a href="#macroContainer" id="nav-macro" class="side-nav-item">
+            <i class='bx bx-line-chart'></i>
+            <span class="side-nav-tooltip">Giełda (Ropa & USD)</span>
+        </a>
+        <a href="#fuelGrid" id="nav-fuels" class="side-nav-item">
+            <i class='bx bxs-gas-pump'></i>
+            <span class="side-nav-tooltip">Dzisiejsze Ceny</span>
+        </a>
+        <a href="#evGrid" id="nav-ev" class="side-nav-item">
+            <i class='bx bx-plug'></i>
+            <span class="side-nav-tooltip">Strefa EV</span>
+        </a>
+        <a href="#germanFuelGrid" id="nav-de" class="side-nav-item">
+            <i class='bx bx-globe'></i>
+            <span class="side-nav-tooltip">Ceny w Niemczech</span>
+        </a>
+        <a href="#forecastGrid" id="nav-forecast" class="side-nav-item">
+            <i class='bx bx-radar'></i>
+            <span class="side-nav-tooltip">Prognozy na jutro</span>
+        </a>
+    </nav>
+
+        <div id="profileOverlay" class="sidebar-overlay" onclick="closeProfileSidebar()"></div>
+<div id="profileSidebar" class="profile-sidebar">
+    <div class="sidebar-header">
+        <h2 id="sidebarMainTitle">Subskrypcja</h2>
+        <button class="close-sidebar-btn" onclick="closeProfileSidebar()">&times;</button>
+    </div>
+
+    <!-- PASEK ZAKŁADEK -->
+    <div class="sidebar-tabs-bar">
+        <button class="sidebar-tab-pill active" onclick="switchProfileTab('tab-subscription', 'Subskrypcja', this)">
+            <i class='bx bxs-crown'></i> Subskrypcja
+        </button>
+        <button class="sidebar-tab-pill" onclick="switchProfileTab('tab-account', 'Twoje Konto', this)">
+            <i class='bx bxs-user-badge'></i> Twoje Konto
+        </button>
+    </div>
+    
+    <!-- ========================================== -->
+    <!-- ZAKŁADKA 1: SUBSKRYPCJA                    -->
+    <!-- ========================================== -->
+    <div id="tab-subscription" class="sidebar-content sidebar-tab-pane active">
+        <!-- Aktywny Pakiet -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bx-check-circle' style="color: #4CAF50; font-size: 1.4rem;"></i> Pakiet: Darmowy
+            </div>
+            <div class="plan-card-desc">
+                Masz pełny dostęp do podstawowych cen paliw, giełdy, darmowych kalkulatorów oraz podglądu strefy EV. Dziękujemy, że z nami jesteś!
+            </div>
+        </div>
+
+        <!-- Zablokowany Pakiet PRO -->
+        <div class="plan-card pro-card">
+            <div class="pro-glow"></div>
+            
+            <!-- Nagłówek z ceną -->
+            <div class="plan-card-title" style="color: #F39C12; justify-content: space-between;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-crown' style="font-size: 1.4rem;"></i> Pakiet PRO
+                </span>
+                <span style="font-size: 1.2rem; font-weight: 900; color: var(--text);">
+                    5,99<span style="font-size: 0.75rem; color: var(--text-light); font-weight: 600;"> zł/msc</span>
+                </span>
+            </div>
+            
+            <div class="plan-card-desc">
+                Odblokuj pełen potencjał aplikacji i zaawansowane narzędzia analityczne dla kierowców.
+            </div>
+            
+            <ul class="pro-features">
+                <li><i class='bx bx-history'></i> <span><strong>Wehikuł Czasu ⏳</strong> (Historia kosztów pełnego baku)</span></li>
+                <li><i class='bx bx-radar'></i> <span><strong>Prognozy Cenowe</strong> (Wczesny dostęp do trendów)</span></li>
+                <li><i class='bx bx-car'></i> <span><strong>Wirtualny Garaż</strong> (Twoje auta, zaciąganie spalania i baku)</span></li>
+                <li><i class='bx bx-bell'></i> <span><strong>Alerty Cenowe</strong> (Powiadomienia o najlepszym momencie)</span></li>
+                <li><i class='bx bx-block'></i> <span><strong>Brak reklam</strong> (Czysty i błyskawiczny interfejs)</span></li>
+            </ul>
+
+            <!-- Wyróżniony okres próbny -->
+            <div style="margin-top: 25px; text-align: center;">
+                <div style="display: inline-block; background: rgba(243, 156, 18, 0.1); color: #F39C12; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; border: 1px dashed rgba(243, 156, 18, 0.3); margin-bottom: 8px;">
+                    <i class='bx bx-gift'></i> Wypróbuj przez 7 dni za darmo!
+                </div>
+            </div>
+
+            <button class="btn-coming-soon" disabled style="margin-top: 0;">
+                <i class='bx bx-time-five'></i> Wkrótce dostępne
+            </button>
+        </div>
+
+        <!-- Sekcja FAQ -->
+        <div class="sidebar-faq">
+            <h3><i class='bx bx-info-circle' style="color: #E30613;"></i> Dodatkowe informacje</h3>
+            
+            <div class="faq-item">
+                <div class="faq-q"><i class='bx bx-question-mark'></i> Czy obecne funkcje będą płatne?</div>
+                <div class="faq-a">Nie. Wszystkie narzędzia, z których korzystasz obecnie (bieżące ceny, standardowe kalkulatory), na zawsze pozostaną darmowe. Pakiet PRO dodaje tylko nowe, ekskluzywne możliwości.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q"><i class='bx bx-question-mark'></i> Kiedy ruszy pakiet Premium?</div>
+                <div class="faq-a">Jesteśmy w fazie zamkniętych testów (BETA). Chcemy mieć pewność, że narzędzia takie jak Wehikuł Czasu i Alerty będą działać bezbłędnie, zanim udostępnimy je publicznie.</div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            Stworzone z pasją dla polskich kierowców
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ZAKŁADKA 2: TWOJE KONTO (ROZBUDOWANA)      -->
+    <!-- ========================================== -->
+    <div id="tab-account" class="sidebar-content sidebar-tab-pane">
+        
+        <!-- KARTA 1: PROFIL AUTA + SZYBKI BAK + ZASIĘG -->
+        <div class="plan-card" style="border-color: rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.04);">
+            <div class="plan-card-title" style="color: #3498db; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                
+                <!-- Lewa strona: Ikona + Tytuł -->
+                <span style="display: flex; align-items: center; gap: 8px; font-size: 1.05rem; line-height: 1.2;">
+                    <i class='bx bxs-car-garage' style="font-size: 1.35rem; flex-shrink: 0;"></i> 
+                    <span>Moje Auto & Narzędzia</span>
+                </span>
+                
+                <!-- Prawa strona: Zgrupowane pigułki o równej wysokości -->
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <span style="height: 24px; padding: 0 8px; font-size: 0.62rem; background: rgba(52, 152, 219, 0.15); color: #3498db; border-radius: 6px; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1;">
+                        Standard
+                    </span>
+                    <span id="cloudSyncBadge" style="height: 24px; padding: 0 8px; font-size: 0.65rem; background: rgba(76, 175, 80, 0.12); color: #4CAF50; border-radius: 6px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; line-height: 1;">
+                        <i class='bx bx-cloud-check' style="font-size: 0.85rem;"></i> Chmura
+                    </span>
+                </div>
+
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 15px;">
+                Skonfiguruj parametry swojego pojazdu – aplikacja automatycznie podstawi je do kalkulatorów i wyliczeń.
+            </div>
+
+            <!-- Parametry samochodu -->
+            <div class="range-calc-box" style="margin-bottom: 15px;">
+                <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-light); text-transform: uppercase; margin-bottom: 10px;">
+                    Domyślne parametry pojazdu:
+                </div>
+                <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Paliwo</label>
+                        <select id="quickRangeFuel" onchange="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 700;">
+                            <option value="Pb95">EFECTA 95</option>
+                            <option value="ONEkodiesel">DIESEL</option>
+                            <option value="Pb98">VERVA 98</option>
+                            <option value="ONArctic2">VERVA ON</option>
+                            <option value="LPG">LPG</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Spalanie (L)</label>
+                        <input type="number" id="quickRangeCons" value="7.0" step="0.5" min="2" max="30" oninput="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 800; text-align: center;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Bak (Litry)</label>
+                        <input type="number" id="quickTankSize" value="50" step="5" min="20" max="120" oninput="saveDriverProfileAndRecalc()" style="padding: 7px 8px; font-size: 0.78rem; border-radius: 8px; font-weight: 800; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- Szybki widżet: Ile dziś kosztuje Twój pełny bak -->
+                <div style="background: var(--card-bg); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(128,128,128,0.1);">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Pełny bak dzisiaj:</span>
+                        <strong id="myFullTankCost" style="font-size: 1.2rem; font-family: 'Outfit', sans-serif; color: var(--text);">--- PLN</strong>
+                    </div>
+                    <span id="myFullTankDiff" style="font-size: 0.75rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; background: rgba(128,128,128,0.1); color: var(--text-light);">
+                        ---
+                    </span>
+                </div>
+            </div>
+
+            <!-- Suwak: Zasięg za kwotę -->
+            <div style="border-top: 1px dashed rgba(52, 152, 219, 0.25); padding-top: 15px;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: #3498db; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                    <i class='bx bx-map-pin'></i> Szybki Kalkulator Zasięgu
+                </div>
+
+                <div class="range-calc-box">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-light);">Kwota tankowania:</span>
+                        <span id="rangeAmountVal" style="font-size: 1.1rem; font-weight: 900; color: var(--text); font-family: 'Outfit', sans-serif;">100 zł</span>
+                    </div>
+
+                    <input type="range" id="rangeSlider" class="premium-slider" min="20" max="500" step="10" value="100" oninput="updateQuickRange()">
+
+                    <div class="range-result-pill">
+                        <div>
+                            <span style="font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; font-weight: 800; display: block;">Przejedziesz dziś:</span>
+                            <span id="rangeResultVal" style="font-size: 1.65rem; font-weight: 900; color: #3498db; font-family: 'Outfit', sans-serif;">--- km</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Wlejesz do baku:</span>
+                            <span id="rangeLitersVal" style="font-size: 1rem; font-weight: 800; color: var(--text);">--- L</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 2: KSIĄŻKA SERWISOWA KIEROWCY -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-wrench' style="color: #e67e22; font-size: 1.3rem;"></i> Terminarz Kierowcy
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 15px;">
+                Zapisz ważne daty dla swojego auta – dane są bezpiecznie pamiętane w Twojej przeglądarce.
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Ubezpieczenie OC/AC</span>
+                        <span id="ocDaysLeft" style="font-size: 0.7rem; color: var(--text-light);">Wybierz datę końca polisy</span>
+                    </div>
+                    <input type="date" id="serviceOcDate" onchange="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 600;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Badanie Techniczne</span>
+                        <span id="techDaysLeft" style="font-size: 0.7rem; color: var(--text-light);">Wybierz datę przeglądu</span>
+                    </div>
+                    <input type="date" id="serviceTechDate" onchange="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 600;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text); display: block;">Kolejna wymiana oleju</span>
+                        <span style="font-size: 0.7rem; color: var(--text-light);">Docelowy przebieg (km)</span>
+                    </div>
+                    <input type="number" id="serviceOilKm" placeholder="np. 185000" oninput="saveServiceBook()" style="width: 140px; padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; font-weight: 700; text-align: right;">
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 3: POWIADOMIENIA & PERSONALIZACJA WIDOKU -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-sliders' style="color: #9b59b6; font-size: 1.3rem;"></i> Alerty i Personalizacja
+            </div>
+
+            <!-- Alerty Web Push -->
+            <div style="margin-top: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 0.82rem; font-weight: 700; color: var(--text);">Alerty Cenowe (Web Push)</span>
+                        <span style="font-size: 0.7rem; color: var(--text-light);">Raport na ekranie przy zmianie cen</span>
+                    </div>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="togglePushAlerts" onchange="toggleWebPushAlerts(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button onclick="sendTestPushAlert()" id="testPushBtn" style="display: none; width: 100%; margin-top: 10px; padding: 8px; border-radius: 8px; border: 1px solid rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.08); color: #3498db; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+                    <i class='bx bx-paper-plane'></i> Wyślij testowy raport cenowy
+                </button>
+            </div>
+
+            <!-- Ukrywanie sekcji -->
+            <div style="margin-top: 15px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Pokaż sekcję "Strefa EV"</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleEV" onchange="toggleDashboardSection('evGrid', this)" checked>
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Pokaż "Ceny w Niemczech"</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleDE" onchange="toggleDashboardSection('germanFuelGrid', this)" checked>
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Kosmetyka CSS -->
+            <div style="margin-top: 15px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Tryb AMOLED Pure Black</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleAmoled" onchange="toggleAmoledMode(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Cyfrowa Czcionka Pylonu (LED)</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleDigitalFont" onchange="toggleDigitalFont(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Kompaktowa lista paliw</span>
+                    <label class="dz-toggle-switch">
+                        <input type="checkbox" id="toggleCompactView" onchange="toggleCompactView(this)">
+                        <span class="dz-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- KARTA 4: KALKULATOR ZRZUTKI NA PALIWO (SPLIT BILL) -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-group' style="color: #27ae60; font-size: 1.4rem;"></i> Zrzutka na Paliwo
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Jedziesz ze znajomymi? Podziel koszt trasy i skopiuj gotową wiadomość z kwotą na BLIKA.
+            </div>
+
+            <div class="range-calc-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Dystans (km)</label>
+                        <input type="number" id="splitDistance" value="250" step="10" min="10" oninput="calculateFuelSplit()" style="padding: 7px 10px; font-size: 0.85rem; border-radius: 8px; font-weight: 800;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.68rem; color: var(--text-light); margin-bottom: 3px;">Liczba osób w aucie</label>
+                        <select id="splitPeople" onchange="calculateFuelSplit()" style="padding: 7px 10px; font-size: 0.85rem; border-radius: 8px; font-weight: 800;">
+                            <option value="2">2 osoby</option>
+                            <option value="3">3 osoby</option>
+                            <option value="4" selected>4 osoby</option>
+                            <option value="5">5 osób</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(128,128,128,0.12); margin-bottom: 10px;">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-light); font-weight: 700; display: block;">Koszt całkowity: <strong id="splitTotalCost">--- zł</strong></span>
+                        <span style="font-size: 0.75rem; color: var(--text); font-weight: 800;">Na głowę wychodzi:</span>
+                    </div>
+                    <span id="splitPerPerson" style="font-size: 1.45rem; font-weight: 900; color: #27ae60; font-family: 'Outfit', sans-serif;">--- zł</span>
+                </div>
+
+                <button onclick="copySplitMessage()" style="width: 100%; padding: 9px; border-radius: 10px; border: none; background: rgba(39, 174, 96, 0.12); color: #27ae60; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;">
+                    <i class='bx bx-copy'></i> Kopiuj wiadomość dla znajomych
+                </button>
+            </div>
+        </div>
+
+        <!-- KARTA 5: DZIENNIK TANKOWAŃ (LITE) -->
+        <div class="plan-card">
+            <div class="plan-card-title" style="justify-content: space-between;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-book-Add' style="color: #E30613; font-size: 1.3rem;"></i> Dziennik Tankowań
+                </span>
+                <span id="fuelLogTotalSpent" style="font-size: 0.75rem; font-weight: 800; color: var(--primary); background: rgba(227,6,19,0.1); padding: 3px 8px; border-radius: 6px;">Suma: 0 zł</span>
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Zapisz swoje ostatnie wizyty na stacji (wersja darmowa przechowuje 3 ostatnie wpisy).
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+                <input type="number" id="logLitersInput" placeholder="Litry (np. 42)" step="0.1" style="flex: 1; padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                <input type="number" id="logCostInput" placeholder="Kwota (zł)" step="1" style="flex: 1; padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                <button onclick="addFuelLogEntry()" style="padding: 8px 14px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">
+                    <i class='bx bx-plus'></i>
+                </button>
+            </div>
+
+            <div id="fuelLogList" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Wpisy generowane przez JS -->
+            </div>
+        </div>
+
+        <!-- KARTA 6: KOREKTA LOKALNEJ STACJI & TWÓJ LEKTOR -->
+        <div class="plan-card">
+            <div class="plan-card-title">
+                <i class='bx bxs-map-alt' style="color: #2980b9; font-size: 1.3rem;"></i> Moja Stacja & Asystent
+            </div>
+            <div class="plan-card-desc" style="margin-bottom: 12px;">
+                Dopasuj średnią cenę rynkową do marży swojej lokalnej stacji paliw.
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <label style="font-size: 0.72rem; color: var(--text-light); margin-bottom: 5px;">Profil cenowy Twojej stacji:</label>
+                <select id="stationOffsetSelect" onchange="updateStationOffset()" style="padding: 8px 10px; font-size: 0.8rem; border-radius: 8px; font-weight: 700;">
+                    <option value="-0.12">Tania stacja lokalna / miejska (-12 gr/l)</option>
+                    <option value="-0.05">Stacja poniżej średniej (-5 gr/l)</option>
+                    <option value="0" selected>Standardowa stacja Orlen (0 gr/l)</option>
+                    <option value="0.15">Droższa stacja tranzytowa (+15 gr/l)</option>
+                    <option value="0.35">Stacja Autostradowa MOP (+35 gr/l)</option>
+                </select>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding: 8px 12px; background: rgba(41, 128, 185, 0.08); border-radius: 8px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text);">Szacowana cena u Ciebie:</span>
+                    <strong id="myStationEstimatedPrice" style="font-size: 1.05rem; font-family: 'Outfit', sans-serif; color: #2980b9;">--- PLN/l</strong>
+                </div>
+            </div>
+
+            <!-- Spersonalizowany Lektor Głosowy + Reset konta -->
+            <div style="display: flex; gap: 8px; border-top: 1px dashed rgba(128,128,128,0.15); padding-top: 12px;">
+                <button onclick="speakMyPersonalFuel()" style="flex: 1.4; padding: 9px 10px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.3); background: rgba(52, 152, 219, 0.08); color: #3498db; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <i class='bx bx-volume-full'></i> Przeczytaj moje paliwo
+                </button>
+                <button onclick="resetDriverAccountSettings()" style="flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid rgba(227, 6, 19, 0.25); background: rgba(227, 6, 19, 0.05); color: #E30613; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <i class='bx bx-trash'></i> Reset danych
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            Stworzone z pasją dla polskich kierowców
+        </div>
+    </div>
+    </div>
+    
+    <footer class="animate">
+        © 2026 kacpiq.pl - Wszelkie prawa zastrzeżone
+    </footer>
+
+    <!-- Rejestracja Service Workera dla PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('cenypaliw/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker zarejestrowany pomyślnie:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Rejestracja Service Workera nie powiodła się:', error);
+                    });
+            });
+        }
+    </script>
+
+    <script src="cenypaliw/fuelscript.js"></script>
+
+</body>
+</html>
