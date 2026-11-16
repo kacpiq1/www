@@ -4983,3 +4983,48 @@ body.dark-theme .sidebar-tab-pill.active {
     display: flex !important;
     animation: fadeIn 0.25s ease;
 }
+
+
+@keyframes ceneoPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255, 100, 0, 0.25); }
+        50% { box-shadow: 0 0 0 6px rgba(255, 100, 0, 0); }
+    }
+    .ceneo-cat-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px;
+        border-radius: 12px;
+        background: rgba(255, 100, 0, 0.05);
+        border: 1px solid rgba(255, 100, 0, 0.18);
+        text-decoration: none;
+        color: var(--text);
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 0.84rem;
+        transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .ceneo-cat-btn:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 100, 0, 0.12);
+        border-color: #ff6400;
+        box-shadow: 0 6px 18px rgba(255, 100, 0, 0.16);
+    }
+    .ceneo-cat-btn .cat-arrow {
+        color: #ff6400;
+        font-size: 1.25rem;
+        transition: transform 0.25s ease;
+    }
+    .ceneo-cat-btn:hover .cat-arrow {
+        transform: translateX(4px);
+    }
+    .ceneo-live-dot {
+        width: 8px;
+        height: 8px;
+        background: #ff6400;
+        border-radius: 50%;
+        display: inline-block;
+        animation: ceneoPulse 2s infinite;
+    }
