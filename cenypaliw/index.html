@@ -208,31 +208,64 @@
             </button> -->
         </div>
 
-        <!-- REKLAMA 1: GŁÓWNY BANER POD PRZYCISKAMI AKCJI (UBEZPIECZENIA OC/AC) -->
-<div class="ad-slot-wrapper animate-up" data-ad-slot="main-banner" style="width: 100%; max-width: 900px; margin: 2rem auto; background: rgba(128, 128, 128, 0.03); border: 1px dashed rgba(128, 128, 128, 0.25); border-radius: 18px; padding: 12px 16px 16px 16px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px;">
-        <span style="font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; color: var(--text-light); text-transform: uppercase; opacity: 0.75;">PARTNER DLA KIEROWCÓW</span>
+        <!-- MODUŁ 1: PORÓWNYWARKA CEN DLA KIEROWCÓW (CENEO) -->
+<div class="ad-slot-wrapper animate-up" data-ad-slot="main-banner" style="width: 100%; max-width: 900px; margin: 2rem auto; background: rgba(128, 128, 128, 0.03); border: 1px dashed rgba(128, 128, 128, 0.25); border-radius: 18px; padding: 14px 16px 16px 16px;">
+    
+    <!-- Nagłówek sekcji -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
+        <span style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.8px; color: var(--text-light); text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+            <i class='bx bx-search-alt' style="color: #ff6400; font-size: 1rem;"></i> Porównywarka cen części i eksploatacji (Ceneo)
+        </span>
         <button onclick="openProfileSidebar()" style="background: rgba(243, 156, 18, 0.12); color: #F39C12; border: 1px solid rgba(243, 156, 18, 0.35); border-radius: 50px; padding: 4px 12px; font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-            <i class='bx bxs-crown'></i> Ukryj reklamy w PRO
+            <i class='bx bxs-crown'></i> Ukryj w PRO
         </button>
     </div>
 
-    <div class="ad-slot-box" style="width: 100%; background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid rgba(52, 152, 219, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-        <a href="https://TWOJ-LINK-PARTNERSKI-OC.pl" target="_blank" rel="noopener sponsored" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 16px 20px; text-decoration: none; background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(41, 128, 185, 0.03)); flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 240px;">
-                <div style="width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);">
-                    <i class='bx bxs-shield-plus'></i>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 3px; text-align: left;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #3498db; letter-spacing: 0.8px; text-transform: uppercase;">Kalkulator OC / AC • Zniżka dla kierowców</span>
-                    <strong style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; color: var(--text); line-height: 1.25;">Kończy Ci się ubezpieczenie? Kierowcy przepłacają średnio 420 zł!</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-light);">Porównaj oferty 18 ubezpieczycieli w 2 minuty i odbierz do 150 zł zwrotu na konto.</span>
-                </div>
+    <!-- Wnętrze: Rekomendacje tekstowo-katalogowe -->
+    <div style="width: 100%; background: var(--card-bg); border-radius: 14px; padding: 16px; border: 1px solid rgba(255, 100, 0, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+            <div>
+                <strong style="font-family: 'Outfit', sans-serif; font-size: 1rem; color: var(--text); display: block;">Sprawdź aktualne ceny w sklepach motoryzacyjnych</strong>
+                <span style="font-size: 0.78rem; color: var(--text-light);">Wybierz kategorię, aby porównać oferty producentów i przejść do wybranego sprzedawcy:</span>
             </div>
-            <div style="background: #3498db; color: #fff; padding: 10px 18px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);">
-                Oblicz składkę <i class='bx bx-right-arrow-alt' style="font-size: 1.15rem;"></i>
-            </div>
-        </a>
+        </div>
+
+        <!-- Siatka 4 szybkich linków z Twoim adresem Ceneo -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+            
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
+               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-washer' style="color: #ff6400; font-size: 1.2rem;"></i> Opony zimowe i całoroczne
+                </span>
+                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+            </a>
+
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
+               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-droplet' style="color: #ff6400; font-size: 1.2rem;"></i> Oleje silnikowe i filtry
+                </span>
+                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+            </a>
+
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
+               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-battery-charging' style="color: #ff6400; font-size: 1.2rem;"></i> Akumulatory i prostowniki
+                </span>
+                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+            </a>
+
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
+               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bxs-car-wash' style="color: #ff6400; font-size: 1.2rem;"></i> Wycieraczki i chemia
+                </span>
+                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+            </a>
+
+        </div>
     </div>
 </div>
 
