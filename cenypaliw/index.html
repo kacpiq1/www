@@ -208,61 +208,66 @@
             </button> -->
         </div>
 
-        <!-- MODUŁ 1: PORÓWNYWARKA CEN DLA KIEROWCÓW (CENEO) -->
-<div class="ad-slot-wrapper animate-up" data-ad-slot="main-banner" style="width: 100%; max-width: 900px; margin: 2rem auto; background: rgba(128, 128, 128, 0.03); border: 1px dashed rgba(128, 128, 128, 0.25); border-radius: 18px; padding: 14px 16px 16px 16px;">
+        <div class="ad-slot-wrapper animate-up" data-ad-slot="main-banner" style="width: 100%; max-width: 900px; margin: 2rem auto; background: rgba(128, 128, 128, 0.03); border: 1px dashed rgba(128, 128, 128, 0.25); border-radius: 18px; padding: 14px 16px 16px 16px;">
     
     <!-- Nagłówek sekcji -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
-        <span style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.8px; color: var(--text-light); text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
-            <i class='bx bx-search-alt' style="color: #ff6400; font-size: 1rem;"></i> Porównywarka cen części i eksploatacji (Ceneo)
+        <span style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.8px; color: var(--text-light); text-transform: uppercase; display: flex; align-items: center; gap: 7px;">
+            <span class="ceneo-live-dot"></span> Porównywarka cen części i eksploatacji
         </span>
-        <button onclick="openProfileSidebar()" style="background: rgba(243, 156, 18, 0.12); color: #F39C12; border: 1px solid rgba(243, 156, 18, 0.35); border-radius: 50px; padding: 4px 12px; font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+        <button onclick="openProfileSidebar()" style="background: rgba(243, 156, 18, 0.12); color: #F39C12; border: 1px solid rgba(243, 156, 18, 0.35); border-radius: 50px; padding: 4px 12px; font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s;">
             <i class='bx bxs-crown'></i> Ukryj w PRO
         </button>
     </div>
 
-    <!-- Wnętrze: Rekomendacje tekstowo-katalogowe -->
-    <div style="width: 100%; background: var(--card-bg); border-radius: 14px; padding: 16px; border: 1px solid rgba(255, 100, 0, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+    <!-- Wnętrze z Logo Ceneo -->
+    <div style="width: 100%; background: var(--card-bg); border-radius: 14px; padding: 18px; border: 1px solid rgba(255, 100, 0, 0.22); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
             <div>
-                <strong style="font-family: 'Outfit', sans-serif; font-size: 1rem; color: var(--text); display: block;">Sprawdź aktualne ceny w sklepach motoryzacyjnych</strong>
-                <span style="font-size: 0.78rem; color: var(--text-light);">Wybierz kategorię, aby porównać oferty producentów i przejść do wybranego sprzedawcy:</span>
+                <strong style="font-family: 'Outfit', sans-serif; font-size: 1.05rem; color: var(--text); display: block;">Sprawdź aktualne ceny w sklepach motoryzacyjnych</strong>
+                <span style="font-size: 0.78rem; color: var(--text-light);">Wybierz kategorię, aby porównać oferty i przejść do wybranego sprzedawcy:</span>
             </div>
+            
+            <!-- Oficjalna plakietka z Logo CENEO -->
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" title="Przejdź do Ceneo.pl"
+               style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.08); border: 1px solid rgba(255, 100, 0, 0.2); text-decoration: none; transition: 0.2s;">
+                <span style="font-size: 0.65rem; font-weight: 700; color: var(--text-light); text-transform: uppercase;">Oferty z</span>
+                <svg width="74" height="20" viewBox="0 0 110 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="22" fill="#FF6400" font-family="'Outfit', 'Arial Black', sans-serif" font-weight="900" font-size="25" letter-spacing="-0.5">CENEO</text>
+                </svg>
+            </a>
         </div>
 
-        <!-- Siatka 4 szybkich linków z Twoim adresem Ceneo -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+        <!-- Siatka 4 animowanych kafelków -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px;">
             
-            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
-               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bxs-washer' style="color: #ff6400; font-size: 1.2rem;"></i> Opony zimowe i całoroczne
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" class="ceneo-cat-btn">
+                <span style="display: flex; align-items: center; gap: 9px;">
+                    <i class='bx bxs-washer' style="color: #ff6400; font-size: 1.25rem;"></i> Opony zimowe
                 </span>
-                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+                <i class='bx bx-right-arrow-alt cat-arrow'></i>
             </a>
 
-            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
-               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bxs-droplet' style="color: #ff6400; font-size: 1.2rem;"></i> Oleje silnikowe i filtry
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" class="ceneo-cat-btn">
+                <span style="display: flex; align-items: center; gap: 9px;">
+                    <i class='bx bxs-droplet' style="color: #ff6400; font-size: 1.25rem;"></i> Oleje i filtry
                 </span>
-                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+                <i class='bx bx-right-arrow-alt cat-arrow'></i>
             </a>
 
-            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
-               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bxs-battery-charging' style="color: #ff6400; font-size: 1.2rem;"></i> Akumulatory i prostowniki
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" class="ceneo-cat-btn">
+                <span style="display: flex; align-items: center; gap: 9px;">
+                    <i class='bx bxs-battery-charging' style="color: #ff6400; font-size: 1.25rem;"></i> Akumulatory
                 </span>
-                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+                <i class='bx bx-right-arrow-alt cat-arrow'></i>
             </a>
 
-            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" 
-               style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255, 100, 0, 0.06); border: 1px solid rgba(255, 100, 0, 0.18); text-decoration: none; color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.82rem; transition: 0.2s;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bxs-car-wash' style="color: #ff6400; font-size: 1.2rem;"></i> Wycieraczki i chemia
+            <a href="https://low-prices.eu/a/pYOwQUANVNcv2AG" target="_blank" rel="noopener sponsored" class="ceneo-cat-btn">
+                <span style="display: flex; align-items: center; gap: 9px;">
+                    <i class='bx bxs-car-wash' style="color: #ff6400; font-size: 1.25rem;"></i> Wycieraczki i chemia
                 </span>
-                <i class='bx bx-chevron-right' style="color: #ff6400; font-size: 1.2rem;"></i>
+                <i class='bx bx-right-arrow-alt cat-arrow'></i>
             </a>
 
         </div>
